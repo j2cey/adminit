@@ -278,7 +278,7 @@ trait LdapImportTrait
                 } else {
                     $usermail = $ldapaccount->userprincipalname;
                 }
-                $role_id = config('Settings.roles.default');;
+//                $role_id = config('Settings.roles.default');;
                 $user_values = [
                     'name' => $ldapaccount->name,
                     'username' => $ldapaccount->samaccountname,
@@ -287,7 +287,7 @@ trait LdapImportTrait
                     'is_ldap' => true,
                     'ldap_account_id' => $ldapaccount->id,
                     'status_id' => Status::inactive()->first()->id,
-                    'roles' => json_encode([$role_id]),
+//                    'roles' => json_encode([$role_id]),
                     'password' => 'gestocksecret',
                     'confirm_password' => 'gestocksecret'
                 ];
@@ -299,7 +299,7 @@ trait LdapImportTrait
                     unset($user_values['confirm_password']);
                     $user_values['password'] = bcrypt($user_values['password']);
                     $user = User::create($user_values);
-                    $user->assignRole([$role_id]);
+//                    $user->assignRole([$role_id]);
                 } else {
                     \Log::info("user " . $ldapaccount->name . " NOT created!!!. validator->fails() : " . $validator->fails());
                     $this->logValidatorErrors($validator);
