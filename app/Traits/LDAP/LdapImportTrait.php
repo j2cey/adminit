@@ -23,9 +23,9 @@ trait LdapImportTrait
     }
 
     /**
-     * Importe les comptes LDAP
+     * Traite les comptes LDAP importés
      */
-    public function importLdapAccounts() {
+    public function parseImportedLdapAccounts() {
         // Tronquage de la table d'importation
         //DB::table('ldapaccountimports')->truncate();
 
