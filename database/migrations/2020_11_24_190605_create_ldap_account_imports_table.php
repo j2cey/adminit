@@ -21,7 +21,6 @@ class CreateLdapAccountImportsTable extends Migration
     {
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
-            $table->baseFields();
 
             $table->string('objectguid')->nullable()->comment('GUID du compte');
             $table->string('username')->nullable()->comment('Account Name');
@@ -29,6 +28,8 @@ class CreateLdapAccountImportsTable extends Migration
 
             $table->string('email')->nullable()->comment('e-mail du compte');
             $table->string('password')->nullable()->comment('mot de passe du compte');
+
+            $table->timestamps();
         });
         $this->setTableComment($this->table_name,$this->table_comment);
     }
@@ -40,9 +41,6 @@ class CreateLdapAccountImportsTable extends Migration
      */
     public function down()
     {
-        Schema::table($this->table_name, function (Blueprint $table) {
-            $table->dropBaseForeigns();
-        });
         Schema::dropIfExists($this->table_name);
     }
 }
