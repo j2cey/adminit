@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Support\Carbon;
 use App\Traits\PhoneNum\HasPhoneNums;
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\EmailAddress\HasEmailAddresses;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -81,14 +80,14 @@ class Employe extends BaseModel
      * Renvoie la Fonction de l employe.
      */
     public function fonction() {
-        return $this->belongsTo('App\FonctionEmploye', 'fonction_employe_id');
+        return $this->belongsTo(FonctionEmploye::class, 'fonction_employe_id');
     }
 
     /**
      * Renvoie l Assignation de l employe.
      */
     public function departement() {
-        return $this->belongsTo('App\Departement');
+        return $this->belongsTo(Departement::class);
     }
 
 
@@ -96,7 +95,7 @@ class Employe extends BaseModel
      * Retourne toutes les Departements pour lesquelles cet employe est responsable.
      */
     public function departementsResponsable() {
-        return $this->hasMany('App\Departement', 'employe_responsable_id');
+        return $this->hasMany(Departement::class, 'employe_responsable_id');
     }
 
     #endregion

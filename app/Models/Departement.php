@@ -65,35 +65,35 @@ class Departement extends BaseModel
      * Renvoie l'employe responsable du Departement.
      */
     public function typedepartement() {
-        return $this->belongsTo('App\TypeDepartement', 'type_departement_id');
+        return $this->belongsTo(TypeDepartement::class, 'type_departement_id');
     }
 
     /**
      * Renvoie le Departement du Departement.
      */
     public function parent() {
-        return $this->belongsTo('App\Departement', 'departement_parent_id');
+        return $this->belongsTo(Departement::class, 'departement_parent_id');
     }
 
     /**
      * Renvoie les employés de ce Departement.
      */
     public function employes() {
-        return $this->hasMany('App\Employe');
+        return $this->hasMany(Employe::class);
     }
 
     /**
      * Renvoie les departement departementenfants du Departement.
      */
     public function departementenfants() {
-        return $this->hasMany('App\Departement', 'departement_parent_id');
+        return $this->hasMany(Departement::class, 'departement_parent_id');
     }
 
     /**
      * Renvoie l'employe responsable du Departement.
      */
     public function employeResponsable() {
-        return $this->belongsTo('App\Employe', 'employe_responsable_id');
+        return $this->belongsTo(Employe::class, 'employe_responsable_id');
     }
 
     #endregion

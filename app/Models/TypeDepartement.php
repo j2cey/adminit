@@ -32,7 +32,7 @@ class TypeDepartement extends BaseModel
     #region Eloquent Relationships
 
     public function departements() {
-        return $this->hasMany('App\Departement', 'type_departement_id');
+        return $this->hasMany(Departement::class, 'type_departement_id');
     }
 
     #endregion
