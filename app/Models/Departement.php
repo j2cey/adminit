@@ -34,7 +34,7 @@ class Departement extends BaseModel
 
     protected $guarded = [];
 
-    #region Validation Rules
+    #region Validation Tools
 
     public static function defaultRules() {
         return [

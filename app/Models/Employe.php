@@ -49,7 +49,7 @@ class Employe extends BaseModel
         return "{$this->nom} {$this->prenom}";
     }
 
-    #region Validation Rules
+    #region Validation Tools
 
     public static function defaultRules() {
         return [

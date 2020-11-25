@@ -29,4 +29,29 @@ class FonctionEmploye extends BaseModel
     use HasFactory;
 
     protected $guarded = [];
+
+    #region validation tools
+
+    public static function defaultRules() {
+        return [];
+    }
+    public static function createRules() {
+        return array_merge(self::defaultRules(), [
+            'intitule' => ['required','string','min:3','max:100',
+                'unique:fonction_employes,intitule,NULL,id,deleted_at,NULL',
+            ],
+        ]);
+    }
+    public static function updateRules($model) {
+        return array_merge(self::defaultRules(), [
+            'intitule' => ['required','string','min:3','max:100',
+                'unique:fonction_employes,intitule,'.$model->id.',id,deleted_at,NULL',
+            ],
+        ]);
+    }
+    public static function validationMessages() {
+        return [];
+    }
+
+    #endregion
 }
