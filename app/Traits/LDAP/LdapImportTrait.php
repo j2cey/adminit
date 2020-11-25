@@ -85,9 +85,10 @@ trait LdapImportTrait
     private function setEmployeInfos(LdapAccount $ldapaccount, $userldap) {
         $employe = Employe::where('objectguid', $ldapaccount->objectguid)->first();
         if (! $employe) {
-            $employe = new Employe([
+            $employe = Employe::create([
                 'objectguid' => $ldapaccount->objectguid,
                 'status_id' => Status::active()->first()->id,
+                'nom' => "UNDEFINED"
             ]);
         }
 
@@ -161,7 +162,7 @@ trait LdapImportTrait
     /**
      * Parse le chemin d'un département
      * @param string $tree chemin du département (chaque branche séparée par une virgule)
-     * @return \App\Departement|null
+     * @return \App\Models\Departement|null
      */
     private function parseDepartementTree(string $tree) {
         $tree_tab = explode(',', $tree);
@@ -267,7 +268,7 @@ trait LdapImportTrait
 
     /**
      * Créer un compte d'accès à l'application
-     * @param \App\LdapAccount $ldapaccount
+     * @param \App\Models\LdapAccount $ldapaccount
      */
     private function createUser(LdapAccount $ldapaccount) {
         if (! User::where('ldap_account_id', $ldapaccount->id)->first()) {
