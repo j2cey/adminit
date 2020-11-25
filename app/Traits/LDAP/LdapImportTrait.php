@@ -270,7 +270,7 @@ trait LdapImportTrait
      * @param \App\LdapAccount $ldapaccount
      */
     private function createUser(LdapAccount $ldapaccount) {
-        if (! User::where('ldapaccount_id', $ldapaccount->id)->first()) {
+        if (! User::where('ldap_account_id', $ldapaccount->id)->first()) {
             if (! User::where('email', $ldapaccount->mail)->first()) {
                 if ($ldapaccount->mail) {
                     $usermail = $ldapaccount->mail;
@@ -284,7 +284,7 @@ trait LdapImportTrait
                     'objectguid' => $ldapaccount->objectguid,
                     'email' => $usermail,
                     'is_ldap' => true,
-                    'ldapaccount_id' => $ldapaccount->id,
+                    'ldap_account_id' => $ldapaccount->id,
                     'status_id' => Status::inactive()->first()->id,
                     'roles' => json_encode([$role_id]),
                     'password' => 'gestocksecret',
