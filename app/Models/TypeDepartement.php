@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class TypeDepartement extends BaseModel
 {
     use HasFactory;
+    protected $guarded = [];
 
     #region Eloquent Relationships
 
