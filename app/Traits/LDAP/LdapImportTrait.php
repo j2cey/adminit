@@ -85,7 +85,7 @@ trait LdapImportTrait
     private function setEmployeInfos(LdapAccount $ldapaccount, $userldap) {
         $employe = Employe::where('objectguid', $ldapaccount->objectguid)->first();
         if (! $employe) {
-            $employe = Employe::create([
+            $employe = new Employe([
                 'objectguid' => $ldapaccount->objectguid,
                 'status_id' => Status::active()->first()->id,
             ]);
