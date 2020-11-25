@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\BaseTrait;
+use App\Traits\Base\BaseTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model
