@@ -40,4 +40,31 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    #region Validation Tools
+
+    public static function defaultRules() {
+        return [
+            'name' => ['required','string',],
+        ];
+    }
+    public static function createRules()  {
+        return array_merge(self::defaultRules(), [
+            'email' => ['required',
+                'unique:users,email,NULL,id',
+            ],
+        ]);
+    }
+    public static function updateRules($model) {
+        return array_merge(self::defaultRules(), [
+            'email' => ['required',
+                'unique:users,email,'.$model->id.',id',
+                ]
+        ]);
+    }
+    public static function validationMessages() {
+        return [];
+    }
+
+    #region Eloquent Relationships
 }
