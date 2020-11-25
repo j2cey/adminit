@@ -39,7 +39,7 @@ trait LdapImportTrait
         }
     }
 
-    public function adldapSyncUser(String $username, LdapAccountImport $accountimported = null) {
+    public function adldapSyncUser($username, LdapAccountImport $accountimported = null) {
         $userldap = Adldap::search()->users()->find($username);
         if ($userldap) {
             //dump('1: $userldap', $userldap);
