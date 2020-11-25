@@ -87,7 +87,7 @@ trait LdapImportTrait
         if (! $employe) {
             $employe = Employe::create([
                 'objectguid' => $ldapaccount->objectguid,
-                'statut_id' => Status::active()->first()->id,
+                'status_id' => Status::active()->first()->id,
             ]);
         }
 
@@ -110,7 +110,7 @@ trait LdapImportTrait
                             $fonctionemploye_values = [
                                 'intitule' => $intitule_fonctionemploye,
                                 'description' => $ldap_val,
-                                'statut_id' => Status::active()->first()->id,
+                                'status_id' => Status::active()->first()->id,
                             ];
                             $validator = Validator::make($fonctionemploye_values, FonctionEmploye::createRules());
                             if (! $validator->fails()) {
@@ -174,7 +174,7 @@ trait LdapImportTrait
                     // création d'un nouveau département
                     $curr_dept = Departement::create([
                         'intitule' => $dept,
-                        'statut_id' => Status::active()->first()->id,
+                        'status_id' => Status::active()->first()->id,
                     ]);
                     // Recherche du type de dépertement en fonction de l'intitulé
                     $type_dpt_id = $this->parseDepartementType($dept);
@@ -284,7 +284,7 @@ trait LdapImportTrait
                     'email' => $usermail,
                     'is_ldap' => true,
                     'ldapaccount_id' => $ldapaccount->id,
-                    'statut_id' => Status::inactive()->first()->id,
+                    'status_id' => Status::inactive()->first()->id,
                     'roles' => json_encode([$role_id]),
                     'password' => 'gestocksecret',
                     'confirm_password' => 'gestocksecret'
