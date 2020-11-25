@@ -24,7 +24,7 @@ class CreateFonctionEmployesTable extends Migration
             $table->baseFields();
 
             $table->string('intitule')->comment('intitule de la fonction');
-            $table->string('slug')->unique()->comment('intitule de la fonction');
+            //$table->string('slug')->unique()->comment('intitule de la fonction');
             $table->string('description')->nullable()->comment('description de la fonction');
         });
         $this->setTableComment($this->table_name,$this->table_comment);
