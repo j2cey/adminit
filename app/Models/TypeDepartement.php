@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class TypeDepartement extends Model
+class TypeDepartement extends BaseModel
 {
     use HasFactory;
 
