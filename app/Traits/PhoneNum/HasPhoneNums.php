@@ -37,7 +37,8 @@ trait HasPhoneNums
     public function phonenums()
     {
         $elem_type = get_called_class();
-        return $this->belongsToMany(PhoneNum::class, 'model_has_phone_nums', 'phone_num_id', 'model_id')
+        return $this->belongsToMany(PhoneNum::class, 'model_has_phone_nums', 'model_id', 'phone_num_id')
+            //return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');
             ->wherePivot('model_type', $elem_type)
             ->withPivot('posi')
             ->withTimestamps()

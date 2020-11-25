@@ -12,7 +12,8 @@ trait HasEmailAddresses
      */
     public function emailaddresses() {
         $elem_type = get_called_class();
-        return $this->belongsToMany(EmailAddress::class, 'model_has_email_addresses', 'email_address_id', 'model_id')
+        return $this->belongsToMany(EmailAddress::class, 'model_has_email_addresses', 'model_id', 'email_address_id')
+            //return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');
             ->wherePivot('model_type', $elem_type)
             ->withPivot('posi')
             ->withTimestamps()
