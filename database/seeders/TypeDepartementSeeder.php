@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Status;
 use App\Models\TypeDepartement;
 use Illuminate\Database\Seeder;
 
