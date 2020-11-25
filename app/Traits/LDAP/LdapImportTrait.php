@@ -109,6 +109,7 @@ trait LdapImportTrait
                         if (! $fonctionemploye) {
                             $fonctionemploye_values = [
                                 'intitule' => $intitule_fonctionemploye,
+                                'slug' => Str::slug($intitule_fonctionemploye),
                                 'description' => $ldap_val,
                                 'status_id' => Status::active()->first()->id,
                             ];
