@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8" ?><!DOCTYPE svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1870px" height="1154px" xmlns:ev="http://www.w3.org/2001/xml-events" style="overflow: hidden; "><g id="viewport-20210216114819622" class="svg-pan-zoom_viewport" transform="matrix(0.9687556883602555,0,0,0.9687556883602555,163.6763650958562,15.528059604278937)" style="transform: matrix(0.968756, 0, 0, 0.968756, 163.676, 15.5281);">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 861)">
+<title>system</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-861 1115.307,-861 1115.307,4 -4,4"></polygon>
+<!-- GradeUnit -->
+<g id="node1" class="node">
+<title>GradeUnit</title>
+<polygon fill="none" stroke="#000000" points="655.8915,-157.5 655.8915,-265.5 793.3085,-265.5 793.3085,-157.5 655.8915,-157.5"></polygon>
+<text text-anchor="middle" x="724.6" y="-252.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">GradeUnit</text>
+<polyline fill="none" stroke="#000000" points="655.8915,-245.5 793.3085,-245.5 "></polyline>
+<text text-anchor="start" x="663.8915" y="-232.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ relative_expression : json</text>
+<text text-anchor="start" x="663.8915" y="-220.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<text text-anchor="start" x="663.8915" y="-208.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ unit : string</text>
+<text text-anchor="start" x="663.8915" y="-196.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ unitparent : GradeUnit</text>
+<text text-anchor="start" x="663.8915" y="-184.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ unitvalue : number</text>
+<polyline fill="none" stroke="#000000" points="655.8915,-177.5 793.3085,-177.5 "></polyline>
+<text text-anchor="middle" x="724.6" y="-164.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- GradeUnit&#45;&gt;GradeUnit -->
+<g id="edge1" class="edge">
+<title>GradeUnit-&gt;GradeUnit</title>
+<path fill="none" stroke="#000000" d="M793.6425,-240.2238C804.1639,-235.8402 811.3085,-226.2656 811.3085,-211.5 811.3085,-196.7344 804.1639,-187.1598 793.6425,-182.7762"></path>
+<text text-anchor="middle" x="796.422" y="-185.7762" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- SubjectResource -->
+<g id="node2" class="node">
+<title>Subject</title>
+<polygon fill="none" stroke="#000000" points="63.841,-338.5 63.841,-470.5 197.359,-470.5 197.359,-338.5 63.841,-338.5"></polygon>
+<text text-anchor="middle" x="130.6" y="-457.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Subject</text>
+<polyline fill="none" stroke="#000000" points="63.841,-450.5 197.359,-450.5 "></polyline>
+<text text-anchor="start" x="71.841" y="-437.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ category : Category</text>
+<text text-anchor="start" x="71.841" y="-425.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ comments : Comment [ ]</text>
+<text text-anchor="start" x="71.841" y="-413.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ goal : Goal</text>
+<text text-anchor="start" x="71.841" y="-401.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ notes : Note [ ]</text>
+<text text-anchor="start" x="71.841" y="-389.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ posi : number</text>
+<text text-anchor="start" x="71.841" y="-377.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ subjectparent : Subject</text>
+<text text-anchor="start" x="71.841" y="-365.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<polyline fill="none" stroke="#000000" points="63.841,-358.5 197.359,-358.5 "></polyline>
+<text text-anchor="middle" x="130.6" y="-345.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- SubjectResource&#45;&gt;SubjectResource -->
+<g id="edge4" class="edge">
+<title>Subject-&gt;Subject</title>
+<path fill="none" stroke="#000000" d="M197.3996,-437.6523C208.0612,-432.8008 215.359,-421.75 215.359,-404.5 215.359,-387.25 208.0612,-376.1992 197.3996,-371.3477"></path>
+<text text-anchor="middle" x="200.1791" y="-374.3477" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Goal -->
+<g id="node3" class="node">
+<title>Goal</title>
+<polygon fill="none" stroke="#000000" points="0,-169.5 0,-253.5 115.2,-253.5 115.2,-169.5 0,-169.5"></polygon>
+<text text-anchor="middle" x="57.6" y="-240.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Goal</text>
+<polyline fill="none" stroke="#000000" points="0,-233.5 115.2,-233.5 "></polyline>
+<text text-anchor="start" x="8" y="-220.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ goal_value : number</text>
+<text text-anchor="start" x="8" y="-208.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<text text-anchor="start" x="8" y="-196.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ type : GoalType</text>
+<polyline fill="none" stroke="#000000" points="0,-189.5 115.2,-189.5 "></polyline>
+<text text-anchor="middle" x="57.6" y="-176.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- SubjectResource&#45;&gt;Goal -->
+<g id="edge3" class="edge">
+<title>Subject-&gt;Goal</title>
+<path fill="none" stroke="#000000" d="M105.5797,-338.3504C94.9724,-310.3064 82.925,-278.4552 73.5558,-253.6846"></path>
+<text text-anchor="middle" x="70.7763" y="-256.6846" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Category -->
+<g id="node4" class="node">
+<title>Category</title>
+<polygon fill="none" stroke="#000000" points="133.497,-175.5 133.497,-247.5 273.703,-247.5 273.703,-175.5 133.497,-175.5"></polygon>
+<text text-anchor="middle" x="203.6" y="-234.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Category</text>
+<polyline fill="none" stroke="#000000" points="133.497,-227.5 273.703,-227.5 "></polyline>
+<text text-anchor="start" x="141.497" y="-214.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ categoryparent : Category</text>
+<text text-anchor="start" x="141.497" y="-202.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<polyline fill="none" stroke="#000000" points="133.497,-195.5 273.703,-195.5 "></polyline>
+<text text-anchor="middle" x="203.6" y="-182.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- SubjectResource&#45;&gt;Category -->
+<g id="edge2" class="edge">
+<title>Subject-&gt;Category</title>
+<path fill="none" stroke="#000000" d="M155.6203,-338.3504C167.0944,-308.0149 180.2534,-273.2245 189.885,-247.7602"></path>
+<text text-anchor="middle" x="192.6645" y="-250.7602" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Comment -->
+<g id="node12" class="node">
+<title>Comment</title>
+<polygon fill="none" stroke="#000000" points="345.507,-175.5 345.507,-247.5 435.693,-247.5 435.693,-175.5 345.507,-175.5"></polygon>
+<text text-anchor="middle" x="390.6" y="-234.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Comment</text>
+<polyline fill="none" stroke="#000000" points="345.507,-227.5 435.693,-227.5 "></polyline>
+<text text-anchor="start" x="353.507" y="-214.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ comment : text</text>
+<text text-anchor="start" x="353.507" y="-202.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<polyline fill="none" stroke="#000000" points="345.507,-195.5 435.693,-195.5 "></polyline>
+<text text-anchor="middle" x="390.6" y="-182.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- SubjectResource&#45;&gt;Comment -->
+<g id="edge14" class="edge">
+<title>Subject-&gt;Comment</title>
+<path fill="none" stroke="#000000" d="M197.4448,-355.1112C206.4194,-349.1052 215.6261,-343.2464 224.6,-338 256.8661,-319.1363 270.0784,-323.5725 300.6,-302 322.495,-286.5247 343.7987,-265.4604 360.1787,-247.5476"></path>
+<text text-anchor="middle" x="352.6757" y="-250.5476" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0..*</text>
+</g>
+<!-- Note -->
+<g id="node13" class="node">
+<title>Note</title>
+<polygon fill="none" stroke="#000000" points="525.172,-175.5 525.172,-247.5 602.028,-247.5 602.028,-175.5 525.172,-175.5"></polygon>
+<text text-anchor="middle" x="563.6" y="-234.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Note</text>
+<polyline fill="none" stroke="#000000" points="525.172,-227.5 602.028,-227.5 "></polyline>
+<text text-anchor="start" x="533.172" y="-214.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ note : string</text>
+<text text-anchor="start" x="533.172" y="-202.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<polyline fill="none" stroke="#000000" points="525.172,-195.5 602.028,-195.5 "></polyline>
+<text text-anchor="middle" x="563.6" y="-182.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- SubjectResource&#45;&gt;Note -->
+<g id="edge15" class="edge">
+<title>Subject-&gt;Note</title>
+<path fill="none" stroke="#000000" d="M197.5429,-351.8222C206.3141,-346.5401 215.4439,-341.7525 224.6,-338 316.2777,-300.4276 353.5837,-341.1474 444.6,-302 474.762,-289.0269 504.1723,-266.777 526.2089,-247.5862"></path>
+<text text-anchor="middle" x="518.7059" y="-250.5862" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0..*</text>
+</g>
+<!-- GoalType -->
+<g id="node6" class="node">
+<title>GoalType</title>
+<polygon fill="none" stroke="#000000" points="4.7295,-.5 4.7295,-84.5 110.4705,-84.5 110.4705,-.5 4.7295,-.5"></polygon>
+<text text-anchor="middle" x="57.6" y="-71.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">GoalType</text>
+<polyline fill="none" stroke="#000000" points="4.7295,-64.5 110.4705,-64.5 "></polyline>
+<text text-anchor="start" x="12.7295" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ code : string</text>
+<text text-anchor="start" x="12.7295" y="-39.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ description : string</text>
+<text text-anchor="start" x="12.7295" y="-27.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<polyline fill="none" stroke="#000000" points="4.7295,-20.5 110.4705,-20.5 "></polyline>
+<text text-anchor="middle" x="57.6" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- Goal&#45;&gt;GoalType -->
+<g id="edge5" class="edge">
+<title>Goal-&gt;GoalType</title>
+<path fill="none" stroke="#000000" d="M57.6,-169.2901C57.6,-143.4797 57.6,-110.5767 57.6,-84.7575"></path>
+<text text-anchor="middle" x="54.8205" y="-87.7575" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Category&#45;&gt;Category -->
+<g id="edge6" class="edge">
+<title>Category-&gt;Category</title>
+<path fill="none" stroke="#000000" d="M273.7528,-240.2238C284.4435,-235.8402 291.703,-226.2656 291.703,-211.5 291.703,-196.7344 284.4435,-187.1598 273.7528,-182.7762"></path>
+<text text-anchor="middle" x="276.5323" y="-185.7762" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Task -->
+<g id="node5" class="node">
+<title>Task</title>
+<polygon fill="none" stroke="#000000" points="479.1085,-507.5 479.1085,-699.5 622.0915,-699.5 622.0915,-507.5 479.1085,-507.5"></polygon>
+<text text-anchor="middle" x="550.6" y="-686.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Task</text>
+<polyline fill="none" stroke="#000000" points="479.1085,-679.5 622.0915,-679.5 "></polyline>
+<text text-anchor="start" x="487.1085" y="-666.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ appreciation : Appreciation</text>
+<text text-anchor="start" x="487.1085" y="-654.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ comments : Comment [ ]</text>
+<text text-anchor="start" x="487.1085" y="-642.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ description : string</text>
+<text text-anchor="start" x="487.1085" y="-630.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ difficulty : Difficulty</text>
+<text text-anchor="start" x="487.1085" y="-618.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ evaluations : Evaluation [ ]</text>
+<text text-anchor="start" x="487.1085" y="-606.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ notes : Note [ ]</text>
+<text text-anchor="start" x="487.1085" y="-594.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ posi : number</text>
+<text text-anchor="start" x="487.1085" y="-582.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ priority : Priority</text>
+<text text-anchor="start" x="487.1085" y="-570.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ progression : Progression</text>
+<text text-anchor="start" x="487.1085" y="-558.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ subject : Subject</text>
+<text text-anchor="start" x="487.1085" y="-546.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ taskparent : Task</text>
+<text text-anchor="start" x="487.1085" y="-534.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<polyline fill="none" stroke="#000000" points="479.1085,-527.5 622.0915,-527.5 "></polyline>
+<text text-anchor="middle" x="550.6" y="-514.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- Task&#45;&gt;SubjectResource -->
+<g id="edge11" class="edge">
+<title>Task-&gt;Subject</title>
+<path fill="none" stroke="#000000" d="M478.8597,-575.3534C390.1376,-540.387 247.9111,-483.7615 224.6,-471 215.5696,-466.0564 206.3683,-460.4105 197.4304,-454.5451"></path>
+<text text-anchor="middle" x="200.2099" y="-457.5451" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Task&#45;&gt;Task -->
+<g id="edge12" class="edge">
+<title>Task-&gt;Task</title>
+<path fill="none" stroke="#000000" d="M622.2191,-636.158C632.8806,-631.0735 640.0915,-620.1875 640.0915,-603.5 640.0915,-586.8125 632.8806,-575.9265 622.2191,-570.842"></path>
+<text text-anchor="middle" x="624.9986" y="-573.842" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Progression -->
+<g id="node7" class="node">
+<title>Progression</title>
+<polygon fill="none" stroke="#000000" points="233.3855,-356.5 233.3855,-452.5 355.8145,-452.5 355.8145,-356.5 233.3855,-356.5"></polygon>
+<text text-anchor="middle" x="294.6" y="-439.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Progression</text>
+<polyline fill="none" stroke="#000000" points="233.3855,-432.5 355.8145,-432.5 "></polyline>
+<text text-anchor="start" x="241.3855" y="-419.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ numb_done : number</text>
+<text text-anchor="start" x="241.3855" y="-407.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ numb_to_do : number</text>
+<text text-anchor="start" x="241.3855" y="-395.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ rate : number</text>
+<text text-anchor="start" x="241.3855" y="-383.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ value : number</text>
+<polyline fill="none" stroke="#000000" points="233.3855,-376.5 355.8145,-376.5 "></polyline>
+<text text-anchor="middle" x="294.6" y="-363.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- Task&#45;&gt;Progression -->
+<g id="edge10" class="edge">
+<title>Task-&gt;Progression</title>
+<path fill="none" stroke="#000000" d="M479.0872,-556.0573C443.7572,-531.7497 401.0066,-501.0091 364.6,-471 357.6153,-465.2426 350.4626,-458.9553 343.5236,-452.6177"></path>
+<text text-anchor="middle" x="340.7441" y="-455.6177" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Priority -->
+<g id="node8" class="node">
+<title>Priority</title>
+<polygon fill="none" stroke="#000000" points="373.7295,-362.5 373.7295,-446.5 479.4705,-446.5 479.4705,-362.5 373.7295,-362.5"></polygon>
+<text text-anchor="middle" x="426.6" y="-433.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Priority</text>
+<polyline fill="none" stroke="#000000" points="373.7295,-426.5 479.4705,-426.5 "></polyline>
+<text text-anchor="start" x="381.7295" y="-413.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ description : string</text>
+<text text-anchor="start" x="381.7295" y="-401.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ level : number</text>
+<text text-anchor="start" x="381.7295" y="-389.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<polyline fill="none" stroke="#000000" points="373.7295,-382.5 479.4705,-382.5 "></polyline>
+<text text-anchor="middle" x="426.6" y="-369.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- Task&#45;&gt;Priority -->
+<g id="edge9" class="edge">
+<title>Task-&gt;Priority</title>
+<path fill="none" stroke="#000000" d="M490.7793,-507.4974C477.4639,-486.1284 464.0144,-464.544 452.8913,-446.6933"></path>
+<text text-anchor="middle" x="455.6708" y="-449.6933" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Appreciation -->
+<g id="node9" class="node">
+<title>Appreciation</title>
+<polygon fill="none" stroke="#000000" points="497.7295,-362.5 497.7295,-446.5 603.4705,-446.5 603.4705,-362.5 497.7295,-362.5"></polygon>
+<text text-anchor="middle" x="550.6" y="-433.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Appreciation</text>
+<polyline fill="none" stroke="#000000" points="497.7295,-426.5 603.4705,-426.5 "></polyline>
+<text text-anchor="start" x="505.7295" y="-413.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ description : string</text>
+<text text-anchor="start" x="505.7295" y="-401.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ level : number</text>
+<text text-anchor="start" x="505.7295" y="-389.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<polyline fill="none" stroke="#000000" points="497.7295,-382.5 603.4705,-382.5 "></polyline>
+<text text-anchor="middle" x="550.6" y="-369.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- Task&#45;&gt;Appreciation -->
+<g id="edge7" class="edge">
+<title>Task-&gt;Appreciation</title>
+<path fill="none" stroke="#000000" d="M550.6,-507.4974C550.6,-486.1284 550.6,-464.544 550.6,-446.6933"></path>
+<text text-anchor="middle" x="547.8205" y="-449.6933" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Difficulty -->
+<g id="node10" class="node">
+<title>Difficulty</title>
+<polygon fill="none" stroke="#000000" points="621.7295,-362.5 621.7295,-446.5 727.4705,-446.5 727.4705,-362.5 621.7295,-362.5"></polygon>
+<text text-anchor="middle" x="674.6" y="-433.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Difficulty</text>
+<polyline fill="none" stroke="#000000" points="621.7295,-426.5 727.4705,-426.5 "></polyline>
+<text text-anchor="start" x="629.7295" y="-413.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ description : string</text>
+<text text-anchor="start" x="629.7295" y="-401.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ level : number</text>
+<text text-anchor="start" x="629.7295" y="-389.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<polyline fill="none" stroke="#000000" points="621.7295,-382.5 727.4705,-382.5 "></polyline>
+<text text-anchor="middle" x="674.6" y="-369.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- Task&#45;&gt;Difficulty -->
+<g id="edge8" class="edge">
+<title>Task-&gt;Difficulty</title>
+<path fill="none" stroke="#000000" d="M610.4207,-507.4974C623.7361,-486.1284 637.1856,-464.544 648.3087,-446.6933"></path>
+<text text-anchor="middle" x="645.5292" y="-449.6933" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Task&#45;&gt;Comment -->
+<g id="edge16" class="edge">
+<title>Task-&gt;Comment</title>
+<path fill="none" stroke="#000000" d="M622.3657,-573.0971C663.9207,-551.2928 712.6231,-517.5189 736.6,-471 763.6816,-418.4575 774.8744,-383.0466 736.6,-338 672.4469,-262.4959 608.1425,-339.9006 516.6,-302 485.1213,-288.9671 453.9863,-266.7166 430.5418,-247.5403"></path>
+<text text-anchor="middle" x="438.0448" y="-250.5403" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0..*</text>
+</g>
+<!-- Task&#45;&gt;Note -->
+<g id="edge18" class="edge">
+<title>Task-&gt;Note</title>
+<path fill="none" stroke="#000000" d="M622.1642,-581.4077C673.2632,-561.4558 738.2836,-526.5493 769.6,-471 798.6291,-419.5079 805.0445,-385.3055 769.6,-338 735.4453,-292.416 694.9603,-332.0952 646.6,-302 624.1556,-288.0326 603.9808,-266.363 589.1429,-247.7299"></path>
+<text text-anchor="middle" x="596.6459" y="-250.7299" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0..*</text>
+</g>
+<!-- Evaluation -->
+<g id="node14" class="node">
+<title>Evaluation</title>
+<polygon fill="none" stroke="#000000" points="821.1125,-350.5 821.1125,-458.5 944.0875,-458.5 944.0875,-350.5 821.1125,-350.5"></polygon>
+<text text-anchor="middle" x="882.6" y="-445.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Evaluation</text>
+<polyline fill="none" stroke="#000000" points="821.1125,-438.5 944.0875,-438.5 "></polyline>
+<text text-anchor="start" x="829.1125" y="-425.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ description : string</text>
+<text text-anchor="start" x="829.1125" y="-413.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ durations : Duration [ ]</text>
+<text text-anchor="start" x="829.1125" y="-401.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ grades : Grade [ ]</text>
+<text text-anchor="start" x="829.1125" y="-389.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<text text-anchor="start" x="829.1125" y="-377.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ unit : GradeUnit</text>
+<polyline fill="none" stroke="#000000" points="821.1125,-370.5 944.0875,-370.5 "></polyline>
+<text text-anchor="middle" x="882.6" y="-357.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- Task&#45;&gt;Evaluation -->
+<g id="edge17" class="edge">
+<title>Task-&gt;Evaluation</title>
+<path fill="none" stroke="#000000" d="M622.2807,-572.4308C675.3872,-548.0354 748.4861,-511.5037 807.6,-471 813.1987,-467.1639 818.8321,-462.9532 824.3599,-458.5712"></path>
+<text text-anchor="middle" x="816.8569" y="-461.5712" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0..*</text>
+</g>
+<!-- Operator -->
+<g id="node11" class="node">
+<title>Operator</title>
+<polygon fill="none" stroke="#000000" points="415.7295,-748.5 415.7295,-844.5 521.4705,-844.5 521.4705,-748.5 415.7295,-748.5"></polygon>
+<text text-anchor="middle" x="468.6" y="-831.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Operator</text>
+<polyline fill="none" stroke="#000000" points="415.7295,-824.5 521.4705,-824.5 "></polyline>
+<text text-anchor="start" x="423.7295" y="-811.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ code : string</text>
+<text text-anchor="start" x="423.7295" y="-799.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ description : string</text>
+<text text-anchor="start" x="423.7295" y="-787.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ symbol : string</text>
+<text text-anchor="start" x="423.7295" y="-775.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<polyline fill="none" stroke="#000000" points="415.7295,-768.5 521.4705,-768.5 "></polyline>
+<text text-anchor="middle" x="468.6" y="-755.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- Evaluation&#45;&gt;GradeUnit -->
+<g id="edge13" class="edge">
+<title>Evaluation-&gt;GradeUnit</title>
+<path fill="none" stroke="#000000" d="M838.3781,-350.4821C816.6504,-323.9413 790.5375,-292.0439 768.8112,-265.5049"></path>
+<text text-anchor="middle" x="771.5907" y="-268.5049" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- Grade -->
+<g id="node15" class="node">
+<title>Grade</title>
+<polygon fill="none" stroke="#000000" points="829.7295,-175.5 829.7295,-247.5 935.4705,-247.5 935.4705,-175.5 829.7295,-175.5"></polygon>
+<text text-anchor="middle" x="882.6" y="-234.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Grade</text>
+<polyline fill="none" stroke="#000000" points="829.7295,-227.5 935.4705,-227.5 "></polyline>
+<text text-anchor="start" x="837.7295" y="-214.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ description : string</text>
+<text text-anchor="start" x="837.7295" y="-202.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ value : number</text>
+<polyline fill="none" stroke="#000000" points="829.7295,-195.5 935.4705,-195.5 "></polyline>
+<text text-anchor="middle" x="882.6" y="-182.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- Evaluation&#45;&gt;Grade -->
+<g id="edge20" class="edge">
+<title>Evaluation-&gt;Grade</title>
+<path fill="none" stroke="#000000" d="M882.6,-350.4821C882.6,-317.5849 882.6,-276.4581 882.6,-247.5061"></path>
+<text text-anchor="middle" x="890.103" y="-250.5061" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0..*</text>
+</g>
+<!-- Duration -->
+<g id="node16" class="node">
+<title>Duration</title>
+<polygon fill="none" stroke="#000000" points="953.893,-121.5 953.893,-301.5 1111.307,-301.5 1111.307,-121.5 953.893,-121.5"></polygon>
+<text text-anchor="middle" x="1032.6" y="-288.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Duration</text>
+<polyline fill="none" stroke="#000000" points="953.893,-281.5 1111.307,-281.5 "></polyline>
+<text text-anchor="start" x="961.893" y="-268.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ description : string</text>
+<text text-anchor="start" x="961.893" y="-256.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ elapsetime_days : any</text>
+<text text-anchor="start" x="961.893" y="-244.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ elapsetime_hours : any</text>
+<text text-anchor="start" x="961.893" y="-232.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ elapsetime_milliseconds : any</text>
+<text text-anchor="start" x="961.893" y="-220.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ elapsetime_minutes : any</text>
+<text text-anchor="start" x="961.893" y="-208.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ elapsetime_months : any</text>
+<text text-anchor="start" x="961.893" y="-196.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ elapsetime_seconds : any</text>
+<text text-anchor="start" x="961.893" y="-184.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ elapsetime_ticks : any</text>
+<text text-anchor="start" x="961.893" y="-172.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ elapsetime_years : any</text>
+<text text-anchor="start" x="961.893" y="-160.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ end_date : any</text>
+<text text-anchor="start" x="961.893" y="-148.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ start_date : any</text>
+<polyline fill="none" stroke="#000000" points="953.893,-141.5 1111.307,-141.5 "></polyline>
+<text text-anchor="middle" x="1032.6" y="-128.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- Evaluation&#45;&gt;Duration -->
+<g id="edge19" class="edge">
+<title>Evaluation-&gt;Duration</title>
+<path fill="none" stroke="#000000" d="M924.5828,-350.4821C936.37,-335.3159 949.5166,-318.4007 962.4687,-301.7356"></path>
+<text text-anchor="middle" x="954.9657" y="-304.7356" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0..*</text>
+</g>
+<!-- Planning -->
+<g id="node17" class="node">
+<title>Planning</title>
+<polygon fill="none" stroke="#000000" points="283.555,-736.5 283.555,-856.5 397.645,-856.5 397.645,-736.5 283.555,-736.5"></polygon>
+<text text-anchor="middle" x="340.6" y="-843.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Planning</text>
+<polyline fill="none" stroke="#000000" points="283.555,-836.5 397.645,-836.5 "></polyline>
+<text text-anchor="start" x="291.555" y="-823.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ description : string</text>
+<text text-anchor="start" x="291.555" y="-811.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ due_date : date</text>
+<text text-anchor="start" x="291.555" y="-799.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ expired : boolean</text>
+<text text-anchor="start" x="291.555" y="-787.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ subjects : Subject [ ]</text>
+<text text-anchor="start" x="291.555" y="-775.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ tasks : Task [ ]</text>
+<text text-anchor="start" x="291.555" y="-763.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ title : string</text>
+<polyline fill="none" stroke="#000000" points="283.555,-756.5 397.645,-756.5 "></polyline>
+<text text-anchor="middle" x="340.6" y="-743.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+</g>
+<!-- Planning&#45;&gt;SubjectResource -->
+<g id="edge21" class="edge">
+<title>Planning-&gt;Subject</title>
+<path fill="none" stroke="#000000" d="M308.2477,-736.1091C269.7628,-664.2705 205.7389,-544.7593 165.9727,-470.5291"></path>
+<text text-anchor="middle" x="158.4697" y="-473.5291" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0..*</text>
+</g>
+<!-- Planning&#45;&gt;Task -->
+<g id="edge22" class="edge">
+<title>Planning-&gt;Task</title>
+<path fill="none" stroke="#000000" d="M397.706,-744.0168C422.7258,-721.0224 452.3631,-693.7844 478.8519,-669.4399"></path>
+<text text-anchor="middle" x="471.3489" y="-672.4399" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0..*</text>
+</g>
+</g>
+</g></svg>
