@@ -16,8 +16,10 @@ const postCssConfig = [require('tailwindcss')('./tailwind.config.js')];
 mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .options({
+        legacyNodePolyfills: true,
         processCssUrls: false,
         postCss: postCssConfig
     })
     .copy('resources/assets/images', 'public/images')
-    .copy('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/fonts/font-awesome');
+    .copy('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/fonts/font-awesome')
+    .vue();
