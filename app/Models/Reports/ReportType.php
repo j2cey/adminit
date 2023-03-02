@@ -60,7 +60,7 @@ class ReportType extends BaseModel implements Auditable
 
     public function reports()
     {
-        return $this->hasMany('App\Report');
+        return $this->hasMany(Report::class);
     }
 
     #endregion

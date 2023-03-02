@@ -4,7 +4,7 @@ namespace App\Models\DynamicAttributes;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\DynamicAttribute\HasDynamicValues;
+use App\Traits\DynamicAttribute\IsDynamicValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class DynamicValueBoolean extends Model
 {
-    use HasDynamicValues, HasFactory;
+    use IsDynamicValue, HasFactory;
 
     protected $guarded = [];
 

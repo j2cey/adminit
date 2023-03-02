@@ -5,7 +5,7 @@ namespace App\Models\DynamicAttributes;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\DynamicAttribute\HasDynamicValues;
+use App\Traits\DynamicAttribute\IsDynamicValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $tags
  * @property integer|null $status_id
  *
- * @property Carbon $thevalue
+ * @property Carbon $thevalue&
  * @property integer $dynamic_row_id
  *
  * @property Carbon $created_at
@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class DynamicValueDatetime extends Model
 {
-    use HasDynamicValues, HasFactory;
+    use IsDynamicValue, HasFactory;
 
     protected $guarded = [];
 

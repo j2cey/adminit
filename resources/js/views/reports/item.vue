@@ -4,7 +4,7 @@
             <header>
                 <div class="card-header-title row">
                     <div class="col-md-6 col-sm-8 col-12">
-                            <span class="text-olive text-lg">
+                            <span class="text-olive text-sm">
                                 {{ report.title }}
                             </span>
                     </div>
@@ -42,7 +42,7 @@
                 <header>
                     <div class="card-header-title row">
                         <div class="col-md-6 col-sm-8 col-12">
-                            <span class="text-purple text-sm" @click="collapseClicked()" data-toggle="collapse" :data-parent="'#reportwrapper_' + report.uuid" :href="'#collapse-reports-'+index">
+                            <span class="text-purple text-xs" @click="collapseClicked(collapse_icon)" data-toggle="collapse" :data-parent="'#reportwrapper_' + report.uuid" :href="'#collapse-reports-'+index">
                                 Report Fields
                             </span>
                         </div>
@@ -54,7 +54,7 @@
                                 <a type="button" class="btn btn-tool text-warning" data-toggle="tooltip" @click="editReport(report)">
                                     <i class="fa fa-pencil-square-o"></i>
                                 </a>
-                                <a type="button" class="btn btn-tool" @click="collapseClicked()" data-toggle="collapse" :data-parent="'#reportwrapper_' + report.uuid" :href="'#collapse-reports-'+index">
+                                <a type="button" class="btn btn-tool" @click="collapseClicked(collapse_icon)" data-toggle="collapse" :data-parent="'#reportwrapper_' + report.uuid" :href="'#collapse-reports-'+index">
                                     <i :class="currentCollapseIcon"></i>
                                 </a>
                                 <a type="button" class="btn btn-tool text-danger" @click="deleteReport(report.uuid, index)">
@@ -82,13 +82,53 @@
                 <!-- /.card-body -->
             </div>
         </div>
+
+        <div :id="'reportfileaccess_' + report.uuid">
+            <div class="card">
+                <header>
+                    <div class="card-header-title row">
+                        <div class="col-md-6 col-sm-8 col-12">
+                            <span class="text-purple text-xs" @click="collapseClicked('collapse_reportaccess_icon', collapse_reportaccess_icon)" data-toggle="collapse" :data-parent="'#reportfileaccess_' + report.uuid" :href="'#collapse-reports-access-'+index">
+                                Report File(s) Access
+                            </span>
+                        </div>
+                        <div class="col-md-6 col-sm-4 col-12 text-right">
+                            <span class="text text-sm">
+                                <a type="button" class="btn btn-tool" @click="collapseClicked('collapse_reportaccess_icon', collapse_reportaccess_icon)" data-toggle="collapse" :data-parent="'#reportfileaccess_' + report.uuid" :href="'#collapse-reports-access-'+index">
+                                    <i :class="currentReportAccessCollapseIcon"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- /.user-block -->
+                </header>
+                <!-- /.card-header -->
+                <div :id="'collapse-reports-access-'+index" class="card-content panel-collapse collapse in">
+
+                    <div class="row">
+
+                        <div class="col-md-12 col-sm-6 col-12">
+
+                            <ReportAccesses></ReportAccesses>
+
+                        </div>
+                        <!-- /.col -->
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+
         <AddUpdateReport></AddUpdateReport>
     </div>
+    
 </template>
 
 <script>
     import ReportAttributes from "../reportattributes/list";
     import AddUpdateReport from "./addupdate";
+    import ReportAccesses from "../reportaccesses/list";
 
     import ReportBus from "./reportBus";
 
@@ -100,7 +140,8 @@
         },
         components: {
             AddUpdateReport,
-            ReportAttributes
+            ReportAttributes,
+            ReportAccesses,
         },
         mounted() {
             ReportBus.$on('report_updated', (updreport) => {
@@ -120,7 +161,8 @@
             return {
                 report: this.report_prop,
                 index: this.index_prop,
-                collapse_icon: 'fas fa-chevron-down'
+                collapse_icon: 'fas fa-chevron-down',
+                collapse_reportaccess_icon: 'fas fa-chevron-down',
             }
         },
         methods: {
@@ -162,17 +204,22 @@
                     }
                 })
             },
-            collapseClicked() {
-                if (this.collapse_icon === 'fas fa-chevron-down') {
-                    this.collapse_icon = 'fas fa-chevron-up';
+            collapseClicked(collapsevar, collapseicon) {
+                console.log("collapseClicked: ", collapsevar, collapseicon)
+                if (collapseicon === 'fas fa-chevron-down') {
+                    this[collapsevar] = 'fas fa-chevron-up';
                 } else {
-                    this.collapse_icon = 'fas fa-chevron-down';
+                    this[collapsevar] = 'fas fa-chevron-down';
                 }
             }
         },
         computed: {
             currentCollapseIcon() {
                 return this.collapse_icon;
+            },
+
+            currentReportAccessCollapseIcon() {
+                return this.collapse_reportaccess_icon;
             }
         }
     }

@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class AnalysisRuleThreshold extends BaseModel  implements IInnerRule
+class AnalysisRuleThreshold extends BaseModel implements IInnerRule
 {
     use IsInnerRule, HasFactory;
 
@@ -85,7 +85,12 @@ class AnalysisRuleThreshold extends BaseModel  implements IInnerRule
 
     public function ruleFollowed($input): bool
     {
-        return $this->thresholdtype->code == "min" ? ($input >= $this->threshold) : ($input <= $this->threshold);
+        //return $this->thresholdtype->code == "min" ? ($input >= $this->threshold) : ($input <= $this->threshold);
+        if ($this->thresholdtype->code == "min") {
+            return ($input >= $this->threshold);
+        } else {
+            return ($input <= $this->threshold);
+        }
     }
 
     public function ruleBroken($input): bool
