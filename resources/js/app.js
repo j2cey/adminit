@@ -133,6 +133,7 @@ Vue.component('dashboard-index', require('./views/dashboard/index').default);
 Vue.component("rawDisplayer", rawDisplayer);
 
 Vue.component('systems-index', require('./views/systems/index').default);
+Vue.component('reportsetting-index', require('./views/reportsettings/index').default);
 Vue.component('user-show', require('./views/users/show').default);
 
 Vue.component('subject-create', require('./views/subjects/addupdate').default);

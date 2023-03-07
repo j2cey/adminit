@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Setting;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Validator;
 use App\Repositories\Eloquent\UserRepository;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Repositories\Eloquent\SubjectRepository;
@@ -44,15 +45,27 @@ class AppServiceProvider extends ServiceProvider
          */
         Blueprint::macro('baseFields', function () {
             $this->uuid('uuid');
-            $this->string('tags')->nullable()->comment('Tags, if any');
+            //$this->string('tags')->nullable()->comment('Tags, if any');
             $this->foreignId('status_id')->nullable()
                 ->comment('status reference')
                 ->constrained('statuses')->onDelete('set null');
             $this->boolean('is_default')->default(false)->comment('determine whether is the default one.');
+
+            // foreign creator & updator user
+            $this->foreignId('created_by')->nullable()
+                ->comment('user creator reference')
+                ->constrained('users')->onDelete('set null');
+
+            $this->foreignId('updated_by')->nullable()
+                ->comment('user updator reference')
+                ->constrained('users')->onDelete('set null');
+
             $this->timestamps();
         });
         Blueprint::macro('dropBaseForeigns', function () {
             $this->dropForeign(['status_id']);
+            $this->dropForeign(['created_by']);
+            $this->dropForeign(['updated_by']);
         });
 
         JsonResource::withoutWrapping();
@@ -71,5 +84,10 @@ class AppServiceProvider extends ServiceProvider
 
             return $rule->passes($attribute, $value);
         });*/
+
+        Validator::extend('without_spaces', function($attr, $value){
+            return preg_match('/^\S*$/u', $value);
+        });
+
     }
 }

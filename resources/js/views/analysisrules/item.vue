@@ -188,7 +188,7 @@
                         axios.delete(`/analysisrules/${analysisrule.uuid}`)
                             .then(resp => {
                                 this.$swal({
-                                    html: '<small>Aanalysis Rule successfully deleted !</small>',
+                                    html: '<small>Analysis Rule successfully deleted !</small>',
                                     icon: 'success',
                                     timer: 3000
                                 }).then(() => {

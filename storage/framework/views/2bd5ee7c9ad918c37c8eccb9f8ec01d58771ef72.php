@@ -49,6 +49,10 @@
                     </ul>
                 </li>
 
+                <li class="nav-item">
+                    <a href="/reportsetting.index" class="nav-link"><i class="nav-icon fa fa-gears"></i> Paramètres</a>
+                </li>
+
                 <?php if(auth()->check() && auth()->user()->hasRole('Admin')): ?>
                 <li class="nav-item dropdown">
                     <a id="usersMenu" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Utilisateurs</a>

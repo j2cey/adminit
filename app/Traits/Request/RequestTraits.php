@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Status;
 use Spatie\Permission\Models\Role;
 use App\Models\Reports\ReportType;
+use App\Models\ReportFile\FileMimeType;
 use App\Models\AnalysisRules\AnalysisRule;
 use App\Models\AnalysisRules\ThresholdType;
 use App\Models\AnalysisRules\AnalysisRuleType;
@@ -167,5 +168,23 @@ trait RequestTraits
             $ids[] = $item['id'];
         }
         return $ids;
+    }
+
+    /**
+     * Retourne un objet FileMimeType en fonction d'un champs donné
+     * @param $value
+     * @param string $field
+     * @param bool $json_decode_before
+     * @return FileMimeType|null
+     */
+    public function setRelevantFileMimeType($value, string $field = 'íd', bool $json_decode_before = false): ?FileMimeType
+    {
+        if (is_null($value)) {
+            return null;
+        }
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? FileMimeType::where($field, $value[$field])->first() : null;
     }
 }

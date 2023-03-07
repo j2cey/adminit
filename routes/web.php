@@ -20,8 +20,11 @@ use App\Http\Controllers\AppreciationController;
 use App\Http\Controllers\Reports\ReportController;
 use App\Http\Controllers\Reports\ReportTypeController;
 use App\Http\Controllers\Authorization\RoleController;
+use App\Http\Controllers\ReportFile\FileMimeTypeController;
+use App\Http\Controllers\ReportFile\ReportFileTypeController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleController;
 use App\Http\Controllers\AnalysisRules\ThresholdTypeController;
+use App\Http\Controllers\Reportsetting\ReportsettingController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
 use App\Http\Controllers\AnalysisRules\AnalysisHighlightController;
 use App\Http\Controllers\AnalysisRules\HighlightTextSizeController;
@@ -87,6 +90,10 @@ Route::get('systems.index',[SystemController::class,'index'])
 Route::resource('settings',SettingController::class);
 Route::get('settings.fetch',[SettingController::class,'fetch'])
     ->name('settings.fetch')
+    ->middleware('auth');
+
+Route::get('reportsetting.index',[ReportsettingController::class,'index'])
+    ->name('reportsetting.index')
     ->middleware('auth');
 
 #endregion
@@ -263,9 +270,18 @@ Route::get('highlighttextsizes.fetchall',[HighlightTextSizeController::class,'fe
     ->middleware('auth');
 
 Route::resource('highlighttextweights',HighlightTextWeightController::class)->middleware('auth');
+
 Route::get('highlighttextweights.fetch',[HighlightTextWeightController::class,'fetch'])
     ->name('highlighttextweights.fetch')
     ->middleware('auth');
 Route::get('highlighttextweights.fetchall',[HighlightTextWeightController::class,'fetchall'])
     ->name('highlighttextweights.fetchall')
     ->middleware('auth');
+
+Route::resource('filemimetypes',FileMimeTypeController::class)->middleware('auth');
+Route::get('filemimetypes.fetch',[FileMimeTypeController::class,'fetch'])
+    ->name('filemimetypes.fetch')
+    ->middleware('auth');
+
+Route::resource('reportfiletypes',ReportFileTypeController::class)->middleware('auth');
+

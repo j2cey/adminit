@@ -9,7 +9,9 @@ trait HasCode
     {
         // before creating the model
         static::creating(function ($model) {
-            $model->code = $model->generateCodeFromClassName();
+            if ( is_null($model->code) ) {
+                $model->code = $model->generateCodeFromClassName();
+            }
         });
     }
 

@@ -17,13 +17,18 @@ class PermissionSeeder extends Seeder
         $permissions = [
             ['role-list', 2],
             ['role-create', 1],
-            ['role-edit', 1],
+            ['role-update', 1],
             ['role-delete', 1],
 
             ['workflow-list', 4],
             ['workflow-create', 3],
-            ['workflow-edit', 3],
-            ['workflow-delete', 3]
+            ['workflow-update', 3],
+            ['workflow-delete', 3],
+
+            ['reportfiletype-list', 4],
+            ['reportfiletype-create', 3],
+            ['reportfiletype-update', 1],
+            ['reportfiletype-delete', 1]
         ];
 
         foreach ($permissions as $permission) {

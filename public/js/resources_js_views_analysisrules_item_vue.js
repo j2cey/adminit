@@ -116,7 +116,7 @@ __webpack_require__.r(__webpack_exports__);
         if (result.value) {
           axios["delete"]("/analysisrules/".concat(analysisrule.uuid)).then(function (resp) {
             _this2.$swal({
-              html: '<small>Aanalysis Rule successfully deleted !</small>',
+              html: '<small>Analysis Rule successfully deleted !</small>',
               icon: 'success',
               timer: 3000
             }).then(function () {
