@@ -51,11 +51,11 @@ class ReportFileResource extends JsonResource
 
             'created_at' => $this->created_at,
 
-            'show_url' => route('reportfile.show', $this->uuid),
-            'edit_url' => route('reportfile.edit', $this->uuid),
-            'destroy_url' => route('reportfile.destroy', $this->uuid),
+            'show_url' => route('reportfiles.show', $this->uuid),
+            'edit_url' => route('reportfiles.edit', $this->uuid),
+            'destroy_url' => route('reportfiles.destroy', $this->uuid),
         ];
-    
+
         //return parent::toArray($request);
     }
 }

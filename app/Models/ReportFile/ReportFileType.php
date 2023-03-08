@@ -69,6 +69,18 @@ class ReportFileType extends BaseModel implements Auditable
 
     #endregion
 
+    #region Scopes
+    public function scopeCsv($query) {
+        return $query
+            ->where('extension', "csv");
+    }
+
+    public function scopeTxt($query) {
+        return $query
+            ->where('extension', "txt");
+    }
+    #endregion
+
     #region Eloquent Relationships
 
     public function filemimetype() {
@@ -118,7 +130,10 @@ class ReportFileType extends BaseModel implements Auditable
 
 
     public function setFormalizedExtension() {
-        return $this->extension = trim($this->extension);
+        // on trime l'extension
+        $this->extension = trim($this->extension);
+        // on lower case l'extension
+        return strtolower($this->extension);
     }
 
     protected static function boot(){

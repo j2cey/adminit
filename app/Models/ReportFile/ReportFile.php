@@ -3,13 +3,42 @@
 namespace App\Models\ReportFile;
 
 use App\Models\Status;
+use App\Models\BaseModel;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ReportFile extends Model
+/**
+ * Class ReportFile
+ * @package App\Models\ReportFile
+ *
+ * @property integer $id
+ *
+ * @property string $uuid
+ * @property bool $is_default
+ * @property integer $created_by
+ * @property integer $updated_by
+ *
+ *
+ * @property string $name
+ * @property string|null $wildcard
+ * @property bool|null $retrieve_by_name
+ * @property bool|null $retrieve_by_wildcard
+ *
+ * @property string|null $description
+ *
+ * @property integer|null $report_file_type_id
+ *
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
+class ReportFile extends BaseModel
 {
     use HasFactory;
 
+    protected $guarded = [];
+
+    protected $with = ["reportfiletype"];
 
     public static function defaultRules() {
         return [
@@ -27,7 +56,6 @@ class ReportFile extends Model
     }
     public static function updateRules($model) {
         return array_merge(self::defaultRules(), [
-
         ]);
     }
 
@@ -72,9 +100,14 @@ class ReportFile extends Model
         ]);
 
         // associate reportfiletype
-        $reportfiletype->reportfiletype()->associate($reportfiletype);
+        $reportfile->reportfiletype()->associate($reportfiletype);
+
         // associate status
-        $status->status()->associate($status)->save();
+        $reportfile->status()->associate($status);
+
+        // save le new object
+        $reportfile->save();
+
         return $reportfile;
     }
 
@@ -85,9 +118,13 @@ class ReportFile extends Model
         $this->retrieve_by_name = $retrieve_by_name;
         $this->retrieve_by_wildcard = $retrieve_by_wildcard;
 
-        //Assignation  du type de rapport de fichier
+        // associate reportfiletype
         $this->reportfiletype()->associate($reportfiletype);
 
+        // associate status
+        $this->status()->associate($status);
+
+        // save le new object
         $this->save();
 
         return $this;
@@ -104,12 +141,10 @@ class ReportFile extends Model
 
         // Pendant la création de ce Model
         static::creating(function ($model) {
-            $model->setFormalizedWildcard();
         });
 
         // Pendant la modification de ce Model
         static::updating(function ($model) {
-            $model->setFormalizedWildcard();
         });
     }
 

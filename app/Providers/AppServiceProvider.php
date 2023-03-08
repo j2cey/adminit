@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Validator;
@@ -13,6 +14,9 @@ use App\Repositories\Contracts\IUserRepositoryContract;
 use App\Repositories\Eloquent\ReportRepositoryContract;
 use App\Repositories\Contracts\IReportRepositoryContract;
 use App\Repositories\Contracts\ISubjectRepositoryContract;
+
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\ParallelTesting;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -63,9 +67,17 @@ class AppServiceProvider extends ServiceProvider
             $this->timestamps();
         });
         Blueprint::macro('dropBaseForeigns', function () {
-            $this->dropForeign(['status_id']);
-            $this->dropForeign(['created_by']);
-            $this->dropForeign(['updated_by']);
+
+            /** Make sure to put this condition to check if driver is SQLite */
+            if (DB::getDriverName() !== 'sqlite') {
+                $this->dropForeign(['status_id']);
+                $this->dropForeign(['created_by']);
+                $this->dropForeign(['updated_by']);
+            }
+
+            //$this->dropColumn(['status_id']);
+            //$this->dropColumn(['created_by']);
+            //$this->dropColumn(['updated_by']);
         });
 
         JsonResource::withoutWrapping();
@@ -89,5 +101,11 @@ class AppServiceProvider extends ServiceProvider
             return preg_match('/^\S*$/u', $value);
         });
 
+        // Executed when a test database is created...
+        /*
+        ParallelTesting::setUpTestDatabase(function ($database, $token) {
+            Artisan::call('db:seed');
+        });
+        */
     }
 }

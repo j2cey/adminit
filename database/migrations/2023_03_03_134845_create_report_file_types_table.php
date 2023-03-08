@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -43,9 +44,11 @@ class CreateReportFileTypesTable extends Migration
     public function down()
     {
         Schema::table($this->table_name, function (Blueprint $table) {
-            $table->dropBaseForeigns();
+            if (DB::getDriverName() !== 'sqlite') {
+                $table->dropBaseForeigns();
 
-            $table->dropForeign(['file_mime_type_id']);
+                $table->dropForeign(['file_mime_type_id']);
+            }
         });
         Schema::dropIfExists($this->table_name);
     }

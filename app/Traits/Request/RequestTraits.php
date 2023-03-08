@@ -8,6 +8,7 @@ use App\Models\Status;
 use Spatie\Permission\Models\Role;
 use App\Models\Reports\ReportType;
 use App\Models\ReportFile\FileMimeType;
+use App\Models\ReportFile\ReportFileType;
 use App\Models\AnalysisRules\AnalysisRule;
 use App\Models\AnalysisRules\ThresholdType;
 use App\Models\AnalysisRules\AnalysisRuleType;
@@ -186,5 +187,24 @@ trait RequestTraits
             $value = $this->decodeJsonField($value);
         }
         return $value ? FileMimeType::where($field, $value[$field])->first() : null;
+    }
+
+    /**
+     * Retourne un objet ReportFileType en fonction d'un champs donné
+     * @param $value
+     * @param string $field
+     * @param bool $json_decode_before
+     * @return ReportFileType|null
+     */
+    public function setRelevantReportFileType($value, string $field = 'íd', bool $json_decode_before = false): ?ReportFileType
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? ReportFileType::where($field, $value[$field])->first() : null;
     }
 }
