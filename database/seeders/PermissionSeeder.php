@@ -28,7 +28,12 @@ class PermissionSeeder extends Seeder
             ['reportfiletype-list', 4],
             ['reportfiletype-create', 3],
             ['reportfiletype-update', 1],
-            ['reportfiletype-delete', 1]
+            ['reportfiletype-delete', 1],
+
+            ['reportfile-list', 4],
+            ['reportfile-create', 3],
+            ['reportfile-update', 1],
+            ['reportfile-delete', 1]
         ];
 
         foreach ($permissions as $permission) {

@@ -20,6 +20,7 @@ use App\Http\Controllers\AppreciationController;
 use App\Http\Controllers\Reports\ReportController;
 use App\Http\Controllers\Reports\ReportTypeController;
 use App\Http\Controllers\Authorization\RoleController;
+use App\Http\Controllers\ReportFile\ReportFileController;
 use App\Http\Controllers\ReportFile\FileMimeTypeController;
 use App\Http\Controllers\ReportFile\ReportFileTypeController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleController;
@@ -284,4 +285,11 @@ Route::get('filemimetypes.fetch',[FileMimeTypeController::class,'fetch'])
     ->middleware('auth');
 
 Route::resource('reportfiletypes',ReportFileTypeController::class)->middleware('auth');
+Route::get('reportfiletypes.fetch',[ReportFileTypeController::class,'fetch'])
+    ->name('reportfiletypes.fetch')
+    ->middleware('auth');
+
+
+
+Route::resource('reportfiles',ReportFileController::class)->middleware('auth');
 

@@ -89,7 +89,7 @@ class ReportFileTypeController extends Controller
      */
     public function destroy(ReportFileType $reportfiletype)
     {
-        //$reportfiletype->delete();
+        $reportfiletype->delete();
 
         return response('Delete Successfull', 200);
     }
