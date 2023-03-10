@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer|null $status_id
  *
  * @property string $name
+ * @property string $code
  * @property string $description
  *
  * @property Carbon $created_at
@@ -35,6 +36,7 @@ class ReportType extends BaseModel implements Auditable
     public static function defaultRules() {
         return [
             'name' => ['required'],
+            'code' => ['required'],
         ];
     }
     public static function createRules() {
@@ -65,12 +67,22 @@ class ReportType extends BaseModel implements Auditable
 
     #endregion
 
+    #region Scopes
+
+    public function scopeDefaultReport($query) {
+        return $query
+            ->where('code', "default");
+    }
+
+    #endregion
+
     #region Custom Functions
 
-    public static function createNew($name,$description): ReportType {
+    public static function createNew($name,$code,$description): ReportType {
 
         $reporttype = ReportType::create([
             'name' => $name,
+            'code' => $code,
             'description' => $description,
         ]);
 

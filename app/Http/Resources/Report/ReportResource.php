@@ -2,11 +2,15 @@
 
 namespace App\Http\Resources\Report;
 
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
+use App\Models\Reports\ReportType;
+use App\Models\ReportFile\ReportFile;
 use App\Http\Resources\StatusResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ReportFile\ReportFileResource;
 use App\Http\Resources\DynamicAttributes\DynamicAttributeResource;
 
 /**
@@ -26,6 +30,12 @@ use App\Http\Resources\DynamicAttributes\DynamicAttributeResource;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ *
+ * @property Status $status
+ * @property ReportType $reporttype
+ * @property mixed $dynamicattributes
+ * @property mixed $reportfiles
  */
 class ReportResource extends JsonResource
 {
@@ -47,6 +57,8 @@ class ReportResource extends JsonResource
 
             'reporttype' => ReportTypeResource::make($this->reporttype),
             'attributes' => DynamicAttributeResource::collection($this->dynamicattributes),
+            'reportfiles' => ReportFileResource::collection($this->reportfiles),
+
             'model_type' => Report::class,
 
             'created_at' => $this->created_at,

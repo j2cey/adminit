@@ -34,6 +34,11 @@ class CreateReportFilesTable extends Migration
                 ->comment('clé reférence du report_file_type')
                 ->constrained('report_file_types')->onDelete('set null');
 
+
+            $table->foreignId('report_id')->nullable()
+                ->comment('clé reférence du report')
+                ->constrained('reports')->onDelete('set null');
+
             $table->baseFields();
         });
 
@@ -49,17 +54,13 @@ class CreateReportFilesTable extends Migration
     public function down()
     {
         Schema::table($this->table_name, function (Blueprint $table) {
-            //$table->dropForeign(['report_file_type_id']);
-
             /** Make sure to put this condition to check if driver is SQLite */
             if (DB::getDriverName() !== 'sqlite') {
                 $table->dropBaseForeigns();
                 $table->dropForeign(['report_file_type_id']);
+                $table->dropForeign(['report_id']);
             }
-
-            //$table->dropColumn(['report_file_type_id']);
         });
-
         Schema::dropIfExists($this->table_name);
     }
 

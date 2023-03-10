@@ -14,6 +14,6 @@ class ReportTypeSeeder extends Seeder
      */
     public function run()
     {
-        ReportType::createNew("Default Report","");
+        ReportType::createNew("Default Report","default","default report type");
     }
 }

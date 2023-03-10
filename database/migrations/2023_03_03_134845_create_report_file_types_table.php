@@ -24,7 +24,7 @@ class CreateReportFileTypesTable extends Migration
             $table->id();
 
             $table->string('name')->comment("nom du type de fichier");
-            $table->string('extension')->comment("extension du type de fichier");
+            $table->string('extension')->unique()->comment("extension du type de fichier");
             $table->string('description', 500)->nullable()->comment("description du type de fichier");
 
             $table->foreignId('file_mime_type_id')->nullable()

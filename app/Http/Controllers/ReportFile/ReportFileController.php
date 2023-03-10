@@ -5,7 +5,7 @@ namespace App\Http\Controllers\ReportFile;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Models\ReportFile\ReportFile;
-use App\Http\Resources\ReportFileResource;
+use App\Http\Resources\ReportFile\ReportFileResource;
 use App\Http\Requests\ReportFile\StoreReportFileRequest;
 use App\Http\Requests\ReportFile\UpdateReportFileRequest;
 
@@ -39,7 +39,7 @@ class ReportFileController extends Controller
      */
     public function store(StoreReportFileRequest $request): ReportFileResource
     {
-        $reportfile = ReportFile::createNew($request->reportfiletype, $request->status, $request->name, $request->wildcard, $request->retrieve_by_name, $request->retrieve_by_wildcard);
+        $reportfile = ReportFile::createNew($request->report, $request->reportfiletype, $request->status, $request->name, $request->wildcard, $request->retrieve_by_name, $request->retrieve_by_wildcard);
 
         return new ReportFileResource($reportfile);
     }
@@ -75,7 +75,7 @@ class ReportFileController extends Controller
      */
     public function update(UpdateReportFileRequest $request, ReportFile $reportfile)
     {
-        $reportfile->updateOne($request->reportfiletype, $request->status, $request->name, $request->wildcard, $request->retrieve_by_name, $request->retrieve_by_wildcard);
+        $reportfile->updateOne($request->report, $request->reportfiletype, $request->status, $request->name, $request->wildcard, $request->retrieve_by_name, $request->retrieve_by_wildcard);
 
         return new ReportFileResource($reportfile);
     }

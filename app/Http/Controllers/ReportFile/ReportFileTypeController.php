@@ -7,11 +7,24 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\ReportFile\ReportFileType;
 use App\Http\Resources\ReportFile\ReportFileTypeResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Requests\ReportFileType\StoreReportFileTypeRequest;
 use App\Http\Requests\ReportFileType\UpdateReportFileTypeRequest;
 
 class ReportFileTypeController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return AnonymousResourceCollection
+     */
+    public function fetch()
+    {
+        $reportfiletypes = ReportFileType::all();
+
+        return ReportFileTypeResource::collection($reportfiletypes);
+    }
+
     /**
      * Display a listing of the resource.
      *

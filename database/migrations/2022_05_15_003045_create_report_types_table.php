@@ -23,6 +23,7 @@ class CreateReportTypesTable extends Migration
             $table->id();
 
             $table->string('name')->comment('report type name');
+            $table->string('code')->unique()->comment('report type code');
             $table->string('description')->nullable()->comment('report type description');
 
             $table->baseFields();

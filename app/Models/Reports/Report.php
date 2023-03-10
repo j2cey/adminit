@@ -5,6 +5,7 @@ namespace App\Models\Reports;
 
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
+use App\Models\ReportFile\ReportFile;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -66,11 +67,15 @@ class Report extends BaseModel implements Auditable
         return $this->belongsTo(ReportType::class, "report_type_id");
     }
 
+    public function reportfiles() {
+        return $this->hasMany(ReportFile::class, "report_id");
+    }
+
     #endregion
 
     #region Custom Functions
 
-    public static function createNew($title,ReportType $report_type,$description): Report {
+    public static function createNew($title, ReportType $report_type,$description): Report {
         return Report::create([
             'title' => $title,
             'report_type_id' => $report_type->id,

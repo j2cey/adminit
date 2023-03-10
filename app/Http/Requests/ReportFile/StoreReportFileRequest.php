@@ -35,8 +35,9 @@ class StoreReportFileRequest extends ReportFileRequest
     protected function prepareForValidation()
     {
         $this->merge([
+            'report' => $this->setRelevantReport($this->input('report'),'id', false),
             'reportfiletype' => $this->setRelevantReportFileType($this->input('reportfiletype'),'id', false),
-            'status' => $this->setRelevantStatus($this->input('status'),'id', false),
+            'status' => $this->setRelevantStatus($this->input('status'),'code', false),
             'retrieve_by_name' => $this->getRetrieveByNameNormalized(),
             'retrieve_by_wildcard' => $this->getRetrieveByWildcardNormalized(),
         ]);

@@ -5,6 +5,7 @@ namespace App\Traits\Request;
 
 use App\Models\User;
 use App\Models\Status;
+use App\Models\Reports\Report;
 use Spatie\Permission\Models\Role;
 use App\Models\Reports\ReportType;
 use App\Models\ReportFile\FileMimeType;
@@ -206,5 +207,24 @@ trait RequestTraits
             $value = $this->decodeJsonField($value);
         }
         return $value ? ReportFileType::where($field, $value[$field])->first() : null;
+    }
+
+    /**
+     * Retourne un objet Report en fonction d'un champs donné
+     * @param $value
+     * @param string $field
+     * @param bool $json_decode_before
+     * @return Report|null
+     */
+    public function setRelevantReport($value, string $field = 'íd', bool $json_decode_before = false): ?Report
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? Report::where($field, $value[$field])->first() : null;
     }
 }

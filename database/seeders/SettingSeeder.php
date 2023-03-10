@@ -33,6 +33,18 @@ class SettingSeeder extends Seeder
         $group = $this->createNew("ldap", null, null, "string", ",", "settings LDAP.");
         // value ldap.liste_sigles
         $this->createNew("liste_sigles", $group->id, "gt,rh,si,it,sav,in,bss,msan,rva,erp,dr", "array", ",", "liste des sigles (à prendre en compte dans l importation LDAP).");
+
+        // groupe ReportFileType
+        $group = $this->createNew("reportfiletype", null, null, "string", ",", "settings ReportFileType.");
+        // value ldap.reportfiletype_extension_is_unique
+        $this->createNew("reportfiletype_extension_is_unique", $group->id, "false", "bool", ",", "Détermine si l'extension d'un ReportFileType doit être UNIQUE.");
+
+        // groupe ReportFile
+        $group = $this->createNew("reportfile", null, null, "string", ",", "settings ReportFile.");
+        // value ldap.retrieve_by_wildcard_label
+        $this->createNew("retrieve_by_wildcard_label", $group->id, "Par Wildcard", "string", ",", "Libellé pour le champs 'retrieve_by_wildcard'.");
+        // value ldap.retrieve_by_name_label
+        $this->createNew("retrieve_by_name_label", $group->id, "Par Nom", "string", ",", "Libellé pour le champs 'retrieve_by_name_label'.");
     }
 
     private function createNew($name, $group_id = null, $value = null, $type = null, $array_sep = ",", $description = null)

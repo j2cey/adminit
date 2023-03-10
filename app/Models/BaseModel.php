@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Carbon;
 use App\Traits\Base\BaseTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class BaseModel
@@ -30,7 +31,8 @@ class BaseModel extends Model
 
     #region Eloquent Relationships
 
-    public function status() {
+    public function status(): BelongsTo
+    {
         return $this->belongsTo(Status::class);
     }
 

@@ -34,8 +34,7 @@
                 <dd class="text text-xs">{{ report.created_at | formatDate}}</dd>
                 <dd class="col-sm-8 offset-sm-4 text-xs"></dd>
             </div>
-            <!-- /.card-body -->
-        </div>
+            <!-- /.card-body -->        </div>
 
         <div :id="'reportwrapper_' + report.uuid">
             <div class="card">
@@ -43,7 +42,7 @@
                     <div class="card-header-title row">
                         <div class="col-md-6 col-sm-8 col-12">
                             <span class="text-purple text-xs" @click="collapseClicked(collapse_icon)" data-toggle="collapse" :data-parent="'#reportwrapper_' + report.uuid" :href="'#collapse-reports-'+index">
-                                Report Fields
+                                Champs du Rapport
                             </span>
                         </div>
                         <div class="col-md-6 col-sm-4 col-12 text-right">
@@ -83,18 +82,24 @@
             </div>
         </div>
 
-        <div :id="'reportfileaccess_' + report.uuid">
+        <div :id="'reportfile_' + report.uuid">
             <div class="card">
                 <header>
                     <div class="card-header-title row">
                         <div class="col-md-6 col-sm-8 col-12">
-                            <span class="text-purple text-xs" @click="collapseClicked('collapse_reportaccess_icon', collapse_reportaccess_icon)" data-toggle="collapse" :data-parent="'#reportfileaccess_' + report.uuid" :href="'#collapse-reports-access-'+index">
-                                Report File(s) Access
+                            <span class="text-purple text-xs" @click="collapseClicked('collapse_reportaccess_icon', collapse_reportaccess_icon)" data-toggle="collapse" :data-parent="'#reportfile_' + report.uuid" :href="'#collapse-reports-access-'+index">
+                                Fichier(s) du Rapport
                             </span>
                         </div>
                         <div class="col-md-6 col-sm-4 col-12 text-right">
                             <span class="text text-sm">
-                                <a type="button" class="btn btn-tool" @click="collapseClicked('collapse_reportaccess_icon', collapse_reportaccess_icon)" data-toggle="collapse" :data-parent="'#reportfileaccess_' + report.uuid" :href="'#collapse-reports-access-'+index">
+                                <span v-if="report.reportfiles.length > 0" class="badge badge-success">
+                                    {{ report.reportfiles.length }}
+                                </span>
+                                <span v-else class="badge badge-danger">
+                                    {{ report.reportfiles.length }}
+                                </span>
+                                <a type="button" class="btn btn-tool" @click="collapseClicked('collapse_reportaccess_icon', collapse_reportaccess_icon)" data-toggle="collapse" :data-parent="'#reportfile_' + report.uuid" :href="'#collapse-reports-access-'+index">
                                     <i :class="currentReportAccessCollapseIcon"></i>
                                 </a>
                             </span>
@@ -109,7 +114,7 @@
 
                         <div class="col-md-12 col-sm-6 col-12">
 
-                            <ReportAccesses></ReportAccesses>
+                            <ReportFiles :report_prop="report" :reportfiles_prop="report.reportfiles"></ReportFiles>
 
                         </div>
                         <!-- /.col -->
@@ -122,13 +127,13 @@
 
         <AddUpdateReport></AddUpdateReport>
     </div>
-    
+
 </template>
 
 <script>
     import ReportAttributes from "../reportattributes/list";
     import AddUpdateReport from "./addupdate";
-    import ReportAccesses from "../reportaccesses/list";
+    import ReportFiles from "../reportfiles/index";
 
     import ReportBus from "./reportBus";
 
@@ -141,7 +146,7 @@
         components: {
             AddUpdateReport,
             ReportAttributes,
-            ReportAccesses,
+            ReportFiles,
         },
         mounted() {
             ReportBus.$on('report_updated', (updreport) => {

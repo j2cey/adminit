@@ -59,6 +59,25 @@ class FileMimeType extends BaseModel implements Auditable
         ];
     }
 
+
+
+
+    #endregion
+
+    #region Scopes
+    public function scopePng($query) {
+        return $query
+            ->where('name', "png");
+    }
+
+    public function scope($query) {
+        return $query
+            ->where('name', "bmp");
+    }
+    #endregion
+
+
+
     #endregion
 
     #region Eloquent Relationships

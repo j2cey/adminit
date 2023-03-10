@@ -5,6 +5,7 @@ namespace App\Models\ReportFile;
 use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
+use App\Models\Reports\Report;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -19,7 +20,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $created_by
  * @property integer $updated_by
  *
- *
  * @property string $name
  * @property string|null $wildcard
  * @property bool|null $retrieve_by_name
@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $description
  *
  * @property integer|null $report_file_type_id
+ * @property integer|null $report_id
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -47,6 +48,7 @@ class ReportFile extends BaseModel
                 'without_spaces'
             ],
             'reportfiletype' => ['required'],
+            'report' => ['required'],
         ];
     }
     public static function createRules() {
@@ -62,13 +64,15 @@ class ReportFile extends BaseModel
     public static function messagesRules() {
         return [
             'name.required' => "Prière de renseigner le nom",
-            'wildcard' => "Prière de renseigner le caractère générique",
+            'wildcard.required' => "Prière de renseigner le caractère générique",
+            'wildcard.without_spaces' => "Le Wildcard ne doit pas comporter des espaces",
+            'report.required' => "Prière de renseigner le rapport lié à ce fichier",
             'reportfiletype.required' => "Prière de renseigner un type de fichier",
         ];
 
-}
+    }
 
-#endregion
+    #endregion
 
     #region Eloquent Relationships
 
@@ -76,7 +80,34 @@ class ReportFile extends BaseModel
         return $this->belongsTo(ReportFileType::class, 'report_file_type_id');
     }
 
+    public function report() {
+        return $this->belongsTo(Report::class, 'report_id');
+    }
+
     #endregion
+
+    #region Accessors & Mutators
+
+    /**
+     * Retourne le type de récupération
+     *
+     * @return string
+     */
+    public function getRetrieveByWildcardLabelAttribute() {
+        return config('Settings.reportfile.retrieve_by_wildcard_label');
+    }
+
+    /**
+     * Retourne le type de récupération
+     *
+     * @return string
+     */
+    public function getRetrieveByNameLabelAttribute() {
+        return config('Settings.reportfile.retrieve_by_name_label');
+    }
+
+    #endregion
+
 
     #region Custom Functions
 
@@ -90,7 +121,7 @@ class ReportFile extends BaseModel
      * @param bool $retrieve_by_wildcard
      * @return ReportFile
      */
-    public static function createNew(ReportFileType $reportfiletype, Status $status, $name, $wildcard = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false) : ReportFile
+    public static function createNew(Report $report, ReportFileType $reportfiletype, Status $status, $name, $wildcard = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false) : ReportFile
     {
         $reportfile = ReportFile::create([
             'name' => $name,
@@ -102,6 +133,9 @@ class ReportFile extends BaseModel
         // associate reportfiletype
         $reportfile->reportfiletype()->associate($reportfiletype);
 
+        // associate report
+        $reportfile->report()->associate($report);
+
         // associate status
         $reportfile->status()->associate($status);
 
@@ -111,7 +145,7 @@ class ReportFile extends BaseModel
         return $reportfile;
     }
 
-    public function updateOne(ReportFileType $reportfiletype, Status $status, $name, $wildcard=null, $retrieve_by_name=false, $retrieve_by_wildcard=false)
+    public function updateOne(Report $report, ReportFileType $reportfiletype, Status $status, $name, $wildcard=null, $retrieve_by_name=false, $retrieve_by_wildcard=false)
     {
         $this->name = $name;
         $this->wildcard = $wildcard;
@@ -120,6 +154,9 @@ class ReportFile extends BaseModel
 
         // associate reportfiletype
         $this->reportfiletype()->associate($reportfiletype);
+
+        // associate report
+        $this->report()->associate($report);
 
         // associate status
         $this->status()->associate($status);

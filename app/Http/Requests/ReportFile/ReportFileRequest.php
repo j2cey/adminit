@@ -3,6 +3,7 @@
 namespace App\Http\Requests\ReportFile;
 
 use App\Models\Status;
+use App\Models\Reports\Report;
 use App\Models\ReportFile\ReportFile;
 use App\Traits\Request\RequestTraits;
 use App\Models\ReportFile\ReportFileType;
@@ -23,6 +24,7 @@ use Illuminate\Foundation\Http\FormRequest;
  * @property ReportFileType $reportfiletype
  *
  * @property ReportFile $reportfile
+ * @property Report $report
  */
 class ReportFileRequest extends FormRequest
 {

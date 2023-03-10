@@ -261,13 +261,13 @@
             },
             deleteAttribute(attribute) {
                 this.$swal({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
+                    title: 'Êtes vous sûr ?',
+                    text: "Vous ne pourrez pas revenir en arrière!",
+                    icon: 'Attention',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Oui, supprimez le!!'
                 }).then((result) => {
                     if(result.value) {
 
@@ -340,7 +340,7 @@
                     this.reportattributes.splice(attributeIndex, 1)
 
                     this.$swal({
-                        html: '<small>Attribute successfully deleted !</small>',
+                        html: '<small>Attribute supprimé avec succès !</small>',
                         icon: 'success',
                         timer: 3000
                     }).then(() => {
