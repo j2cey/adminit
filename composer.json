@@ -24,7 +24,8 @@
         "owen-it/laravel-auditing": "^12.0",
         "spatie/laravel-permission": "^4.0",
         "spatie/laravel-tags": "^4.3",
-        "tabuna/breadcrumbs": "^2.3"
+        "tabuna/breadcrumbs": "^2.3",
+      "ext-pdo": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

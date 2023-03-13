@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Closure;
+use App\Models\User;
 use Illuminate\Support\Fluent;
 use Illuminate\Database\SQLiteConnection;
 use Illuminate\Database\Schema\Blueprint;
@@ -55,5 +56,19 @@ abstract class TestCase extends BaseTestCase
                     }
                 };
             });
+    }
+
+    public function authenticated_user_admin() : ?User {
+        // authentification du user
+        $user = User::find(1);
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'admin123',
+        ]);
+
+        $this->assertAuthenticated();
+
+        return $user;
     }
 }

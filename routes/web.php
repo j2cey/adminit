@@ -17,6 +17,7 @@ use App\Http\Controllers\GradeUnitController;
 use App\Http\Controllers\SubSubjectController;
 use App\Http\Controllers\DifficultyController;
 use App\Http\Controllers\AppreciationController;
+use App\Http\Controllers\AccessAccountController;
 use App\Http\Controllers\Reports\ReportController;
 use App\Http\Controllers\Reports\ReportTypeController;
 use App\Http\Controllers\Authorization\RoleController;
@@ -292,4 +293,8 @@ Route::get('reportfiletypes.fetch',[ReportFileTypeController::class,'fetch'])
 
 
 Route::resource('reportfiles',ReportFileController::class)->middleware('auth');
+
+Route::resource('accessaccounts',AccessAccountController::class)->middleware('auth');
+
+//Route::resource('reportservers',ReportServerController::class)->middleware('auth');
 

@@ -133,7 +133,7 @@
 <script>
     import ReportAttributes from "../reportattributes/list";
     import AddUpdateReport from "./addupdate";
-    import ReportFiles from "../reportfiles/index";
+    import ReportFiles from "../reportfiles/list";
 
     import ReportBus from "./reportBus";
 

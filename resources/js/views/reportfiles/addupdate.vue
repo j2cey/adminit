@@ -156,11 +156,11 @@ export default {
             $('#addUpdateReportfile').modal()
         })
 
-        ReportFileBus.$on('edit_reportfile', ({ attribute }) => {
+        ReportFileBus.$on('edit_reportfile', ({ reportfile }) => {
             this.editing = true
-            this.reportfile = new Reportfile(attribute)
+            this.reportfile = new Reportfile(reportfile)
             this.reportfileForm = new Form(this.reportfile)
-            this.reportfileId = attribute.uuid
+            this.reportfileId = reportfile.uuid
 
             this.formTitle = 'Modification du fichier'
 
@@ -215,12 +215,14 @@ export default {
         updateReportfile() {
             this.loading = true
 
+            this.revertStatusObject()
+
             this.reportfileForm
                 .put(`/reportfiles/${this.reportfileId}`,undefined)
                 .then(updreportfile => {
                     this.loading = false
                     this.$swal({
-                        html: '<small>Fichier supprimé avec succès!</small>',
+                        html: '<small>Fichier modifié avec succès!</small>',
                         icon: 'success',
                         timer: 3000
                     }).then(() => {
@@ -249,7 +251,9 @@ export default {
                 this.reportfileForm.retrieve_by_wildcard = 0;
             }
         },
-
+        /**
+         * Renvoi le code du statut sélectionné en tant qu'objet au lieu d'un string
+         */
         revertStatusObject() {
             this.reportfileForm.status = {'code': this.reportfileForm.status}
         }

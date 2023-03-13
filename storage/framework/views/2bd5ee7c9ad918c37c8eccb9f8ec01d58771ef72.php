@@ -49,6 +49,19 @@
                     </ul>
                 </li>
 
+                <li class="nav-item dropdown">
+                    <a id="dropdownReports" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Ressource IT</a>
+                    <ul aria-labelledby="dropdownReports" class="dropdown-menu border-0 shadow">
+                        <li class="nav-item">
+                            <a href="/accessaccounts" class="nav-link">Comptes d'accès</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/reportservers" class="nav-link">Serveurs</a>
+                        </li>
+                        <!-- End Level two -->
+                    </ul>
+                </li>
+
                 <li class="nav-item">
                     <a href="/reportsetting.index" class="nav-link"><i class="nav-icon fa fa-gears"></i> Paramètres</a>
                 </li>

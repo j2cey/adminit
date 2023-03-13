@@ -135,20 +135,6 @@ class ReportFileTypeTest extends TestCase
 
     #region Private Functions
 
-    private function authenticated_user_admin() : ?User {
-        // authentification du user
-        $user = User::find(1);
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'admin123',
-        ]);
-
-        $this->assertAuthenticated();
-
-        return $user;
-    }
-
     private function add_new_reportfiletype($name, $extension)
     {
         // on essaie d'insérer un nouvel objet ReportFileType dans la base de données

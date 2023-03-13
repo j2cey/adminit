@@ -54,11 +54,11 @@ var Reportfile = /*#__PURE__*/_createClass(function Reportfile(reportfile) {
       $('#addUpdateReportfile').modal();
     });
     _reportfileBus__WEBPACK_IMPORTED_MODULE_1__["default"].$on('edit_reportfile', function (_ref2) {
-      var attribute = _ref2.attribute;
+      var reportfile = _ref2.reportfile;
       _this.editing = true;
-      _this.reportfile = new Reportfile(attribute);
+      _this.reportfile = new Reportfile(reportfile);
       _this.reportfileForm = new Form(_this.reportfile);
-      _this.reportfileId = attribute.uuid;
+      _this.reportfileId = reportfile.uuid;
       _this.formTitle = 'Modification du fichier';
       $('#addUpdateReportfile').modal();
     });
@@ -110,10 +110,11 @@ var Reportfile = /*#__PURE__*/_createClass(function Reportfile(reportfile) {
     updateReportfile: function updateReportfile() {
       var _this4 = this;
       this.loading = true;
+      this.revertStatusObject();
       this.reportfileForm.put("/reportfiles/".concat(this.reportfileId), undefined).then(function (updreportfile) {
         _this4.loading = false;
         _this4.$swal({
-          html: '<small>Fichier supprimé avec succès!</small>',
+          html: '<small>Fichier modifié avec succès!</small>',
           icon: 'success',
           timer: 3000
         }).then(function () {
@@ -140,6 +141,9 @@ var Reportfile = /*#__PURE__*/_createClass(function Reportfile(reportfile) {
         this.reportfileForm.retrieve_by_wildcard = 0;
       }
     },
+    /**
+     * Renvoi le code du statut sélectionné en tant qu'objet au lieu d'un string
+     */
     revertStatusObject: function revertStatusObject() {
       this.reportfileForm.status = {
         'code': this.reportfileForm.status

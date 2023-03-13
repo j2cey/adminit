@@ -11,3 +11,10 @@
 ## ReportFile
 [x] - Ajouter l'entrée retrieve_by_wildcard_label dans les Settings\
 [x] - Ajouter l'entrée retrieve_by_name_label dans les Settings
+
+## Tests à effectuer (rajouter 'test_' devant les fonctions)
+[] - AuthenticationTest
+[] - EmailVerificationTest
+[] - PasswordConfirmationTest
+[] - PasswordResetTest
+[] - RegistrationTest

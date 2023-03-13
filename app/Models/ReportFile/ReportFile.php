@@ -121,13 +121,14 @@ class ReportFile extends BaseModel
      * @param bool $retrieve_by_wildcard
      * @return ReportFile
      */
-    public static function createNew(Report $report, ReportFileType $reportfiletype, Status $status, $name, $wildcard = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false) : ReportFile
+    public static function createNew(Report $report, ReportFileType $reportfiletype, Status $status, $name, $wildcard = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false, $description="") : ReportFile
     {
         $reportfile = ReportFile::create([
             'name' => $name,
             'wildcard' => $wildcard,
             'retrieve_by_name' => $retrieve_by_name,
             'retrieve_by_wildcard' => $retrieve_by_wildcard,
+            'description' => $description,
         ]);
 
         // associate reportfiletype
@@ -145,12 +146,13 @@ class ReportFile extends BaseModel
         return $reportfile;
     }
 
-    public function updateOne(Report $report, ReportFileType $reportfiletype, Status $status, $name, $wildcard=null, $retrieve_by_name=false, $retrieve_by_wildcard=false)
+    public function updateOne(Report $report, ReportFileType $reportfiletype, Status $status, $name, $wildcard=null, $retrieve_by_name=false, $retrieve_by_wildcard=false, $description="")
     {
         $this->name = $name;
         $this->wildcard = $wildcard;
         $this->retrieve_by_name = $retrieve_by_name;
         $this->retrieve_by_wildcard = $retrieve_by_wildcard;
+        $this->description = $description;
 
         // associate reportfiletype
         $this->reportfiletype()->associate($reportfiletype);

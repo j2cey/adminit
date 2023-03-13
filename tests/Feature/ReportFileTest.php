@@ -91,12 +91,14 @@ class ReportFileTest extends TestCase
             'status' => $status_inactive->toJson(),
             'name' => "new report file edited",
             'wildcard' => "new-wilcard",
+            'description' => "new-description",
         ]);
 
         $newreportfile->refresh();
 
         $this->assertEquals('new report file edited',$newreportfile->name);
         $this->assertEquals('new-wilcard', $newreportfile->wildcard);
+        $this->assertEquals('new-description', $newreportfile->description);
         $this->assertEquals($status_inactive->code, $newreportfile->status->code);
         $this->assertEquals($reportfiletype_txt->id, $newreportfile->reportfiletype->id);
         $this->assertEquals($report_new->id, $newreportfile->report->id);
@@ -124,21 +126,7 @@ class ReportFileTest extends TestCase
 
     #region Private Functions
 
-    private function authenticated_user_admin() : ?User {
-        // authentification du user
-        $user = User::find(1);
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'admin123',
-        ]);
-
-        $this->assertAuthenticated();
-
-        return $user;
-    }
-
-    private function add_new_reportfile($name, $wildcard = "")
+    private function add_new_reportfile($name, $wildcard = "",$description="")
     {
         // on essaie d'insérer un nouvel objet ReportFile dans la base de données
         // et on récupère le résultat dans une variable $response
@@ -153,6 +141,7 @@ class ReportFileTest extends TestCase
                 'status' => $status->toJson(),
                 'name' => $name,
                 'wildcard' => $wildcard,
+                'description' => $description,
             ]
         );
     }

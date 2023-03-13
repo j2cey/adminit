@@ -10,7 +10,7 @@ class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_registration_screen_can_be_rendered()
+    public function registration_screen_can_be_rendered()
     {
         $this->markTestSkipped('must be revisited.');
 
@@ -19,7 +19,7 @@ class RegistrationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_new_users_can_register()
+    public function new_users_can_register()
     {
         $this->markTestSkipped('must be revisited.');
 
