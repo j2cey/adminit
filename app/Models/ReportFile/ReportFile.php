@@ -6,7 +6,6 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**

@@ -6,6 +6,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\StatusController;
+use App\Models\OsAndServer\OsArchitecture;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SubTaskController;
 use App\Http\Controllers\CommentController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\ReportFile\ReportFileController;
 use App\Http\Controllers\ReportFile\FileMimeTypeController;
 use App\Http\Controllers\ReportFile\ReportFileTypeController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleController;
+use App\Http\Controllers\OsAndServer\OsArchitectureController;
 use App\Http\Controllers\AnalysisRules\ThresholdTypeController;
 use App\Http\Controllers\Reportsetting\ReportsettingController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
@@ -295,6 +297,11 @@ Route::get('reportfiletypes.fetch',[ReportFileTypeController::class,'fetch'])
 Route::resource('reportfiles',ReportFileController::class)->middleware('auth');
 
 Route::resource('accessaccounts',AccessAccountController::class)->middleware('auth');
+
+Route::resource('osarchitectures',OsArchitectureController::class)->middleware('auth');
+Route::get('osarchitectures.fetch',[OsArchitectureController::class,'fetch'])
+    ->name('osarchitectures.fetch')
+    ->middleware('auth');
 
 //Route::resource('reportservers',ReportServerController::class)->middleware('auth');
 

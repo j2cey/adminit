@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\OsAndServer;
 
+use JsonSerializable;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -19,17 +21,15 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property integer $created_by
  * @property integer $updated_by
  *
- *
- * @property string $name
+ * @property string $code
  * @property string|null $description
- *
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * @property Status $status
  */
-class AccessAccountResource extends JsonResource
+class OsArchitectureResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -40,18 +40,18 @@ class AccessAccountResource extends JsonResource
     public function toArray($request)
     {
         return [
-        'id' => $this->id,
+            'id' => $this->id,
             'uuid' => $this->uuid,
             'status' => StatusResource::make($this->status),
 
-            'name' => $this->name,
+            'code' => $this->code,
             'description' => $this->description,
 
             'created_at' => $this->created_at,
 
-            'show_url' => route('accessaccounts.show', $this->uuid),
-            'edit_url' => route('accessaccounts.edit', $this->uuid),
-            'destroy_url' => route('accessaccounts.destroy', $this->uuid),
+            'show_url' => route('osarchitectures.show', $this->uuid),
+            'edit_url' => route('osarchitectures.edit', $this->uuid),
+            'destroy_url' => route('osarchitectures.destroy', $this->uuid),
         ];
     }
 }

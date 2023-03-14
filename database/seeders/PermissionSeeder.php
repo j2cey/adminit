@@ -38,7 +38,12 @@ class PermissionSeeder extends Seeder
             ['accessaccount-list', 4],
             ['accessaccount-create', 3],
             ['accessaccount-update', 1],
-            ['accessaccount-delete', 1]
+            ['accessaccount-delete', 1],
+
+            ['osarchitecture-list', 4],
+            ['osarchitecture-create', 3],
+            ['osarchitecture-update', 1],
+            ['osarchitecture-delete', 1]
         ];
 
         foreach ($permissions as $permission) {
