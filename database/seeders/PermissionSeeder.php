@@ -43,7 +43,12 @@ class PermissionSeeder extends Seeder
             ['osarchitecture-list', 4],
             ['osarchitecture-create', 3],
             ['osarchitecture-update', 1],
-            ['osarchitecture-delete', 1]
+            ['osarchitecture-delete', 1],
+
+            ['osfamily-list', 4],
+            ['osfamily-create', 3],
+            ['osfamily-update', 1],
+            ['osfamily-delete', 1]
         ];
 
         foreach ($permissions as $permission) {

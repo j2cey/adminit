@@ -39,5 +39,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ReportFileTypeSeeder::class);
 
         $this->call(OsArchitectureSeeder::class);
+        $this->call(OsFamilySeeder::class);
     }
 }

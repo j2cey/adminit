@@ -22,6 +22,7 @@ use App\Http\Controllers\AccessAccountController;
 use App\Http\Controllers\Reports\ReportController;
 use App\Http\Controllers\Reports\ReportTypeController;
 use App\Http\Controllers\Authorization\RoleController;
+use App\Http\Controllers\OsAndServer\OsFamilyController;
 use App\Http\Controllers\ReportFile\ReportFileController;
 use App\Http\Controllers\ReportFile\FileMimeTypeController;
 use App\Http\Controllers\ReportFile\ReportFileTypeController;
@@ -301,6 +302,11 @@ Route::resource('accessaccounts',AccessAccountController::class)->middleware('au
 Route::resource('osarchitectures',OsArchitectureController::class)->middleware('auth');
 Route::get('osarchitectures.fetch',[OsArchitectureController::class,'fetch'])
     ->name('osarchitectures.fetch')
+    ->middleware('auth');
+
+Route::resource('osfamilies',OsFamilyController::class)->middleware('auth');
+Route::get('osfamilies.fetch',[OsFamilyController::class,'fetch'])
+    ->name('osfamilies.fetch')
     ->middleware('auth');
 
 //Route::resource('reportservers',ReportServerController::class)->middleware('auth');
