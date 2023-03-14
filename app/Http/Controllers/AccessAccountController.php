@@ -34,7 +34,7 @@ class AccessAccountController extends Controller
      */
     public function index()
     {
-        $accessaccounts = AccessAccount::all();
+        $accessaccounts = AccessAccountResource::collection(AccessAccount::all());
 
         return view('accessaccounts.index')
             ->with('accessaccounts', $accessaccounts)
@@ -59,7 +59,7 @@ class AccessAccountController extends Controller
      */
     public function store(StoreAccessAccountRequest $request): AccessAccountResource
     {
-        $accessaccount = AccessAccount::createNew($request->login, $request->pwd, $request->email, $request->username, $request->status = null, $request->description);
+        $accessaccount = AccessAccount::createNew($request->login, $request->pwd, $request->email, $request->username, $request->status, $request->description);
 
         return new AccessAccountResource($accessaccount);
     }
@@ -95,7 +95,7 @@ class AccessAccountController extends Controller
      */
     public function update(UpdateAccessAccountRequest $request, AccessAccount $accessaccount)
     {
-        $accessaccount->updateOne($request->login, $request->pwd, $request->email, $request->username, $request->status = null, $request->description);
+        $accessaccount->updateOne($request->login, $request->pwd, $request->email, $request->username, $request->status, $request->description);
 
         return new AccessAccountResource($accessaccount);
     }

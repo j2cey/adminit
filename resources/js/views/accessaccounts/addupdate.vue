@@ -89,7 +89,7 @@
 
 <script>
 
-import AccessAccountBus from "./accessaccountBus";
+import AccessAccountBus from "../accessaccounts/accessaccountBus";
 
 class Accessaccount {
     constructor(accessaccount) {

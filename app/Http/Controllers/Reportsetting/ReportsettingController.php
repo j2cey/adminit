@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reportsetting;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\AccessProtocole;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
@@ -21,11 +22,13 @@ class ReportsettingController extends Controller
     public function index()
     {
         $filemimetypes = FileMimetype::all();
-        $reportfiletypes = Reportfiletype::all()->load('filemimetype');
+        $reportfiletypes = ReportFileType::all()->load('filemimetype');
+        $accessprotocoles = AccessProtocole::all();
 
         return view('reportsetting.index')
             ->with('filemimetypes', $filemimetypes)
             ->with('reportfiletypes', $reportfiletypes)
+            ->with('accessprotocoles', $accessprotocoles)
             ;
     }
 

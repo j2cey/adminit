@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -33,9 +34,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class ReportFile extends BaseModel
+class ReportFile extends BaseModel implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 

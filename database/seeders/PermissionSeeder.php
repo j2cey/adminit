@@ -38,7 +38,12 @@ class PermissionSeeder extends Seeder
             ['accessaccount-list', 4],
             ['accessaccount-create', 3],
             ['accessaccount-update', 1],
-            ['accessaccount-delete', 1]
+            ['accessaccount-delete', 1],
+
+            ['accessprotocole-list', 4],
+            ['accessprotocole-create', 3],
+            ['accessprotocole-update', 1],
+            ['accessprotocole-delete', 1]
         ];
 
         foreach ($permissions as $permission) {
