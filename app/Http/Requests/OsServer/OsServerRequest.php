@@ -1,26 +1,29 @@
 <?php
 
-namespace App\Http\Requests\OsFamily;
+namespace App\Http\Requests\OsServer;
 
 use App\Models\Status;
 use App\Models\OsAndServer\OsFamily;
+use App\Models\OsAndServer\OsServer;
 use App\Traits\Request\RequestTraits;
+use App\Models\OsAndServer\OsArchitecture;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class OsFamilyRequest
- * @package App\Http\Requests\OsFamily
+ * Class OsServerRequest
+ * @package App\Http\Requests\OsServer
  *
  * @property string $name
- * @property string $code
  * @property string|null $description
+ *
+ * @property OsArchitecture $osarchitecture
+ * @property OsFamily $osfamily
  *
  * @property Status $status
  */
-class OsFamilyRequest extends FormRequest
+class OsServerRequest extends FormRequest
 {
     use RequestTraits;
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -36,8 +39,18 @@ class OsFamilyRequest extends FormRequest
      *
      * @return array
      */
-    public function rules() : array
+    public function rules()
     {
-        return OsFamily::defaultRules();
+        return OsServer::defaultRules();
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return OsServer::messagesRules();
     }
 }

@@ -2,16 +2,15 @@
 
 namespace App\Http\Resources\OsAndServer;
 
-use JsonSerializable;
 use App\Models\Status;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\OsAndServer\OsFamily;
 use App\Http\Resources\StatusResource;
-use Illuminate\Contracts\Support\Arrayable;
+use App\Models\OsAndServer\OsArchitecture;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * Class OsFamilyResource
+ * Class OsServerResource
  * @package App\Http\Resources\OsAndServer
  *
  * @property integer $id
@@ -21,21 +20,26 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property integer $created_by
  * @property integer $updated_by
  *
- * @property string $code
+ * @property string $name
  * @property string|null $description
+ *
+ * @property integer|null $os_architecture_id
+ * @property integer|null $os_family_id
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * @property Status $status
+ * @property OsArchitecture $osarchitecture
+ * @property OsFamily $osfamily
  */
-class OsFamilyResource extends JsonResource
+class OsServerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
-     * @return array|Arrayable|JsonSerializable
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
@@ -44,14 +48,17 @@ class OsFamilyResource extends JsonResource
             'uuid' => $this->uuid,
             'status' => StatusResource::make($this->status),
 
-            'code' => $this->code,
+            'name' => $this->name,
             'description' => $this->description,
 
             'created_at' => $this->created_at,
 
-            'show_url' => route('osfamilies.show', $this->uuid),
-            'edit_url' => route('osfamilies.edit', $this->uuid),
-            'destroy_url' => route('osfamilies.destroy', $this->uuid),
+            'osarchitecture' => OsArchitectureResource::make($this->osarchitecture),
+            'osfamily' => OsFamilyResource::make($this->osfamily),
+
+            'show_url' => route('osservers.show', $this->uuid),
+            'edit_url' => route('osservers.edit', $this->uuid),
+            'destroy_url' => route('osservers.destroy', $this->uuid),
         ];
     }
 }

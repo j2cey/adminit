@@ -23,6 +23,7 @@ use App\Http\Controllers\Reports\ReportController;
 use App\Http\Controllers\Reports\ReportTypeController;
 use App\Http\Controllers\Authorization\RoleController;
 use App\Http\Controllers\OsAndServer\OsFamilyController;
+use App\Http\Controllers\OsAndServer\OsServerController;
 use App\Http\Controllers\ReportFile\ReportFileController;
 use App\Http\Controllers\ReportFile\FileMimeTypeController;
 use App\Http\Controllers\ReportFile\ReportFileTypeController;
@@ -307,6 +308,11 @@ Route::get('osarchitectures.fetch',[OsArchitectureController::class,'fetch'])
 Route::resource('osfamilies',OsFamilyController::class)->middleware('auth');
 Route::get('osfamilies.fetch',[OsFamilyController::class,'fetch'])
     ->name('osfamilies.fetch')
+    ->middleware('auth');
+
+Route::resource('osservers',OsServerController::class)->middleware('auth');
+Route::get('osservers.fetch',[OsServerController::class,'fetch'])
+    ->name('osservers.fetch')
     ->middleware('auth');
 
 //Route::resource('reportservers',ReportServerController::class)->middleware('auth');
