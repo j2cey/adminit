@@ -2,8 +2,17 @@
 
 namespace App\Http\Requests\ReportServer;
 
+use Illuminate\Support\Facades\Auth;
+use App\Models\OsAndServer\ReportServer;
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * Class StoreReportServerRequest
+ * @package App\Http\Requests\ReportServer
+ *
+ *
+ */
 class StoreReportServerRequest extends ReportServerRequest
 {
     /**
@@ -13,7 +22,7 @@ class StoreReportServerRequest extends ReportServerRequest
      */
     public function authorize()
     {
-        return false;
+        return Auth::user()->can('reportserver-create');
     }
 
     /**
@@ -23,8 +32,19 @@ class StoreReportServerRequest extends ReportServerRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return ReportServer::createRules();
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'status' => $this->setRelevantStatus($this->input('status'),'code', true),
+            'osserver' => $this->setRelevantOsServer($this->input('osserver'),'id', true),
+        ]);
     }
 }

@@ -2,17 +2,32 @@
 
 namespace App\Http\Controllers\OsAndServer;
 
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Models\OsAndServer\ReportServer;
+use App\Http\Resources\OsAndServer\ReportServerResource;
 use App\Http\Requests\ReportServer\StoreReportServerRequest;
 use App\Http\Requests\ReportServer\UpdateReportServerRequest;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ReportServerController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return AnonymousResourceCollection
+     */
+    public function fetch()
+    {
+        $reportservers= ReportServer::all();
+
+        return ReportServerResource::collection($reportservers);
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
      */
     public function index()
     {
@@ -22,7 +37,7 @@ class ReportServerController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -32,19 +47,21 @@ class ReportServerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\ReportServer\StoreReportServerRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreReportServerRequest $request
+     * @return ReportServerResource
      */
     public function store(StoreReportServerRequest $request)
     {
-        //
+        $reportserver = ReportServer::createNew($request->osserver, $request->name, $request->ip_address, $request->domain_name, $request->status, $request->description);
+
+        return new ReportServerResource($reportserver);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\OsAndServer\ReportServer  $reportServer
-     * @return \Illuminate\Http\Response
+     * @param ReportServer $reportServer
+     * @return Response
      */
     public function show(ReportServer $reportServer)
     {
@@ -54,8 +71,8 @@ class ReportServerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\OsAndServer\ReportServer  $reportServer
-     * @return \Illuminate\Http\Response
+     * @param ReportServer $reportServer
+     * @return Response
      */
     public function edit(ReportServer $reportServer)
     {
@@ -65,23 +82,27 @@ class ReportServerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\ReportServer\UpdateReportServerRequest  $request
-     * @param  \App\Models\OsAndServer\ReportServer  $reportServer
-     * @return \Illuminate\Http\Response
+     * @param UpdateReportServerRequest $request
+     * @param ReportServer $reportserver
+     * @return ReportServerResource
      */
-    public function update(UpdateReportServerRequest $request, ReportServer $reportServer)
+    public function update(UpdateReportServerRequest $request, ReportServer $reportserver)
     {
-        //
+        $reportserver->updateOne($request->osserver, $request->name, $request->ip_address, $request->domain_name ,$request->status, $request->description);
+
+        return new ReportServerResource($reportserver);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\OsAndServer\ReportServer  $reportServer
-     * @return \Illuminate\Http\Response
+     * @param ReportServer $reportserver
+     * @return Response
      */
-    public function destroy(ReportServer $reportServer)
+    public function destroy(ReportServer $reportserver)
     {
-        //
+        $reportserver->delete();
+
+        return response('Delete Successfull', 200);
     }
 }

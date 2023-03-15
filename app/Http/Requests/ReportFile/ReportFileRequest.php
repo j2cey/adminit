@@ -47,9 +47,17 @@ class ReportFileRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return ReportFile::defaultRules();
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return ReportFile::messagesRules();
     }
 
     protected function getRetrieveByNameNormalized() {
