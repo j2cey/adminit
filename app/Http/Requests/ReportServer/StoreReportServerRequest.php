@@ -42,9 +42,10 @@ class StoreReportServerRequest extends ReportServerRequest
      */
     protected function prepareForValidation()
     {
+
         $this->merge([
-            'status' => $this->setRelevantStatus($this->input('status'),'code', true),
-            'osserver' => $this->setRelevantOsServer($this->input('osserver'),'id', true),
+            'status' => $this->setRelevantStatus($this->input('status'),'code', false),
+            'osserver' => $this->setRelevantOsServer($this->input('osserver'),'id', false),
         ]);
     }
 }

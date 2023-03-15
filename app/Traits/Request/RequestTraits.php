@@ -40,7 +40,7 @@ trait RequestTraits
      * @return mixed
      */
     public function decodeJsonField($value) {
-        return json_decode($value, true);
+        return is_string($value) ? json_decode($value, true) : $value;
     }
 
     public function setRelevantRole($value, $json_decode_before = false) {

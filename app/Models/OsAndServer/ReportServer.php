@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ReportServer
- * @package App\Models\ReportFile
+ * @package App\Models\ReportServer
  *
  * @property integer $id
  *
