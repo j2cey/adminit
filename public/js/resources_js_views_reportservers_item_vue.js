@@ -87,7 +87,7 @@ var render = function render() {
     staticClass: "text text-xs"
   }, [_vm._v("Système d'exploitation")]), _vm._v(" "), _c("dd", {
     staticClass: "text text-xs"
-  }, [_vm._v(_vm._s(_vm.reportserver.osserver))]), _vm._v(" "), _c("dt", {
+  }, [_vm._v(_vm._s(_vm.reportserver.osserver ? _vm.reportserver.osserver.name : ""))]), _vm._v(" "), _c("dt", {
     staticClass: "text text-xs"
   }, [_vm._v("Created at")]), _vm._v(" "), _c("dd", {
     staticClass: "text text-xs"

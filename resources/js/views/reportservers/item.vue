@@ -18,7 +18,7 @@
                         <dt class="text text-xs">Statut</dt>
                         <dd class="text text-xs">{{ reportserver.status.name }}</dd>
                         <dt class="text text-xs">Système d'exploitation</dt>
-                        <dd class="text text-xs">{{ reportserver.osserver}}</dd>
+                        <dd class="text text-xs">{{ reportserver.osserver ? reportserver.osserver.name : "" }}</dd>
                         <dt class="text text-xs">Created at</dt>
                         <dd class="text text-xs">{{ reportserver.created_at | formatDate}}</dd>
                     </dl>
