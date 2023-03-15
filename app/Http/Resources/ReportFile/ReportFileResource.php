@@ -2,14 +2,13 @@
 
 namespace App\Http\Resources\ReportFile;
 
+use function route;
 use App\Models\Status;
 use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
 use App\Http\Resources\StatusResource;
 use App\Models\ReportFile\ReportFileType;
-use App\Http\Resources\Report\ReportResource;
 use Illuminate\Http\Resources\Json\JsonResource;
-use function route;
 
 /**
  * Class StatusResource
@@ -69,7 +68,5 @@ class ReportFileResource extends JsonResource
             'edit_url' => route('reportfiles.edit', $this->uuid),
             'destroy_url' => route('reportfiles.destroy', $this->uuid),
         ];
-
-        //return parent::toArray($request);
     }
 }

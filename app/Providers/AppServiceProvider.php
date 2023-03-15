@@ -98,7 +98,7 @@ class AppServiceProvider extends ServiceProvider
         });*/
 
         Validator::extend('without_spaces', function($attr, $value){
-            return preg_match('/^\S*$/u', $value);
+            return (empty($value)) ? true : preg_match('/^\S*$/u', $value);
         });
 
         // Executed when a test database is created...

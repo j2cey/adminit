@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\AccessProtocole;
 
 class AccessProtocoleSeeder extends Seeder
 {
@@ -13,6 +14,7 @@ class AccessProtocoleSeeder extends Seeder
      */
     public function run()
     {
-        //
+        AccessProtocole::createNew("FTP", "ftp");
+        AccessProtocole::createNew("SFTP", "sftp");
     }
 }

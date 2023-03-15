@@ -85,15 +85,15 @@ class OsServer extends BaseModel  implements Auditable
     #region Custom Functions
 
     /**
-     * Crée (et stocker dans la base de données) un nouvel objet de type OsServer
-     * @param OsArchitecture $osarchitecture
-     * @param OsFamily $osfamily
-     * @param Status $status
-     * @param $name
-     * @param string $description
+     * Crée (et stocker dans la base de données) un nouveau Système d'Exploitation
+     * @param OsArchitecture $osarchitecture L'architecture de l'OS
+     * @param OsFamily $osfamily Famille de l'OS
+     * @param string $name Nom de l'OS
+     * @param Status|null $status Statut de l'OS
+     * @param string $description Description
      * @return OsServer
      */
-    public static function createNew(OsArchitecture $osarchitecture, OsFamily $osfamily, $name, Status $status = null, string $description = "") : OsServer
+    public static function createNew(OsArchitecture $osarchitecture, OsFamily $osfamily, string $name, Status $status = null, string $description = ""): OsServer
     {
         $osserver = OsServer::create([
             'name' => $name,
@@ -116,15 +116,15 @@ class OsServer extends BaseModel  implements Auditable
     }
 
     /**
-     * Met à jour (et stocker dans la base de données) cet objet
-     * @param OsArchitecture $osarchitecture
-     * @param OsFamily $osfamily
-     * @param Status $status
-     * @param $name
-     * @param string $description
+     * Met à jour (et stocker dans la base de données) ce Système d'Exploitation
+     * @param OsArchitecture $osarchitecture L'architecture de l'OS
+     * @param OsFamily $osfamily Famille de l'OS
+     * @param string $name Nom de l'OS
+     * @param Status|null $status Statut de l'OS
+     * @param string $description Description
      * @return $this
      */
-    public function updateOne(OsArchitecture $osarchitecture, OsFamily $osfamily, $name, Status $status = null, string $description = ""): OsServer
+    public function updateOne(OsArchitecture $osarchitecture, OsFamily $osfamily, string $name, Status $status = null, string $description = ""): OsServer
     {
         $this->name = $name;
         $this->description = $description;

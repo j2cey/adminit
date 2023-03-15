@@ -34,15 +34,13 @@ class AccessProtocoleTest extends TestCase
      *
      * @return void
      */
-    public function test_a_AccessProtocole_can_be_stored_to_the_database()
+    public function test_an_AccessProtocole_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
-        //$accessprotocole_count_before_test = ReportFileType::all()->count();
-
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessprotocole("Anri","yfuyd-ydy");
+        $response = $this->add_new_AccessProtocole("Anri", "anri","yfuyd-ydy");
 
         // on test si l'assertion s'est bien passée
         $response->assertStatus(201);
@@ -62,10 +60,10 @@ class AccessProtocoleTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessprotocole("","");
+        $response = $this->add_new_AccessProtocole("","");
 
         // on doit avoir une erreur de validation des champs ci-dessous
-        $response->assertSessionHasErrors(['name']);
+        $response->assertSessionHasErrors(['name','code']);
     }
 
     /**
@@ -79,15 +77,16 @@ class AccessProtocoleTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessprotocole("vcibvfuezb","ftpadmin");
+        $response = $this->add_new_AccessProtocole("vcibvfuezb","new_code","first desc");
 
         $newaccessprotocole = AccessProtocole::first();
 
-        $this->update_existing_accessprotocole($newaccessprotocole, "new name edited", "new-description");
+        $this->update_existing_AccessProtocole($newaccessprotocole, "new name edited", "new code edited", "new-description");
 
         $newaccessprotocole->refresh();
 
         $this->assertEquals('new name edited',$newaccessprotocole->name);
+        $this->assertEquals('new code edited',$newaccessprotocole->code);
         $this->assertEquals('new-description', $newaccessprotocole->description);
     }
 
@@ -96,13 +95,13 @@ class AccessProtocoleTest extends TestCase
      *
      * @return void
      */
-    public function test_a_accessprotocole_can_be_deleted()
+    public function test_an_AccessProtocole_can_be_deleted()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessprotocole("new access protocole","new-description");
+        $response = $this->add_new_AccessProtocole("new access protocole", "new_access_protocole","new-description");
 
         $newaccessprotocole = AccessProtocole::first();
 
@@ -113,22 +112,24 @@ class AccessProtocoleTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_accessprotocole($name, $description = "")
+    private function add_new_AccessProtocole($name, $code, $description = "")
     {
         // on essaie d'insérer un nouvel objet AccessProtocole dans la base de données
         // et on récupère le résultat dans une variable $response
 
         return $this->post('accessprotocoles', [
                 'name' => $name,
+                'code' => $code,
                 'description' => $description,
             ]
         );
     }
 
-    private function update_existing_accessprotocole($existingaccessprotocole, $name, $description = "")
+    private function update_existing_AccessProtocole($existingaccessprotocole, $name, $code, $description = "")
     {
         return $this->put('accessprotocoles/' . $existingaccessprotocole->uuid, [
             'name' => $name,
+            'code' => $code,
             'description' => $description,
         ]);
     }

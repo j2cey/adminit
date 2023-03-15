@@ -23,6 +23,7 @@ class CreateAccessProtocoleTable extends Migration
             $table->id();
 
             $table->string('name')->comment("Nom du protocole");
+            $table->string('code')->unique()->comment("code du protocole");
 
             $table->string('description', 500)->nullable()->comment("description du protocole");
 

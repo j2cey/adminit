@@ -8,15 +8,15 @@ use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class ReportFileTypeRequest
- * @package App\Http\Requests\ReportFileType
+ * Class AccessProtocoleRequest
+ * @package App\Http\Requests\AccessProtocole
  *
  * @property string $name
+ * @property string $code
  *
  * @property string|null $description
  *
  * @property Status $status
- * @property AccessProtocole $accessprotocole
  */
 class AccessProtocoleRequest extends FormRequest
 {
@@ -26,7 +26,7 @@ class AccessProtocoleRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -36,7 +36,7 @@ class AccessProtocoleRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return AccessProtocole::defaultRules();
     }
@@ -46,7 +46,7 @@ class AccessProtocoleRequest extends FormRequest
      *
      * @return array
      */
-    public function messages()
+    public function messages(): array
     {
         return AccessProtocole::messagesRules();
     }

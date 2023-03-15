@@ -75,12 +75,43 @@ class Report extends BaseModel implements Auditable
 
     #region Custom Functions
 
-    public static function createNew($title, ReportType $report_type,$description): Report {
-        return Report::create([
+    /**
+     * Crée (et stocke dans la base de données) un nouvel objet Report
+     * @param string $title Le Titre du Rapport
+     * @param ReportType $reporttype Le Type du Rapport
+     * @param string $description La Description
+     * @return Report
+     */
+    public static function createNew(string $title, ReportType $reporttype, string $description): Report {
+        $report = Report::create([
             'title' => $title,
-            'report_type_id' => $report_type->id,
             'description' => $description,
         ]);
+
+        $report->reporttype()->associate($reporttype);
+
+        $report->save();
+
+        return $report;
+    }
+
+    /**
+     * Met à jour (et modifie dans la base de données) cet objet Report
+     * @param string $title
+     * @param ReportType $reporttype
+     * @param string $description
+     * @return $this
+     */
+    public function updateOne(string $title, ReportType $reporttype, string $description): Report
+    {
+        $this->title = $title;
+        $this->description = $description;
+
+        $this->reporttype()->associate($reporttype);
+
+        $this->save();
+
+        return $this;
     }
 
     #endregion
