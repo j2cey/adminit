@@ -2,9 +2,32 @@
 
 namespace App\Http\Requests\ReportFileAccess;
 
+use App\Models\Status;
+use Illuminate\Support\Carbon;
+use App\Models\AccessProtocole;
 use App\Traits\Request\RequestTraits;
+use App\Models\ReportFile\ReportFile;
+use App\Models\OsAndServer\ReportServer;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\ReportFile\ReportFileAccess;
 
+/**
+ * Class ReportFileAccessRequest
+ * @package App\Http\Requests\ReportFileAccess
+ *
+ * @property string $name
+ * @property string|null $code
+ * @property string|null $description
+ *
+ * @property bool $retrieve_by_name
+ * @property bool $retrieve_by_wildcard
+ *
+ *
+ * @property Status $status
+ * @property ReportFile $reportfile
+ * @property ReportServer $reportserver
+ * @property AccessProtocole $accessprotocole
+ */
 class ReportFileAccessRequest extends FormRequest
 {
     use RequestTraits;
@@ -14,9 +37,9 @@ class ReportFileAccessRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,10 +47,18 @@ class ReportFileAccessRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
-        return [
-            //
-        ];
+        return ReportFileAccess::defaultRules();
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return ReportFileAccess::messagesRules();
     }
 }

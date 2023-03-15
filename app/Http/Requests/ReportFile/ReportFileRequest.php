@@ -47,9 +47,7 @@ class ReportFileRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return ReportFile::defaultRules();
     }
 
     protected function getRetrieveByNameNormalized() {

@@ -4,11 +4,18 @@ namespace App\Http\Controllers\ReportFile;
 
 use App\Http\Controllers\Controller;
 use App\Models\ReportFile\ReportFileAccess;
+use App\Http\Resources\ReportFile\ReportFileAccessResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Requests\ReportFileAccess\StoreReportFileAccessRequest;
 use App\Http\Requests\ReportFileAccess\UpdateReportFileAccessRequest;
 
 class ReportFileAccessController extends Controller
 {
+    public function fetch(): AnonymousResourceCollection
+    {
+        return ReportFileAccessResource::collection(ReportFileAccess::all());
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -32,21 +39,23 @@ class ReportFileAccessController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\ReportFileAccess\StoreReportFileAccessRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreReportFileAccessRequest $request
+     * @return ReportFileAccessResource
      */
-    public function store(StoreReportFileAccessRequest $request)
+    public function store(StoreReportFileAccessRequest $request): ReportFileAccessResource
     {
-        //
+        $reportfileaccess = ReportFileAccess::createNew($request->reportfile, $request->reportserver, $request->accessprotocole, $request->name, $request->code, $request->status, $request->retrieve_by_name, $request->retrieve_by_wildcard, $request->description);
+
+        return new ReportFileAccessResource($reportfileaccess);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ReportFile\ReportFileAccess  $reportFileAccess
+     * @param ReportFileAccess $reportfileaccess
      * @return \Illuminate\Http\Response
      */
-    public function show(ReportFileAccess $reportFileAccess)
+    public function show(ReportFileAccess $reportfileaccess)
     {
         //
     }
@@ -54,10 +63,10 @@ class ReportFileAccessController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ReportFile\ReportFileAccess  $reportFileAccess
+     * @param ReportFileAccess $reportfileaccess
      * @return \Illuminate\Http\Response
      */
-    public function edit(ReportFileAccess $reportFileAccess)
+    public function edit(ReportFileAccess $reportfileaccess)
     {
         //
     }
@@ -65,23 +74,27 @@ class ReportFileAccessController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\ReportFileAccess\UpdateReportFileAccessRequest  $request
-     * @param  \App\Models\ReportFile\ReportFileAccess  $reportFileAccess
-     * @return \Illuminate\Http\Response
+     * @param UpdateReportFileAccessRequest $request
+     * @param ReportFileAccess $reportfileaccess
+     * @return ReportFileAccessResource
      */
-    public function update(UpdateReportFileAccessRequest $request, ReportFileAccess $reportFileAccess)
+    public function update(UpdateReportFileAccessRequest $request, ReportFileAccess $reportfileaccess): ReportFileAccessResource
     {
-        //
+        $reportfileaccess->updateOne($request->reportfile, $request->reportserver, $request->accessprotocole, $request->name, $request->code, $request->status, $request->retrieve_by_name, $request->retrieve_by_wildcard, $request->description);
+
+        return new ReportFileAccessResource($reportfileaccess);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ReportFile\ReportFileAccess  $reportFileAccess
+     * @param ReportFileAccess $reportfileaccess
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ReportFileAccess $reportFileAccess)
+    public function destroy(ReportFileAccess $reportfileaccess)
     {
-        //
+        $reportfileaccess->delete();
+
+        return response('Delete Successfull', 200);
     }
 }

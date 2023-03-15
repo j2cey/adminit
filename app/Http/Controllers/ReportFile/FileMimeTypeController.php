@@ -4,13 +4,16 @@ namespace App\Http\Controllers\ReportFile;
 
 use App\Http\Controllers\Controller;
 use App\Models\ReportFile\FileMimeType;
+use App\Http\Resources\ReportFile\FileMimeTypeResource;
 use App\Http\Requests\FileMimeType\StoreFileMimeTypeRequest;
 use App\Http\Requests\FileMimeType\UpdateFileMimeTypeRequest;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FileMimeTypeController extends Controller
 {
-    public function fetch() {
-        return FileMimeType::all();
+    public function fetch(): AnonymousResourceCollection
+    {
+        return FileMimeTypeResource::collection(FileMimeType::all());
     }
 
     /**

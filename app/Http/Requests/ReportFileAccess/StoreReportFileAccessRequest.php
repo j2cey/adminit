@@ -2,8 +2,15 @@
 
 namespace App\Http\Requests\ReportFileAccess;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ReportFile\ReportFileAccess;
 
+/**
+ * Class StoreReportFileAccessRequest
+ * @package App\Http\Requests\ReportFileAccess
+ *
+ *
+ */
 class StoreReportFileAccessRequest extends ReportFileAccessRequest
 {
     /**
@@ -11,9 +18,9 @@ class StoreReportFileAccessRequest extends ReportFileAccessRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return Auth::user()->can('reportfileaccess-create');
     }
 
     /**
@@ -21,10 +28,23 @@ class StoreReportFileAccessRequest extends ReportFileAccessRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
-        return [
-            //
-        ];
+        return ReportFileAccess::createRules();
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'reportfile' => $this->setRelevantReportFile($this->input('reportfile'),'id', false),
+            'reportserver' => $this->setRelevantReportServer($this->input('reportserver'),'id', false),
+            'accessprotocole' => $this->setRelevantAccessProtocole($this->input('accessprotocole'),'id', false),
+            'status' => $this->setRelevantStatus($this->input('status'),'code', false),
+        ]);
     }
 }
