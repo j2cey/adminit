@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\Code\HasCode;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $updated_by
  *
  * @property string $name
+ * @property string $code
  *
  * @property string|null $description
  *
@@ -30,7 +31,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class AccessProtocole extends BaseModel implements Auditable
 
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasCode, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -40,6 +41,7 @@ class AccessProtocole extends BaseModel implements Auditable
     {
         return [
             'name' => ['required'],
+            'code' => ['required','unique:access_protocoles,code,NULL,id'],
         ];
     }
 
@@ -50,10 +52,10 @@ class AccessProtocole extends BaseModel implements Auditable
         ]);
     }
 
-    public static function updateRules()
+    public static function updateRules($model)
     {
-        return array_merge(self::defaultRules(), [
-
+        return array_merge(self::defaultRules($model), [
+            'code' => ['required','unique:access_protocoles,code,'.$model->id.',id'],
         ]);
     }
 
@@ -61,23 +63,42 @@ class AccessProtocole extends BaseModel implements Auditable
     public static function messagesRules()
     {
         return [
-            'name.required' => "Prière de renseigner le login",
+            'name.required' => "Prière de renseigner le Nom",
+            'code.required' => "Prière de renseigner le Code",
+            'code.unique' => "Ce Code est déjà utilisé",
         ];
     }
 
+    #region Scopes
+
+    public function scopeFtp($query) {
+        return $query
+            ->where('code', "ftp");
+    }
+
+    public function scopeSftp($query) {
+        return $query
+            ->where('code', "sftp");
+    }
+
+    #endregion
+
 
     /**
-     * Sert à créer (et stocker dans la base de données) un nouvel objet de type AccessProtocole
-     * @param $name
-     * @param null $description
+     * Crée (et stocke dans la base de données) un nouveau Protocole d'accès
+     * @param string $name Nom du Protocole
+     * @param string $code Code du Protocole
+     * @param Status|null $status Statut
+     * @param string|null $description Description
      * @return AccessProtocole
      */
-    public static function createNew($name,Status $status = null, $description = null): AccessProtocole
+    public static function createNew(string $name, string $code, Status $status = null, string $description = null): AccessProtocole
     {
         $status = is_null($status) ? Status::default()->first() : $status;
 
         $accessprotocole = AccessProtocole::create([
             'name' => $name,
+            'code' => $code,
             'description' => $description,
         ]);
 
@@ -86,13 +107,22 @@ class AccessProtocole extends BaseModel implements Auditable
         return $accessprotocole;
     }
 
-    public function updateOne($name,Status $status = null, $description = null): AccessProtocole
+    /**
+     * Met à jour (et stocke dans la base de données) ce Protocole d'accès
+     * @param string $name Nom du Protocole
+     * @param string $code Code du Protocole
+     * @param Status|null $status Statut
+     * @param string|null $description Description
+     * @return $this
+     */
+    public function updateOne(string $name, string $code,Status $status = null, string $description = null): AccessProtocole
     {
         $this->name = $name;
+        $this->code = $code;
         $this->description = $description;
 
         if ( ! is_null($status) ) {
-            $this->status()->associate($status)->save();
+            $this->status()->associate($status);
         }
 
         $this->save();

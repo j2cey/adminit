@@ -70,7 +70,7 @@ class FileMimeType extends BaseModel implements Auditable
             ->where('name', "png");
     }
 
-    public function scope($query) {
+    public function scopeBmp($query) {
         return $query
             ->where('name', "bmp");
     }

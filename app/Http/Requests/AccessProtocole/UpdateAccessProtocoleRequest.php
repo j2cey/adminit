@@ -4,8 +4,13 @@ namespace App\Http\Requests\AccessProtocole;
 
 use App\Models\AccessProtocole;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class UpdateAccessProtocoleRequest
+ * @package App\Http\Requests\AccessProtocole
+ *
+ * @property AccessProtocole $accessprotocole
+ */
 class UpdateAccessProtocoleRequest extends AccessProtocoleRequest
 {
     /**
@@ -13,7 +18,7 @@ class UpdateAccessProtocoleRequest extends AccessProtocoleRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return Auth::user()->can('accessprotocole-update');
     }
@@ -23,7 +28,7 @@ class UpdateAccessProtocoleRequest extends AccessProtocoleRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return AccessProtocole::updateRules($this->accessprotocole);
     }

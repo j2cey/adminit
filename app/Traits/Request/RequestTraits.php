@@ -6,11 +6,14 @@ namespace App\Traits\Request;
 use App\Models\User;
 use App\Models\Status;
 use App\Models\Reports\Report;
+use App\Models\AccessProtocole;
 use Spatie\Permission\Models\Role;
 use App\Models\Reports\ReportType;
 use App\Models\OsAndServer\OsServer;
 use App\Models\OsAndServer\OsFamily;
+use App\Models\ReportFile\ReportFile;
 use App\Models\ReportFile\FileMimeType;
+use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
 use App\Models\AnalysisRules\AnalysisRule;
 use App\Models\OsAndServer\OsArchitecture;
@@ -214,6 +217,25 @@ trait RequestTraits
     }
 
     /**
+     * Retourne un objet ReportFileType en fonction d'un champs donné
+     * @param $value
+     * @param string $field
+     * @param bool $json_decode_before
+     * @return ReportFile|null
+     */
+    public function setRelevantReportFile($value, string $field = 'íd', bool $json_decode_before = false): ?ReportFile
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? ReportFile::where($field, $value[$field])->first() : null;
+    }
+
+    /**
      * Retourne un objet Report en fonction d'un champs donné
      * @param $value
      * @param string $field
@@ -230,6 +252,25 @@ trait RequestTraits
             $value = $this->decodeJsonField($value);
         }
         return $value ? Report::where($field, $value[$field])->first() : null;
+    }
+
+    /**
+     * Retourne un objet Report en fonction d'un champs donné
+     * @param $value
+     * @param string $field
+     * @param bool $json_decode_before
+     * @return ReportServer|null
+     */
+    public function setRelevantReportServer($value, string $field = 'íd', bool $json_decode_before = false): ?ReportServer
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? ReportServer::where($field, $value[$field])->first() : null;
     }
 
     /**
@@ -250,9 +291,6 @@ trait RequestTraits
         }
         return $value ? OsArchitecture::where($field, $value[$field])->first() : null;
     }
-
-
-
 
     /**
      * Retourne un objet OsServer en fonction d'un champs donné
@@ -290,5 +328,24 @@ trait RequestTraits
             $value = $this->decodeJsonField($value);
         }
         return $value ? OsFamily::where($field, $value[$field])->first() : null;
+    }
+
+    /**
+     * Retourne un objet OsFamily en fonction d'un champs donné
+     * @param $value
+     * @param string $field
+     * @param bool $json_decode_before
+     * @return AccessProtocole|null
+     */
+    public function setRelevantAccessProtocole($value, string $field = 'íd', bool $json_decode_before = false): ?AccessProtocole
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? AccessProtocole::where($field, $value[$field])->first() : null;
     }
 }

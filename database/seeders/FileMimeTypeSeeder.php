@@ -17,7 +17,7 @@ class FileMimeTypeSeeder extends Seeder
         $this->createNew("jpg", "jpg","Mimes des fichiers JPEG");
         $this->createNew("bmp", "bmp","Mimes des fichiers BMP");
         $this->createNew("png", "png","Mimes des fichiers PNG");
-        $this->createNew("csv,txt", "csv,txt","Mimes des fichiers CSV");
+        $this->createNew("csv,txt", 'csv,txt',"Mimes des fichiers CSV");
     }
 
     private function createNew($name, $code, $description = null) {

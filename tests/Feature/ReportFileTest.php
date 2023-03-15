@@ -3,12 +3,10 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\User;
 use App\Models\Status;
 use App\Models\Reports\Report;
 use App\Models\Reports\ReportType;
 use App\Models\ReportFile\ReportFile;
-use Illuminate\Support\Facades\Artisan;
 use App\Models\ReportFile\ReportFileType;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -40,7 +38,12 @@ class ReportFileTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_reportfile("gutuu");
+        $response = $this->add_new_reportfile(
+            $this->add_new_report("new report"),
+            ReportFileType::csv()->first(),
+            Status::active()->first(),
+            "new report file"
+        );
 
         // on test si l'assertion s'est bien passée
         $response->assertStatus(201);
@@ -60,10 +63,38 @@ class ReportFileTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_reportfile("");
+        $response = $this->add_new_reportfile(
+            null,
+            null,
+            Status::active()->first(),
+            ""
+        );
 
         // on doit avoir une erreur de validation des champs ci-dessous
-        $response->assertSessionHasErrors(['name']);
+        $response->assertSessionHasErrors(['report','reportfiletype','name']);
+    }
+
+    /**
+     * Test la validation d'un nouveau ReportFile avant création
+     *
+     * @return void
+     */
+    public function test_ReportFile_without_spaces_fields_must_be_validated_before_creation()
+    {
+        //$this->withoutExceptionHandling();
+
+        $user = $this->authenticated_user_admin();
+
+        $response = $this->add_new_reportfile(
+            $this->add_new_report("new report"),
+            ReportFileType::csv()->first(),
+            Status::active()->first(),
+            "new report file",
+            "rerre reerre"
+        );
+
+        // on doit avoir une erreur de validation des champs ci-dessous
+        $response->assertSessionHasErrors(['wildcard']);
     }
 
     /**
@@ -77,31 +108,44 @@ class ReportFileTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_reportfile("new report file");
+        $response = $this->add_new_reportfile(
+            $this->add_new_report("new report"),
+            ReportFileType::csv()->first(),
+            Status::active()->first(),
+            "new report file",
+            "rerre_reerre",
+            true,
+            false,
+            "new report desc"
+        );
 
         $newreportfile = ReportFile::first();
 
         $reportfiletype_txt = ReportFileType::txt()->first();
         $status_inactive = Status::inactive()->first();
-        $report_new = $this->add_new_report("new report test");
+        $another_report = $this->add_new_report("another report");
 
-        $this->put('reportfiles/' . $newreportfile->uuid, [
-            'report' => $report_new->toJson(),
-            'reportfiletype' => $reportfiletype_txt->toJson(),
-            'status' => $status_inactive->toJson(),
-            'name' => "new report file edited",
-            'wildcard' => "new-wilcard",
-            'description' => "new-description",
-        ]);
+        $this->update_existing_reportfile(
+            $newreportfile,
+            $another_report,
+            $reportfiletype_txt,
+            $status_inactive,"new report file edited",
+            "new_wildcard",
+            false,
+            true,
+            "new report desc edited"
+        );
 
         $newreportfile->refresh();
 
         $this->assertEquals('new report file edited',$newreportfile->name);
-        $this->assertEquals('new-wilcard', $newreportfile->wildcard);
-        $this->assertEquals('new-description', $newreportfile->description);
+        $this->assertEquals('new_wildcard', $newreportfile->wildcard);
+        $this->assertEquals('new report desc edited', $newreportfile->description);
+        $this->assertEquals(false, $newreportfile->retrieve_by_name);
+        $this->assertEquals(true, $newreportfile->retrieve_by_wildcard);
         $this->assertEquals($status_inactive->code, $newreportfile->status->code);
         $this->assertEquals($reportfiletype_txt->id, $newreportfile->reportfiletype->id);
-        $this->assertEquals($report_new->id, $newreportfile->report->id);
+        $this->assertEquals($another_report->id, $newreportfile->report->id);
     }
 
     /**
@@ -111,11 +155,16 @@ class ReportFileTest extends TestCase
      */
     public function test_a_ReportFile_can_be_deleted()
     {
-        //$this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_reportfile("new report file");
+        $response = $this->add_new_reportfile(
+            $this->add_new_report("new report"),
+            ReportFileType::csv()->first(),
+            Status::active()->first(),
+            "new report file"
+        );
 
         $newreportfile = ReportFile::first();
 
@@ -124,33 +173,38 @@ class ReportFileTest extends TestCase
         $this->assertCount(0, ReportFile::all());
     }
 
+
+
     #region Private Functions
 
-    private function add_new_reportfile($name, $wildcard = "",$description="")
+    private function add_new_reportfile($report, $reportfiletype, $status, $name, $wildcard = null, $retrieve_by_name = false, $retrieve_by_wildcard = false, $description = "")
     {
-        // on essaie d'insérer un nouvel objet ReportFile dans la base de données
-        // et on récupère le résultat dans une variable $response
+        return $this->post('reportfiles', $this->new_data($report, $reportfiletype, $status, $name, $wildcard, $retrieve_by_name, $retrieve_by_wildcard, $description));
+    }
 
-        $reportfiletype = ReportFileType::csv()->first();
-        $report = $this->add_new_report("test");
-        $status = Status::active()->first();
-
-        return $this->post('reportfiles', [
-                'report' => $report->toJson(),
-                'reportfiletype' => $reportfiletype->toJson(),
-                'status' => $status->toJson(),
-                'name' => $name,
-                'wildcard' => $wildcard,
-                'description' => $description,
-            ]
-        );
+    private function update_existing_reportfile($existingreportfile, $report, $reportfiletype, $status, $name, $wildcard = null, $retrieve_by_name = false, $retrieve_by_wildcard = false, $description = "")
+    {
+        $this->put('reportfiles/' . $existingreportfile->uuid, $this->new_data($report, $reportfiletype, $status, $name, $wildcard, $retrieve_by_name, $retrieve_by_wildcard, $description));
     }
 
     private function add_new_report($title)
     {
         $reporttype = ReportType::defaultReport()->first();
-
         return Report::createNew($title,$reporttype,"sdsd");
+    }
+
+    private function new_data($report, $reportfiletype, $status, $name, $wildcard = null, $retrieve_by_name = false, $retrieve_by_wildcard = false, $description = "") {
+        return [
+            'report' => $report,
+            'reportfiletype' => $reportfiletype,
+            'status' => $status,
+
+            'name' => $name,
+            'wildcard' => $wildcard,
+            'retrieve_by_name' => $retrieve_by_name,
+            'retrieve_by_wildcard' => $retrieve_by_wildcard,
+            'description' => $description,
+        ];
     }
 
     #endregion

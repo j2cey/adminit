@@ -4,8 +4,13 @@ namespace App\Http\Requests\AccessProtocole;
 
 use App\Models\AccessProtocole;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class UpdateAccessProtocoleRequest
+ * @package App\Http\Requests\AccessProtocole
+ *
+ *
+ */
 class StoreAccessProtocoleRequest extends AccessProtocoleRequest
 {
     /**
@@ -13,7 +18,7 @@ class StoreAccessProtocoleRequest extends AccessProtocoleRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return Auth::user()->can('accessprotocole-create');
     }

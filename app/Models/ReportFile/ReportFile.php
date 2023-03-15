@@ -112,16 +112,18 @@ class ReportFile extends BaseModel implements Auditable
     #region Custom Functions
 
     /**
-     * Sert à créer (et stocker dans la base de données) un nouvel objet de type ReportFile
-     * @param ReportFileType $reportfiletype
-     * @param Status $status
-     * @param $name
-     * @param null $wildcard
-     * @param bool $retrieve_by_name
-     * @param bool $retrieve_by_wildcard
+     * Crée (et stocker dans la base de données) un nouveau Fichier de Rapport
+     * @param Report $report Le Rapport auquel le fichier appartient
+     * @param ReportFileType $reportfiletype Le Type de fichier
+     * @param Status $status Le statut du fichier
+     * @param string $name Le Nomn du fichier
+     * @param string|null $wildcard Le Wildcard
+     * @param bool $retrieve_by_name Détermine si le fichier doit être récupéré par Nom
+     * @param bool $retrieve_by_wildcard Détermine si le fichier doit être récupéré par Wildcard
+     * @param string|null $description Description du Fichier
      * @return ReportFile
      */
-    public static function createNew(Report $report, ReportFileType $reportfiletype, Status $status, $name, $wildcard = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false, $description="") : ReportFile
+    public static function createNew(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $wildcard = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false, string $description = null): ReportFile
     {
         $reportfile = ReportFile::create([
             'name' => $name,
@@ -146,7 +148,19 @@ class ReportFile extends BaseModel implements Auditable
         return $reportfile;
     }
 
-    public function updateOne(Report $report, ReportFileType $reportfiletype, Status $status, $name, $wildcard=null, $retrieve_by_name=false, $retrieve_by_wildcard=false, $description="")
+    /**
+     * Crée (et stocker dans la base de données) un nouveau Fichier de Rapport
+     * @param Report $report Le Rapport auquel le fichier appartient
+     * @param ReportFileType $reportfiletype Le Type de fichier
+     * @param Status $status Le statut du fichier
+     * @param string $name Le Nomn du fichier
+     * @param string|null $wildcard Le Wildcard
+     * @param bool $retrieve_by_name Détermine si le fichier doit être récupéré par Nom
+     * @param bool $retrieve_by_wildcard Détermine si le fichier doit être récupéré par Wildcard
+     * @param string $description Description du Fichier
+     * @return $this
+     */
+    public function updateOne(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $wildcard = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false, string $description = ""): ReportFile
     {
         $this->name = $name;
         $this->wildcard = $wildcard;
@@ -167,12 +181,6 @@ class ReportFile extends BaseModel implements Auditable
         $this->save();
 
         return $this;
-    }
-
-
-
-    public function setFormalizedExtension() {
-        return $this->wildcard = trim($this->wildcard);
     }
 
     protected static function boot(){

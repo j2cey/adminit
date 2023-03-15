@@ -41,5 +41,6 @@ class DatabaseSeeder extends Seeder
         $this->call(OsArchitectureSeeder::class);
         $this->call(OsFamilySeeder::class);
         $this->call(OsServerSeeder::class);
+        $this->call(AccessProtocoleSeeder::class);
     }
 }

@@ -88,16 +88,16 @@ class ReportServer extends BaseModel implements Auditable
     #region Custom Functions
 
     /**
-     * Sert à créer (et stocker dans la base de données) un nouvel objet de type ReportFileType
-     * @param OsServer $osserver
-     * @param $name
-     * @param $ip_address
-     * @param $domain_name
-     * @param Status $status
-     * @param null $description
+     * Crée (et stocke dans la base de données) un nouvel Serveur
+     * @param OsServer $osserver Le Système d'exploitation
+     * @param string $name Le Nom du Serveur
+     * @param string $ip_address L'adresse IP du Serveur
+     * @param string $domain_name Le nom DNS du Serveur
+     * @param Status|null $status Le Statut
+     * @param string $description La Description
      * @return ReportServer
      */
-    public static function createNew(OsServer $osserver, $name, $ip_address, $domain_name, Status $status = null, $description = null) : ReportServer
+    public static function createNew(OsServer $osserver, string $name, string $ip_address, string $domain_name, Status $status = null, string $description = ""): ReportServer
     {
         $reportserver = ReportServer::create([
             'name' => $name,
@@ -115,7 +115,17 @@ class ReportServer extends BaseModel implements Auditable
         return $reportserver;
     }
 
-    public function updateOne(OsServer $osserver, $name, $ip_address, $domain_name, Status $status = null, $description)
+    /**
+     * Met à jour (et stocke dans la base de données) ce Serveur
+     * @param OsServer $osserver Le Système d'exploitation
+     * @param string $name Le Nom du Serveur
+     * @param string $ip_address L'adresse IP du Serveur
+     * @param string $domain_name Le nom DNS du Serveur
+     * @param Status|null $status Le Statut
+     * @param string $description La Description
+     * @return $this
+     */
+    public function updateOne(OsServer $osserver, string $name, string $ip_address, string $domain_name, Status $status = null, string $description = ""): ReportServer
     {
         $this->name = $name;
         $this->domain_name = $domain_name;

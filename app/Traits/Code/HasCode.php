@@ -22,9 +22,9 @@ trait HasCode
     public function normalizeCodeField() {
         if ( is_null($this->code) ) {
             $this->code = $this->generateCodeFromClassName();
-        } else {
+        } /*else {
             $this->code = Str::slug($this->code, '-');
-        }
+        }*/
     }
 
     public function generateCodeFromClassName(): string

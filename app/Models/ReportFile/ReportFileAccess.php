@@ -47,7 +47,7 @@ class ReportFileAccess extends BaseModel implements Auditable
 
     protected $guarded = [];
 
-    protected $with = ["reportfiletype"];
+    protected $with = [];
 
     public static function defaultRules() {
         return [
@@ -101,7 +101,7 @@ class ReportFileAccess extends BaseModel implements Auditable
     #region Custom Functions
 
     /**
-     * Crée (et stocke dans la base de données) un nouvel objet de type ReportFileAccess
+     * Crée (et stocke dans la base de données) un nouvel objet ReportFileAccess
      * @param ReportFile $reportfile Le Fichier
      * @param ReportServer $reportserver Le Serveur
      * @param AccessProtocole $accessprotocole Le Protocole d'accès
@@ -110,10 +110,10 @@ class ReportFileAccess extends BaseModel implements Auditable
      * @param Status|null $status Le Statut
      * @param bool|null $retrieve_by_name Valeur déterminant si le fichier doit être récupéré par nom
      * @param bool|null $retrieve_by_wildcard Valeur déterminant si le fichier doit être récupéré par Wildcard
-     * @param string $description Description
+     * @param string|null $description Description
      * @return ReportFileAccess
      */
-    public static function createNew(ReportFile $reportfile, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, string $code = null, Status $status = null, bool $retrieve_by_name = null, bool $retrieve_by_wildcard = null, string $description = ""): ReportFileAccess
+    public static function createNew(ReportFile $reportfile, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, string $code = null, Status $status = null, bool $retrieve_by_name = null, bool $retrieve_by_wildcard = null, string $description = null): ReportFileAccess
     {
         $reportfileaccess = ReportFileAccess::create([
             'name' => $name,
@@ -142,7 +142,7 @@ class ReportFileAccess extends BaseModel implements Auditable
     }
 
     /**
-     * Met à jour (et modifie dans la base de données) un nouvel objet de type ReportFileAccess
+     * Met à jour (et modifie dans la base de données) l'objet ReportFileAccess
      * @param ReportFile $reportfile Le Fichier
      * @param ReportServer $reportserver Le Serveur
      * @param AccessProtocole $accessprotocole Le Protocole d'accès
@@ -151,10 +151,10 @@ class ReportFileAccess extends BaseModel implements Auditable
      * @param Status|null $status Le Statut
      * @param bool $retrieve_by_name Valeur déterminant si le fichier doit être récupéré par nom
      * @param bool $retrieve_by_wildcard Valeur déterminant si le fichier doit être récupéré par Wildcard
-     * @param string $description Description
+     * @param string|null $description Description
      * @return $this
      */
-    public function updateOne(ReportFile $reportfile, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, string $code = null, Status $status = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false, string $description = ""): ReportFileAccess
+    public function updateOne(ReportFile $reportfile, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, string $code = null, Status $status = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false, string $description = null): ReportFileAccess
     {
         $this->name = $name;
         $this->code = $code;
