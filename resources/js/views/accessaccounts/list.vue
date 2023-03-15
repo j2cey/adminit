@@ -63,7 +63,8 @@
                         </span>
                         <span v-else-if="column.field === 'status'" class="has-text-info is-italic text-xs">
                             <span v-if="props.row[column.field]">
-                                {{ props.row[column.field].name }}
+                                <b-tag v-if="props.row[column.field].code === 'active'" type="is-success is-light">{{ props.row[column.field].name }}</b-tag>
+                                <b-tag v-else type="is-danger is-light">{{ props.row[column.field].name }}</b-tag>
                             </span>
                             <span v-else></span>
                         </span>
@@ -114,6 +115,7 @@
 
 <script>
 import AccessAccountBus from "../accessaccounts/accessaccountBus";
+import AddUpdateAccessAccount from "../accessaccounts/addupdate";
 
 export default {
     props: {
@@ -121,7 +123,7 @@ export default {
     },
     name: "access-account-list",
     components: {
-        AddUpdateAccessAccount: () => import('../accessaccounts/addupdate'),
+        AddUpdateAccessAccount,
         AccessAccountItem: () => import('../accessaccounts/item'),
     },
     mounted() {
@@ -199,8 +201,7 @@ export default {
     },
     methods: {
         createAccessAccount() {
-            let report = this.report
-            AccessAccountBus.$emit('create_new_accessaccount', { report })
+            AccessAccountBus.$emit('create_new_accessaccount')
         },
         editAccessAccount(accessaccount) {
             AccessAccountBus.$emit('edit_accessaccount', { accessaccount })
@@ -232,12 +233,14 @@ export default {
                 return accessaccount.id === c.id
             })
 
+            console.log("addAccessAccountToList: ", accessaccount, accessaccountIndex)
+
             // if this Account doesn't belong to the list
             if (accessaccountIndex === -1) {
                 //J'ajoute dans la liste
                 this.accessaccounts.push(accessaccount)
-
-                this.$emit('accessaccount_created', accessaccount)
+                this.$emit('accessaccount_added', accessaccount)
+                console.log("accessaccount_added")
             }
         },
         updateAccessAccountFromList(accessaccount) {

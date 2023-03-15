@@ -4,7 +4,6 @@ namespace App\Http\Requests\AccessAccount;
 
 use App\Models\AccessAccount;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAccessAccountRequest extends AccessAccountRequest
 {

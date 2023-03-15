@@ -20,9 +20,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property integer $updated_by
  *
  *
- * @property string $name
+ * @property string $login
+ * @property string $pwd
+ * @property string $email
+ * @property string $username
  * @property string|null $description
- *
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -44,7 +46,10 @@ class AccessAccountResource extends JsonResource
             'uuid' => $this->uuid,
             'status' => StatusResource::make($this->status),
 
-            'name' => $this->name,
+            'login' => $this->login,
+            'pwd' => $this->pwd,
+            'email' => $this->email,
+            'username' => $this->username,
             'description' => $this->description,
 
             'created_at' => $this->created_at,

@@ -54,6 +54,11 @@ class PermissionSeeder extends Seeder
             ['osserver-create', 3],
             ['osserver-update', 1],
             ['osserver-delete', 1]
+
+            ['accessprotocole-list', 4],
+            ['accessprotocole-create', 3],
+            ['accessprotocole-update', 1],
+            ['accessprotocole-delete', 1]
         ];
 
         foreach ($permissions as $permission) {

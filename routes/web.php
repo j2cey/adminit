@@ -20,6 +20,7 @@ use App\Http\Controllers\DifficultyController;
 use App\Http\Controllers\AppreciationController;
 use App\Http\Controllers\AccessAccountController;
 use App\Http\Controllers\Reports\ReportController;
+use App\Http\Controllers\AccessProtocoleController;
 use App\Http\Controllers\Reports\ReportTypeController;
 use App\Http\Controllers\Authorization\RoleController;
 use App\Http\Controllers\OsAndServer\OsFamilyController;
@@ -314,6 +315,8 @@ Route::resource('osservers',OsServerController::class)->middleware('auth');
 Route::get('osservers.fetch',[OsServerController::class,'fetch'])
     ->name('osservers.fetch')
     ->middleware('auth');
+
+Route::resource('accessprotocoles',AccessProtocoleController::class)->middleware('auth');
 
 //Route::resource('reportservers',ReportServerController::class)->middleware('auth');
 

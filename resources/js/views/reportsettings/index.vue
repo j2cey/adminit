@@ -51,7 +51,8 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text">Protocoles d'Accès</span>
-                        <span class="info-box-number">0</span>
+                        
+                        <span class="info-box-number">{{ accessprotocoles.length }}</span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
@@ -70,6 +71,14 @@
         </div>
         <!-- /.row -->
 
+        <div class="row">
+            <div class="col-md-12">
+                <AccessProtocoles list_title_prop="Protocoles d'accès" :accessprotocoles_list_prop="accessprotocoles" v-on:access_protocole_created="addAccessProtocole" v-on:accesprotocole_removed_from_list="removeAccessProtocole"></AccessProtocoles>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
     </div><!--/. container-fluid -->
 </template>
 
@@ -80,14 +89,17 @@ export default {
     props: {
         filemimetypes_prop: {},
         reportfiletypes_prop: {},
+        accessprotocoles_prop: {},
     },
     components: {
         ReportFileTypes: () => import('../reportfiletypes/item-list'),
+        AccessProtocoles: () => import('../accessprotocoles/item-list'),
     },
     data() {
         return {
             filemimetypes: this.filemimetypes_prop,
             reportfiletypes: this.reportfiletypes_prop,
+            accessprotocoles: this.accessprotocoles_prop,
         };
     },
     methods: {
@@ -108,8 +120,27 @@ export default {
             if (reportFileTypeIndex === -1) {
                 this.reportfiletypes.splice($event, 1)
             }
-        }
+        },
 
+        addAccessProtocole($event) {
+            //console.log("AccessProtocole created received in system index", $event)
+            let AccessProtocoleIndex = this.accessprotocoles.findIndex(s => {
+                return $event.id === s.id
+            })
+            if (AccessProtocoleIndex === -1) {
+                this.accessprotocoles.push($event)
+            }
+        },
+
+        removeAccessProtocole($event){
+            //console.log("accessprotocole_removed_from_list received at reportsetting-index", $event)
+            let AccessProtocoleIndex = this.accessprotocoles.findIndex(s => {
+                return $event.id === s.id
+            })
+            if (AccessProtocoleIndex === -1) {
+                this.accessprotocoles.splice($event, 1)
+            }
+        }
     },
     computed: {
     }

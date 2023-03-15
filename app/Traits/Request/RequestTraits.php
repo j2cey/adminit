@@ -152,6 +152,7 @@ trait RequestTraits
         if ($json_decode_before || is_string($value)) {
             $value = $this->decodeJsonField($value);
         }
+
         return $value ? Status::where($field, $value[$field])->first() : null;
     }
 
