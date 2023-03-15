@@ -27,11 +27,13 @@ use App\Http\Controllers\OsAndServer\OsFamilyController;
 use App\Http\Controllers\OsAndServer\OsServerController;
 use App\Http\Controllers\ReportFile\ReportFileController;
 use App\Http\Controllers\ReportFile\FileMimeTypeController;
+use App\Http\Controllers\OsAndServer\ReportServerController;
 use App\Http\Controllers\ReportFile\ReportFileTypeController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleController;
 use App\Http\Controllers\OsAndServer\OsArchitectureController;
 use App\Http\Controllers\AnalysisRules\ThresholdTypeController;
 use App\Http\Controllers\Reportsetting\ReportsettingController;
+use App\Http\Controllers\ReportFile\ReportFileAccessController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
 use App\Http\Controllers\AnalysisRules\AnalysisHighlightController;
 use App\Http\Controllers\AnalysisRules\HighlightTextSizeController;
@@ -317,6 +319,18 @@ Route::get('osservers.fetch',[OsServerController::class,'fetch'])
     ->middleware('auth');
 
 Route::resource('accessprotocoles',AccessProtocoleController::class)->middleware('auth');
+Route::get('accessprotocoles.fetch',[AccessProtocoleController::class,'fetch'])
+    ->name('accessprotocoles.fetch')
+    ->middleware('auth');
 
-//Route::resource('reportservers',ReportServerController::class)->middleware('auth');
+
+Route::resource('reportservers',ReportServerController::class)->middleware('auth');
+Route::get('reportservers.fetch',[ReportServerController::class,'fetch'])
+    ->name('reportservers.fetch')
+    ->middleware('auth');
+
+Route::resource('reportfileaccesses',ReportFileAccessController::class)->middleware('auth');
+Route::get('reportfileaccesses.fetch',[ReportFileAccessController::class,'fetch'])
+    ->name('reportfileaccesses.fetch')
+    ->middleware('auth');
 

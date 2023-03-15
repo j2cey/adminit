@@ -53,7 +53,7 @@ class PermissionSeeder extends Seeder
             ['osserver-list', 4],
             ['osserver-create', 3],
             ['osserver-update', 1],
-            ['osserver-delete', 1]
+            ['osserver-delete', 1],
 
             ['accessprotocole-list', 4],
             ['accessprotocole-create', 3],
