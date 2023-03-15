@@ -1,5 +1,5 @@
 <template>
-    <AccountAccessList :accessaccounts_prop="accessaccounts"></AccountAccessList>
+    <AccessAccountList :accessaccounts_prop="accessaccounts"></AccessAccountList>
 </template>
 
 <script>
@@ -10,7 +10,7 @@ export default {
     },
     name: "access-account-index",
     components: {
-        AccountAccessList: () => import('../accessaccounts/list'),
+        AccessAccountList: () => import('../accessaccounts/list'),
     },
     data() {
         return {

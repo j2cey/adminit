@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\OsAndServer;
 
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\Factory;
 use App\Models\OsAndServer\ReportServer;
+use Illuminate\Contracts\Foundation\Application;
 use App\Http\Resources\OsAndServer\ReportServerResource;
 use App\Http\Requests\ReportServer\StoreReportServerRequest;
 use App\Http\Requests\ReportServer\UpdateReportServerRequest;
@@ -27,11 +30,15 @@ class ReportServerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return Application|Factory|View
      */
     public function index()
     {
-        //
+        $reportservers = ReportServerResource::collection(ReportServer::all());
+
+        return view('reportservers.index')
+            ->with('reportservers', $reportservers)
+            ;
     }
 
     /**
@@ -60,21 +67,21 @@ class ReportServerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param ReportServer $reportServer
+     * @param ReportServer $reportserver
      * @return Response
      */
-    public function show(ReportServer $reportServer)
+    public function show(ReportServer $reportserver)
     {
-        //
+        dd("reportservers.show: ",$reportserver);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param ReportServer $reportServer
+     * @param ReportServer $reportserver
      * @return Response
      */
-    public function edit(ReportServer $reportServer)
+    public function edit(ReportServer $reportserver)
     {
         //
     }

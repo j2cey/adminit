@@ -24,3 +24,6 @@
 
 ## Champs uniques
 [] - Tester les champs uniques
+
+## @IP
+[] - Valider une adresse IP (preg App\Providers\AppServiceProvider)

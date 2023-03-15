@@ -152,6 +152,7 @@ Vue.component('reports-details', require('./views/reports/details').default);
 
 Vue.component('accessaccount-index', require('./views/accessaccounts/index').default);
 Vue.component('accessaccount-list', require('./views/accessaccounts/list').default);
+Vue.component('reportserver-index', require('./views/reportservers/index').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
