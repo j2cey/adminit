@@ -63,7 +63,12 @@ class PermissionSeeder extends Seeder
             ['reportfileaccess-list', 4],
             ['reportfileaccess-create', 3],
             ['reportfileaccess-update', 1],
-            ['reportfileaccess-delete', 1]
+            ['reportfileaccess-delete', 1],
+            
+            ['reportserver-list', 4],
+            ['reportserver-create', 3],
+            ['reportserver-update', 1],
+            ['reportserver-delete', 1]
         ];
 
         foreach ($permissions as $permission) {

@@ -33,7 +33,7 @@ trait StatusTrait
         }
     }
 
-    public function setStatus(Status $status = null, $save = true) {
+    public function setStatus(Status $status = null, $save = false) {
         if ( is_null($status) ) {
             $this->status()->disassociate();
         } else {

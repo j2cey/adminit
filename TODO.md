@@ -18,3 +18,9 @@
 [] - PasswordConfirmationTest
 [] - PasswordResetTest
 [] - RegistrationTest
+
+## Modèle
+[] - Pour tous les modèles, tester qu'un utilisateur non authorisé ne peut CRÉER, MODIFIER, SUPPRIMER
+
+## Champs uniques
+[] - Tester les champs uniques

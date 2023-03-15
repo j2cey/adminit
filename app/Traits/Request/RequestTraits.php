@@ -8,6 +8,7 @@ use App\Models\Status;
 use App\Models\Reports\Report;
 use Spatie\Permission\Models\Role;
 use App\Models\Reports\ReportType;
+use App\Models\OsAndServer\OsServer;
 use App\Models\OsAndServer\OsFamily;
 use App\Models\ReportFile\FileMimeType;
 use App\Models\ReportFile\ReportFileType;
@@ -248,6 +249,28 @@ trait RequestTraits
             $value = $this->decodeJsonField($value);
         }
         return $value ? OsArchitecture::where($field, $value[$field])->first() : null;
+    }
+
+
+
+
+    /**
+     * Retourne un objet OsServer en fonction d'un champs donné
+     * @param $value
+     * @param string $field
+     * @param bool $json_decode_before
+     * @return OsServer|null
+     */
+    public function setRelevantOsServer($value, string $field = 'íd', bool $json_decode_before = false): ?OsServer
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? OsServer::where($field, $value[$field])->first() : null;
     }
 
     /**

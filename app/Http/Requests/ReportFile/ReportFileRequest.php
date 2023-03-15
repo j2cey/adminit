@@ -50,6 +50,16 @@ class ReportFileRequest extends FormRequest
         return ReportFile::defaultRules();
     }
 
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return ReportFile::messagesRules();
+    }
+
     protected function getRetrieveByNameNormalized() {
         return is_null($this->input('retrieve_by_name')) ? false : $this->input('retrieve_by_name');
     }
