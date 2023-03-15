@@ -151,9 +151,6 @@ class AccessAccountTest extends TestCase
         $this->assertEquals('new-description', $newaccessaccount->description);
     }
 
-
-
-
     /**
      * Test la suppression d'un AccessAccount
      *
@@ -173,6 +170,9 @@ class AccessAccountTest extends TestCase
 
         $this->assertCount(0, AccessAccount::all());
     }
+
+
+
 
     #region Private Functions
 
@@ -201,5 +201,6 @@ class AccessAccountTest extends TestCase
             'description' => $description,
         ]);
     }
+
     #endregion
 }

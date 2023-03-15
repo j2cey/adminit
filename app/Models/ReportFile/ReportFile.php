@@ -188,7 +188,5 @@ class ReportFile extends BaseModel implements Auditable
         });
     }
 
-
-
     #endregion
 }

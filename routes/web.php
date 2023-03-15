@@ -6,6 +6,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\StatusController;
+use App\Models\OsAndServer\OsArchitecture;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SubTaskController;
 use App\Http\Controllers\CommentController;
@@ -22,10 +23,13 @@ use App\Http\Controllers\Reports\ReportController;
 use App\Http\Controllers\AccessProtocoleController;
 use App\Http\Controllers\Reports\ReportTypeController;
 use App\Http\Controllers\Authorization\RoleController;
+use App\Http\Controllers\OsAndServer\OsFamilyController;
+use App\Http\Controllers\OsAndServer\OsServerController;
 use App\Http\Controllers\ReportFile\ReportFileController;
 use App\Http\Controllers\ReportFile\FileMimeTypeController;
 use App\Http\Controllers\ReportFile\ReportFileTypeController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleController;
+use App\Http\Controllers\OsAndServer\OsArchitectureController;
 use App\Http\Controllers\AnalysisRules\ThresholdTypeController;
 use App\Http\Controllers\Reportsetting\ReportsettingController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
@@ -297,6 +301,20 @@ Route::resource('reportfiles',ReportFileController::class)->middleware('auth');
 
 Route::resource('accessaccounts',AccessAccountController::class)->middleware('auth');
 
+Route::resource('osarchitectures',OsArchitectureController::class)->middleware('auth');
+Route::get('osarchitectures.fetch',[OsArchitectureController::class,'fetch'])
+    ->name('osarchitectures.fetch')
+    ->middleware('auth');
+
+Route::resource('osfamilies',OsFamilyController::class)->middleware('auth');
+Route::get('osfamilies.fetch',[OsFamilyController::class,'fetch'])
+    ->name('osfamilies.fetch')
+    ->middleware('auth');
+
+Route::resource('osservers',OsServerController::class)->middleware('auth');
+Route::get('osservers.fetch',[OsServerController::class,'fetch'])
+    ->name('osservers.fetch')
+    ->middleware('auth');
 
 Route::resource('accessprotocoles',AccessProtocoleController::class)->middleware('auth');
 

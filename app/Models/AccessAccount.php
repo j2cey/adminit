@@ -115,7 +115,5 @@ class AccessAccount extends BaseModel implements Auditable
 
         return $this;
     }
-
-
 }
 

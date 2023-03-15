@@ -8,9 +8,11 @@ use App\Models\Status;
 use App\Models\Reports\Report;
 use Spatie\Permission\Models\Role;
 use App\Models\Reports\ReportType;
+use App\Models\OsAndServer\OsFamily;
 use App\Models\ReportFile\FileMimeType;
 use App\Models\ReportFile\ReportFileType;
 use App\Models\AnalysisRules\AnalysisRule;
+use App\Models\OsAndServer\OsArchitecture;
 use App\Models\AnalysisRules\ThresholdType;
 use App\Models\AnalysisRules\AnalysisRuleType;
 use App\Models\DynamicAttributes\DynamicAttribute;
@@ -227,5 +229,43 @@ trait RequestTraits
             $value = $this->decodeJsonField($value);
         }
         return $value ? Report::where($field, $value[$field])->first() : null;
+    }
+
+    /**
+     * Retourne un objet OsArchitecture en fonction d'un champs donné
+     * @param $value
+     * @param string $field
+     * @param bool $json_decode_before
+     * @return OsArchitecture|null
+     */
+    public function setRelevantOsArchitecture($value, string $field = 'íd', bool $json_decode_before = false): ?OsArchitecture
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? OsArchitecture::where($field, $value[$field])->first() : null;
+    }
+
+    /**
+     * Retourne un objet OsFamily en fonction d'un champs donné
+     * @param $value
+     * @param string $field
+     * @param bool $json_decode_before
+     * @return OsFamily|null
+     */
+    public function setRelevantOsFamily($value, string $field = 'íd', bool $json_decode_before = false): ?OsFamily
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? OsFamily::where($field, $value[$field])->first() : null;
     }
 }

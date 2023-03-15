@@ -40,6 +40,21 @@ class PermissionSeeder extends Seeder
             ['accessaccount-update', 1],
             ['accessaccount-delete', 1],
 
+            ['osarchitecture-list', 4],
+            ['osarchitecture-create', 3],
+            ['osarchitecture-update', 1],
+            ['osarchitecture-delete', 1],
+
+            ['osfamily-list', 4],
+            ['osfamily-create', 3],
+            ['osfamily-update', 1],
+            ['osfamily-delete', 1],
+
+            ['osserver-list', 4],
+            ['osserver-create', 3],
+            ['osserver-update', 1],
+            ['osserver-delete', 1]
+
             ['accessprotocole-list', 4],
             ['accessprotocole-create', 3],
             ['accessprotocole-update', 1],
