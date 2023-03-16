@@ -4,8 +4,11 @@ namespace App\Http\Controllers\OsAndServer;
 
 use http\Env\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use App\Models\OsAndServer\OsServer;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\Foundation\Application;
 use App\Http\Requests\OsServer\StoreOsServerRequest;
 use App\Http\Resources\OsAndServer\OsServerResource;
 use App\Http\Resources\OsAndServer\OsFamilyResource;
@@ -30,11 +33,15 @@ class OsServerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return Application|Factory|View
      */
     public function index()
     {
-        //
+        $osservers = OsServer::all();
+
+        return view('osservers.index')
+            ->with('osservers', $osservers)
+            ;
     }
 
     /**

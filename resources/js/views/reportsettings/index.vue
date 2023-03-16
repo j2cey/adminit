@@ -34,7 +34,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text">Systèmes d'Exploitation</span>
-                        <span class="info-box-number">0</span>
+                        <span class="info-box-number">{{ osservers.length }}</span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
@@ -51,7 +51,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text">Protocoles d'Accès</span>
-                        
+
                         <span class="info-box-number">{{ accessprotocoles.length }}</span>
                     </div>
                     <!-- /.info-box-content -->
@@ -66,6 +66,14 @@
         <div class="row">
             <div class="col-md-12">
                 <ReportFileTypes list_title_prop="Types de Fichier" :reportfiletypes_list_prop="reportfiletypes" v-on:report_file_type_created="addReportFileType" v-on:reportfiletype_removed_from_list="removeReportFileType"></ReportFileTypes>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-md-12">
+                <OsServers list_title_prop="Systèmes d'Exploitation" :osservers_list_prop="osservers" v-on:os_server_created="addOsServer" v-on:osserver_removed_from_list="removeOsServer"></OsServers>
             </div>
             <!-- /.col -->
         </div>
@@ -90,16 +98,19 @@ export default {
         filemimetypes_prop: {},
         reportfiletypes_prop: {},
         accessprotocoles_prop: {},
+        osservers_prop: {},
     },
     components: {
         ReportFileTypes: () => import('../reportfiletypes/item-list'),
         AccessProtocoles: () => import('../accessprotocoles/item-list'),
+        OsServers: () => import('../osservers/item-list'),
     },
     data() {
         return {
             filemimetypes: this.filemimetypes_prop,
             reportfiletypes: this.reportfiletypes_prop,
             accessprotocoles: this.accessprotocoles_prop,
+            osservers: this.osservers_prop,
         };
     },
     methods: {
@@ -140,8 +151,29 @@ export default {
             if (AccessProtocoleIndex === -1) {
                 this.accessprotocoles.splice($event, 1)
             }
+        },
+
+
+    addOsServer($event) {
+        //console.log("OsServer created received in system index", $event)
+        let OsServerIndex = this.osservers.findIndex(s => {
+            return $event.id === s.id
+        })
+        if (OsServerIndex === -1) {
+            this.osservers.push($event)
         }
     },
+
+    removeOsServer($event){
+        //console.log("osserver received at reportsetting-index", $event)
+        let OsServerIndex = this.osservers.findIndex(s => {
+            return $event.id === s.id
+        })
+        if (OsServerIndex === -1) {
+            this.osservers.splice($event, 1)
+        }
+    }
+},
     computed: {
     }
 }

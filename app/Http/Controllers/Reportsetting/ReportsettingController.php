@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\Models\AccessProtocole;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
+use App\Models\OsAndServer\OsServer;
 use Illuminate\Contracts\View\Factory;
 use App\Models\ReportFile\FileMimeType;
 use App\Models\ReportFile\ReportFileType;
@@ -24,11 +25,13 @@ class ReportsettingController extends Controller
         $filemimetypes = FileMimetype::all();
         $reportfiletypes = ReportFileType::all()->load('filemimetype');
         $accessprotocoles = AccessProtocole::all();
+        $osservers = OsServer::all();
 
         return view('reportsetting.index')
             ->with('filemimetypes', $filemimetypes)
             ->with('reportfiletypes', $reportfiletypes)
             ->with('accessprotocoles', $accessprotocoles)
+            ->with('osservers', $osservers)
             ;
     }
 

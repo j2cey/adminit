@@ -15,21 +15,21 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a href="/dashboards" class="nav-link"><i class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a>
+                    <a href="/dashboards" class="nav-link"><i class="nav-icon fas fa-tachometer-alt"></i> Tableau de Bord</a>
                 </li>
 
                 @if(false)
                 <li class="nav-item dropdown">
-                    <a id="dropdownSubjects" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Subjects</a>
+                    <a id="dropdownSubjects" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Sujet(s)</a>
                     <ul aria-labelledby="dropdownSubjects" class="dropdown-menu border-0 shadow">
                         <li class="nav-item">
-                            <a href="/subjects" class="nav-link">List</a>
+                            <a href="/subjects" class="nav-link">Liste</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/subjects/create" class="nav-link">Create</a>
+                            <a href="/subjects/create" class="nav-link">Créer</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/categories" class="nav-link">Categories</a>
+                            <a href="/categories" class="nav-link">Catégories</a>
                         </li>
                         <!-- End Level two -->
                     </ul>
@@ -37,13 +37,13 @@
                 @endif
 
                 <li class="nav-item dropdown">
-                    <a id="dropdownReports" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Reports</a>
+                    <a id="dropdownReports" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Rapport(s)</a>
                     <ul aria-labelledby="dropdownReports" class="dropdown-menu border-0 shadow">
                         <li class="nav-item">
-                            <a href="/reports" class="nav-link">Reports</a>
+                            <a href="/reports" class="nav-link">Rapport(s)</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/reporttypes" class="nav-link">Report Types</a>
+                            <a href="/reporttypes" class="nav-link">Type(s) de Rapport</a>
                         </li>
                         <!-- End Level two -->
                     </ul>
@@ -74,7 +74,7 @@
                             <a href="/users" class="nav-link">Liste</a>
                         </li>
                         <li class="dropdown-submenu dropdown-hover">
-                            <a id="rolesMenu" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Profiles</a>
+                            <a id="rolesMenu" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Profils</a>
                             <ul aria-labelledby="rolesMenu" class="dropdown-menu border-0 shadow">
                                 <li class="nav-item">
                                     <a href="/roles" class="nav-link">Liste</a>
@@ -87,7 +87,7 @@
 
                 @role('Admin')
                 <li class="nav-item dropdown">
-                    <a id="systemsMenu" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">System</a>
+                    <a id="systemsMenu" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Système</a>
                     <ul aria-labelledby="systemsMenu" class="dropdown-menu border-0 shadow">
                         <li class="nav-item">
                             <a href="/systems.index" class="nav-link">Index</a>

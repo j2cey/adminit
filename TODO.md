@@ -30,3 +30,6 @@
 
 ## OsServer
 [] - Add code field
+
+## Report Treatment
+[] - Gérer les étape de traitement (workflow) dans les Settings du Système.
