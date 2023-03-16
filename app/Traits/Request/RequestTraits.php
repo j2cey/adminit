@@ -5,6 +5,7 @@ namespace App\Traits\Request;
 
 use App\Models\User;
 use App\Models\Status;
+use App\Models\AccessAccount;
 use App\Models\Reports\Report;
 use App\Models\AccessProtocole;
 use Spatie\Permission\Models\Role;
@@ -347,5 +348,24 @@ trait RequestTraits
             $value = $this->decodeJsonField($value);
         }
         return $value ? AccessProtocole::where($field, $value[$field])->first() : null;
+    }
+
+    /**
+     * Retourne un objet OsFamily en fonction d'un champs donné
+     * @param $value
+     * @param string $field
+     * @param bool $json_decode_before
+     * @return AccessAccount|null
+     */
+    public function setRelevantAccessAccount($value, string $field = 'íd', bool $json_decode_before = false): ?AccessAccount
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? AccessAccount::where($field, $value[$field])->first() : null;
     }
 }

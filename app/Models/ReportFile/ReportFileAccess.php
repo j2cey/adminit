@@ -5,6 +5,7 @@ namespace App\Models\ReportFile;
 use App\Models\Status;
 use App\Models\BaseModel;
 use App\Traits\Code\HasCode;
+use App\Models\AccessAccount;
 use Illuminate\Support\Carbon;
 use App\Models\AccessProtocole;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -29,15 +30,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property bool $retrieve_by_name
  * @property bool $retrieve_by_wildcard
  *
- * @property integer $report_file_id
- * @property integer $report_server_id
- * @property integer $access_protocole_id
+ * @property integer|null $report_file_id
+ * @property integer|null $access_account_id
+ * @property integer|null $report_server_id
+ * @property integer|null $access_protocole_id
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  *
  * @property ReportFile $reportfile
+ * @property AccessAccount $accessaccount
  * @property ReportServer $reportserver
  * @property AccessProtocole $accessprotocole
  */
@@ -52,6 +55,7 @@ class ReportFileAccess extends BaseModel implements Auditable
     public static function defaultRules() {
         return [
             'reportfile' => ['required'],
+            'accessaccount' => ['required'],
             'reportserver' => ['required'],
             'accessprotocole' => ['required'],
         ];
@@ -69,6 +73,7 @@ class ReportFileAccess extends BaseModel implements Auditable
     public static function messagesRules() {
         return [
             'reportfile.required' => "Prière de renseigner le Fichier",
+            'accessaccount.required' => "Prière de renseigner le Compte",
             'reportserver.required' => "Prière de renseigner le Serveur",
             'accessprotocole.required' => "Prière de renseigner le Protocole d'accès",
         ];
@@ -81,6 +86,10 @@ class ReportFileAccess extends BaseModel implements Auditable
 
     public function reportfile() {
         return $this->belongsTo(ReportFile::class, 'report_file_id');
+    }
+
+    public function accessaccount() {
+        return $this->belongsTo(AccessAccount::class, 'access_account_id');
     }
 
     public function reportserver() {
@@ -103,6 +112,7 @@ class ReportFileAccess extends BaseModel implements Auditable
     /**
      * Crée (et stocke dans la base de données) un nouvel objet ReportFileAccess
      * @param ReportFile $reportfile Le Fichier
+     * @param AccessAccount $accessaccount Le Compte
      * @param ReportServer $reportserver Le Serveur
      * @param AccessProtocole $accessprotocole Le Protocole d'accès
      * @param string|null $name Le Nom de l'accès
@@ -113,7 +123,7 @@ class ReportFileAccess extends BaseModel implements Auditable
      * @param string|null $description Description
      * @return ReportFileAccess
      */
-    public static function createNew(ReportFile $reportfile, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, string $code = null, Status $status = null, bool $retrieve_by_name = null, bool $retrieve_by_wildcard = null, string $description = null): ReportFileAccess
+    public static function createNew(ReportFile $reportfile, AccessAccount $accessaccount, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, string $code = null, Status $status = null, bool $retrieve_by_name = null, bool $retrieve_by_wildcard = null, string $description = null): ReportFileAccess
     {
         $reportfileaccess = ReportFileAccess::create([
             'name' => $name,
@@ -128,6 +138,9 @@ class ReportFileAccess extends BaseModel implements Auditable
 
         // associate ReportServer
         $reportfileaccess->reportserver()->associate($reportserver);
+
+        // associate AccessAccount
+        $reportfileaccess->accessaccount()->associate($accessaccount);
 
         // associate AccessProtocole
         $reportfileaccess->accessprotocole()->associate($accessprotocole);
@@ -144,17 +157,18 @@ class ReportFileAccess extends BaseModel implements Auditable
     /**
      * Met à jour (et modifie dans la base de données) l'objet ReportFileAccess
      * @param ReportFile $reportfile Le Fichier
+     * @param AccessAccount $accessaccount Le Compte
      * @param ReportServer $reportserver Le Serveur
      * @param AccessProtocole $accessprotocole Le Protocole d'accès
      * @param string|null $name Le Nom de l'accès
      * @param string|null $code Le Code de l'accès
      * @param Status|null $status Le Statut
-     * @param bool $retrieve_by_name Valeur déterminant si le fichier doit être récupéré par nom
-     * @param bool $retrieve_by_wildcard Valeur déterminant si le fichier doit être récupéré par Wildcard
+     * @param bool|null $retrieve_by_name Valeur déterminant si le fichier doit être récupéré par nom
+     * @param bool|null $retrieve_by_wildcard Valeur déterminant si le fichier doit être récupéré par Wildcard
      * @param string|null $description Description
      * @return $this
      */
-    public function updateOne(ReportFile $reportfile, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, string $code = null, Status $status = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false, string $description = null): ReportFileAccess
+    public function updateOne(ReportFile $reportfile, AccessAccount $accessaccount, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, string $code = null, Status $status = null, bool $retrieve_by_name = null, bool $retrieve_by_wildcard = null, string $description = null): ReportFileAccess
     {
         $this->name = $name;
         $this->code = $code;
@@ -167,6 +181,9 @@ class ReportFileAccess extends BaseModel implements Auditable
 
         // associate ReportServer
         $this->reportserver()->associate($reportserver);
+
+        // associate AccessAccount
+        $this->accessaccount()->associate($accessaccount);
 
         // associate AccessProtocole
         $this->accessprotocole()->associate($accessprotocole);

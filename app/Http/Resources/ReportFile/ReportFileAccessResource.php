@@ -5,14 +5,13 @@ namespace App\Http\Resources\ReportFile;
 use JsonSerializable;
 use App\Models\Status;
 use Illuminate\Http\Request;
+use App\Models\AccessAccount;
 use Illuminate\Support\Carbon;
-use App\Models\Reports\Report;
 use App\Models\AccessProtocole;
 use App\Models\ReportFile\ReportFile;
 use App\Http\Resources\StatusResource;
 use App\Models\OsAndServer\ReportServer;
-use App\Models\ReportFile\ReportFileType;
-use Illuminate\Contracts\Support\Arrayable;
+use App\Http\Resources\AccessAccountResource;
 use App\Http\Resources\AccessProtocoleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\OsAndServer\ReportServerResource;
@@ -45,6 +44,7 @@ use App\Http\Resources\OsAndServer\ReportServerResource;
  *
  * @property Status $status
  * @property ReportFile $reportfile
+ * @property AccessAccount $accessaccount
  * @property ReportServer $reportserver
  * @property AccessProtocole $accessprotocole
  */
@@ -63,7 +63,8 @@ class ReportFileAccessResource extends JsonResource
             'uuid' => $this->uuid,
             'status' => StatusResource::make($this->status),
 
-            'reportfile' => ReportFileResource::make($this->reportfile),
+            'reportfile' => $this->reportfile,
+            'accessaccount' => AccessAccountResource::make($this->accessaccount),
             'reportserver' => ReportServerResource::make($this->reportserver),
             'accessprotocole' => AccessProtocoleResource::make($this->accessprotocole),
 

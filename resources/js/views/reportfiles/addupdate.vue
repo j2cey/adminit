@@ -28,13 +28,13 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="reportfile_wildcard" class="col-sm-4 col-form-label text-xs">Récupération du Fichier:</label>
+                                <label for="reportfile_retrieval_type" class="col-sm-4 col-form-label text-xs">Récupération du Fichier:</label>
                             </div>
                             <div class="form-group row">
-                                <label for="reportfile_wildcard" class="col-sm-2 col-form-label text-xs">
+                                <label for="reportfile_retrieval_type" class="col-sm-2 col-form-label text-xs">
                                 </label>
                                 <div class="col-sm-10">
-                                    <b-field label="" label-position="on-border" custom-class="is-small">
+                                    <b-field id="reportfile_retrieval_type" label="" label-position="on-border" custom-class="is-small">
                                         <b-radio-button size="is-small" v-model="reportfileForm.retrieval_type"
                                                         native-value="retrieve_by_name"
                                                         type="is-success is-light is-outlined" @input="retrievalTypeChange($event)">
@@ -71,9 +71,9 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="description" class="col-sm-2 col-form-label text-xs">Statut</label>
+                                <label for="status" class="col-sm-2 col-form-label text-xs">Statut</label>
                                 <div class="col-sm-10">
-                                    <b-field label="Statut" label-position="on-border" custom-class="is-small">
+                                    <b-field id="status" label="Statut" label-position="on-border" custom-class="is-small">
                                         <b-radio-button size="is-small" v-model="reportfileForm.status"
                                                         native-value="active"
                                                         type="is-success is-light is-outlined">

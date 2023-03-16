@@ -88,7 +88,7 @@ class ReportServer extends BaseModel implements Auditable
     #region Custom Functions
 
     /**
-     * Crée (et stocke dans la base de données) un nouvel Serveur
+     * Crée (et stocke dans la base de données) un nouveau Serveur
      * @param OsServer $osserver Le Système d'exploitation
      * @param string $name Le Nom du Serveur
      * @param string $ip_address L'adresse IP du Serveur

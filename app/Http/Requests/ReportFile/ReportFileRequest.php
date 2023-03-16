@@ -60,11 +60,7 @@ class ReportFileRequest extends FormRequest
         return ReportFile::messagesRules();
     }
 
-    protected function getRetrieveByNameNormalized() {
-        return is_null($this->input('retrieve_by_name')) ? false : $this->input('retrieve_by_name');
-    }
-
-    protected function getRetrieveByWildcardNormalized() {
-        return is_null($this->input('retrieve_by_wildcard')) ? false : $this->input('retrieve_by_wildcard');
+    public static function getRetrieveTypeNormalized($value) {
+        return is_null($value) ? false : $value;
     }
 }

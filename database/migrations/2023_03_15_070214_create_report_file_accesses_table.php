@@ -35,6 +35,10 @@ class CreateReportFileAccessesTable extends Migration
                 ->comment('clé de reférence du fichier')
                 ->constrained('report_files')->onDelete('set null');
 
+            $table->foreignId('access_account_id')->nullable()
+                ->comment('clé de reférence du compte')
+                ->constrained('access_accounts')->onDelete('set null');
+
             $table->foreignId('report_server_id')->nullable()
                 ->comment('clé de reférence du server')
                 ->constrained('report_servers')->onDelete('set null');
@@ -62,6 +66,7 @@ class CreateReportFileAccessesTable extends Migration
                 $table->dropBaseForeigns();
 
                 $table->dropForeign(['report_file_id']);
+                $table->dropForeign(['access_account_id']);
                 $table->dropForeign(['report_server_id']);
                 $table->dropForeign(['access_protocole_id']);
             }

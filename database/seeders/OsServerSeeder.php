@@ -22,8 +22,9 @@ class OsServerSeeder extends Seeder
         $osfam_windows = OsFamily::where('code', "windows")->first();
         $osfam_windowsserver = OsFamily::where('code', "windowsserver")->first();
 
-        OsServer::createNew($osarch_hybrid,$osfam_linux,"UBUNTU 20");
-        OsServer::createNew($osarch_hybrid,$osfam_windows,"WINDOWS 10");
-        OsServer::createNew($osarch_hybrid,$osfam_windowsserver,"WINDOWS SERVER 12");
+        OsServer::createNew($osarch_hybrid,$osfam_linux,"Ubuntu 20");
+        OsServer::createNew($osarch_hybrid,$osfam_windows,"Windows 10");
+        OsServer::createNew($osarch_hybrid,$osfam_windowsserver,"Windows Server 2012");
+        OsServer::createNew($osarch_hybrid,$osfam_linux,"Red Hat");
     }
 }

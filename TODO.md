@@ -27,3 +27,6 @@
 
 ## @IP
 [] - Valider une adresse IP (preg App\Providers\AppServiceProvider)
+
+## OsServer
+[] - Add code field

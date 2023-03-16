@@ -125,10 +125,10 @@
                         <template #header>
                             <b-icon icon="source-pull"></b-icon>
                             <span class="help-inline pr-1 text-sm"> Accès </span>
-                            <b-button size="is-small" type="is-ghost" @click="createReportFileAccess(props.row)"><i class="fas fa-plus"></i></b-button>
+                            <b-tag type="is-info is-light">{{ props.row.reportfileaccesses.length }}</b-tag>
                         </template>
 
-                        <ReportFileAccessList></ReportFileAccessList>
+                        <ReportFileAccessList list_title_prop="Accès au fichier" :reportfile_prop="props.row" :reportfileaccesses_list_prop="props.row.reportfileaccesses" ></ReportFileAccessList>
 
                     </b-tab-item>
                 </b-tabs>

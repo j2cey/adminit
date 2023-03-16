@@ -301,8 +301,6 @@ Route::get('reportfiletypes.fetch',[ReportFileTypeController::class,'fetch'])
 
 Route::resource('reportfiles',ReportFileController::class)->middleware('auth');
 
-Route::resource('accessaccounts',AccessAccountController::class)->middleware('auth');
-
 Route::resource('osarchitectures',OsArchitectureController::class)->middleware('auth');
 Route::get('osarchitectures.fetch',[OsArchitectureController::class,'fetch'])
     ->name('osarchitectures.fetch')
@@ -332,5 +330,10 @@ Route::get('reportservers.fetch',[ReportServerController::class,'fetch'])
 Route::resource('reportfileaccesses',ReportFileAccessController::class)->middleware('auth');
 Route::get('reportfileaccesses.fetch',[ReportFileAccessController::class,'fetch'])
     ->name('reportfileaccesses.fetch')
+    ->middleware('auth');
+
+Route::resource('accessaccounts',AccessAccountController::class)->middleware('auth');
+Route::get('accessaccounts.fetch',[AccessAccountController::class,'fetch'])
+    ->name('accessaccounts.fetch')
     ->middleware('auth');
 
