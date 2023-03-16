@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Status;
+use App\Models\AccessAccount;
 use App\Models\Reports\Report;
 use App\Models\AccessProtocole;
 use App\Models\Reports\ReportType;
@@ -53,9 +54,11 @@ class ReportFileAccessTest extends TestCase
         $reportfile = $this->get_new_reportfile("new report", "new file");
         $reportserver = $this->get_new_reportserver("new serveur","10.10.10.10","new_serveur_dns");
         $protocole_ftp = AccessProtocole::ftp()->first();
+        $accessaccount = AccessAccount::createNew("new_accout","new_account_pwd","new_account@email.com","new account");
 
         $response = $this->add_new_reportfileaccess(
             $reportfile,
+            $accessaccount,
             $reportserver,
             $protocole_ftp,
             "new_reportfileaccess"
@@ -82,11 +85,12 @@ class ReportFileAccessTest extends TestCase
         $response = $this->add_new_reportfileaccess(
             null,
             null,
+            null,
             null
         );
 
         // on doit avoir une erreur de validation des champs ci-dessous
-        $response->assertSessionHasErrors(['reportfile','reportserver','accessprotocole']);
+        $response->assertSessionHasErrors(['reportfile','accessaccount','reportserver','accessprotocole']);
     }
 
     /**
@@ -103,9 +107,11 @@ class ReportFileAccessTest extends TestCase
         $reportfile = $this->get_new_reportfile("new report", "new file");
         $reportserver = $this->get_new_reportserver("new serveur","10.10.10.10","new_serveur_dns");
         $protocole_ftp = AccessProtocole::ftp()->first();
+        $accessaccount = AccessAccount::createNew("new_accout","new_account_pwd","new_account@email.com","new account");
 
         $response = $this->add_new_reportfileaccess(
             $reportfile,
+            $accessaccount,
             $reportserver,
             $protocole_ftp,
             "new_reportfileaccess",
@@ -121,11 +127,13 @@ class ReportFileAccessTest extends TestCase
         $another_reportfile = $this->get_new_reportfile("another report", "another file");
         $another_reportserver = $this->get_new_reportserver("another serveur","10.10.10.11","another_serveur_dns");
         $protocole_sftp = AccessProtocole::sftp()->first();
+        $another_accessaccount = AccessAccount::createNew("another_accout","another_account_pwd","another_account@email.com","another account");
         $status_inactive = Status::inactive()->first();
 
         $this->update_existing_reportfileaccess(
             $reportfileaccess,
             $another_reportfile,
+            $another_accessaccount,
             $another_reportserver,
             $protocole_sftp,
             "new reportfileaccess",
@@ -139,6 +147,7 @@ class ReportFileAccessTest extends TestCase
         $reportfileaccess->refresh();
 
         $this->assertEquals($another_reportfile->id, $reportfileaccess->reportfile->id);
+        $this->assertEquals($another_accessaccount->id, $reportfileaccess->accessaccount->id);
         $this->assertEquals($another_reportserver->id, $reportfileaccess->reportserver->id);
         $this->assertEquals($protocole_sftp->id, $reportfileaccess->accessprotocole->id);
         $this->assertEquals("new reportfileaccess", $reportfileaccess->name);
@@ -162,9 +171,11 @@ class ReportFileAccessTest extends TestCase
         $reportfile = $this->get_new_reportfile("new report", "new file");
         $reportserver = $this->get_new_reportserver("new serveur","10.10.10.10","new_serveur_dns");
         $protocole_ftp = AccessProtocole::ftp()->first();
+        $accessaccount = AccessAccount::createNew("new_accout","new_account_pwd","new_account@email.com","new account");
 
         $response = $this->add_new_reportfileaccess(
             $reportfile,
+            $accessaccount,
             $reportserver,
             $protocole_ftp,
             "new_reportfileaccess"
@@ -176,6 +187,7 @@ class ReportFileAccessTest extends TestCase
 
         $this->assertCount(0, ReportFileAccess::all());
     }
+
 
 
     #region Private Functions
@@ -191,17 +203,17 @@ class ReportFileAccessTest extends TestCase
         return ReportFile::createNew($report, ReportFileType::txt()->first(), Status::default()->first(), $file_name);
     }
 
-    private function add_new_reportfileaccess($reportfile, $reportserver, $accessprotocole, $name = null, $code = null, $status = null, $retrieve_by_name = null, $retrieve_by_wildcard = null, $description = ""): TestResponse
+    private function add_new_reportfileaccess($reportfile, $accessaccount, $reportserver, $accessprotocole, $name = null, $code = null, $status = null, $retrieve_by_name = null, $retrieve_by_wildcard = null, $description = ""): TestResponse
     {
-        return $this->post('reportfileaccesses', $this->new_data($reportfile, $reportserver, $accessprotocole, $name, $code, $status, $retrieve_by_name, $retrieve_by_wildcard, $description));
+        return $this->post('reportfileaccesses', $this->new_data($reportfile, $accessaccount, $reportserver, $accessprotocole, $name, $code, $status, $retrieve_by_name, $retrieve_by_wildcard, $description));
     }
 
-    private function update_existing_reportfileaccess($existing_reportfileaccess, $reportfile, $reportserver, $accessprotocole, $name = null, $code = null, $status = null, $retrieve_by_name = null, $retrieve_by_wildcard = null, $description = ""): TestResponse
+    private function update_existing_reportfileaccess($existing_reportfileaccess, $reportfile, $accessaccount, $reportserver, $accessprotocole, $name = null, $code = null, $status = null, $retrieve_by_name = null, $retrieve_by_wildcard = null, $description = ""): TestResponse
     {
-        return $this->put('reportfileaccesses/' . $existing_reportfileaccess->uuid, $this->new_data($reportfile, $reportserver, $accessprotocole, $name, $code, $status, $retrieve_by_name, $retrieve_by_wildcard, $description));
+        return $this->put('reportfileaccesses/' . $existing_reportfileaccess->uuid, $this->new_data($reportfile, $accessaccount, $reportserver, $accessprotocole, $name, $code, $status, $retrieve_by_name, $retrieve_by_wildcard, $description));
     }
 
-    private function new_data($reportfile, $reportserver, $accessprotocole, $name = null, $code = null, $status = null, $retrieve_by_name = null, $retrieve_by_wildcard = null, $description = ""): array
+    private function new_data($reportfile, $accessaccount, $reportserver, $accessprotocole, $name = null, $code = null, $status = null, $retrieve_by_name = null, $retrieve_by_wildcard = null, $description = ""): array
     {
         return [
             'name' => $name,
@@ -212,6 +224,7 @@ class ReportFileAccessTest extends TestCase
 
             'status' => $status,
             'reportfile' => $reportfile,
+            'accessaccount' => $accessaccount,
             'reportserver' => $reportserver,
             'accessprotocole' => $accessprotocole,
         ];

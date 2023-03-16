@@ -976,23 +976,21 @@ var render = function render() {
                 }
               }), _vm._v(" "), _c("span", {
                 staticClass: "help-inline pr-1 text-sm"
-              }, [_vm._v(" Accès ")]), _vm._v(" "), _c("b-button", {
+              }, [_vm._v(" Accès ")]), _vm._v(" "), _c("b-tag", {
                 attrs: {
-                  size: "is-small",
-                  type: "is-ghost"
-                },
-                on: {
-                  click: function click($event) {
-                    return _vm.createReportFileAccess(props.row);
-                  }
+                  type: "is-info is-light"
                 }
-              }, [_c("i", {
-                staticClass: "fas fa-plus"
-              })])];
+              }, [_vm._v(_vm._s(props.row.reportfileaccesses.length))])];
             },
             proxy: true
           }], null, true)
-        }, [_vm._v(" "), _c("ReportFileAccessList")], 1)], 1)];
+        }, [_vm._v(" "), _c("ReportFileAccessList", {
+          attrs: {
+            list_title_prop: "Accès au fichier",
+            reportfile_prop: props.row,
+            reportfileaccesses_list_prop: props.row.reportfileaccesses
+          }
+        })], 1)], 1)];
       }
     }, {
       key: "empty",

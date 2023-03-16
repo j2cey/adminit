@@ -76,12 +76,16 @@ class ReportFile extends BaseModel implements Auditable
 
     #region Eloquent Relationships
 
+    public function report() {
+        return $this->belongsTo(Report::class, 'report_id');
+    }
+
     public function reportfiletype() {
         return $this->belongsTo(ReportFileType::class, 'report_file_type_id');
     }
 
-    public function report() {
-        return $this->belongsTo(Report::class, 'report_id');
+    public function reportfileaccesses() {
+        return $this->hasMany(ReportFileAccess::class,'report_file_id');
     }
 
     #endregion

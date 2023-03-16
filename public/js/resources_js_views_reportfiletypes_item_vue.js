@@ -52,7 +52,7 @@ __webpack_require__.r(__webpack_exports__);
           // eslint-disable-next-line no-unused-vars
           .then(function (resp) {
             _this2.$swal({
-              html: '<small>Fichier supprimé avec succès</small>',
+              html: '<small>Type de Fichier supprimé avec succès</small>',
               icon: 'success',
               timer: 3000
             }).then(function () {

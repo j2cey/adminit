@@ -38,6 +38,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $retrieve_by_name_label
  *
  * @property Report $report
+ * @property mixed $reportfileaccesses
  */
 class ReportFileResource extends JsonResource
 {
@@ -50,6 +51,7 @@ class ReportFileResource extends JsonResource
             'status' => StatusResource::make($this->status),
 
             'reportfiletype' => ReportFileTypeResource::make($this->reportfiletype),
+            'reportfileaccesses' => ReportFileAccessResource::collection($this->reportfileaccesses),
 
             'report' => $this->report,
 

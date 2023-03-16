@@ -80,7 +80,7 @@ export default {
                         // eslint-disable-next-line no-unused-vars
                         .then(resp => {
                             this.$swal({
-                                html: '<small>Fichier supprimé avec succès</small>',
+                                html: '<small>Type de Fichier supprimé avec succès</small>',
                                 icon: 'success',
                                 timer: 3000
                             }).then(() => {

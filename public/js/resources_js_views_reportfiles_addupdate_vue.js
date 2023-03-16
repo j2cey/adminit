@@ -296,12 +296,13 @@ var render = function render() {
   }, [_c("label", {
     staticClass: "col-sm-2 col-form-label text-xs",
     attrs: {
-      "for": "reportfile_wildcard"
+      "for": "reportfile_retrieval_type"
     }
   }), _vm._v(" "), _c("div", {
     staticClass: "col-sm-10"
   }, [_c("b-field", {
     attrs: {
+      id: "reportfile_retrieval_type",
       label: "",
       "label-position": "on-border",
       "custom-class": "is-small"
@@ -385,12 +386,13 @@ var render = function render() {
   }, [_c("label", {
     staticClass: "col-sm-2 col-form-label text-xs",
     attrs: {
-      "for": "description"
+      "for": "status"
     }
   }, [_vm._v("Statut")]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-10"
   }, [_c("b-field", {
     attrs: {
+      id: "status",
       label: "Statut",
       "label-position": "on-border",
       "custom-class": "is-small"
@@ -535,7 +537,7 @@ var staticRenderFns = [function () {
   }, [_c("label", {
     staticClass: "col-sm-4 col-form-label text-xs",
     attrs: {
-      "for": "reportfile_wildcard"
+      "for": "reportfile_retrieval_type"
     }
   }, [_vm._v("Récupération du Fichier:")])]);
 }];

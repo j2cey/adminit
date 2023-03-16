@@ -3,7 +3,7 @@
 namespace App\Http\Requests\ReportFileAccess;
 
 use App\Models\Status;
-use Illuminate\Support\Carbon;
+use App\Models\AccessAccount;
 use App\Models\AccessProtocole;
 use App\Traits\Request\RequestTraits;
 use App\Models\ReportFile\ReportFile;
@@ -24,6 +24,7 @@ use App\Models\ReportFile\ReportFileAccess;
  *
  *
  * @property Status $status
+ * @property AccessAccount $accessaccount
  * @property ReportFile $reportfile
  * @property ReportServer $reportserver
  * @property AccessProtocole $accessprotocole
