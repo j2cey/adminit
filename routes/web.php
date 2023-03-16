@@ -331,6 +331,9 @@ Route::resource('reportfileaccesses',ReportFileAccessController::class)->middlew
 Route::get('reportfileaccesses.fetch',[ReportFileAccessController::class,'fetch'])
     ->name('reportfileaccesses.fetch')
     ->middleware('auth');
+Route::get('reportfileaccesses.download',[ReportFileAccessController::class,'download'])
+    ->name('reportfileaccesses.download')
+    ->middleware('auth');
 
 Route::resource('accessaccounts',AccessAccountController::class)->middleware('auth');
 Route::get('accessaccounts.fetch',[AccessAccountController::class,'fetch'])

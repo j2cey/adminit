@@ -11,6 +11,12 @@ use App\Http\Requests\ReportFileAccess\UpdateReportFileAccessRequest;
 
 class ReportFileAccessController extends Controller
 {
+
+    public function download() {
+        $reportfileaccess = ReportFileAccess::first();
+        $reportfileaccess->downloadFile();
+    }
+
     public function fetch(): AnonymousResourceCollection
     {
         return ReportFileAccessResource::collection(ReportFileAccess::all());

@@ -117,7 +117,7 @@ var ReportFileAccess = /*#__PURE__*/_createClass(function ReportFileAccess(repor
           icon: 'success',
           timer: 3000
         }).then(function () {
-          _reportfileaccessBus__WEBPACK_IMPORTED_MODULE_1__["default"].$emit('report_file_type_created', reportfileaccess);
+          _reportfileaccessBus__WEBPACK_IMPORTED_MODULE_1__["default"].$emit('report_file_access_created', reportfileaccess);
         });
       })["catch"](function (error) {
         _this3.loading = false;
@@ -136,7 +136,7 @@ var ReportFileAccess = /*#__PURE__*/_createClass(function ReportFileAccess(repor
           icon: 'success',
           timer: 3000
         }).then(function () {
-          _reportfileaccessBus__WEBPACK_IMPORTED_MODULE_1__["default"].$emit('report_file_type_updated', reportfileaccess);
+          _reportfileaccessBus__WEBPACK_IMPORTED_MODULE_1__["default"].$emit('report_file_access_updated', reportfileaccess);
         });
       })["catch"](function (error) {
         _this4.loading = false;

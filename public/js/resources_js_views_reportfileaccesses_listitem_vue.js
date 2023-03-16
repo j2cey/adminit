@@ -31,7 +31,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     editReportFileAccess: function editReportFileAccess(reportfileaccess) {
-      console.log('report_file_access_edit on ITEM: ', reportfileaccess);
+      console.log('report_file_access_edit launched ITEM: ', reportfileaccess);
       _reportfileaccesses_reportfileaccessBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('report_file_access_edit', reportfileaccess);
     },
     deleteReportFileAccess: function deleteReportFileAccess(reportfileaccess) {

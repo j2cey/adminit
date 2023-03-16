@@ -30,7 +30,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     var _this = this;
-    _reportfileaccesses_reportfileaccessBus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('report_file_type_created', function (reportfileaccess) {
+    _reportfileaccesses_reportfileaccessBus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('report_file_access_created', function (reportfileaccess) {
       if (_this.reportfile.id === reportfileaccess.reportfile.id) {
         _this.addReportfileaccessToList(reportfileaccess);
       }
@@ -53,7 +53,6 @@ __webpack_require__.r(__webpack_exports__);
       _reportfileaccesses_reportfileaccessBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('report_file_type_create', reportfile);
     },
     deleteReportFileAccess: function deleteReportFileAccess($event) {
-      //console.log("report_file_access_deleted received at list: ", $event)
       var itemIndex = this.reportfileaccesses_list.findIndex(function (c) {
         return $event.id === c.id;
       });

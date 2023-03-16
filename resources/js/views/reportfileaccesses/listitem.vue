@@ -71,7 +71,7 @@ export default {
     },
     methods: {
         editReportFileAccess(reportfileaccess) {
-            console.log('report_file_access_edit on ITEM: ', reportfileaccess)
+            console.log('report_file_access_edit launched ITEM: ', reportfileaccess)
             ReportFileAccessBus.$emit('report_file_access_edit', reportfileaccess);
         },
 
