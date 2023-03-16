@@ -108,7 +108,7 @@ export default {
         ReportFileAccessListdetail: () => import('./listitem')
     },
     mounted() {
-        ReportFileAccessBus.$on('report_file_type_created', (reportfileaccess) => {
+        ReportFileAccessBus.$on('report_file_access_created', (reportfileaccess) => {
             if (this.reportfile.id === reportfileaccess.reportfile.id) {
                 this.addReportfileaccessToList(reportfileaccess)
             }
@@ -131,7 +131,6 @@ export default {
             ReportFileAccessBus.$emit('report_file_type_create', reportfile);
         },
         deleteReportFileAccess($event) {
-            //console.log("report_file_access_deleted received at list: ", $event)
             let itemIndex = this.reportfileaccesses_list.findIndex(c => {
                 return $event.id === c.id
             })

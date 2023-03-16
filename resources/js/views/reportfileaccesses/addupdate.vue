@@ -269,7 +269,7 @@ export default {
                         icon: 'success',
                         timer: 3000
                     }).then(() => {
-                        ReportFileAccessBus.$emit('report_file_type_created', reportfileaccess)
+                        ReportFileAccessBus.$emit('report_file_access_created', reportfileaccess)
                     })
                 }).catch(error => {
                 this.loading = false
@@ -291,7 +291,7 @@ export default {
                         icon: 'success',
                         timer: 3000
                     }).then(() => {
-                        ReportFileAccessBus.$emit('report_file_type_updated', reportfileaccess)
+                        ReportFileAccessBus.$emit('report_file_access_updated', reportfileaccess)
                     })
                 }).catch(error => {
                 this.loading = false
