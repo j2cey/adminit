@@ -8,6 +8,7 @@ use App\Traits\Code\HasCode;
 use App\Models\AccessAccount;
 use Illuminate\Support\Carbon;
 use App\Models\AccessProtocole;
+use Illuminate\Support\Facades\Storage;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\OsAndServer\ReportServer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -220,6 +221,17 @@ class ReportFileAccess extends BaseModel implements Auditable
         // Pendant la modification de ce Model
         static::updating(function ($model) {
         });
+    }
+
+    public function downloadFile() {
+        $file_name = "laravel_test.txt";
+        $remotedir_path = "/";
+        $file_path = $remotedir_path . "/" . $file_name;
+
+        //$result = Storage::disk('ftp')->download($file_path);
+        $result = Storage::disk('public')->put('/'. $file_name, Storage::disk('ftp')->readStream($file_path));
+
+        dd($result);
     }
 
     #endregion
