@@ -2,13 +2,15 @@
 
 namespace App\Models\ReportFile;
 
+use App\Models\Status;
 use App\Models\BaseModel;
+use App\Traits\Code\HasCode;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class ReportFileType
+ * Class RetrieveActionType
  * @package App\Models\ReportFile
  *
  * @property integer $id
@@ -20,17 +22,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  *
  * @property string $name
- * @property string $extension
+ * @property string $code
  * @property string|null $description
- *
- * @property integer|null $file_mime_type_id
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class ReportFileType extends BaseModel implements Auditable
+class RetrieveActionType extends BaseModel implements Auditable
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasCode, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     //protected $with = ['filemimetype'];
@@ -40,30 +40,24 @@ class ReportFileType extends BaseModel implements Auditable
     public static function defaultRules() {
         return [
             'name' => ['required'],
-            'extension' => [
-                'required',
-                'without_spaces'
-            ],
-            'filemimetype' => ['required'],
         ];
     }
     public static function createRules() {
         return array_merge(self::defaultRules(), [
-
+            'code' => ['required','unique:retrieve_action_types,code,NULL,id'],
         ]);
     }
     public static function updateRules($model) {
         return array_merge(self::defaultRules(), [
-
+            'code' => ['required','unique:retrieve_action_types,code,'.$model->id.',id'],
         ]);
     }
 
     public static function messagesRules() {
         return [
             'name.required' => "Prière de renseigner le nom",
-            'extension.required' => "Prière de renseigner l'extension",
-            'filemimetype.required' => "Prière de renseigner un mime type",
-            'extension.without_spaces' => "L'extension ne doit pas comporter d'espace.",
+            'code.required' => "Prière de renseigner le code",
+            'code.unique' => "Ce code est deja utilise",
         ];
     }
 
@@ -83,57 +77,53 @@ class ReportFileType extends BaseModel implements Auditable
 
     #region Eloquent Relationships
 
-    public function filemimetype() {
-        return $this->belongsTo(FileMimeType::class, 'file_mime_type_id');
-    }
+
 
     #endregion
 
     #region Custom Functions
 
     /**
-     * Sert à créer (et stocker dans la base de données) un nouvel objet de type ReportFileType
-     * @param FileMimeType $filemimetype
-     * @param $name
-     * @param $extension
-     * @param null $description
-     * @return ReportFileType
+     * Crée (et stocke dans la base de données) un nouveau Type d'action de récupération (RetrieveActionType)
+     * @param string $name Nom du Type d'action
+     * @param string|null $code Code du Type d'action
+     * @param Status|null $status Statut
+     * @param string|null $description Description du Type d'action
+     * @return RetrieveActionType
      */
-    public static function createNew(FileMimeType $filemimetype, $name, $extension, $description = null) : ReportFileType
+    public static function createNew(string $name, string $code = null, Status $status = null, string $description = null): RetrieveActionType
     {
-        $reportfiletype = ReportFileType::create([
+        $retrieveactiontype = RetrieveActionType::create([
             'name' => $name,
-            'extension' => $extension,
+            'code' => is_null($code) ? $name : $code,
             'description' => $description,
         ]);
 
-        // Assignation du type de mime type
-        $reportfiletype->filemimetype()->associate($filemimetype)->save();
+        $retrieveactiontype->status()->associate( is_null($status) ? Status::default()->first() : $status );
+        $retrieveactiontype->save();
 
-        return $reportfiletype;
+        return $retrieveactiontype;
     }
 
-    public function updateOne(FileMimeType $filemimetype, $name, $extension, $description)
+    /**
+     * Modifie (et stocke dans la base de données) ce Type d'action de récupération (RetrieveActionType)
+     * @param string $name Nom du Type d'action
+     * @param string|null $code Code du Type d'action
+     * @param Status|null $status Statut
+     * @param string|null $description Description du Type d'action
+     * @return $this
+     */
+    public function updateOne(string $name, string $code = null, Status $status = null, string $description = null): RetrieveActionType
     {
         $this->name = $name;
-        $this->extension = $extension;
+        $this->code = is_null($code) ? $name : $code;
         $this->description = $description;
 
-        //Assignation  du type de mime type
-        $this->filemimetype()->associate($filemimetype);
+        $this->status()->associate( is_null($status) ? Status::default()->first() : $status );
 
         $this->save();
 
         return $this;
-    }
-
-
-
-    public function setFormalizedExtension() {
-        // on trime l'extension
-        $this->extension = trim($this->extension);
-        // on lower case l'extension
-        return strtolower($this->extension);
     }
 
     protected static function boot(){
@@ -141,12 +131,12 @@ class ReportFileType extends BaseModel implements Auditable
 
         // Pendant la création de ce Model
         static::creating(function ($model) {
-            $model->setFormalizedExtension();
+
         });
 
         // Pendant la modification de ce Model
         static::updating(function ($model) {
-            $model->setFormalizedExtension();
+
         });
     }
 

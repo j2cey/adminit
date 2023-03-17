@@ -34,6 +34,7 @@ use App\Http\Controllers\OsAndServer\OsArchitectureController;
 use App\Http\Controllers\AnalysisRules\ThresholdTypeController;
 use App\Http\Controllers\Reportsetting\ReportsettingController;
 use App\Http\Controllers\ReportFile\ReportFileAccessController;
+use App\Http\Controllers\ReportFile\RetrieveActionTypeController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
 use App\Http\Controllers\AnalysisRules\AnalysisHighlightController;
 use App\Http\Controllers\AnalysisRules\HighlightTextSizeController;
@@ -338,5 +339,10 @@ Route::get('reportfileaccesses.download',[ReportFileAccessController::class,'dow
 Route::resource('accessaccounts',AccessAccountController::class)->middleware('auth');
 Route::get('accessaccounts.fetch',[AccessAccountController::class,'fetch'])
     ->name('accessaccounts.fetch')
+    ->middleware('auth');
+
+Route::resource('retrieveactiontypes',RetrieveActionTypeController::class)->middleware('auth');
+Route::get('retrieveactiontypes.fetch',[RetrieveActionTypeController::class,'fetch'])
+    ->name('retrieveactiontypes.fetch')
     ->middleware('auth');
 
