@@ -24,6 +24,7 @@ class CreateAccessProtocoleTable extends Migration
 
             $table->string('name')->comment("Nom du protocole");
             $table->string('code')->unique()->comment("code du protocole");
+            $table->string('protocole_class')->comment('chemin complet de la classe du InnerProtocole (qui va implémenter l interface IProtocole)');
 
             $table->string('description', 500)->nullable()->comment("description du protocole");
 

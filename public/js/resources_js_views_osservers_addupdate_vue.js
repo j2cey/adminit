@@ -308,69 +308,29 @@ var render = function render() {
   }, [_c("label", {
     staticClass: "col-sm-2 col-form-label text-xs text-xs",
     attrs: {
-      "for": "select_group"
+      "for": "select_osarchitecture"
     }
-  }, [_vm._v("Famille")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Architecture")]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-8"
   }, [_c("multiselect", {
     key: "id",
     attrs: {
-      id: "select_group",
-      "selected.sync": "subjectForm.osfamily",
+      id: "select_osarchitecture",
+      "selected.sync": "subjectForm.osarchitecture",
       value: "",
-      options: _vm.osfamilies,
+      options: _vm.osarchitecture,
       searchable: true,
       multiple: false,
       label: "name",
       "track-by": "id",
-      placeholder: "Famille"
-    },
-    model: {
-      value: _vm.osServerForm.osfamily,
-      callback: function callback($$v) {
-        _vm.$set(_vm.osServerForm, "osfamily", $$v);
-      },
-      expression: "osServerForm.osfamily"
-    }
-  }), _vm._v(" "), _vm.osServerForm.errors.has("osfamily") ? _c("span", {
-    staticClass: "invalid-feedback d-block text-xs",
-    attrs: {
-      role: "alert"
-    },
-    domProps: {
-      textContent: _vm._s(_vm.osServerForm.errors.get("osfamily"))
-    }
-  }) : _vm._e()], 1)]), _vm._v(" "), _c("div", {
-    staticClass: "form-group row"
-  }, [_c("label", {
-    staticClass: "col-sm-2 col-form-label text-xs",
-    attrs: {
-      "for": "osarchitecture"
-    }
-  }, [_vm._v("Architecture")]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-10"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.osServerForm.osarchitecture,
-      expression: "osServerForm.osarchitecture"
-    }],
-    staticClass: "form-control form-control-sm",
-    attrs: {
-      type: "text",
-      id: "osarchitecture",
-      name: "osarchitecture",
       placeholder: "Architecture"
     },
-    domProps: {
-      value: _vm.osServerForm.osarchitecture
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.osServerForm, "osarchitecture", $event.target.value);
-      }
+    model: {
+      value: _vm.osServerForm.osarchitecture,
+      callback: function callback($$v) {
+        _vm.$set(_vm.osServerForm, "osarchitecture", $$v);
+      },
+      expression: "osServerForm.osarchitecture"
     }
   }), _vm._v(" "), _vm.osServerForm.errors.has("osarchitecture") ? _c("span", {
     staticClass: "invalid-feedback d-block text-xs",
@@ -380,7 +340,7 @@ var render = function render() {
     domProps: {
       textContent: _vm._s(_vm.osServerForm.errors.get("osarchitecture"))
     }
-  }) : _vm._e()])])])])]), _vm._v(" "), _c("div", {
+  }) : _vm._e()], 1)])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer justify-content-between"
   }, [_c("b-button", {
     attrs: {

@@ -49,30 +49,22 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="select_group" class="col-sm-2 col-form-label text-xs text-xs">Famille</label>
+                                <label for="select_osarchitecture" class="col-sm-2 col-form-label text-xs text-xs">Architecture</label>
                                 <div class="col-sm-8">
                                     <multiselect
-                                        id="select_group"
-                                        v-model="osServerForm.osfamily"
-                                        selected.sync="subjectForm.osfamily"
+                                        id="select_osarchitecture"
+                                        v-model="osServerForm.osarchitecture"
+                                        selected.sync="subjectForm.osarchitecture"
                                         value=""
-                                        :options="osfamilies"
+                                        :options="osarchitecture"
                                         :searchable="true"
                                         :multiple="false"
                                         label="name"
                                         track-by="id"
                                         key="id"
-                                        placeholder="Famille"
+                                        placeholder="Architecture"
                                     >
                                     </multiselect>
-                                    <span class="invalid-feedback d-block text-xs" role="alert" v-if="osServerForm.errors.has('osfamily')" v-text="osServerForm.errors.get('osfamily')"></span>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="osarchitecture" class="col-sm-2 col-form-label text-xs">Architecture</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control form-control-sm" id="osarchitecture" name="osarchitecture" placeholder="Architecture" v-model="osServerForm.osarchitecture">
                                     <span class="invalid-feedback d-block text-xs" role="alert" v-if="osServerForm.errors.has('osarchitecture')" v-text="osServerForm.errors.get('osarchitecture')"></span>
                                 </div>
                             </div>

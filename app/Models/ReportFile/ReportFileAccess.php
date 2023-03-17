@@ -4,13 +4,18 @@ namespace App\Models\ReportFile;
 
 use App\Models\Status;
 use App\Models\BaseModel;
+use Illuminate\Support\Str;
 use App\Traits\Code\HasCode;
 use App\Models\AccessAccount;
 use Illuminate\Support\Carbon;
 use App\Models\AccessProtocole;
+use App\Models\Access\FtpProtocole;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\OsAndServer\ReportServer;
+use Illuminate\Filesystem\FilesystemManager;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -89,7 +94,8 @@ class ReportFileAccess extends BaseModel implements Auditable
         return $this->belongsTo(ReportFile::class, 'report_file_id');
     }
 
-    public function accessaccount() {
+    public function accessaccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
         return $this->belongsTo(AccessAccount::class, 'access_account_id');
     }
 
@@ -210,6 +216,137 @@ class ReportFileAccess extends BaseModel implements Auditable
         }
     }
 
+    public function renameRemoteFile(){
+        $file_name = "laravel_test" . "." . $this->reportfile->extension;
+        $remotedir_path = "/";
+        $file_path_from = $remotedir_path . "/" . $file_name;
+        $file_path_to = $remotedir_path . "/" . "laravel_test2" . "." . $this->reportfile->extension;
+
+        $remoteDisk = $this->getDisk();
+
+        $result = $remoteDisk->rename($file_path_from, $file_path_to);
+
+        dd($result);
+    }
+
+    public function renameRemoteFileStart(){
+
+    }
+
+    public function renameRemoteFileEnd(){
+
+    }
+
+    public function deleteRemoteFile(){
+        $file_name = "laravel_test" . "." . $this->reportfile->extension;
+        $remotedir_path = "/";
+        $file_path_from = $remotedir_path . "/" . $file_name;
+
+        $remoteDisk = $this->getDisk();
+
+        $result = $remoteDisk->delete($file_path_from);
+
+        dd($result);
+    }
+
+    public function appendRemoteFile(){
+        $file_name = "laravel_test" . "." . $this->reportfile->extension;
+        $remotedir_path = "/";
+        $file_path_from = $remotedir_path . "/" . $file_name;
+        $text_to_append = 'onof';
+
+        $remoteDisk = $this->getDisk();
+
+        $result = $remoteDisk->append($file_path_from,$text_to_append);
+
+        dd($result);
+    }
+
+    public function prependRemoteFile(){
+        $file_name = "laravel_test" . "." . $this->reportfile->extension;
+        $remotedir_path = "/";
+        $file_path_from = $remotedir_path . "/" . $file_name;
+        $text_to_prepend = 'gourde';
+
+        $remoteDisk = $this->getDisk();
+
+        $result = $remoteDisk->prepend($file_path_from,$text_to_prepend);
+
+        dd($result);
+    }
+
+    public function downloadFile() {
+        //$this->renameRemoteFile();
+        //$this->deleteRemoteFile();
+        //$this->appendRemoteFile();
+        //$this->prependRemoteFile();
+        $this->downloadByWildcard();
+        $file_name = "laravel_t.*"."." . $this->reportfile->extension; //$this->reportfile->name . $this->reportfile->extension; //
+        $remotedir_path = "/";
+        $file_path_from = $remotedir_path . "/" . $file_name;
+
+        $local_file_name = md5($this->reportfile->name . '_' . time()) . '.' . $this->reportfile->extension;
+
+        $port = 21;
+
+        $remoteDisk = $this->getDisk();
+
+
+        try{
+            $result = Storage::disk('public')->put('/collectedreportfiles/'. $local_file_name, $remoteDisk->readStream($file_path_from));
+        }
+        catch (\Exception $e){
+            dd($e->getMessage());
+        }
+
+
+        //$result = Storage::disk('ftp')->rename($file_path_from, $file_path_to);
+        //$result = Storage::disk('public')->put('/collectedreportfiles/'. $file_name, Storage::disk('ftp')->readStream(file_path_from));
+
+        // Action(s) après récupération
+
+        // renommage du fichier distant
+
+        // suppression du fichier distant
+
+        // append au nom du fichier distant (après)
+
+        // prepend au nom du fichier distant (avant)
+
+        // modification de l'extension du fichier distant
+
+        dd($result);
+    }
+
+    public function downloadByWildcard(){
+
+        $file_name = "laravel_t.*"."." . $this->reportfile->extension;
+        $remotedir_path = "/";
+        $file_path_from = $remotedir_path . "/" . $file_name;
+
+        $remoteDisk = $this->getDisk();
+        $wilcard = "laravel_*". '.' . $this->reportfile->extension;
+        $files = $remoteDisk->allFiles();
+        $nbrfiles = 0;
+
+        foreach ($files as $file){
+
+            if(Str::is($file,$wilcard)){
+                $nbrfiles += 1;
+                $local_file_name = md5($file . '_' . time()) . '.' . $this->reportfile->extension;
+                $result = Storage::disk('public')->put('/collectedreportfiles/'. $local_file_name, $remoteDisk->readStream($remotedir_path . "/" . $file));
+            }
+
+        }
+        dd($nbrfiles);
+    }
+
+    private function getDisk(): Filesystem {
+        return $this->accessprotocole->innerprotocole()::getDisk($this->accessaccount, $this->reportserver,21);// $this->getDisk(21);
+    }
+
+
+
     protected static function boot(){
         parent::boot();
 
@@ -221,17 +358,6 @@ class ReportFileAccess extends BaseModel implements Auditable
         // Pendant la modification de ce Model
         static::updating(function ($model) {
         });
-    }
-
-    public function downloadFile() {
-        $file_name = "laravel_test.txt";
-        $remotedir_path = "/";
-        $file_path = $remotedir_path . "/" . $file_name;
-
-        //$result = Storage::disk('ftp')->download($file_path);
-        $result = Storage::disk('public')->put('/'. $file_name, Storage::disk('ftp')->readStream($file_path));
-
-        dd($result);
     }
 
     #endregion
