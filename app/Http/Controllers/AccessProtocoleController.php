@@ -59,7 +59,7 @@ class AccessProtocoleController extends Controller
      */
     public function store(StoreAccessProtocoleRequest $request): AccessProtocoleResource
     {
-        $accessprotocole = AccessProtocole::createNew($request->name, $request->code, $request->status, $request->description);
+        $accessprotocole = AccessProtocole::createNew($request->name, $request->code, $request->protocole_class, $request->status, $request->description);
 
         return new AccessProtocoleResource($accessprotocole);
     }
@@ -95,7 +95,7 @@ class AccessProtocoleController extends Controller
      */
     public function update(UpdateAccessProtocoleRequest $request, AccessProtocole $accessprotocole)
     {
-        $accessprotocole->updateOne($request->name, $request->code, $request->status, $request->description);
+        $accessprotocole->updateOne($request->name, $request->code, $request->protocole_class, $request->status, $request->description);
 
         return new AccessProtocoleResource($accessprotocole);
     }

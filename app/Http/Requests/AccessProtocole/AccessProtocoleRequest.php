@@ -13,6 +13,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *
  * @property string $name
  * @property string $code
+ * @property string $protocole_class
  *
  * @property string|null $description
  *

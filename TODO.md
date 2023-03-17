@@ -33,3 +33,10 @@
 
 ## Report Treatment
 [] - Gérer les étape de traitement (workflow) dans les Settings du Système.
+
+### ReportFileAccess
+[] - Rajouter attribut port
+
+### AccessPorocole
+[] - Rajouter attribut default_port
+[] - Utiliser les extensions dans les interfaces

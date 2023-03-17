@@ -32,6 +32,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property ReportFileType $reportfiletype
+ * @property string $extension
  */
 class ReportFile extends BaseModel implements Auditable
 {
@@ -91,6 +94,15 @@ class ReportFile extends BaseModel implements Auditable
     #endregion
 
     #region Accessors & Mutators
+
+    /**
+     * Retourne le type de récupération
+     *
+     * @return string
+     */
+    public function getExtensionAttribute() {
+        return $this->reportfiletype->extension;
+    }
 
     /**
      * Retourne le type de récupération
