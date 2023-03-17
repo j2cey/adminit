@@ -10,7 +10,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class RetrieveActionType
+ * Class RetrieveAction
  * @package App\Models\ReportFile
  *
  * @property integer $id
@@ -27,8 +27,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ *
+ * @property RetrieveActionType $retrieveactiontype
  */
-class RetrieveActionType extends BaseModel implements Auditable
+class RetrieveAction extends BaseModel implements Auditable
 {
     use HasFactory, HasCode, \OwenIt\Auditing\Auditable;
 
@@ -40,22 +43,24 @@ class RetrieveActionType extends BaseModel implements Auditable
     public static function defaultRules() {
         return [
             'name' => ['required'],
+            'retrieveactiontype' => ['required'],
         ];
     }
     public static function createRules() {
         return array_merge(self::defaultRules(), [
-            'code' => ['required','unique:retrieve_action_types,code,NULL,id'],
+            'code' => ['required','unique:retrieve_actions,code,NULL,id'],
         ]);
     }
     public static function updateRules($model) {
         return array_merge(self::defaultRules(), [
-            'code' => ['required','unique:retrieve_action_types,code,'.$model->id.',id'],
+            'code' => ['required','unique:retrieve_actions,code,'.$model->id.',id'],
         ]);
     }
 
     public static function messagesRules() {
         return [
             'name.required' => "Prière de renseigner le nom",
+            'retrieveactiontype.required' => "Prière de renseigner le Type d'action",
             'code.required' => "Prière de renseigner le code",
             'code.unique' => "Ce code est deja utilise",
         ];
@@ -64,67 +69,61 @@ class RetrieveActionType extends BaseModel implements Auditable
     #endregion
 
     #region Scopes
-    public function scopeRetrieveMode($query) {
-        return $query
-            ->where('code', "retrieve_mode");
-    }
 
-    public function scopeToPerformBeforeRetrieving($query) {
-        return $query
-            ->where('code', "to_perform_before_retrieving");
-    }
-
-    public function scopeToPerformAfterRetrieving($query) {
-        return $query
-            ->where('code', "to_perform_after_retrieving");
-    }
     #endregion
 
     #region Eloquent Relationships
 
-
+    public function retrieveactiontype() {
+        return $this->belongsTo(RetrieveActionType::class, 'retrieve_action_type_id');
+    }
 
     #endregion
 
     #region Custom Functions
 
     /**
-     * Crée (et stocke dans la base de données) un nouveau Type d'action de récupération (RetrieveActionType)
+     * Crée (et stocke dans la base de données) une nouvelle action de récupération (RetrieveAction)
+     * @param RetrieveActionType $retrieveactiontype Type d'action
      * @param string $name Nom du Type d'action
      * @param string|null $code Code du Type d'action
      * @param Status|null $status Statut
      * @param string|null $description Description du Type d'action
-     * @return RetrieveActionType
+     * @return RetrieveAction
      */
-    public static function createNew(string $name, string $code = null, Status $status = null, string $description = null): RetrieveActionType
+    public static function createNew(RetrieveActionType $retrieveactiontype, string $name, string $code = null, Status $status = null, string $description = null): RetrieveAction
     {
-        $retrieveactiontype = RetrieveActionType::create([
+        $retrieveaction = RetrieveAction::create([
             'name' => $name,
             'code' => is_null($code) ? $name : $code,
             'description' => $description,
         ]);
 
-        $retrieveactiontype->status()->associate( is_null($status) ? Status::default()->first() : $status );
-        $retrieveactiontype->save();
+        $retrieveaction->status()->associate( is_null($status) ? Status::default()->first() : $status );
+        $retrieveaction->retrieveactiontype()->associate( $retrieveactiontype );
 
-        return $retrieveactiontype;
+        $retrieveaction->save();
+
+        return $retrieveaction;
     }
 
     /**
-     * Modifie (et stocke dans la base de données) ce Type d'action de récupération (RetrieveActionType)
+     * Modifie (et stocke dans la base de données) cette action de récupération (RetrieveAction)
+     * @param RetrieveActionType $retrieveactiontype Type d'action
      * @param string $name Nom du Type d'action
      * @param string|null $code Code du Type d'action
      * @param Status|null $status Statut
      * @param string|null $description Description du Type d'action
      * @return $this
      */
-    public function updateOne(string $name, string $code = null, Status $status = null, string $description = null): RetrieveActionType
+    public function updateOne(RetrieveActionType $retrieveactiontype, string $name, string $code = null, Status $status = null, string $description = null): RetrieveAction
     {
         $this->name = $name;
         $this->code = is_null($code) ? $name : $code;
         $this->description = $description;
 
         $this->status()->associate( is_null($status) ? Status::default()->first() : $status );
+        $this->retrieveactiontype()->associate( $retrieveactiontype );
 
         $this->save();
 

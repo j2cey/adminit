@@ -28,7 +28,7 @@ class StoreRetrieveActionTypeRequest extends RetrieveActionTypeRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return RetrieveActionType::createRules();
     }
@@ -41,7 +41,7 @@ class StoreRetrieveActionTypeRequest extends RetrieveActionTypeRequest
     protected function prepareForValidation()
     {
         $this->merge([
-
+            'status' => $this->setRelevantStatus($this->input('status'),'code', false),
         ]);
     }
 }

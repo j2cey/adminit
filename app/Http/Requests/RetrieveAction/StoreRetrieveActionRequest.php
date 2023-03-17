@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\RetrieveActionType;
+namespace App\Http\Requests\RetrieveAction;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\ReportFile\RetrieveActionType;
+use App\Models\ReportFile\RetrieveAction;
 
 /**
- * Class UpdateRetrieveActionTypeRequest
+ * Class StoreRetrieveActionTypeRequest
  * @package App\Http\Requests\RetrieveActionType
  *
- * @property RetrieveActionType $retrieveactiontype
+ *
  */
-class UpdateRetrieveActionTypeRequest extends RetrieveActionTypeRequest
+class StoreRetrieveActionRequest extends RetrieveActionRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,7 +20,7 @@ class UpdateRetrieveActionTypeRequest extends RetrieveActionTypeRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->can('retrieveactiontype-update');
+        return Auth::user()->can('retrieveaction-create');
     }
 
     /**
@@ -30,7 +30,7 @@ class UpdateRetrieveActionTypeRequest extends RetrieveActionTypeRequest
      */
     public function rules(): array
     {
-        return RetrieveActionType::updateRules($this->retrieveactiontype);
+        return RetrieveAction::createRules();
     }
 
     /**
@@ -41,7 +41,8 @@ class UpdateRetrieveActionTypeRequest extends RetrieveActionTypeRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'status' => $this->setRelevantStatus($this->input('status'),'code', true),
+            'status' => $this->setRelevantStatus($this->input('status'),'code', false),
+            'retrieveactiontype' => $this->setRelevantRetrieveActionType($this->input('retrieveactiontype'),'code', false),
         ]);
     }
 }

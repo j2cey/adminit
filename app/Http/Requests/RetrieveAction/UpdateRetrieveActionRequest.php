@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Requests\RetrieveActionType;
+namespace App\Http\Requests\RetrieveAction;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\ReportFile\RetrieveActionType;
+use App\Models\ReportFile\RetrieveAction;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class UpdateRetrieveActionTypeRequest
  * @package App\Http\Requests\RetrieveActionType
  *
- * @property RetrieveActionType $retrieveactiontype
+ * @property RetrieveAction $retrieveaction
  */
-class UpdateRetrieveActionTypeRequest extends RetrieveActionTypeRequest
+class UpdateRetrieveActionRequest extends RetrieveActionRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,7 +21,7 @@ class UpdateRetrieveActionTypeRequest extends RetrieveActionTypeRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->can('retrieveactiontype-update');
+        return Auth::user()->can('retrieveaction-update');
     }
 
     /**
@@ -30,7 +31,7 @@ class UpdateRetrieveActionTypeRequest extends RetrieveActionTypeRequest
      */
     public function rules(): array
     {
-        return RetrieveActionType::updateRules($this->retrieveactiontype);
+        return RetrieveAction::updateRules($this->retrieveaction);
     }
 
     /**
@@ -42,6 +43,7 @@ class UpdateRetrieveActionTypeRequest extends RetrieveActionTypeRequest
     {
         $this->merge([
             'status' => $this->setRelevantStatus($this->input('status'),'code', true),
+            'retrieveactiontype' => $this->setRelevantRetrieveActionType($this->input('retrieveactiontype'),'code', true),
         ]);
     }
 }

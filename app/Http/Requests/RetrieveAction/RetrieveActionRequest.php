@@ -1,23 +1,25 @@
 <?php
 
-namespace App\Http\Requests\RetrieveActionType;
+namespace App\Http\Requests\RetrieveAction;
 
 use App\Models\Status;
 use App\Traits\Request\RequestTraits;
+use App\Models\ReportFile\RetrieveAction;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\ReportFile\RetrieveActionType;
 
 /**
- * Class RetrieveActionTypeRequest
- * @package App\Http\Requests\RetrieveActionType
+ * Class RetrieveActionRequest
+ * @package App\Http\Requests\RetrieveAction
  *
  * @property string $name
  * @property string $code
  * @property string|null $description
  *
  * @property Status $status
+ * @property RetrieveActionType $retrieveactiontype
  */
-class RetrieveActionTypeRequest extends FormRequest
+class RetrieveActionRequest extends FormRequest
 {
     use RequestTraits;
 
@@ -38,7 +40,7 @@ class RetrieveActionTypeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return RetrieveActionType::defaultRules();
+        return RetrieveAction::defaultRules();
     }
 
     /**
@@ -48,6 +50,6 @@ class RetrieveActionTypeRequest extends FormRequest
      */
     public function messages()
     {
-        return RetrieveActionType::messagesRules();
+        return RetrieveAction::messagesRules();
     }
 }
