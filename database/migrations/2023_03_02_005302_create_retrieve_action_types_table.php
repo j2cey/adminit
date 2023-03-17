@@ -1,17 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Traits\Migrations\BaseMigrationTrait;
 
-class CreateOsServersTable extends Migration
+class CreateRetrieveActionTypesTable extends Migration
 {
     use BaseMigrationTrait;
 
-    public $table_name = "os_servers";
-    public $table_comment = "liste des systèmes d exploitation.";
+    public $table_name = "retrieve_action_types";
+    public $table_comment = "liste des types d actions qui peuvent être effectues en rapport a la recuperation d un fichier.";
 
     /**
      * Run the migrations.
@@ -23,17 +22,9 @@ class CreateOsServersTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
-            $table->string('name')->comment("nom du système d exploitation");
-            $table->string('description', 500)->nullable()->comment("description du système d exploitation");
-
-            $table->foreignId('os_architecture_id')->nullable()
-                ->comment('clé de reférence de l os_architecture')
-                ->constrained('os_architectures')->onDelete('set null');
-
-
-            $table->foreignId('os_family_id')->nullable()
-                ->comment('clé de reférence de l os_family')
-                ->constrained('os_families')->onDelete('set null');
+            $table->string('name')->comment("nom du type d action");
+            $table->string('code')->unique()->comment("code du type d action");
+            $table->string('description', 500)->nullable()->comment("description du type d action");
 
             $table->baseFields();
         });
@@ -52,8 +43,6 @@ class CreateOsServersTable extends Migration
             if (DB::getDriverName() !== 'sqlite') {
                 $table->dropBaseForeigns();
 
-                $table->dropForeign(['os_architecture_id']);
-                $table->dropForeign(['os_family_id']);
             }
         });
         Schema::dropIfExists($this->table_name);

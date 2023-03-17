@@ -45,5 +45,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(AccessAccountSeeder::class);
         $this->call(ReportServerSeeder::class);
+
+        $this->call(RetrieveActionTypeSeeder::class);
     }
 }

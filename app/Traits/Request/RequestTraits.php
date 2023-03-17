@@ -19,6 +19,7 @@ use App\Models\ReportFile\ReportFileType;
 use App\Models\AnalysisRules\AnalysisRule;
 use App\Models\OsAndServer\OsArchitecture;
 use App\Models\AnalysisRules\ThresholdType;
+use App\Models\ReportFile\RetrieveActionType;
 use App\Models\AnalysisRules\AnalysisRuleType;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\AnalysisRules\AnalysisHighlightType;
@@ -367,5 +368,24 @@ trait RequestTraits
             $value = $this->decodeJsonField($value);
         }
         return $value ? AccessAccount::where($field, $value[$field])->first() : null;
+    }
+
+    /**
+     * Retourne un objet OsFamily en fonction d'un champs donné
+     * @param $value
+     * @param string $field
+     * @param bool $json_decode_before
+     * @return RetrieveActionType|null
+     */
+    public function setRelevantRetrieveActionType($value, string $field = 'íd', bool $json_decode_before = false): ?RetrieveActionType
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? RetrieveActionType::where($field, $value[$field])->first() : null;
     }
 }

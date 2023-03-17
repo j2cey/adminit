@@ -11,7 +11,9 @@ trait HasCode
     {
         // before creating the model
         static::creating(function ($model) {
-            $model->normalizeCodeField();
+            if ( is_null($model->code) ) {
+                $model->code = $model->generateCodeFromClassName();
+            }
         });
     }
 
@@ -20,11 +22,10 @@ trait HasCode
      * @return void
      */
     public function normalizeCodeField() {
-        if ( is_null($this->code) ) {
-            $this->code = $this->generateCodeFromClassName();
-        } /*else {
-            $this->code = Str::slug($this->code, '-');
-        }*/
+        $this->code = Str::slug(
+            Str::lower($this->code),
+            '-'
+        );
     }
 
     public function generateCodeFromClassName(): string

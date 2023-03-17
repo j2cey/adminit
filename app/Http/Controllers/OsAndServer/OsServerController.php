@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\OsAndServer;
 
-use http\Env\Request;
 use Illuminate\Http\Response;
 use Illuminate\Contracts\View\View;
 use App\Models\OsAndServer\OsServer;
@@ -23,7 +22,7 @@ class OsServerController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function fetch()
+    public function fetch(): AnonymousResourceCollection
     {
         $osservers = OsServer::all();
 

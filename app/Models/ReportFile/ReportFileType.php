@@ -8,7 +8,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class FileMimeType
+ * Class ReportFileType
  * @package App\Models\ReportFile
  *
  * @property integer $id
@@ -149,8 +149,6 @@ class ReportFileType extends BaseModel implements Auditable
             $model->setFormalizedExtension();
         });
     }
-
-
 
     #endregion
 }
