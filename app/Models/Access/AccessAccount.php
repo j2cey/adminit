@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Access;
 
+use App\Models\Status;
+use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\ReportFile;
+namespace App\Http\Controllers\RetrieveAction;
 
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Models\ReportFile\RetrieveAction;
+use App\Models\RetrieveAction\RetrieveAction;
 use App\Http\Resources\ReportFile\RetrieveActionResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Requests\RetrieveAction\StoreRetrieveActionRequest;
@@ -52,7 +52,7 @@ class RetrieveActionController extends Controller
      */
     public function store(StoreRetrieveActionRequest $request)
     {
-        $retrieveaction = RetrieveAction::createNew($request->retrieveactiontype, $request->name, $request->code, $request->status, $request->description);
+        $retrieveaction = RetrieveAction::createNew($request->retrieveactiontype, $request->name, $request->action_class, $request->code, $request->status, $request->description);
 
         return new RetrieveActionResource($retrieveaction);
     }
@@ -88,7 +88,7 @@ class RetrieveActionController extends Controller
      */
     public function update(UpdateRetrieveActionRequest $request, RetrieveAction $retrieveaction)
     {
-        $retrieveaction->updateOne($request->retrieveactiontype, $request->name, $request->code, $request->status, $request->description);
+        $retrieveaction->updateOne($request->retrieveactiontype, $request->name, $request->action_class, $request->code, $request->status, $request->description);
 
         return new RetrieveActionResource($retrieveaction);
     }

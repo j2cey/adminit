@@ -3,10 +3,10 @@
 namespace App\Http\Requests\ReportFileAccess;
 
 use App\Models\Status;
-use App\Models\AccessAccount;
-use App\Models\AccessProtocole;
+use App\Models\Access\AccessAccount;
 use App\Traits\Request\RequestTraits;
 use App\Models\ReportFile\ReportFile;
+use App\Models\Access\AccessProtocole;
 use App\Models\OsAndServer\ReportServer;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\ReportFile\ReportFileAccess;

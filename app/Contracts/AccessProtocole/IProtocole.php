@@ -2,7 +2,7 @@
 
 namespace App\Contracts\AccessProtocole;
 
-use App\Models\AccessAccount;
+use App\Models\Access\AccessAccount;
 use App\Models\OsAndServer\ReportServer;
 use Illuminate\Contracts\Filesystem\Filesystem;
 

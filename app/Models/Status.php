@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $updated_at
  *
  * @method static default()
+ * @method static active()
  */
 class Status extends Model implements Auditable
 {

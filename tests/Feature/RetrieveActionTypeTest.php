@@ -6,8 +6,7 @@ use Tests\TestCase;
 use App\Models\Status;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Foundation\Testing\WithFaker;
-use App\Models\ReportFile\RetrieveActionType;
+use App\Models\RetrieveAction\RetrieveActionType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\ReportFile;
+namespace App\Models\RetrieveAction;
 
 use App\Models\Status;
 use App\Models\BaseModel;
@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  *
  * @property string $name
+ * @property string $action_class
  * @property string $code
  * @property string|null $description
  *
@@ -43,6 +44,7 @@ class RetrieveAction extends BaseModel implements Auditable
     public static function defaultRules() {
         return [
             'name' => ['required'],
+            'action_class' => ['required'],
             'retrieveactiontype' => ['required'],
         ];
     }
@@ -60,6 +62,7 @@ class RetrieveAction extends BaseModel implements Auditable
     public static function messagesRules() {
         return [
             'name.required' => "Prière de renseigner le nom",
+            'action_class.required' => "Prière de renseigner le chemin de classe",
             'retrieveactiontype.required' => "Prière de renseigner le Type d'action",
             'code.required' => "Prière de renseigner le code",
             'code.unique' => "Ce code est deja utilise",
@@ -85,16 +88,18 @@ class RetrieveAction extends BaseModel implements Auditable
     /**
      * Crée (et stocke dans la base de données) une nouvelle action de récupération (RetrieveAction)
      * @param RetrieveActionType $retrieveactiontype Type d'action
-     * @param string $name Nom du Type d'action
-     * @param string|null $code Code du Type d'action
+     * @param string $name Nom de l'action
+     * @param string $action_class Classe de l'action
+     * @param string|null $code Code de l'action
      * @param Status|null $status Statut
-     * @param string|null $description Description du Type d'action
+     * @param string|null $description Description de l'action
      * @return RetrieveAction
      */
-    public static function createNew(RetrieveActionType $retrieveactiontype, string $name, string $code = null, Status $status = null, string $description = null): RetrieveAction
+    public static function createNew(RetrieveActionType $retrieveactiontype, string $name, string $action_class, string $code = null, Status $status = null, string $description = null): RetrieveAction
     {
         $retrieveaction = RetrieveAction::create([
             'name' => $name,
+            'action_class' => $action_class,
             'code' => is_null($code) ? $name : $code,
             'description' => $description,
         ]);
@@ -110,15 +115,17 @@ class RetrieveAction extends BaseModel implements Auditable
     /**
      * Modifie (et stocke dans la base de données) cette action de récupération (RetrieveAction)
      * @param RetrieveActionType $retrieveactiontype Type d'action
-     * @param string $name Nom du Type d'action
-     * @param string|null $code Code du Type d'action
+     * @param string $name Nom de l'action
+     * @param string $action_class Classe de l'action
+     * @param string|null $code Code de l'action
      * @param Status|null $status Statut
-     * @param string|null $description Description du Type d'action
+     * @param string|null $description Description de l'action
      * @return $this
      */
-    public function updateOne(RetrieveActionType $retrieveactiontype, string $name, string $code = null, Status $status = null, string $description = null): RetrieveAction
+    public function updateOne(RetrieveActionType $retrieveactiontype, string $name, string $action_class, string $code = null, Status $status = null, string $description = null): RetrieveAction
     {
         $this->name = $name;
+        $this->action_class = $action_class;
         $this->code = is_null($code) ? $name : $code;
         $this->description = $description;
 

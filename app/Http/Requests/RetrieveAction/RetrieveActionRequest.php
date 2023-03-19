@@ -4,15 +4,16 @@ namespace App\Http\Requests\RetrieveAction;
 
 use App\Models\Status;
 use App\Traits\Request\RequestTraits;
-use App\Models\ReportFile\RetrieveAction;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\ReportFile\RetrieveActionType;
+use App\Models\RetrieveAction\RetrieveAction;
+use App\Models\RetrieveAction\RetrieveActionType;
 
 /**
  * Class RetrieveActionRequest
  * @package App\Http\Requests\RetrieveAction
  *
  * @property string $name
+ * @property string $action_class
  * @property string $code
  * @property string|null $description
  *

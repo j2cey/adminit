@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\AccessAccount;
 
-use App\Models\AccessAccount;
+use App\Models\Access\AccessAccount;
 use Illuminate\Support\Facades\Auth;
 
 class StoreAccessAccountRequest extends AccessAccountRequest

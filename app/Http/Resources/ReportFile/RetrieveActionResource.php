@@ -5,8 +5,8 @@ namespace App\Http\Resources\ReportFile;
 use App\Models\Status;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
-use App\Models\ReportFile\RetrieveActionType;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\RetrieveAction\RetrieveActionType;
 
 /**
  * Class RetrieveActionResource

@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Access;
 
+use App\Models\Status;
+use App\Models\BaseModel;
 use App\Traits\Code\HasCode;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;

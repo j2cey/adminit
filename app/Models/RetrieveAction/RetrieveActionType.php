@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\ReportFile;
+namespace App\Models\RetrieveAction;
 
 use App\Models\Status;
 use App\Models\BaseModel;
@@ -27,6 +27,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @method static retrieveMode()
+ * @method static toPerformAfterRetrieving()
  */
 class RetrieveActionType extends BaseModel implements Auditable
 {

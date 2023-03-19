@@ -6,15 +6,12 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Str;
 use App\Traits\Code\HasCode;
-use App\Models\AccessAccount;
 use Illuminate\Support\Carbon;
-use App\Models\AccessProtocole;
-use App\Models\Access\FtpProtocole;
-use Illuminate\Support\Facades\Schema;
+use App\Models\Access\AccessAccount;
+use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Storage;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\OsAndServer\ReportServer;
-use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

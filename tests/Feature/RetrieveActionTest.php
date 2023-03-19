@@ -6,9 +6,8 @@ use Tests\TestCase;
 use App\Models\Status;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Support\Facades\Schema;
-use App\Models\ReportFile\RetrieveAction;
-use Illuminate\Foundation\Testing\WithFaker;
-use App\Models\ReportFile\RetrieveActionType;
+use App\Models\RetrieveAction\RetrieveAction;
+use App\Models\RetrieveAction\RetrieveActionType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -47,6 +46,7 @@ class RetrieveActionTest extends TestCase
         $response = $this->add_new_retrieveaction(
             RetrieveActionType::retrieveMode()->first(),
             "new retrieve action",
+            "new_action_class",
             "retrive_action_code"
         );
 
@@ -68,10 +68,10 @@ class RetrieveActionTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_retrieveaction(null, null, null);
+        $response = $this->add_new_retrieveaction(null, null, null, null);
 
         // on doit avoir une erreur de validation des champs ci-dessous
-        $response->assertSessionHasErrors(['retrieveactiontype','name','code']);
+        $response->assertSessionHasErrors(['retrieveactiontype','name', 'action_class','code']);
     }
 
     public function test_a_RetrieveAction_unique_fields_must_be_validated_before_creation()
@@ -83,11 +83,13 @@ class RetrieveActionTest extends TestCase
         $response = $this->add_new_retrieveaction(
             RetrieveActionType::retrieveMode()->first(),
             "new retrieve action",
+            "new_action_class",
             "retrive_action_code"
         );
         $response = $this->add_new_retrieveaction(
             RetrieveActionType::retrieveMode()->first(),
             "another retrieve action",
+            "new_action_class",
             "retrive_action_code"
         );
 
@@ -109,6 +111,7 @@ class RetrieveActionTest extends TestCase
         $response = $this->add_new_retrieveaction(
             RetrieveActionType::retrieveMode()->first(),
             "new retrieve action",
+            "new_action_class",
             "retrive_action_code",
             Status::active()->first(),
             "new retrieve action desc"
@@ -123,6 +126,7 @@ class RetrieveActionTest extends TestCase
             $retrieveaction,
             $retrieveactiontype_another,
             "new retrieve action upd",
+            "new_action_class_upd",
             "retrive_action_code_upd",
             $status_inactive,
             "new retrieve action desc upd"
@@ -131,6 +135,7 @@ class RetrieveActionTest extends TestCase
         $retrieveaction->refresh();
 
         $this->assertEquals("new retrieve action upd", $retrieveaction->name);
+        $this->assertEquals("new_action_class_upd", $retrieveaction->action_class);
         $this->assertEquals("retrive_action_code_upd", $retrieveaction->code);
         $this->assertEquals($status_inactive->id, $retrieveaction->status->id);
         $this->assertEquals($retrieveactiontype_another->id, $retrieveaction->retrieveactiontype->id);
@@ -151,6 +156,7 @@ class RetrieveActionTest extends TestCase
         $response = $this->add_new_retrieveaction(
             RetrieveActionType::retrieveMode()->first(),
             "new retrieve action",
+            "new_action_class",
             "retrive_action_code",
             Status::active()->first(),
             "new retrieve action desc"
@@ -167,20 +173,21 @@ class RetrieveActionTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_retrieveaction($retrieveactiontype, $name, $code = null, $status = null, $description = null): TestResponse
+    private function add_new_retrieveaction($retrieveactiontype, $name, $action_class, $code = null, $status = null, $description = null): TestResponse
     {
-        return $this->post('retrieveactions', $this->new_data($retrieveactiontype, $name, $code, $status, $description));
+        return $this->post('retrieveactions', $this->new_data($retrieveactiontype, $name, $action_class, $code, $status, $description));
     }
 
-    private function update_existing_retrieveaction($existing_retrieveaction, $retrieveactiontype, $name, $code = null, $status = null, $description = null): TestResponse
+    private function update_existing_retrieveaction($existing_retrieveaction, $retrieveactiontype, $name, $action_class, $code = null, $status = null, $description = null): TestResponse
     {
-        return $this->put('retrieveactions/' . $existing_retrieveaction->uuid, $this->new_data($retrieveactiontype, $name, $code, $status, $description));
+        return $this->put('retrieveactions/' . $existing_retrieveaction->uuid, $this->new_data($retrieveactiontype, $name, $action_class, $code, $status, $description));
     }
 
-    private function new_data($retrieveactiontype, $name, $code = null, $status = null, $description = null): array
+    private function new_data($retrieveactiontype, $name, $action_class, $code = null, $status = null, $description = null): array
     {
         return [
             'name' => $name,
+            'action_class' => $action_class,
             'code' => $code,
             'description' => $description,
 

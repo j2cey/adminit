@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests\AccessAccount;
 
-use App\Models\AccessAccount;
+use App\Models\Access\AccessAccount;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAccessAccountRequest extends AccessAccountRequest
 {

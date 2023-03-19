@@ -3,7 +3,7 @@
 namespace App\Http\Requests\RetrieveActionType;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\ReportFile\RetrieveActionType;
+use App\Models\RetrieveAction\RetrieveActionType;
 
 /**
  * Class StoreRetrieveActionTypeRequest

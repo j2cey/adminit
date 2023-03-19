@@ -3,8 +3,8 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\ReportFile\RetrieveActionType;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\RetrieveAction\RetrieveActionType;
 
 class RetrieveActionTypePolicy
 {
@@ -25,7 +25,7 @@ class RetrieveActionTypePolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportFile\RetrieveActionType  $retrieveActionType
+     * @param  \App\Models\RetrieveAction\RetrieveActionType  $retrieveActionType
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, RetrieveActionType $retrieveActionType)
@@ -48,7 +48,7 @@ class RetrieveActionTypePolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportFile\RetrieveActionType  $retrieveActionType
+     * @param  \App\Models\RetrieveAction\RetrieveActionType  $retrieveActionType
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, RetrieveActionType $retrieveActionType)
@@ -60,7 +60,7 @@ class RetrieveActionTypePolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportFile\RetrieveActionType  $retrieveActionType
+     * @param  \App\Models\RetrieveAction\RetrieveActionType  $retrieveActionType
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, RetrieveActionType $retrieveActionType)
@@ -72,7 +72,7 @@ class RetrieveActionTypePolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportFile\RetrieveActionType  $retrieveActionType
+     * @param  \App\Models\RetrieveAction\RetrieveActionType  $retrieveActionType
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function restore(User $user, RetrieveActionType $retrieveActionType)
@@ -84,7 +84,7 @@ class RetrieveActionTypePolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportFile\RetrieveActionType  $retrieveActionType
+     * @param  \App\Models\RetrieveAction\RetrieveActionType  $retrieveActionType
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function forceDelete(User $user, RetrieveActionType $retrieveActionType)

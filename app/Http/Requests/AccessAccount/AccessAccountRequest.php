@@ -3,7 +3,7 @@
 namespace App\Http\Requests\AccessAccount;
 
 use App\Models\Status;
-use App\Models\AccessAccount;
+use App\Models\Access\AccessAccount;
 use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;
 

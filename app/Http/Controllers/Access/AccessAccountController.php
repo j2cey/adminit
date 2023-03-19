@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Access;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\AccessAccount;
 use Illuminate\Contracts\View\View;
+use App\Models\Access\AccessAccount;
+use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use App\Http\Resources\AccessAccountResource;
 use Illuminate\Contracts\Foundation\Application;

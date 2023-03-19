@@ -4,18 +4,17 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Status;
-use App\Models\AccessAccount;
 use App\Models\Reports\Report;
-use App\Models\AccessProtocole;
 use App\Models\Reports\ReportType;
+use App\Models\Access\AccessAccount;
 use App\Models\OsAndServer\OsServer;
 use Illuminate\Testing\TestResponse;
 use App\Models\ReportFile\ReportFile;
+use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Schema;
 use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
 use App\Models\ReportFile\ReportFileAccess;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 

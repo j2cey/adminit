@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\AccessAccount;
 use Illuminate\Database\Seeder;
+use App\Models\Access\AccessAccount;
 
 class AccessAccountSeeder extends Seeder
 {

@@ -3,8 +3,7 @@
 namespace App\Http\Requests\RetrieveAction;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\ReportFile\RetrieveAction;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\RetrieveAction\RetrieveAction;
 
 /**
  * Class UpdateRetrieveActionTypeRequest

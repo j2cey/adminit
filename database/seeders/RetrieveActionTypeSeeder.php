@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Status;
 use Illuminate\Database\Seeder;
-use App\Models\ReportFile\RetrieveActionType;
+use App\Models\RetrieveAction\RetrieveActionType;
 
 class RetrieveActionTypeSeeder extends Seeder
 {

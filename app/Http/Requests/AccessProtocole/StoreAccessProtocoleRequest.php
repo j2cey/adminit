@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\AccessProtocole;
 
-use App\Models\AccessProtocole;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Access\AccessProtocole;
 
 /**
  * Class UpdateAccessProtocoleRequest
