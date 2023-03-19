@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\ReportFileAccess;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ReportFile\ReportFileAccess;
 use App\Http\Requests\ReportFile\ReportFileRequest;
@@ -21,7 +22,7 @@ class StoreReportFileAccessRequest extends ReportFileAccessRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->can('reportfileaccess-create');
+        return Auth::user()->can( Permissions::ReportFileAccess()->create() );
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\RetrieveActionType;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RetrieveAction\RetrieveActionType;
 
@@ -20,7 +21,7 @@ class StoreRetrieveActionTypeRequest extends RetrieveActionTypeRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->can('retrieveactiontype-create');
+        return Auth::user()->can( Permissions::RetrieveActionType()->create() );
     }
 
     /**

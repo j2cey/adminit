@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\ReportFile;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Foundation\Http\FormRequest;
@@ -15,7 +16,7 @@ class UpdateReportFileRequest extends ReportFileRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('reportfile-update');
+        return Auth::user()->can( Permissions::ReportFile()->update() );
     }
 
     /**

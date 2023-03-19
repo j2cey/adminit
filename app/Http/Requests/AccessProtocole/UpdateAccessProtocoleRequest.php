@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\AccessProtocole;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Access\AccessProtocole;
 
@@ -20,7 +21,7 @@ class UpdateAccessProtocoleRequest extends AccessProtocoleRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->can('accessprotocole-update');
+        return Auth::user()->can( Permissions::AccessProtocole()->update() );
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\SelectedRetrieveAction;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\RetrieveAction\RetrieveAction;
@@ -25,7 +26,7 @@ class StoreSelectedRetrieveActionRequest extends SelectedRetrieveActionRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->can('selectedretrieveaction-create');
+        return Auth::user()->can( Permissions::SelectedRetrieveAction()->create() );
     }
 
     /**

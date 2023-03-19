@@ -68,6 +68,7 @@ class RetrieveActionType extends BaseModel implements Auditable
 
     #region Scopes
     public function scopeRetrieveMode($query) {
+
         return $query
             ->where('code', "retrieve_mode");
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\AccessAccount;
 
+use App\Enums\Permissions;
 use App\Models\Access\AccessAccount;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,7 @@ class UpdateAccessAccountRequest extends AccessAccountRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('accessaccount-update');
+        return Auth::user()->can( Permissions::AccessAccount()->update() );
     }
 
     /**

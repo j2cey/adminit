@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\RetrieveAction;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RetrieveAction\RetrieveAction;
 
@@ -20,7 +21,7 @@ class StoreRetrieveActionRequest extends RetrieveActionRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->can('retrieveaction-create');
+        return Auth::user()->can( Permissions::RetrieveAction()->create() );
     }
 
     /**

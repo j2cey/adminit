@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\ReportFileType;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ReportFile\ReportFileType;
 
@@ -14,7 +15,7 @@ class StoreReportFileTypeRequest extends ReportFileTypeRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('reportfiletype-create');
+        return Auth::user()->can( Permissions::ReportFileType()->create() );
     }
 
     /**

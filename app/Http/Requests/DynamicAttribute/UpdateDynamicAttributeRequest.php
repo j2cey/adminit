@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\DynamicAttribute;
 
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
 use App\Models\DynamicAttributes\DynamicAttribute;
 
 class UpdateDynamicAttributeRequest extends DynamicAttributeRequest
@@ -13,7 +15,7 @@ class UpdateDynamicAttributeRequest extends DynamicAttributeRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can( Permissions::DynamicAttribute()->update() );
     }
 
     /**

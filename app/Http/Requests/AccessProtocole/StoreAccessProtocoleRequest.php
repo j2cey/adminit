@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\AccessProtocole;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Access\AccessProtocole;
 
@@ -20,7 +21,7 @@ class StoreAccessProtocoleRequest extends AccessProtocoleRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->can('accessprotocole-create');
+        return Auth::user()->can( Permissions::AccessProtocole()->create() );
     }
 
     /**

@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\ReportServer;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
-use App\Models\OsAndServer\OsServer;
 use App\Models\OsAndServer\ReportServer;
-use Illuminate\Foundation\Http\FormRequest;
 
 
 /**
@@ -23,7 +22,7 @@ class UpdateReportServerRequest extends ReportServerRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('reportserver-update');
+        return Auth::user()->can( Permissions::ReportServer()->update() );
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\ReportServer;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OsAndServer\ReportServer;
 use Illuminate\Foundation\Http\FormRequest;
@@ -22,7 +23,7 @@ class StoreReportServerRequest extends ReportServerRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('reportserver-create');
+        return Auth::user()->can( Permissions::ReportServer()->create() );
     }
 
     /**

@@ -4,9 +4,11 @@ namespace App\Models\RetrieveAction;
 
 use App\Models\Status;
 use App\Models\BaseModel;
+use App\Enums\Permissions;
 use App\Traits\Code\HasCode;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Traits\Permissions\HasPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**

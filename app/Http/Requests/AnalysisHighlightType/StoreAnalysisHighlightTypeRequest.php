@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\AnalysisHighlightType;
 
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
 use App\Models\AnalysisRules\AnalysisHighlightType;
 
 class StoreAnalysisHighlightTypeRequest extends AnalysisHighlightTypeRequest
@@ -13,7 +15,7 @@ class StoreAnalysisHighlightTypeRequest extends AnalysisHighlightTypeRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can( Permissions::AnalysisHighlightType()->create() );
     }
 
     /**

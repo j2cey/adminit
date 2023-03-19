@@ -111,6 +111,11 @@ Route::get('reportsetting.index',[ReportsettingController::class,'index'])
 
 #region permissions & roles
 
+Route::get('permissions.test', function () {
+    dd(\App\Enums\Permissions::Role()->getAllPermissions());
+    //dd(App\Models\RetrieveAction\RetrieveAction::can_create());
+});
+
 Route::get('permissions',[RoleController::class, 'permissions'])->middleware('auth');
 
 Route::resource('roles',RoleController::class)->middleware('auth');

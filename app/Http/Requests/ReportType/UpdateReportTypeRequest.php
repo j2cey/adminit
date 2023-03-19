@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\ReportType;
 
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateReportTypeRequest extends FormRequest
@@ -13,7 +15,7 @@ class UpdateReportTypeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return Auth::user()->can( Permissions::ReportType()->update() );
     }
 
     /**

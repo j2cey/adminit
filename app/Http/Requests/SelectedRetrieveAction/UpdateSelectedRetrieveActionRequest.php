@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\SelectedRetrieveAction;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
@@ -21,7 +22,7 @@ class UpdateSelectedRetrieveActionRequest extends SelectedRetrieveActionRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->can('selectedretrieveaction-update');
+        return Auth::user()->can( Permissions::SelectedRetrieveAction()->update() );
     }
 
     /**

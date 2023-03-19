@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\ThresholdType;
 
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
 use App\Models\AnalysisRules\ThresholdType;
 
 class UpdateThresholdTypeRequest extends ThresholdTypeRequest
@@ -13,7 +15,7 @@ class UpdateThresholdTypeRequest extends ThresholdTypeRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can( Permissions::ThresholdType()->update() );
     }
 
     /**

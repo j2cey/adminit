@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\OsFamily;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OsAndServer\OsFamily;
 
@@ -20,7 +21,7 @@ class UpdateOsFamilyRequest extends OsFamilyRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('osfamily-update');
+        return Auth::user()->can( Permissions::OsFamily()->update() );
     }
 
     /**
