@@ -43,6 +43,7 @@ use App\Http\Controllers\AnalysisRules\HighlightTextWeightController;
 use App\Http\Controllers\DynamicAttributes\DynamicAttributeController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleThresholdController;
 use App\Http\Controllers\AnalysisRules\AnalysisHighlightTypeController;
+use App\Http\Controllers\RetrieveAction\SelectedRetrieveActionController;
 use App\Http\Controllers\DynamicAttributes\DynamicAttributeTypeController;
 
 /*
@@ -349,5 +350,10 @@ Route::get('retrieveactiontypes.fetch',[RetrieveActionTypeController::class,'fet
 Route::resource('retrieveactions',RetrieveActionController::class)->middleware('auth');
 Route::get('retrieveactions.fetch',[RetrieveActionController::class,'fetch'])
     ->name('retrieveactions.fetch')
+    ->middleware('auth');
+
+Route::resource('selectedretrieveactions',SelectedRetrieveActionController::class)->middleware('auth');
+Route::get('selectedretrieveactions.fetch',[SelectedRetrieveActionController::class,'fetch'])
+    ->name('selectedretrieveactions.fetch')
     ->middleware('auth');
 

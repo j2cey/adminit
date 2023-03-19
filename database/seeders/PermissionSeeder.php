@@ -78,7 +78,12 @@ class PermissionSeeder extends Seeder
             ['retrieveaction-list', 4],
             ['retrieveaction-create', 3],
             ['retrieveaction-update', 1],
-            ['retrieveaction-delete', 1]
+            ['retrieveaction-delete', 1],
+
+            ['selectedretrieveaction-list', 4],
+            ['selectedretrieveaction-create', 3],
+            ['selectedretrieveaction-update', 1],
+            ['selectedretrieveaction-delete', 1]
         ];
 
         foreach ($permissions as $permission) {

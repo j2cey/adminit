@@ -48,16 +48,6 @@ trait RequestTraits
         return is_string($value) ? json_decode($value, true) : $value;
     }
 
-    public function setRelevantRole($value, $json_decode_before = false) {
-        if (is_null($value)) {
-            return null;
-        }
-        if ($json_decode_before || is_string($value)) {
-            $value = $this->decodeJsonField($value);
-        }
-        return $value ? Role::where('id', $value['id'])->first() : null;
-    }
-
     public function setCheckOrOptionValue($value) {
         if (is_null($value) || $value === "null") {
             $value = null;
@@ -69,6 +59,29 @@ trait RequestTraits
             $value = false;
         }
         return intval($value);
+    }
+
+    public function getRelevantModel($model_type, $value, $field = 'íd', $json_decode_before = false) {
+        if (is_null($value)) {
+            return null;
+        }
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? $model_type::where($field, $value[$field])->first() : null;
+    }
+
+
+
+
+    public function setRelevantRole($value, $json_decode_before = false) {
+        if (is_null($value)) {
+            return null;
+        }
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? Role::where('id', $value['id'])->first() : null;
     }
 
     public function setRelevantUser($value, $json_decode_before = false) {
@@ -387,5 +400,9 @@ trait RequestTraits
             $value = $this->decodeJsonField($value);
         }
         return $value ? RetrieveActionType::where($field, $value[$field])->first() : null;
+    }
+
+    public function setRelevantRetrieveAction($model_type, $value, string $field = 'íd', bool $json_decode_before = false) {
+        return $this->getRelevantModel($model_type, $value, $field, $json_decode_before);
     }
 }

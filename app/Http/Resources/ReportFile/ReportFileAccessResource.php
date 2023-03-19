@@ -10,9 +10,9 @@ use App\Models\ReportFile\ReportFile;
 use App\Models\Access\AccessProtocole;
 use App\Http\Resources\StatusResource;
 use App\Models\OsAndServer\ReportServer;
-use App\Http\Resources\AccessAccountResource;
-use App\Http\Resources\AccessProtocoleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Access\AccessAccountResource;
+use App\Http\Resources\Access\AccessProtocoleResource;
 use App\Http\Resources\OsAndServer\ReportServerResource;
 
 /**

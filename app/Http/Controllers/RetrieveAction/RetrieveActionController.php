@@ -5,7 +5,7 @@ namespace App\Http\Controllers\RetrieveAction;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Models\RetrieveAction\RetrieveAction;
-use App\Http\Resources\ReportFile\RetrieveActionResource;
+use App\Http\Resources\RetrieveAction\RetrieveActionResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Requests\RetrieveAction\StoreRetrieveActionRequest;
 use App\Http\Requests\RetrieveAction\UpdateRetrieveActionRequest;

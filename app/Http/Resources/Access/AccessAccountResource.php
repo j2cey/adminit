@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Resources\ReportFile;
+namespace App\Http\Resources\Access;
 
 use App\Models\Status;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\RetrieveAction\RetrieveActionType;
+use function route;
 
 /**
- * Class RetrieveActionResource
+ * Class ReportFileTypeResource
  * @package App\Http\Resources\ReportFile
  *
  * @property integer $id
@@ -20,42 +21,43 @@ use App\Models\RetrieveAction\RetrieveActionType;
  * @property integer $updated_by
  *
  *
- * @property string $name
- * @property string $code
+ * @property string $login
+ * @property string $pwd
+ * @property string $email
+ * @property string $username
  * @property string|null $description
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * @property Status $status
- * @property RetrieveActionType $retrieveactiontype
  */
-class RetrieveActionResource extends JsonResource
+class AccessAccountResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array
      */
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+        'id' => $this->id,
             'uuid' => $this->uuid,
-
             'status' => StatusResource::make($this->status),
-            'retrieveactiontype' => RetrieveActionTypeResource::make($this->retrieveactiontype),
 
-            'name' => $this->name,
-            'code' => $this->code,
+            'login' => $this->login,
+            'pwd' => $this->pwd,
+            'email' => $this->email,
+            'username' => $this->username,
             'description' => $this->description,
 
             'created_at' => $this->created_at,
 
-            'show_url' => route('retrieveactions.show', $this->uuid),
-            'edit_url' => route('retrieveactions.edit', $this->uuid),
-            'destroy_url' => route('retrieveactions.destroy', $this->uuid),
+            'show_url' => route('accessaccounts.show', $this->uuid),
+            'edit_url' => route('accessaccounts.edit', $this->uuid),
+            'destroy_url' => route('accessaccounts.destroy', $this->uuid),
         ];
     }
 }

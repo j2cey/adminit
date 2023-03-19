@@ -7,32 +7,45 @@ use Illuminate\Support\Str;
 
 trait HasCode
 {
+    private function CODE_SEPARATOR() {
+        return "-";
+    }
+
     public static function bootHasCode()
     {
         // before creating the model
         static::creating(function ($model) {
-            if ( is_null($model->code) ) {
+            /*if ( is_null($model->code) ) {
                 $model->code = $model->generateCodeFromClassName();
-            }
+            }*/
+            self::setCodeIfNotExists($model);
         });
     }
 
     /**
      * Make sure the code field is given and set it if not
-     * @return void
+     * @param $code
+     * @return string
      */
-    public function normalizeCodeField() {
-        $this->code = Str::slug(
-            Str::lower($this->code),
+    public static function normalizeCodeField($code): string
+    {
+        return Str::slug(
+            Str::lower($code),
             '-'
         );
     }
 
+    public static function setCodeIfNotExists($model) {
+        if ( is_null($model->code) ) {
+            $model->code = $model->generateCodeFromClassName();
+        }
+    }
+
     public function generateCodeFromClassName(): string
     {
-        $elem_type = str_replace("\\", "_", get_called_class());
+        $elem_type = str_replace("\\", self::CODE_SEPARATOR(), get_called_class());
         $elem_count = get_called_class()::all()->count();
 
-        return $elem_type . "_" . $elem_count;
+        return self::normalizeCodeField( $elem_type . self::CODE_SEPARATOR() . $elem_count );
     }
 }

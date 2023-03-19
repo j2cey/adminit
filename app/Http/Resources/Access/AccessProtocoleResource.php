@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Resources\ReportFile;
+namespace App\Http\Resources\Access;
 
-use JsonSerializable;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
+use function route;
 
 /**
  * Class ReportFileTypeResource
@@ -23,15 +22,16 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *
  *
  * @property string $name
- * @property string $code
  * @property string|null $description
+ *
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * @property Status $status
  */
-class RetrieveActionTypeResource extends JsonResource
+
+class AccessProtocoleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -39,7 +39,7 @@ class RetrieveActionTypeResource extends JsonResource
      * @param  Request  $request
      * @return array
      */
-    public function toArray($request): array
+    public function toArray($request)
     {
         return [
             'id' => $this->id,
@@ -47,14 +47,13 @@ class RetrieveActionTypeResource extends JsonResource
             'status' => StatusResource::make($this->status),
 
             'name' => $this->name,
-            'code' => $this->code,
             'description' => $this->description,
 
             'created_at' => $this->created_at,
 
-            'show_url' => route('retrieveactiontypes.show', $this->uuid),
-            'edit_url' => route('retrieveactiontypes.edit', $this->uuid),
-            'destroy_url' => route('retrieveactiontypes.destroy', $this->uuid),
+            'show_url' => route('accessprotocoles.show', $this->uuid),
+            'edit_url' => route('accessprotocoles.edit', $this->uuid),
+            'destroy_url' => route('accessprotocoles.destroy', $this->uuid),
         ];
     }
 }

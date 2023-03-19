@@ -5,12 +5,12 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Traits\Migrations\BaseMigrationTrait;
 
-class CreateRetrieveActionsTable extends Migration
+class CreateSelectedRetrieveActionsTable extends Migration
 {
     use BaseMigrationTrait;
 
-    public $table_name = "retrieve_actions";
-    public $table_comment = "liste actions qui peuvent être effectues (en rapport a la recuperation) pour un fichier.";
+    public $table_name = "selected_retrieve_actions";
+    public $table_comment = "liste actions (en rapport a la récupération) selectionnées pour un fichier et/ou un accès.";
 
     /**
      * Run the migrations.
@@ -22,14 +22,12 @@ class CreateRetrieveActionsTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
-            $table->string('name')->comment("nom de l action");
-            $table->string('code')->unique()->comment("code de l action");
-            $table->string('action_class')->comment("chemin complet de la classe de l Action (qui va implémenter l interface IRetrieveAction)");
-            $table->string('description', 500)->nullable()->comment("description de l action");
+            $table->string('code')->unique()->comment("code de la selection");
+            $table->string('description', 500)->nullable()->comment("description de la selection");
 
-            $table->foreignId('retrieve_action_type_id')->nullable()
-                ->comment('clé de reférence du type d action')
-                ->constrained('retrieve_action_types')->onDelete('set null');
+            $table->foreignId('retrieve_action_id')->nullable()
+                ->comment('clé de reférence de l action')
+                ->constrained('retrieve_actions')->onDelete('set null');
 
             $table->baseFields();
         });
@@ -47,7 +45,7 @@ class CreateRetrieveActionsTable extends Migration
             /** Make sure to put this condition to check if driver is SQLite */
             if (DB::getDriverName() !== 'sqlite') {
                 $table->dropBaseForeigns();
-                $table->dropForeign(['retrieve_action_type_id']);
+                $table->dropForeign(['retrieve_action_id']);
             }
         });
         Schema::dropIfExists($this->table_name);

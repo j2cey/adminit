@@ -1,0 +1,106 @@
+<?php
+
+namespace App\Http\Controllers\RetrieveAction;
+
+use App\Http\Controllers\Controller;
+use App\Models\RetrieveAction\SelectedRetrieveAction;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Resources\RetrieveAction\SelectedRetrieveActionResource;
+use App\Http\Requests\SelectedRetrieveAction\StoreSelectedRetrieveActionRequest;
+use App\Http\Requests\SelectedRetrieveAction\UpdateSelectedRetrieveActionRequest;
+
+class SelectedRetrieveActionController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return AnonymousResourceCollection
+     */
+    public function fetch(): AnonymousResourceCollection
+    {
+        $selectedretrieveactions = SelectedRetrieveAction::all();
+
+        return SelectedRetrieveActionResource::collection($selectedretrieveactions);
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param StoreSelectedRetrieveActionRequest $request
+     * @return SelectedRetrieveActionResource
+     */
+    public function store(StoreSelectedRetrieveActionRequest $request)
+    {
+        $selectedretrieveaction = SelectedRetrieveAction::createNew($request->retrieveaction, $request->code, $request->status, $request->description);
+
+        return new SelectedRetrieveActionResource($selectedretrieveaction);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param SelectedRetrieveAction $selectedretrieveaction
+     * @return \Illuminate\Http\Response
+     */
+    public function show(SelectedRetrieveAction $selectedretrieveaction)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param SelectedRetrieveAction $selectedretrieveaction
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(SelectedRetrieveAction $selectedretrieveaction)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param UpdateSelectedRetrieveActionRequest $request
+     * @param SelectedRetrieveAction $selectedretrieveaction
+     * @return SelectedRetrieveActionResource
+     */
+    public function update(UpdateSelectedRetrieveActionRequest $request, SelectedRetrieveAction $selectedretrieveaction)
+    {
+        $selectedretrieveaction->updateOne($request->retrieveaction, $request->code, $request->status, $request->description);
+
+        return new SelectedRetrieveActionResource($selectedretrieveaction);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param SelectedRetrieveAction $selectedretrieveaction
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(SelectedRetrieveAction $selectedretrieveaction)
+    {
+        $selectedretrieveaction->delete();
+
+        return response('Delete Successfull', 200);
+    }
+}

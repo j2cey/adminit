@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class RetrieveAction
- * @package App\Models\ReportFile
+ * @package App\Models\RetrieveAction
  *
  * @property integer $id
  *
@@ -31,6 +31,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  *
  * @property RetrieveActionType $retrieveactiontype
+ *
+ * @method static retrieveByName()
+ * @method static retrieveByWildcard()
+ * @method static renameFile()
+ * @method static deleteFile()
  */
 class RetrieveAction extends BaseModel implements Auditable
 {
@@ -65,14 +70,32 @@ class RetrieveAction extends BaseModel implements Auditable
             'action_class.required' => "Prière de renseigner le chemin de classe",
             'retrieveactiontype.required' => "Prière de renseigner le Type d'action",
             'code.required' => "Prière de renseigner le code",
-            'code.unique' => "Ce code est deja utilise",
+            'code.unique' => "Ce code est deja utilisé",
         ];
     }
 
     #endregion
 
     #region Scopes
+    public function scopeRetrieveByName($query) {
+        return $query
+            ->where('code', "by_name");
+    }
 
+    public function scopeRetrieveByWildcard($query) {
+        return $query
+            ->where('code', "by_wildcard");
+    }
+
+    public function scopeRenameFile($query) {
+        return $query
+            ->where('code', "rename_file");
+    }
+
+    public function scopeDeleteFile($query) {
+        return $query
+            ->where('code', "delete_file");
+    }
     #endregion
 
     #region Eloquent Relationships

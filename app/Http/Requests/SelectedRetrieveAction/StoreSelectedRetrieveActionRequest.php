@@ -1,17 +1,22 @@
 <?php
 
-namespace App\Http\Requests\RetrieveAction;
+namespace App\Http\Requests\SelectedRetrieveAction;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\FormRequest;
 use App\Models\RetrieveAction\RetrieveAction;
+use App\Models\RetrieveAction\SelectedRetrieveAction;
 
 /**
- * Class StoreRetrieveActionTypeRequest
- * @package App\Http\Requests\RetrieveActionType
+ * Class StoreSelectedRetrieveActionRequest
+ * @package App\Http\Requests\SelectedRetrieveAction
+ *
+ * @property string $code
+ * @property string|null $description
  *
  *
  */
-class StoreRetrieveActionRequest extends RetrieveActionRequest
+class StoreSelectedRetrieveActionRequest extends SelectedRetrieveActionRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,7 +25,7 @@ class StoreRetrieveActionRequest extends RetrieveActionRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->can('retrieveaction-create');
+        return Auth::user()->can('selectedretrieveaction-create');
     }
 
     /**
@@ -30,7 +35,7 @@ class StoreRetrieveActionRequest extends RetrieveActionRequest
      */
     public function rules(): array
     {
-        return RetrieveAction::createRules();
+        return SelectedRetrieveAction::createRules();
     }
 
     /**
@@ -41,9 +46,8 @@ class StoreRetrieveActionRequest extends RetrieveActionRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'code' => $this->getCodeField(),
             'status' => $this->setRelevantStatus($this->input('status'),'code', false),
-            'retrieveactiontype' => $this->setRelevantRetrieveActionType($this->input('retrieveactiontype'),'code', false),
+            'retrieveaction' => $this->setRelevantRetrieveAction(RetrieveAction::class, $this->input('retrieveaction'),'code', false),
         ]);
     }
 }

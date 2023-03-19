@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Access\AccessProtocole;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
-use App\Http\Resources\AccessProtocoleResource;
+use App\Http\Resources\Access\AccessProtocoleResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Requests\AccessProtocole\StoreAccessProtocoleRequest;
 use App\Http\Requests\AccessProtocole\UpdateAccessProtocoleRequest;

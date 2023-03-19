@@ -207,7 +207,8 @@ class ReportFileAccess extends BaseModel implements Auditable
 
 
     public function setFormalizedCodeAndName() {
-        $this->normalizeCodeField();
+        //$this->normalizeCodeField();
+        self::setCodeIfNotExists($this);
         if ( is_null($this->name) ) {
             $this->name = $this->code;
         }

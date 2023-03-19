@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @method static default()
  * @method static active()
+ * @method static inactive()
  */
 class Status extends Model implements Auditable
 {
