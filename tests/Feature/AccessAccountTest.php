@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Status;
 use App\Models\Access\AccessAccount;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -33,7 +34,7 @@ class AccessAccountTest extends TestCase
      *
      * @return void
      */
-    public function test_an_accessaccount_can_be_stored_to_the_database()
+    public function test_anAccessAccount_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -41,7 +42,12 @@ class AccessAccountTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessaccount("ftpadmin","ftpadmin","ftpadmin@adminit.com","ftpadmin");
+        $response = $this->add_new_accessaccount(
+            "ftpadmin",
+            "ftpadmin",
+            "ftpadmin@adminit.com",
+            "ftpadmin"
+        );
 
         // on test si l'assertion s'est bien passée
         $response->assertStatus(201);
@@ -55,16 +61,16 @@ class AccessAccountTest extends TestCase
      *
      * @return void
      */
-    public function test_an_accessaccount_required_fields_must_be_validated_before_creation()
+    public function test_anAccessAccount_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessaccount("","","","");
+        $response = $this->add_new_accessaccount(null,null,null,null);
 
         // on doit avoir une erreur de validation des champs ci-dessous
-        $response->assertSessionHasErrors(['login','email','username']);
+        $response->assertSessionHasErrors(['login', 'pwd','email','username']);
     }
 
     /**
@@ -72,7 +78,7 @@ class AccessAccountTest extends TestCase
      *
      * @return void
      */
-    public function test_an_accessaccount_email_fields_must_be_validated_before_creation()
+    public function test_anAccessAccount_email_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -89,14 +95,24 @@ class AccessAccountTest extends TestCase
      *
      * @return void
      */
-    public function test_an_accessaccount_unique_fields_must_be_validated_before_creation()
+    public function test_anAccessAccount_unique_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessaccount("ftpadmin","ftpadmin","ftpadmin@adminit.com","ftpadmin");
-        $response = $this->add_new_accessaccount("ftpadmin","ftpadmin","ftpadmin@adminit.com","ftpadmin");
+        $response = $this->add_new_accessaccount(
+            "ftpadmin",
+            "ftpadmin",
+            "ftpadmin@adminit.com",
+            "ftpadmin"
+        );
+        $response = $this->add_new_accessaccount(
+            "ftpadmin",
+            "ftpadmin",
+            "ftpadmin@adminit.com",
+            "ftpadmin"
+        );
 
         // on doit avoir une erreur de validation des champs ci-dessous
         $response->assertSessionHasErrors(['username']);
@@ -107,15 +123,33 @@ class AccessAccountTest extends TestCase
      *
      * @return void
      */
-    public function test_an_accessaccount_unique_fields_can_updated_with_same_values()
+    public function test_anAccessAccount_unique_fields_can_updated_with_same_values()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessaccount("ftpadmin","ftpadmin","ftpadmin@adminit.com","ftpadmin");
+        $response = $this->add_new_accessaccount(
+            "ftpadmin",
+            "ftpadmin",
+            "ftpadmin@adminit.com",
+            "ftpadmin",
+            Status::active()->first(),
+            "access account desc"
+        );
+
         $newaccessaccount = AccessAccount::first();
-        $response = $this->update_existing_accessaccount($newaccessaccount, "new login edited", "new-pwd","newemail@adminit.com","ftpadmin","new-description");
+
+        $status_another = Status::inactive()->first();
+        $response = $this->update_existing_accessaccount(
+            $newaccessaccount,
+            "new login edited",
+            "new-pwd",
+            "newemail@adminit.com",
+            "ftpadmin",
+            $status_another,
+            "new-description"
+        );
 
         // on test si l'assertion s'est bien passée
         $response->assertStatus(200);
@@ -127,25 +161,42 @@ class AccessAccountTest extends TestCase
      *
      * @return void
      */
-    public function test_an_accessaccount_can_be_updated_from_the_database()
+    public function test_anAccessAccount_can_be_updated_from_the_database()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessaccount("ftpadmin","ftpadmin","ftpadmin@adminit.com","ftpadmin");
+        $response = $this->add_new_accessaccount(
+            "new_login",
+            "new_pwd",
+            "newemail@adminit.com",
+            "new username",
+            Status::active()->first(),
+            "access account desc"
+        );
 
         $newaccessaccount = AccessAccount::first();
 
-        $this->update_existing_accessaccount($newaccessaccount, "new login edited", "new-pwd","newemail@adminit.com","new-username","new-description");
+        $status_another = Status::inactive()->first();
+        $response = $this->update_existing_accessaccount(
+            $newaccessaccount,
+            "new_login_upd",
+            "new_pwd_upd",
+            "newemail_upd@adminit.com",
+            "new username upd",
+            $status_another,
+            "access account desc upd"
+        );
 
         $newaccessaccount->refresh();
 
-        $this->assertEquals('new login edited',$newaccessaccount->login);
-        $this->assertEquals('new-pwd', $newaccessaccount->pwd);
-        $this->assertEquals('newemail@adminit.com', $newaccessaccount->email);
-        $this->assertEquals('new-username', $newaccessaccount->username);
-        $this->assertEquals('new-description', $newaccessaccount->description);
+        $this->assertEquals('new_login_upd',$newaccessaccount->login);
+        $this->assertEquals('new_pwd_upd', $newaccessaccount->pwd);
+        $this->assertEquals('newemail_upd@adminit.com', $newaccessaccount->email);
+        $this->assertEquals('new username upd', $newaccessaccount->username);
+        $this->assertEquals($status_another->id, $newaccessaccount->status->id);
+        $this->assertEquals('access account desc upd', $newaccessaccount->description);
     }
 
     /**
@@ -153,13 +204,19 @@ class AccessAccountTest extends TestCase
      *
      * @return void
      */
-    public function test_a_accessaccount_can_be_deleted()
+    public function test_anAccessAccount_can_be_deleted()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessaccount("new access account","new-pwd","newemail@adminit.com",",new-username","new-description");
+        $response = $this->add_new_accessaccount(
+            "new access account",
+            "new-pwd",
+            "newemail@adminit.com",
+            ",new-username",
+            "new-description"
+        );
 
         $newaccessaccount = AccessAccount::first();
 
@@ -173,30 +230,25 @@ class AccessAccountTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_accessaccount($login, $pwd, $email, $username, $description = "")
+    private function add_new_accessaccount($login, $pwd, $email, $username, $status = null, $description = null)
     {
-        // on essaie d'insérer un nouvel objet AccessAccount dans la base de données
-        // et on récupère le résultat dans une variable $response
-
-        return $this->post('accessaccounts', [
-                'login' => $login,
-                'pwd' => $pwd,
-                'email' => $email,
-                'username' => $username,
-                'description' => $description,
-            ]
-        );
+        return $this->post('accessaccounts', $this->new_data($login,$pwd,$email,$username,$status,$description));
     }
 
-    private function update_existing_accessaccount($existingaccessaccount, $login, $pwd, $email, $username, $description = "")
+    private function update_existing_accessaccount($existingaccessaccount, $login, $pwd, $email, $username, $status = null, $description = null)
     {
-        return $this->put('accessaccounts/' . $existingaccessaccount->uuid, [
+        return $this->put('accessaccounts/' . $existingaccessaccount->uuid, $this->new_data($login,$pwd,$email,$username,$status,$description));
+    }
+
+    private function new_data($login,$pwd,$email,$username,$status = null,$description = null) {
+        return [
             'login' => $login,
             'pwd' => $pwd,
             'email' => $email,
             'username' => $username,
+            'status' => $status,
             'description' => $description,
-        ]);
+        ];
     }
 
     #endregion

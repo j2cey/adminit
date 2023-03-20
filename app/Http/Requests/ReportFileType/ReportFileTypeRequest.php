@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\ReportFileType;
 
+use App\Models\Status;
 use App\Traits\Request\RequestTraits;
 use App\Models\ReportFile\FileMimeType;
 use App\Models\ReportFile\ReportFileType;
@@ -15,6 +16,7 @@ use Illuminate\Foundation\Http\FormRequest;
  * @property string $extension
  * @property string|null $description
  *
+ * @property Status $status
  * @property FileMimeType $filemimetype
  * @property ReportFileType $reportfiletype
  */

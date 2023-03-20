@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  *
  * @property RetrieveAction $retrieveaction
+ * @property mixed $retrieveactionvalues
 */
 class SelectedRetrieveAction extends BaseModel implements Auditable
 {
@@ -72,6 +73,9 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
 
     public function retrieveaction() {
         return $this->belongsTo(RetrieveAction::class, 'retrieve_action_id');
+    }
+    public function retrieveactionvalues() {
+        return $this->hasMany(RetrieveActionValue::class, 'selected_retrieve_action_id');
     }
 
     #endregion

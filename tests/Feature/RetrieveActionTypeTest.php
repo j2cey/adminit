@@ -36,7 +36,7 @@ class RetrieveActionTypeTest extends TestCase
      *
      * @return void
      */
-    public function test_an_RetrieveActionType_can_be_stored_to_the_database()
+    public function test_aRetrieveActionType_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -56,7 +56,7 @@ class RetrieveActionTypeTest extends TestCase
      *
      * @return void
      */
-    public function test_a_RetrieveActionType_required_fields_must_be_validated_before_creation()
+    public function test_aRetrieveActionType_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -68,7 +68,7 @@ class RetrieveActionTypeTest extends TestCase
         $response->assertSessionHasErrors(['name','code']);
     }
 
-    public function test_a_RetrieveActionType_unique_fields_must_be_validated_before_creation()
+    public function test_aRetrieveActionType_unique_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -92,7 +92,7 @@ class RetrieveActionTypeTest extends TestCase
      *
      * @return void
      */
-    public function test_a_RetrieveActionType_can_be_updated_from_the_database()
+    public function test_aRetrieveActionType_can_be_updated_from_the_database()
     {
         $this->withoutExceptionHandling();
 
@@ -130,7 +130,7 @@ class RetrieveActionTypeTest extends TestCase
      *
      * @return void
      */
-    public function test_a_RetrieveActionType_can_be_deleted()
+    public function test_aRetrieveActionType_can_be_deleted()
     {
         $this->withoutExceptionHandling();
 

@@ -29,6 +29,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *
  * @property Status $status
  * @property RetrieveAction $retrieveaction
+ * @property mixed $retrieveactionvalues
  */
 class SelectedRetrieveActionResource extends JsonResource
 {
@@ -46,6 +47,7 @@ class SelectedRetrieveActionResource extends JsonResource
 
             'status' => StatusResource::make($this->status),
             'retrieveaction' => RetrieveActionResource::make($this->retrieveaction),
+            'retrieveactionvalues' => RetrieveActionValueResource::collection($this->retrieveactionvalues),
 
             'code' => $this->code,
             'description' => $this->description,

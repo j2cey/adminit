@@ -38,7 +38,7 @@ class SelectedRetrieveActionTest extends TestCase
      *
      * @return void
      */
-    public function test_an_SelectedRetrieveAction_can_be_stored_to_the_database()
+    public function test_aSelectedRetrieveAction_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -63,7 +63,7 @@ class SelectedRetrieveActionTest extends TestCase
      *
      * @return void
      */
-    public function test_a_SelectedRetrieveAction_required_fields_must_be_validated_before_creation()
+    public function test_aSelectedRetrieveAction_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -80,7 +80,7 @@ class SelectedRetrieveActionTest extends TestCase
         $response->assertSessionHasErrors(['retrieveaction']);
     }
 
-    public function test_a_SelectedRetrieveAction_unique_fields_must_be_validated_before_creation()
+    public function test_aSelectedRetrieveAction_unique_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -108,7 +108,7 @@ class SelectedRetrieveActionTest extends TestCase
      *
      * @return void
      */
-    public function test_a_SelectedRetrieveAction_can_be_updated_from_the_database()
+    public function test_aSelectedRetrieveAction_can_be_updated_from_the_database()
     {
         $this->withoutExceptionHandling();
 
@@ -147,7 +147,7 @@ class SelectedRetrieveActionTest extends TestCase
      *
      * @return void
      */
-    public function test_a_SelectedRetrieveAction_can_be_deleted()
+    public function test_aSelectedRetrieveAction_can_be_deleted()
     {
         $this->withoutExceptionHandling();
 

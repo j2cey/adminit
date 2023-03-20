@@ -22,6 +22,7 @@ class SelectedRetrieveActionController extends Controller
 
         return SelectedRetrieveActionResource::collection($selectedretrieveactions);
     }
+
     /**
      * Display a listing of the resource.
      *

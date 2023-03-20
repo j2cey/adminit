@@ -2,11 +2,19 @@
 
 namespace App\Http\Requests\RetrieveActionValue;
 
+use App\Models\Status;
 use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\RetrieveAction\RetrieveActionValue;
+use App\Models\RetrieveAction\SelectedRetrieveAction;
 
-class StoreRetrieveActionValueRequest extends FormRequest
+/**
+ * Class StoreRetrieveActionTypeRequest
+ * @package App\Http\Requests\RetrieveActionType
+ *
+ *
+ */
+class StoreRetrieveActionValueRequest extends RetrieveActionValueRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +33,19 @@ class StoreRetrieveActionValueRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return RetrieveActionValue::createRules();
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'status' => $this->getRelevantModel(Status::class, $this->input('status'),'code', false),
+            'selectedretrieveaction' => $this->getRelevantModel(SelectedRetrieveAction::class, $this->input('selectedretrieveaction'),'id', false),
+        ]);
     }
 }

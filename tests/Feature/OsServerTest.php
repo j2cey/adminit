@@ -39,7 +39,7 @@ class OsServerTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osserver_can_be_stored_to_the_database()
+    public function test_anOsServer_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -59,7 +59,7 @@ class OsServerTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osservery_required_fields_must_be_validated_before_creation()
+    public function test_anOsServer_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -76,7 +76,7 @@ class OsServerTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osserver_can_be_updated_from_the_database()
+    public function test_anOsServer_can_be_updated_from_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -106,7 +106,7 @@ class OsServerTest extends TestCase
      *
      * @return void
      */
-    public function test_a_osserver_can_be_deleted()
+    public function test_anOsServer_can_be_deleted()
     {
         //$this->withoutExceptionHandling();
 

@@ -4,11 +4,23 @@ namespace App\Http\Controllers\RetrieveAction;
 
 use App\Http\Controllers\Controller;
 use App\Models\RetrieveAction\RetrieveActionValue;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Resources\RetrieveAction\RetrieveActionValueResource;
 use App\Http\Requests\RetrieveActionValue\StoreRetrieveActionValueRequest;
 use App\Http\Requests\RetrieveActionValue\UpdateRetrieveActionValueRequest;
 
 class RetrieveActionValueController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return AnonymousResourceCollection
+     */
+    public function fetch(): AnonymousResourceCollection
+    {
+        return RetrieveActionValueResource::collection( RetrieveActionValue::all() );
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -32,21 +44,23 @@ class RetrieveActionValueController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\RetrieveActionValue\StoreRetrieveActionValueRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreRetrieveActionValueRequest $request
+     * @return RetrieveActionValueResource
      */
     public function store(StoreRetrieveActionValueRequest $request)
     {
-        //
+        $retrieveactionvalue = RetrieveActionValue::createNew($request->selectedretrieveaction, $request->label, $request->type, $request->value_string, $request->value_int, $request->value_datetime, $request->status, $request->description);
+
+        return new RetrieveActionValueResource($retrieveactionvalue);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\RetrieveAction\RetrieveActionValue  $retrieveActionValue
+     * @param RetrieveActionValue $retrieveactionvalue
      * @return \Illuminate\Http\Response
      */
-    public function show(RetrieveActionValue $retrieveActionValue)
+    public function show(RetrieveActionValue $retrieveactionvalue)
     {
         //
     }
@@ -54,10 +68,10 @@ class RetrieveActionValueController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\RetrieveAction\RetrieveActionValue  $retrieveActionValue
+     * @param RetrieveActionValue $retrieveactionvalue
      * @return \Illuminate\Http\Response
      */
-    public function edit(RetrieveActionValue $retrieveActionValue)
+    public function edit(RetrieveActionValue $retrieveactionvalue)
     {
         //
     }
@@ -65,23 +79,27 @@ class RetrieveActionValueController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\RetrieveActionValue\UpdateRetrieveActionValueRequest  $request
-     * @param  \App\Models\RetrieveAction\RetrieveActionValue  $retrieveActionValue
-     * @return \Illuminate\Http\Response
+     * @param UpdateRetrieveActionValueRequest $request
+     * @param RetrieveActionValue $retrieveactionvalue
+     * @return RetrieveActionValueResource
      */
-    public function update(UpdateRetrieveActionValueRequest $request, RetrieveActionValue $retrieveActionValue)
+    public function update(UpdateRetrieveActionValueRequest $request, RetrieveActionValue $retrieveactionvalue)
     {
-        //
+        $retrieveactionvalue->updateOne($request->selectedretrieveaction, $request->label, $request->type, $request->value_string, $request->value_int, $request->value_datetime, $request->status, $request->description);
+
+        return new RetrieveActionValueResource($retrieveactionvalue);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\RetrieveAction\RetrieveActionValue  $retrieveActionValue
+     * @param RetrieveActionValue $retrieveactionvalue
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RetrieveActionValue $retrieveActionValue)
+    public function destroy(RetrieveActionValue $retrieveactionvalue)
     {
-        //
+        $retrieveactionvalue->delete();
+
+        return response('Delete Successfull', 200);
     }
 }

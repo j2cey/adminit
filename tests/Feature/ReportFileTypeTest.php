@@ -3,12 +3,10 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use App\Models\Status;
 use Illuminate\Support\Facades\Schema;
 use App\Models\ReportFile\FileMimeType;
 use App\Models\ReportFile\ReportFileType;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -38,7 +36,7 @@ class ReportFileTypeTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportFileType_can_be_stored_to_the_database()
+    public function test_aReportFileType_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -46,7 +44,11 @@ class ReportFileTypeTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_reportfiletype("txt","sv");
+        $response = $this->add_new_reportfiletype(
+            FileMimeType::txt()->first(),
+            "txt",
+            "csv"
+        );
 
         // on test si l'assertion s'est bien passée
         $response->assertStatus(201);
@@ -61,20 +63,34 @@ class ReportFileTypeTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportFileType_must_be_validated_before_creation()
+    public function test_aReportFileType_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_reportfiletype("","");
+        $response = $this->add_new_reportfiletype(
+            null,
+            null,
+            null
+        );
 
         // on doit avoir une erreur de validation des champs ci-dessous
-        $response->assertSessionHasErrors(['name']);        // le champs 'name' doit être requis
-        $response->assertSessionHasErrors(['extension']);   // le champs 'extension' doit être requis
+        $response->assertSessionHasErrors(['filemimetype','name','extension']);
+    }
+    public function test_aReportFileType_spaced_fields_must_be_validated_before_creation()
+    {
+        //$this->withoutExceptionHandling();
+
+        $user = $this->authenticated_user_admin();
+
+        $response = $this->add_new_reportfiletype(
+            FileMimeType::png()->first(),
+            "png",
+            "p n g"
+        );
 
         // on s'assure que les espaces ne sont pas autorisés dans l'extension
-        $response = $this->add_new_reportfiletype("new-type","aad gege");
         $response->assertSessionHasErrors(['extension']);
     }
 
@@ -84,29 +100,40 @@ class ReportFileTypeTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportFileType_can_be_updated_from_the_database()
+    public function test_aReportFileType_can_be_updated_from_the_database()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_reportfiletype("new report file type","new_extension");
+        $response = $this->add_new_reportfiletype(
+            FileMimeType::txt()->first(),
+            "txt",
+            "csv",
+            Status::active()->first(),
+            "csv desc"
+        );
 
         $newreportfiletype = ReportFileType::first();
 
         $filemimetype_png = FileMimeType::png()->first();
+        $status_another = Status::inactive()->first();
 
+        $response = $this->update_existing_reportfiletype(
+            $newreportfiletype,
+            $filemimetype_png,
+            "png",
+            "csv",
+            $status_another,
+            "png desc"
+        );
 
-        $this->put('reportfiletypes/' . $newreportfiletype->uuid, [
-            'filemimetype' => $filemimetype_png->toJson(),
-            'name' => "new report file type edited",
-            'extension' => "new-extension",
-        ]);
         $newreportfiletype->refresh();
 
-        $this->assertEquals('new report file type edited',$newreportfiletype->name);
-        $this->assertEquals('new-extension', $newreportfiletype->extension);
+        $this->assertEquals('png',$newreportfiletype->name);
+        $this->assertEquals('csv', $newreportfiletype->extension);
         $this->assertEquals($filemimetype_png->id, $newreportfiletype->filemimetype->id);
+        $this->assertEquals($status_another->id, $newreportfiletype->status->id);
     }
 
     /**
@@ -114,15 +141,17 @@ class ReportFileTypeTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportFileType_can_be_deleted()
+    public function test_aReportFileType_can_be_deleted()
     {
         //$this->withoutExceptionHandling();
 
-        //$reportfiletype_count_before_test = ReportFileType::all()->count();
-
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_reportfiletype("new report file type","new_extension");
+        $response = $this->add_new_reportfiletype(
+            FileMimeType::txt()->first(),
+            "txt",
+            "csv"
+        );
 
         $newreportfiletype = ReportFileType::first();
 
@@ -135,18 +164,23 @@ class ReportFileTypeTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_reportfiletype($name, $extension)
+    private function add_new_reportfiletype($filemimetype, $name, $extension, $status = null, $description = null)
     {
-        // on essaie d'insérer un nouvel objet ReportFileType dans la base de données
-        // et on récupère le résultat dans une variable $response
-        $filemimetype = FileMimeType::png()->first();
+        return $this->post('reportfiletypes', $this->new_data($filemimetype, $name, $extension, $status, $description));
+    }
+    private function update_existing_reportfiletype($reportfiletype, $filemimetype, $name, $extension, $status = null, $description = null)
+    {
+        return $this->put('reportfiletypes/' . $reportfiletype->uuid, $this->new_data($filemimetype, $name, $extension, $status, $description));
+    }
 
-        return $this->post('reportfiletypes', [
-                'filemimetype' => $filemimetype->toJson(),
-                'name' => $name,
-                'extension' => $extension,
-            ]
-        );
+    private function new_data($filemimetype, $name, $extension, $status = null, $description = null) {
+        return [
+            'filemimetype' => $filemimetype,
+            'name' => $name,
+            'extension' => $extension,
+            'status' => $status,
+            'description' => $description,
+        ];
     }
 
     #endregion

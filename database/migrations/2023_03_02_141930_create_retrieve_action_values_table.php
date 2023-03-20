@@ -10,9 +10,8 @@ class CreateRetrieveActionValuesTable extends Migration
 {
     use BaseMigrationTrait;
 
-    public $table_name = "retrieve_action_values";
-    public $types_de_valeur = ["string","int","DateTime"];
-    public $table_comment = "valeurs d une action (en rapport a la récupération) selectionné.";
+    public string $table_name = "retrieve_action_values";
+    public string $table_comment = "valeurs d une action (en rapport a la récupération) selectionné.";
 
     /**
      * Run the migrations.
@@ -25,11 +24,14 @@ class CreateRetrieveActionValuesTable extends Migration
             $table->id();
 
             $table->string('label')->unique()->comment("libellé de la valeur");
-            $table->enum('type', $this->types_de_valeur)->comment("type de la valeur");
+            $table->string('type')->comment("type de la valeur");
+            $table->string('value_string')->nullable()->comment("valeur string");
+            $table->integer('value_int')->nullable()->comment("valeur integer");
+            $table->timestamp('value_datetime')->nullable()->comment("valeur DateTime");
             $table->string('description', 500)->nullable()->comment("description de la valeur");
 
-            $table->foreignId('retrieve_action_id')->nullable()
-                ->comment('clé de reférence de l action')
+            $table->foreignId('selected_retrieve_action_id')->nullable()
+                ->comment('clé de reférence de l action sélectionnée')
                 ->constrained('retrieve_actions')->onDelete('set null');
 
             $table->baseFields();
@@ -48,7 +50,7 @@ class CreateRetrieveActionValuesTable extends Migration
             /** Make sure to put this condition to check if driver is SQLite */
             if (DB::getDriverName() !== 'sqlite') {
                 $table->dropBaseForeigns();
-                $table->dropForeign(['retrieve_action_id']);
+                $table->dropForeign(['selected_retrieve_action_id']);
             }
         });
         Schema::dropIfExists($this->table_name);
