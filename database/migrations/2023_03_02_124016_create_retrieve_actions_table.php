@@ -10,7 +10,7 @@ class CreateRetrieveActionsTable extends Migration
     use BaseMigrationTrait;
 
     public $table_name = "retrieve_actions";
-    public $table_comment = "liste actions qui peuvent être effectues en rapport a la recuperation d un fichier.";
+    public $table_comment = "liste actions qui peuvent être effectues (en rapport a la recuperation) pour un fichier.";
 
     /**
      * Run the migrations.
@@ -24,6 +24,7 @@ class CreateRetrieveActionsTable extends Migration
 
             $table->string('name')->comment("nom de l action");
             $table->string('code')->unique()->comment("code de l action");
+            $table->string('action_class')->comment("chemin complet de la classe de l Action (qui va implémenter l interface IRetrieveAction)");
             $table->string('description', 500)->nullable()->comment("description de l action");
 
             $table->foreignId('retrieve_action_type_id')->nullable()

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\ReportFileType;
 
+use App\Models\Status;
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ReportFile\ReportFileType;
 
@@ -14,7 +16,7 @@ class UpdateReportFileTypeRequest extends ReportFileTypeRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('reportfiletype-update');
+        return Auth::user()->can( Permissions::ReportFileType()->update() );
     }
 
     /**
@@ -36,6 +38,7 @@ class UpdateReportFileTypeRequest extends ReportFileTypeRequest
     {
         $this->merge([
             'filemimetype' => $this->setRelevantFileMimeType($this->input('filemimetype'),'id', true),
+            'status' => $this->getRelevantModel(Status::class, $this->input('status'),'code', true),
         ]);
     }
 }

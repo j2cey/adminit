@@ -2,11 +2,10 @@
 
 namespace App\Models\Access;
 
-use App\Models\AccessAccount;
 use App\Models\OsAndServer\ReportServer;
 use Illuminate\Filesystem\FilesystemManager;
-use Illuminate\Contracts\Filesystem\Filesystem;
 use App\Contracts\AccessProtocole\IProtocole;
+use Illuminate\Contracts\Filesystem\Filesystem;
 
 class FtpProtocole implements IProtocole
 {

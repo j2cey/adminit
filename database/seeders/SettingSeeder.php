@@ -41,10 +41,15 @@ class SettingSeeder extends Seeder
 
         // groupe ReportFile
         $group = $this->createNew("reportfile", null, null, "string", ",", "settings ReportFile.");
-        // value ldap.retrieve_by_wildcard_label
+        // value reportfile.retrieve_by_wildcard_label
         $this->createNew("retrieve_by_wildcard_label", $group->id, "Par Wildcard", "string", ",", "Libellé pour le champs 'retrieve_by_wildcard'.");
-        // value ldap.retrieve_by_name_label
+        // value reportfile.retrieve_by_name_label
         $this->createNew("retrieve_by_name_label", $group->id, "Par Nom", "string", ",", "Libellé pour le champs 'retrieve_by_name_label'.");
+
+        // groupe SelectedRetrieveAction
+        $group = $this->createNew("selretrieveaction", null, null, "string", ",", "settings SelectedRetrieveAction.");
+        // value selretrieveaction.default_actions_scopes
+        $this->createNew("default_actions_scopes", $group->id, "retrieveByName,deleteFile", "array", ",", "liste des actions par défaut.");
     }
 
     private function createNew($name, $group_id = null, $value = null, $type = null, $array_sep = ",", $description = null)

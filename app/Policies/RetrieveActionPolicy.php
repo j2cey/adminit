@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\ReportFile\RetrieveAction;
+use App\Models\RetrieveAction\RetrieveAction;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RetrieveActionPolicy
@@ -25,7 +25,7 @@ class RetrieveActionPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportFile\RetrieveAction  $retrieveAction
+     * @param  \App\Models\RetrieveAction\RetrieveAction  $retrieveAction
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, RetrieveAction $retrieveAction)
@@ -48,7 +48,7 @@ class RetrieveActionPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportFile\RetrieveAction  $retrieveAction
+     * @param  \App\Models\RetrieveAction\RetrieveAction  $retrieveAction
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, RetrieveAction $retrieveAction)
@@ -60,7 +60,7 @@ class RetrieveActionPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportFile\RetrieveAction  $retrieveAction
+     * @param  \App\Models\RetrieveAction\RetrieveAction  $retrieveAction
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, RetrieveAction $retrieveAction)
@@ -72,7 +72,7 @@ class RetrieveActionPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportFile\RetrieveAction  $retrieveAction
+     * @param  \App\Models\RetrieveAction\RetrieveAction  $retrieveAction
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function restore(User $user, RetrieveAction $retrieveAction)
@@ -84,7 +84,7 @@ class RetrieveActionPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportFile\RetrieveAction  $retrieveAction
+     * @param  \App\Models\RetrieveAction\RetrieveAction  $retrieveAction
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function forceDelete(User $user, RetrieveAction $retrieveAction)

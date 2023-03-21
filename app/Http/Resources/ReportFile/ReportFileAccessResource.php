@@ -2,18 +2,17 @@
 
 namespace App\Http\Resources\ReportFile;
 
-use JsonSerializable;
 use App\Models\Status;
 use Illuminate\Http\Request;
-use App\Models\AccessAccount;
 use Illuminate\Support\Carbon;
-use App\Models\AccessProtocole;
+use App\Models\Access\AccessAccount;
 use App\Models\ReportFile\ReportFile;
+use App\Models\Access\AccessProtocole;
 use App\Http\Resources\StatusResource;
 use App\Models\OsAndServer\ReportServer;
-use App\Http\Resources\AccessAccountResource;
-use App\Http\Resources\AccessProtocoleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Access\AccessAccountResource;
+use App\Http\Resources\Access\AccessProtocoleResource;
 use App\Http\Resources\OsAndServer\ReportServerResource;
 
 /**

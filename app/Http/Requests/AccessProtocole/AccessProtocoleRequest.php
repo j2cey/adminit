@@ -3,8 +3,8 @@
 namespace App\Http\Requests\AccessProtocole;
 
 use App\Models\Status;
-use App\Models\AccessProtocole;
 use App\Traits\Request\RequestTraits;
+use App\Models\Access\AccessProtocole;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**

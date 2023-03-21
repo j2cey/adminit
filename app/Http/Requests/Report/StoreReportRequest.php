@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Report;
 
+use App\Enums\Permissions;
 use App\Models\Reports\Report;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreReportRequest extends ReportRequest
@@ -14,7 +16,7 @@ class StoreReportRequest extends ReportRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can( Permissions::Report()->create() );
     }
 
     /**

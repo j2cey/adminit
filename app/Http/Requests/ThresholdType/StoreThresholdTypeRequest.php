@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\ThresholdType;
 
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\AnalysisRules\ThresholdType;
 
@@ -14,7 +16,7 @@ class StoreThresholdTypeRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can( Permissions::ThresholdType()->create() );
     }
 
     /**

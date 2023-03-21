@@ -2,6 +2,7 @@
 
 namespace App\Models\ReportFile;
 
+use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -94,12 +95,13 @@ class ReportFileType extends BaseModel implements Auditable
     /**
      * Sert à créer (et stocker dans la base de données) un nouvel objet de type ReportFileType
      * @param FileMimeType $filemimetype
-     * @param $name
-     * @param $extension
+     * @param string $name
+     * @param string $extension
+     * @param Status|null $status
      * @param null $description
      * @return ReportFileType
      */
-    public static function createNew(FileMimeType $filemimetype, $name, $extension, $description = null) : ReportFileType
+    public static function createNew(FileMimeType $filemimetype, string $name, string $extension, Status $status = null, $description = null) : ReportFileType
     {
         $reportfiletype = ReportFileType::create([
             'name' => $name,
@@ -108,12 +110,25 @@ class ReportFileType extends BaseModel implements Auditable
         ]);
 
         // Assignation du type de mime type
-        $reportfiletype->filemimetype()->associate($filemimetype)->save();
+        $reportfiletype->filemimetype()->associate($filemimetype);
+
+        // Assignation du statut de mime type
+        $reportfiletype->status()->associate( is_null($status) ? Status::default()->first() : $status );
+
+        $reportfiletype->save();
 
         return $reportfiletype;
     }
 
-    public function updateOne(FileMimeType $filemimetype, $name, $extension, $description)
+    /**
+     * @param FileMimeType $filemimetype
+     * @param string $name
+     * @param string $extension
+     * @param Status|null $status
+     * @param null $description
+     * @return $this
+     */
+    public function updateOne(FileMimeType $filemimetype, string $name, string $extension, Status $status = null, $description = null): ReportFileType
     {
         $this->name = $name;
         $this->extension = $extension;
@@ -121,6 +136,9 @@ class ReportFileType extends BaseModel implements Auditable
 
         //Assignation  du type de mime type
         $this->filemimetype()->associate($filemimetype);
+
+        // Assignation du statut de mime type
+        $this->status()->associate( is_null($status) ? Status::default()->first() : $status );
 
         $this->save();
 

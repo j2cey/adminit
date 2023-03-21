@@ -5,22 +5,22 @@ namespace App\Traits\Request;
 
 use App\Models\User;
 use App\Models\Status;
-use App\Models\AccessAccount;
 use App\Models\Reports\Report;
-use App\Models\AccessProtocole;
 use Spatie\Permission\Models\Role;
 use App\Models\Reports\ReportType;
+use App\Models\Access\AccessAccount;
 use App\Models\OsAndServer\OsServer;
 use App\Models\OsAndServer\OsFamily;
 use App\Models\ReportFile\ReportFile;
+use App\Models\Access\AccessProtocole;
 use App\Models\ReportFile\FileMimeType;
 use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
 use App\Models\AnalysisRules\AnalysisRule;
 use App\Models\OsAndServer\OsArchitecture;
 use App\Models\AnalysisRules\ThresholdType;
-use App\Models\ReportFile\RetrieveActionType;
 use App\Models\AnalysisRules\AnalysisRuleType;
+use App\Models\RetrieveAction\RetrieveActionType;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\AnalysisRules\AnalysisHighlightType;
 use App\Models\DynamicAttributes\DynamicAttributeType;
@@ -48,16 +48,6 @@ trait RequestTraits
         return is_string($value) ? json_decode($value, true) : $value;
     }
 
-    public function setRelevantRole($value, $json_decode_before = false) {
-        if (is_null($value)) {
-            return null;
-        }
-        if ($json_decode_before || is_string($value)) {
-            $value = $this->decodeJsonField($value);
-        }
-        return $value ? Role::where('id', $value['id'])->first() : null;
-    }
-
     public function setCheckOrOptionValue($value) {
         if (is_null($value) || $value === "null") {
             $value = null;
@@ -69,6 +59,29 @@ trait RequestTraits
             $value = false;
         }
         return intval($value);
+    }
+
+    public function getRelevantModel($model_type, $value, $field = 'íd', $json_decode_before = false) {
+        if (is_null($value)) {
+            return null;
+        }
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? $model_type::where($field, $value[$field])->first() : null;
+    }
+
+
+
+
+    public function setRelevantRole($value, $json_decode_before = false) {
+        if (is_null($value)) {
+            return null;
+        }
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+        return $value ? Role::where('id', $value['id'])->first() : null;
     }
 
     public function setRelevantUser($value, $json_decode_before = false) {
@@ -387,5 +400,9 @@ trait RequestTraits
             $value = $this->decodeJsonField($value);
         }
         return $value ? RetrieveActionType::where($field, $value[$field])->first() : null;
+    }
+
+    public function setRelevantRetrieveAction($model_type, $value, string $field = 'íd', bool $json_decode_before = false) {
+        return $this->getRelevantModel($model_type, $value, $field, $json_decode_before);
     }
 }

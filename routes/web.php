@@ -6,7 +6,6 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\StatusController;
-use App\Models\OsAndServer\OsArchitecture;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SubTaskController;
 use App\Http\Controllers\CommentController;
@@ -18,32 +17,34 @@ use App\Http\Controllers\GradeUnitController;
 use App\Http\Controllers\SubSubjectController;
 use App\Http\Controllers\DifficultyController;
 use App\Http\Controllers\AppreciationController;
-use App\Http\Controllers\AccessAccountController;
 use App\Http\Controllers\Reports\ReportController;
-use App\Http\Controllers\AccessProtocoleController;
 use App\Http\Controllers\Reports\ReportTypeController;
 use App\Http\Controllers\Authorization\RoleController;
+use App\Http\Controllers\Access\AccessAccountController;
 use App\Http\Controllers\OsAndServer\OsFamilyController;
 use App\Http\Controllers\OsAndServer\OsServerController;
 use App\Http\Controllers\ReportFile\ReportFileController;
+use App\Http\Controllers\Access\AccessProtocoleController;
 use App\Http\Controllers\ReportFile\FileMimeTypeController;
 use App\Http\Controllers\OsAndServer\ReportServerController;
 use App\Http\Controllers\ReportFile\ReportFileTypeController;
-use App\Http\Controllers\ReportFile\RetrieveActionController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleController;
 use App\Http\Controllers\OsAndServer\OsArchitectureController;
 use App\Http\Controllers\AnalysisRules\ThresholdTypeController;
 use App\Http\Controllers\Reportsetting\ReportsettingController;
 use App\Http\Controllers\ReportFile\ReportFileAccessController;
-use App\Http\Controllers\ReportFile\RetrieveActionTypeController;
+use App\Http\Controllers\RetrieveAction\RetrieveActionController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
 use App\Http\Controllers\AnalysisRules\AnalysisHighlightController;
 use App\Http\Controllers\AnalysisRules\HighlightTextSizeController;
 use App\Http\Controllers\AnalysisRules\HighlightTextColorController;
+use App\Http\Controllers\RetrieveAction\RetrieveActionTypeController;
 use App\Http\Controllers\AnalysisRules\HighlightTextWeightController;
 use App\Http\Controllers\DynamicAttributes\DynamicAttributeController;
+use App\Http\Controllers\RetrieveAction\RetrieveActionValueController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleThresholdController;
 use App\Http\Controllers\AnalysisRules\AnalysisHighlightTypeController;
+use App\Http\Controllers\RetrieveAction\SelectedRetrieveActionController;
 use App\Http\Controllers\DynamicAttributes\DynamicAttributeTypeController;
 
 /*
@@ -103,6 +104,10 @@ Route::get('settings.fetch',[SettingController::class,'fetch'])
     ->name('settings.fetch')
     ->middleware('auth');
 
+Route::get('settings.test', function () {
+    dd(config('Settings.selretrieveaction.default_actions_scopes'));
+});
+
 Route::get('reportsetting.index',[ReportsettingController::class,'index'])
     ->name('reportsetting.index')
     ->middleware('auth');
@@ -110,6 +115,11 @@ Route::get('reportsetting.index',[ReportsettingController::class,'index'])
 #endregion
 
 #region permissions & roles
+
+Route::get('permissions.test', function () {
+    dd(\App\Enums\Permissions::Role()->getAllPermissions());
+    //dd(App\Models\RetrieveAction\RetrieveAction::can_create());
+});
 
 Route::get('permissions',[RoleController::class, 'permissions'])->middleware('auth');
 
@@ -350,5 +360,21 @@ Route::get('retrieveactiontypes.fetch',[RetrieveActionTypeController::class,'fet
 Route::resource('retrieveactions',RetrieveActionController::class)->middleware('auth');
 Route::get('retrieveactions.fetch',[RetrieveActionController::class,'fetch'])
     ->name('retrieveactions.fetch')
+    ->middleware('auth');
+
+Route::resource('selectedretrieveactions',SelectedRetrieveActionController::class)->middleware('auth');
+Route::get('selectedretrieveactions.fetch',[SelectedRetrieveActionController::class,'fetch'])
+    ->name('selectedretrieveactions.fetch')
+    ->middleware('auth');
+Route::put('selectedretrieveactions.addtomodel',[SelectedRetrieveActionController::class,'addtomodel'])
+    ->name('selectedretrieveactions.addtomodel')
+    ->middleware('auth');
+Route::put('selectedretrieveactions.removefrommodel',[SelectedRetrieveActionController::class,'removefrommodel'])
+    ->name('selectedretrieveactions.removefrommodel')
+    ->middleware('auth');
+
+Route::resource('retrieveactionvalues',RetrieveActionValueController::class)->middleware('auth');
+Route::get('retrieveactionvalues.fetch',[RetrieveActionValueController::class,'fetch'])
+    ->name('retrieveactionvalues.fetch')
     ->middleware('auth');
 

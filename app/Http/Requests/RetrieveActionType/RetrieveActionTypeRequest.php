@@ -5,7 +5,7 @@ namespace App\Http\Requests\RetrieveActionType;
 use App\Models\Status;
 use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\ReportFile\RetrieveActionType;
+use App\Models\RetrieveAction\RetrieveActionType;
 
 /**
  * Class RetrieveActionTypeRequest

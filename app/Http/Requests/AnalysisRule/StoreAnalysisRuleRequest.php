@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\AnalysisRule;
 
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
 use App\Models\AnalysisRules\AnalysisRule;
 
 class StoreAnalysisRuleRequest extends AnalysisRuleRequest
@@ -13,7 +15,7 @@ class StoreAnalysisRuleRequest extends AnalysisRuleRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can( Permissions::AnalysisRule()->create() );
     }
 
     /**

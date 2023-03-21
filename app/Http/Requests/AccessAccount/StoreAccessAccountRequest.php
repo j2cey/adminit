@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests\AccessAccount;
 
-use App\Models\AccessAccount;
+use App\Enums\Permissions;
+use App\Models\Access\AccessAccount;
 use Illuminate\Support\Facades\Auth;
 
 class StoreAccessAccountRequest extends AccessAccountRequest
@@ -14,7 +15,7 @@ class StoreAccessAccountRequest extends AccessAccountRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('accessaccount-create');
+        return Auth::user()->can( Permissions::AccessAccount()->create() );
     }
 
     /**

@@ -4,18 +4,19 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Status;
-use App\Models\AccessAccount;
+use App\Models\Setting;
 use App\Models\Reports\Report;
-use App\Models\AccessProtocole;
 use App\Models\Reports\ReportType;
+use App\Models\Access\AccessAccount;
 use App\Models\OsAndServer\OsServer;
 use Illuminate\Testing\TestResponse;
 use App\Models\ReportFile\ReportFile;
+use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
 use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
 use App\Models\ReportFile\ReportFileAccess;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -33,6 +34,9 @@ class ReportFileAccessTest extends TestCase
         // alternatively you can call
         // $this->seed();
 
+        // Custom Configs
+        Config::set('Settings', Setting::getAllGrouped());
+
         // on tronque la table du modèle AccessAccount dans la base de données
         Schema::disableForeignKeyConstraints();
         ReportFileAccess::truncate();
@@ -45,7 +49,7 @@ class ReportFileAccessTest extends TestCase
      *
      * @return void
      */
-    public function test_an_ReportFileAccess_can_be_stored_to_the_database()
+    public function test_aReportFileAccess_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -76,7 +80,7 @@ class ReportFileAccessTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportFileAccess_required_fields_must_be_validated_before_creation()
+    public function test_aReportFileAccess_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -98,7 +102,7 @@ class ReportFileAccessTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportFileAccess_can_be_updated_from_the_database()
+    public function test_aReportFileAccess_can_be_updated_from_the_database()
     {
         $this->withoutExceptionHandling();
 
@@ -162,7 +166,7 @@ class ReportFileAccessTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportFileAccess_can_be_deleted()
+    public function test_aReportFileAccess_can_be_deleted()
     {
         $this->withoutExceptionHandling();
 

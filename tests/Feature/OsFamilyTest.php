@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Setting;
 use App\Models\OsAndServer\OsFamily;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -23,6 +25,8 @@ class OsFamilyTest extends TestCase
         // alternatively you can call
         // $this->seed();
 
+        Config::set('Settings', Setting::getAllGrouped());
+
         // on tronque la table du modèle AccessAccount dans la base de données
         Schema::disableForeignKeyConstraints();
         OsFamily::truncate();
@@ -35,7 +39,7 @@ class OsFamilyTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osfamily_can_be_stored_to_the_database()
+    public function test_anOsFamily_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -55,7 +59,7 @@ class OsFamilyTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osfamily_required_fields_must_be_validated_before_creation()
+    public function test_anOsFamily_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -72,7 +76,7 @@ class OsFamilyTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osfamily_unique_fields_must_be_validated_before_creation()
+    public function test_anOsFamily_unique_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -90,7 +94,7 @@ class OsFamilyTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osfamily_unique_fields_can_be_updated_with_same_values()
+    public function test_anOsFamily_unique_fields_can_be_updated_with_same_values()
     {
         //$this->withoutExceptionHandling();
 
@@ -109,7 +113,7 @@ class OsFamilyTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osfamily_can_be_updated_from_the_database()
+    public function test_anOsFamily_can_be_updated_from_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -133,7 +137,7 @@ class OsFamilyTest extends TestCase
      *
      * @return void
      */
-    public function test_a_accessaccount_can_be_deleted()
+    public function test_anOsFamily_can_be_deleted()
     {
         //$this->withoutExceptionHandling();
 

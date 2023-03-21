@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Status;
+use App\Models\Setting;
 use App\Models\OsAndServer\OsServer;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
 use App\Models\OsAndServer\ReportServer;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,6 +28,8 @@ class ReportServerTest extends TestCase
         // alternatively you can call
         // $this->seed();
 
+        Config::set('Settings', Setting::getAllGrouped());
+
         // on tronque la table du modèle ReportServer dans la base de données
         Schema::disableForeignKeyConstraints();
         ReportServer::truncate();
@@ -37,7 +41,7 @@ class ReportServerTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportServer_can_be_stored_to_the_database()
+    public function test_aReportServer_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -59,7 +63,7 @@ class ReportServerTest extends TestCase
      *
      * @return void
      */
-    public function test_an_reportserver_required_fields_must_be_validated_before_creation()
+    public function test_aReportServer_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -76,7 +80,7 @@ class ReportServerTest extends TestCase
      *
      * @return void
      */
-    public function test_an_reportserver_can_be_updated_from_the_database()
+    public function test_aReportServer_can_be_updated_from_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -105,7 +109,7 @@ class ReportServerTest extends TestCase
      *
      * @return void
      */
-    public function test_a_reportserver_can_be_deleted()
+    public function test_aReportServer_can_be_deleted()
     {
         //$this->withoutExceptionHandling();
 

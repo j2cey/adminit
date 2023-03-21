@@ -3,6 +3,9 @@
 namespace App\Http\Requests\Role;
 
 
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
+
 class UpdateRoleRequest extends RoleRequest
 {
     /**
@@ -12,7 +15,7 @@ class UpdateRoleRequest extends RoleRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can( Permissions::Role()->update() );
     }
 
     /**

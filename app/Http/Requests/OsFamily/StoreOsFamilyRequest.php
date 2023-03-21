@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\OsFamily;
 
+use App\Enums\Permissions;
 use App\Models\OsAndServer\OsFamily;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +20,7 @@ class StoreOsFamilyRequest extends OsFamilyRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('osfamily-create');
+        return Auth::user()->can( Permissions::OsFamily()->create() );
     }
 
     /**

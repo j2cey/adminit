@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\OsArchitecture;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OsAndServer\OsArchitecture;
 
@@ -20,7 +21,7 @@ class UpdateOsArchitectureRequest extends OsArchitectureRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('osarchitecture-update');
+        return Auth::user()->can( Permissions::OsArchitecture()->update() );
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\OsServer;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OsAndServer\OsServer;
 
@@ -20,7 +21,7 @@ class StoreOsServerRequest extends OsServerRequest
      */
     public function authorize()
     {
-        return Auth::user()->can('osserver-create');
+        return Auth::user()->can( Permissions::OsServer()->create() );
     }
 
     /**

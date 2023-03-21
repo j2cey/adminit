@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Setting;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
 use App\Models\OsAndServer\OsArchitecture;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -24,6 +26,8 @@ class OsArchitectureTest extends TestCase
         // alternatively you can call
         // $this->seed();
 
+        Config::set('Settings', Setting::getAllGrouped());
+
         // on tronque la table du modèle AccessAccount dans la base de données
         Schema::disableForeignKeyConstraints();
         OsArchitecture::truncate();
@@ -35,7 +39,7 @@ class OsArchitectureTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osarchitecture_can_be_stored_to_the_database()
+    public function test_anOsArchitecture_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -55,7 +59,7 @@ class OsArchitectureTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osarchitecture_required_fields_must_be_validated_before_creation()
+    public function test_anOsArchitecture_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -72,7 +76,7 @@ class OsArchitectureTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osarchitecture_unique_fields_must_be_validated_before_creation()
+    public function test_anOsArchitecture_unique_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -90,7 +94,7 @@ class OsArchitectureTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osarchitecture_unique_fields_can_updated_with_same_values()
+    public function test_anOsArchitecture_unique_fields_can_updated_with_same_values()
     {
         //$this->withoutExceptionHandling();
 
@@ -109,7 +113,7 @@ class OsArchitectureTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osarchitecture_can_be_updated_from_the_database()
+    public function test_anOsArchitecture_can_be_updated_from_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -133,7 +137,7 @@ class OsArchitectureTest extends TestCase
      *
      * @return void
      */
-    public function test_a_accessaccount_can_be_deleted()
+    public function test_anOsArchitecture_can_be_deleted()
     {
         //$this->withoutExceptionHandling();
 
@@ -152,28 +156,23 @@ class OsArchitectureTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_osarchitecture($name, $code, $description = "", $status = null)
+    private function add_new_osarchitecture($name, $code, $description = null, $status = null)
     {
-        $new_data = [
-            'name' => $name,
-            'code' => $code,
-            'description' => $description,
-            'status' => $status
-        ];
-
-        return $this->post('osarchitectures', $new_data);
+        return $this->post('osarchitectures', $this->new_data($name,$code,$status,$description));
     }
 
-    private function update_existing_osarchitecture($existing_osarchitecture, $name, $code, $description = "", $status = null)
+    private function update_existing_osarchitecture($existing_osarchitecture, $name, $code, $description = null, $status = null)
     {
-        $new_data = [
+        return $this->put('osarchitectures/' . $existing_osarchitecture->uuid, $this->new_data($name,$code,$status,$description));
+    }
+
+    private function new_data($name,$code,$status = null,$description = null) {
+        return [
             'name' => $name,
             'code' => $code,
             'description' => $description,
             'status' => $status
         ];
-
-        return $this->put('osarchitectures/' . $existing_osarchitecture->uuid, $new_data);
     }
 
     #endregion

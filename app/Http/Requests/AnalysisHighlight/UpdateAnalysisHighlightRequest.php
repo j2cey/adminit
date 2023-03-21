@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\AnalysisHighlight;
 
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
 use App\Models\AnalysisRules\AnalysisHighlight;
 
 class UpdateAnalysisHighlightRequest extends AnalysisHighlightRequest
@@ -13,7 +15,7 @@ class UpdateAnalysisHighlightRequest extends AnalysisHighlightRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can( Permissions::AnalysisHighlight()->update() );
     }
 
     /**

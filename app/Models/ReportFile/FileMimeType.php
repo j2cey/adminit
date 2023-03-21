@@ -26,6 +26,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @method static jpg()
+ * @method static png()
+ * @method static bmp()
+ * @method static csv()
+ * @method static txt()
  */
 class FileMimeType extends BaseModel implements Auditable
 {
@@ -65,11 +71,21 @@ class FileMimeType extends BaseModel implements Auditable
     #endregion
 
     #region Scopes
+    public function scopeJpg($query) {
+        return $query
+            ->where('name', "jpg");
+    }
     public function scopePng($query) {
         return $query
             ->where('name', "png");
     }
-
+    public function scopeCsv($query) {
+        return $query
+            ->where('name', "csv,txt");
+    }
+    public function scopeTxt($query) {
+        return $this->scopeCsv($query);
+    }
     public function scopeBmp($query) {
         return $query
             ->where('name', "bmp");

@@ -7,7 +7,11 @@ use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Models\RetrieveAction\RetrieveAction;
+use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
+use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
 /**
  * Class ReportFile
@@ -35,14 +39,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property ReportFileType $reportfiletype
  * @property string $extension
+ * @property mixed $selectedretrieveactions
  */
-class ReportFile extends BaseModel implements Auditable
+class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasSelectedRetrieveActions, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
-    protected $with = ["reportfiletype"];
+    protected $with = ['reportfiletype','selectedretrieveactions'];
 
     public static function defaultRules() {
         return [
@@ -89,6 +94,11 @@ class ReportFile extends BaseModel implements Auditable
 
     public function reportfileaccesses() {
         return $this->hasMany(ReportFileAccess::class,'report_file_id');
+    }
+
+    public function selectedretrieveactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(SelectedRetrieveAction::class,'report_file_id');
     }
 
     #endregion
@@ -161,6 +171,9 @@ class ReportFile extends BaseModel implements Auditable
         // save le new object
         $reportfile->save();
 
+        // set default actions
+        $reportfile->setDefaultSelectedRetrieveActions();
+
         return $reportfile;
     }
 
@@ -197,6 +210,17 @@ class ReportFile extends BaseModel implements Auditable
         $this->save();
 
         return $this;
+    }
+
+    private function setDefaultSelectedRetrieveActions() {
+        $this->setDefaultActionsFromSettings();
+    }
+
+    public function dissociateSelectedActions(SelectedRetrieveAction $selectedretrieveaction): ?bool
+    {
+        $selectedretrieveaction->reportfile()->dissociate()->save();
+
+        return true;
     }
 
     protected static function boot(){

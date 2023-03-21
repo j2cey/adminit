@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\ReportFile;
 
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\ReportFile\ReportFileType;
 use App\Http\Resources\ReportFile\ReportFileTypeResource;
@@ -53,7 +52,7 @@ class ReportFileTypeController extends Controller
      */
     public function store(StoreReportFileTypeRequest $request): ReportFileTypeResource
     {
-        $reportfiletype = ReportFileType::createNew($request->filemimetype, $request->name, $request->extension, $request->description);
+        $reportfiletype = ReportFileType::createNew($request->filemimetype, $request->name, $request->extension, $request->status, $request->description);
 
         return new ReportFileTypeResource($reportfiletype);
     }
@@ -89,7 +88,7 @@ class ReportFileTypeController extends Controller
      */
     public function update(updateReportFileTypeRequest $request, ReportFileType $reportfiletype)
     {
-        $reportfiletype->updateOne($request->filemimetype,  $request->name, $request->extension, $request->description);
+        $reportfiletype->updateOne($request->filemimetype,  $request->name, $request->extension, $request->status, $request->description);
 
         return new ReportFileTypeResource($reportfiletype);
     }

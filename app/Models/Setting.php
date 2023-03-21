@@ -55,9 +55,8 @@ class Setting extends Model implements Auditable
 
             $all_settings = Setting::all()->toArray();
             $tree_settings = self::buildTree($all_settings);
-            $final_array = self::cleanTree($tree_settings);
 
-            return $final_array;
+            return self::cleanTree($tree_settings);
         } catch (\Exception $e) {
             return [];
         }

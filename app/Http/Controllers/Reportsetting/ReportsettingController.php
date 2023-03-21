@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Reportsetting;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\AccessProtocole;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use App\Models\OsAndServer\OsServer;
+use App\Models\Access\AccessProtocole;
 use Illuminate\Contracts\View\Factory;
 use App\Models\ReportFile\FileMimeType;
 use App\Models\ReportFile\ReportFileType;

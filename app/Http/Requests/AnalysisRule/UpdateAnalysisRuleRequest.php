@@ -4,6 +4,8 @@ namespace App\Http\Requests\AnalysisRule;
 
 
 
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
 use App\Models\AnalysisRules\AnalysisRule;
 
 class UpdateAnalysisRuleRequest extends AnalysisRuleRequest
@@ -15,7 +17,7 @@ class UpdateAnalysisRuleRequest extends AnalysisRuleRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can( Permissions::AnalysisRule()->update() );
     }
 
     /**

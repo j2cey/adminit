@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\AccessProtocole;
+use App\Models\Status;
+use App\Models\Setting;
+use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -23,6 +25,8 @@ class AccessProtocoleTest extends TestCase
         // alternatively you can call
         // $this->seed();
 
+        Config::set('Settings', Setting::getAllGrouped());
+
         // on tronque la table du modèle AccessProtocole dans la base de données
         Schema::disableForeignKeyConstraints();
         AccessProtocole::truncate();
@@ -34,13 +38,13 @@ class AccessProtocoleTest extends TestCase
      *
      * @return void
      */
-    public function test_an_AccessProtocole_can_be_stored_to_the_database()
+    public function test_anAccessProtocole_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_AccessProtocole("Anri", "anri","new protocole_class");
+        $response = $this->add_new_accessprotocole("Anri", "anri","new protocole_class");
 
         // on test si l'assertion s'est bien passée
         $response->assertStatus(201);
@@ -54,13 +58,13 @@ class AccessProtocoleTest extends TestCase
      *
      * @return void
      */
-    public function test_an_accessprotocole_required_fields_must_be_validated_before_creation()
+    public function test_anAccessProtocole_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_AccessProtocole("","", "");
+        $response = $this->add_new_accessprotocole("","", "");
 
         // on doit avoir une erreur de validation des champs ci-dessous
         $response->assertSessionHasErrors(['name','code','protocole_class']);
@@ -71,23 +75,38 @@ class AccessProtocoleTest extends TestCase
      *
      * @return void
      */
-    public function test_an_accessprotocole_can_be_updated_from_the_database()
+    public function test_anAccessProtocole_can_be_updated_from_the_database()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_AccessProtocole("vcibvfuezb","new_code", "new protocole_class","first desc");
+        $response = $this->add_new_accessprotocole(
+            "vcibvfuezb",
+            "new_code",
+            "new protocole_class",
+            Status::active()->first(),
+            "first desc"
+        );
 
         $newaccessprotocole = AccessProtocole::first();
 
-        $this->update_existing_AccessProtocole($newaccessprotocole, "upd name edited", "upd code edited", "upd protocole_class", "upd-description");
+        $status_another = Status::inactive()->first();
+        $this->update_existing_accessprotocole(
+            $newaccessprotocole,
+            "upd name edited",
+            "upd code edited",
+            "upd protocole_class",
+            $status_another,
+            "upd-description"
+        );
 
         $newaccessprotocole->refresh();
 
         $this->assertEquals('upd name edited',$newaccessprotocole->name);
         $this->assertEquals('upd code edited',$newaccessprotocole->code);
         $this->assertEquals('upd protocole_class',$newaccessprotocole->protocole_class);
+        $this->assertEquals($status_another->id,$newaccessprotocole->status->id);
         $this->assertEquals('upd-description', $newaccessprotocole->description);
     }
 
@@ -96,13 +115,13 @@ class AccessProtocoleTest extends TestCase
      *
      * @return void
      */
-    public function test_an_AccessProtocole_can_be_deleted()
+    public function test_anAccessProtocole_can_be_deleted()
     {
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_AccessProtocole("new access protocole", "new_access_protocole", "new protocole_class","new-description");
+        $response = $this->add_new_accessprotocole("new access protocole", "new_access_protocole", "new protocole_class");
 
         $newaccessprotocole = AccessProtocole::first();
 
@@ -113,28 +132,25 @@ class AccessProtocoleTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_AccessProtocole($name, $code, $protocole_class, $description = "")
+    private function add_new_accessprotocole($name, $code, $protocole_class,$status = null, $description = null)
     {
-        // on essaie d'insérer un nouvel objet AccessProtocole dans la base de données
-        // et on récupère le résultat dans une variable $response
-
-        return $this->post('accessprotocoles', [
-                'name' => $name,
-                'code' => $code,
-                'protocole_class' => $protocole_class,
-                'description' => $description,
-            ]
-        );
+        return $this->post('accessprotocoles', $this->new_data($name,$code,$protocole_class,$status,$description));
     }
 
-    private function update_existing_AccessProtocole($existingaccessprotocole, $name, $code, $protocole_class, $description = "")
+    private function update_existing_accessprotocole($existingaccessprotocole, $name, $code, $protocole_class,$status = null,$description = null)
     {
-        return $this->put('accessprotocoles/' . $existingaccessprotocole->uuid, [
+        return $this->put('accessprotocoles/' . $existingaccessprotocole->uuid, $this->new_data($name,$code,$protocole_class,$status,$description));
+    }
+
+    private function new_data($name,$code,$protocole_class,$status = null,$description = null) {
+        return [
             'name' => $name,
             'code' => $code,
             'protocole_class' => $protocole_class,
+            'status' => $status,
             'description' => $description,
-        ]);
+        ];
     }
+
     #endregion
 }

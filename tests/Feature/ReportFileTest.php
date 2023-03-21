@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Status;
+use App\Models\Setting;
 use App\Models\Reports\Report;
 use App\Models\Reports\ReportType;
 use App\Models\ReportFile\ReportFile;
+use Illuminate\Support\Facades\Config;
 use App\Models\ReportFile\ReportFileType;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,6 +27,9 @@ class ReportFileTest extends TestCase
         $this->artisan('db:seed');
         // alternatively you can call
         // $this->seed();
+
+        // Custom Configs
+        Config::set('Settings', Setting::getAllGrouped());
     }
 
     /**
@@ -32,7 +37,7 @@ class ReportFileTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportFile_can_be_stored_to_the_database()
+    public function test_aReportFile_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -57,7 +62,7 @@ class ReportFileTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportFile_must_be_validated_before_creation()
+    public function test_aReportFile_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -79,7 +84,7 @@ class ReportFileTest extends TestCase
      *
      * @return void
      */
-    public function test_ReportFile_without_spaces_fields_must_be_validated_before_creation()
+    public function test_aReportFile_without_spaces_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -102,9 +107,9 @@ class ReportFileTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportFile_can_be_updated_from_the_database()
+    public function test_aReportFile_can_be_updated_from_the_database()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
@@ -153,9 +158,9 @@ class ReportFileTest extends TestCase
      *
      * @return void
      */
-    public function test_a_ReportFile_can_be_deleted()
+    public function test_aReportFile_can_be_deleted()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 

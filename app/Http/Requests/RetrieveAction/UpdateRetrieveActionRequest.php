@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\RetrieveAction;
 
+use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
-use App\Models\ReportFile\RetrieveAction;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\RetrieveAction\RetrieveAction;
 
 /**
  * Class UpdateRetrieveActionTypeRequest
@@ -21,7 +21,7 @@ class UpdateRetrieveActionRequest extends RetrieveActionRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()->can('retrieveaction-update');
+        return Auth::user()->can( Permissions::RetrieveAction()->update() );
     }
 
     /**
@@ -42,6 +42,7 @@ class UpdateRetrieveActionRequest extends RetrieveActionRequest
     protected function prepareForValidation()
     {
         $this->merge([
+            'code' => $this->getCodeField(),
             'status' => $this->setRelevantStatus($this->input('status'),'code', true),
             'retrieveactiontype' => $this->setRelevantRetrieveActionType($this->input('retrieveactiontype'),'code', true),
         ]);

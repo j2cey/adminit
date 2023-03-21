@@ -4,12 +4,13 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Status;
+use App\Models\Setting;
 use App\Models\OsAndServer\OsServer;
 use App\Models\OsAndServer\OsFamily;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
 use App\Models\OsAndServer\OsArchitecture;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -27,6 +28,8 @@ class OsServerTest extends TestCase
         // alternatively you can call
         // $this->seed();
 
+        Config::set('Settings', Setting::getAllGrouped());
+
         // on tronque la table du modèle AccessAccount dans la base de données
         Schema::disableForeignKeyConstraints();
         OsServer::truncate();
@@ -39,7 +42,7 @@ class OsServerTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osserver_can_be_stored_to_the_database()
+    public function test_anOsServer_can_be_stored_to_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -59,7 +62,7 @@ class OsServerTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osservery_required_fields_must_be_validated_before_creation()
+    public function test_anOsServer_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -76,7 +79,7 @@ class OsServerTest extends TestCase
      *
      * @return void
      */
-    public function test_an_osserver_can_be_updated_from_the_database()
+    public function test_anOsServer_can_be_updated_from_the_database()
     {
         //$this->withoutExceptionHandling();
 
@@ -106,7 +109,7 @@ class OsServerTest extends TestCase
      *
      * @return void
      */
-    public function test_a_osserver_can_be_deleted()
+    public function test_anOsServer_can_be_deleted()
     {
         //$this->withoutExceptionHandling();
 
