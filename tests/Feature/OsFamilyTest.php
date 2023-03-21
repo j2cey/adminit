@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Setting;
 use App\Models\OsAndServer\OsFamily;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -22,6 +24,8 @@ class OsFamilyTest extends TestCase
         $this->artisan('db:seed');
         // alternatively you can call
         // $this->seed();
+
+        Config::set('Settings', Setting::getAllGrouped());
 
         // on tronque la table du modèle AccessAccount dans la base de données
         Schema::disableForeignKeyConstraints();

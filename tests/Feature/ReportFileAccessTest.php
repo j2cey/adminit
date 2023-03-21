@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Status;
+use App\Models\Setting;
 use App\Models\Reports\Report;
 use App\Models\Reports\ReportType;
 use App\Models\Access\AccessAccount;
@@ -12,6 +13,7 @@ use Illuminate\Testing\TestResponse;
 use App\Models\ReportFile\ReportFile;
 use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
 use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
 use App\Models\ReportFile\ReportFileAccess;
@@ -31,6 +33,9 @@ class ReportFileAccessTest extends TestCase
         $this->artisan('db:seed');
         // alternatively you can call
         // $this->seed();
+
+        // Custom Configs
+        Config::set('Settings', Setting::getAllGrouped());
 
         // on tronque la table du modèle AccessAccount dans la base de données
         Schema::disableForeignKeyConstraints();

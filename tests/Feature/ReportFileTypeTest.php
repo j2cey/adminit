@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Status;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
 use App\Models\ReportFile\FileMimeType;
 use App\Models\ReportFile\ReportFileType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,6 +26,8 @@ class ReportFileTypeTest extends TestCase
         $this->artisan('db:seed');
         // alternatively you can call
         // $this->seed();
+
+        Config::set('Settings', Setting::getAllGrouped());
 
         // on tronque la table du modèle ReportFileType dans la base de données
         Schema::disableForeignKeyConstraints();

@@ -4,8 +4,10 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Status;
+use App\Models\Setting;
 use App\Models\Access\AccessAccount;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -22,6 +24,8 @@ class AccessAccountTest extends TestCase
         $this->artisan('db:seed');
         // alternatively you can call
         // $this->seed();
+
+        Config::set('Settings', Setting::getAllGrouped());
 
         // on tronque la table du modèle AccessAccount dans la base de données
         Schema::disableForeignKeyConstraints();

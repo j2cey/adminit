@@ -5,8 +5,11 @@ namespace App\Models\RetrieveAction;
 use App\Models\Status;
 use App\Models\BaseModel;
 use App\Traits\Code\HasCode;
+use App\Enums\ValueTypeEnum;
 use Illuminate\Support\Carbon;
+use App\Models\ReportFile\ReportFile;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Models\ReportFile\ReportFileAccess;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -28,6 +31,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $updated_at
  *
  *
+ * @property ReportFile $reportfile
+ * @property ReportFileAccess $reportfileaccess
  * @property RetrieveAction $retrieveaction
  * @property mixed $retrieveactionvalues
 */
@@ -71,10 +76,17 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
 
     #region Eloquent Relationships
 
+    public function reportfile() {
+        return $this->belongsTo(ReportFile::class, 'report_file_id');
+    }
+    public function reportfileaccess() {
+        return $this->belongsTo(ReportFileAccess::class, 'report_file_access_id');
+    }
     public function retrieveaction() {
         return $this->belongsTo(RetrieveAction::class, 'retrieve_action_id');
     }
-    public function retrieveactionvalues() {
+    public function retrieveactionvalues()
+    {
         return $this->hasMany(RetrieveActionValue::class, 'selected_retrieve_action_id');
     }
 
@@ -124,6 +136,19 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
         $this->save();
 
         return $this;
+    }
+
+    public function addActionValue(string $label,string $type,$value): RetrieveActionValue
+    {
+        return RetrieveActionValue::createNew(
+            $this,
+            $label,
+            $type,
+            ($type === ValueTypeEnum::STRING->value ? $value : null),
+            ($type === ValueTypeEnum::INT->value ? $value : null),
+            ($type === ValueTypeEnum::DATETIME->value ? $value : null),
+            Status::active()->first()
+        );
     }
 
     protected static function boot(){

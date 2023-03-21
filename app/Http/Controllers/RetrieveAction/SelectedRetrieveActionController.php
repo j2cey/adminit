@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\RetrieveAction;
 
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Resources\RetrieveAction\SelectedRetrieveActionResource;
 use App\Http\Requests\SelectedRetrieveAction\StoreSelectedRetrieveActionRequest;
 use App\Http\Requests\SelectedRetrieveAction\UpdateSelectedRetrieveActionRequest;
+use App\Http\Requests\SelectedRetrieveAction\FromModelAddSelectedRetrieveActionRequest;
+use App\Http\Requests\SelectedRetrieveAction\FromModelRemoveSelectedRetrieveActionRequest;
 
 class SelectedRetrieveActionController extends Controller
 {
@@ -26,7 +29,7 @@ class SelectedRetrieveActionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -36,7 +39,7 @@ class SelectedRetrieveActionController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -60,7 +63,7 @@ class SelectedRetrieveActionController extends Controller
      * Display the specified resource.
      *
      * @param SelectedRetrieveAction $selectedretrieveaction
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(SelectedRetrieveAction $selectedretrieveaction)
     {
@@ -71,7 +74,7 @@ class SelectedRetrieveActionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param SelectedRetrieveAction $selectedretrieveaction
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(SelectedRetrieveAction $selectedretrieveaction)
     {
@@ -96,11 +99,23 @@ class SelectedRetrieveActionController extends Controller
      * Remove the specified resource from storage.
      *
      * @param SelectedRetrieveAction $selectedretrieveaction
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(SelectedRetrieveAction $selectedretrieveaction)
     {
         $selectedretrieveaction->delete();
+
+        return response('Delete Successfull', 200);
+    }
+
+    public function addtomodel(FromModelAddSelectedRetrieveActionRequest $request) {
+        $selectedretrieveaction = $request->model->addSelectedAction($request->retrieveaction,$request->label,$request->valuetype,$request->actionvalue,$request->description);
+
+        return new SelectedRetrieveActionResource($selectedretrieveaction);
+    }
+
+    public function removefrommodel(FromModelRemoveSelectedRetrieveActionRequest $request) {
+        $request->model->removeSelectedAction($request->selectedretrieveaction);
 
         return response('Delete Successfull', 200);
     }

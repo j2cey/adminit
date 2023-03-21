@@ -104,6 +104,10 @@ Route::get('settings.fetch',[SettingController::class,'fetch'])
     ->name('settings.fetch')
     ->middleware('auth');
 
+Route::get('settings.test', function () {
+    dd(config('Settings.selretrieveaction.default_actions_scopes'));
+});
+
 Route::get('reportsetting.index',[ReportsettingController::class,'index'])
     ->name('reportsetting.index')
     ->middleware('auth');
@@ -361,6 +365,12 @@ Route::get('retrieveactions.fetch',[RetrieveActionController::class,'fetch'])
 Route::resource('selectedretrieveactions',SelectedRetrieveActionController::class)->middleware('auth');
 Route::get('selectedretrieveactions.fetch',[SelectedRetrieveActionController::class,'fetch'])
     ->name('selectedretrieveactions.fetch')
+    ->middleware('auth');
+Route::put('selectedretrieveactions.addtomodel',[SelectedRetrieveActionController::class,'addtomodel'])
+    ->name('selectedretrieveactions.addtomodel')
+    ->middleware('auth');
+Route::put('selectedretrieveactions.removefrommodel',[SelectedRetrieveActionController::class,'removefrommodel'])
+    ->name('selectedretrieveactions.removefrommodel')
     ->middleware('auth');
 
 Route::resource('retrieveactionvalues',RetrieveActionValueController::class)->middleware('auth');

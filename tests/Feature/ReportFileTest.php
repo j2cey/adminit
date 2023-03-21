@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Status;
+use App\Models\Setting;
 use App\Models\Reports\Report;
 use App\Models\Reports\ReportType;
 use App\Models\ReportFile\ReportFile;
+use Illuminate\Support\Facades\Config;
 use App\Models\ReportFile\ReportFileType;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,6 +27,9 @@ class ReportFileTest extends TestCase
         $this->artisan('db:seed');
         // alternatively you can call
         // $this->seed();
+
+        // Custom Configs
+        Config::set('Settings', Setting::getAllGrouped());
     }
 
     /**
@@ -104,7 +109,7 @@ class ReportFileTest extends TestCase
      */
     public function test_aReportFile_can_be_updated_from_the_database()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
@@ -155,7 +160,7 @@ class ReportFileTest extends TestCase
      */
     public function test_aReportFile_can_be_deleted()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 

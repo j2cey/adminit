@@ -4,8 +4,15 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Status;
+use App\Models\Setting;
+use App\Enums\ValueTypeEnum;
+use App\Models\Reports\Report;
+use App\Models\Reports\ReportType;
 use Illuminate\Testing\TestResponse;
+use App\Models\ReportFile\ReportFile;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
+use App\Models\ReportFile\ReportFileType;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
@@ -25,6 +32,8 @@ class SelectedRetrieveActionTest extends TestCase
         $this->artisan('db:seed');
         // alternatively you can call
         // $this->seed();
+
+        Config::set('Settings', Setting::getAllGrouped());
 
         // on tronque la table du modèle AccessAccount dans la base de données
         Schema::disableForeignKeyConstraints();
@@ -110,7 +119,7 @@ class SelectedRetrieveActionTest extends TestCase
      */
     public function test_aSelectedRetrieveAction_can_be_updated_from_the_database()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
@@ -149,7 +158,7 @@ class SelectedRetrieveActionTest extends TestCase
      */
     public function test_aSelectedRetrieveAction_can_be_deleted()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
@@ -165,6 +174,94 @@ class SelectedRetrieveActionTest extends TestCase
         $this->delete('selectedretrieveactions/' . $selectedretrieveaction->uuid);
 
         $this->assertCount(0, SelectedRetrieveAction::all());
+    }
+
+    public function test_aSelectedRetrieveAction_can_be_added_to_model()
+    {
+        //$this->withoutExceptionHandling();
+
+        $user = $this->authenticated_user_admin();
+
+        $report_file = $this->add_new_reportfile("new reportfile");
+        $report_file->removeAllSelectedActions(true);
+
+        $response = $this->put('selectedretrieveactions.addtomodel/',
+            [
+                'model_type' => ReportFile::class,
+                'model' => $report_file,
+                'retrieveaction' => RetrieveAction::retrieveByName()->first(),
+                'label' => null,
+                'valuetype' => null,
+                'actionvalue' => null,
+                'description' => null,
+            ]
+        );
+
+        $report_file->refresh();
+
+        // on test si l'assertion s'est bien passée
+        $response->assertStatus(201);
+
+        // on test qu'il y a bien 1 objet dans la base de données
+        $this->assertCount(1, $report_file->selectedretrieveactions);
+    }
+
+    public function test_aSelectedRetrieveAction_can_be_added_to_model_with_RetrieveActionValue()
+    {
+        //$this->withoutExceptionHandling();
+
+        $user = $this->authenticated_user_admin();
+
+        $report_file = $this->add_new_reportfile("new reportfile");
+        $report_file->removeAllSelectedActions(true);
+
+        $response = $this->put('selectedretrieveactions.addtomodel/',
+            [
+                'model_type' => ReportFile::class,
+                'model' => $report_file,
+                'retrieveaction' => RetrieveAction::renameFile()->first(),
+                'label' => "new file name",
+                'valuetype' => ValueTypeEnum::STRING->value,
+                'actionvalue' => "file_downloaded",
+                'description' => null,
+            ]
+        );
+
+        $report_file->refresh();
+
+        // on test si l'assertion s'est bien passée
+        $response->assertStatus(201);
+
+        $this->assertCount(1, $report_file->selectedretrieveactions);
+        $this->assertCount(1, $report_file->selectedretrieveactions[0]->retrieveactionvalues);
+    }
+
+    public function test_aSelectedRetrieveAction_can_be_removed_from_model()
+    {
+        //$this->withoutExceptionHandling();
+
+        $user = $this->authenticated_user_admin();
+
+        $report_file = $this->add_new_reportfile("new reportfile");
+        $report_file->removeAllSelectedActions(true);
+
+        $selectedretrieveaction = $report_file->addSelectedAction(RetrieveAction::retrieveByName()->first());
+
+        $response = $this->put('selectedretrieveactions.removefrommodel/',
+            [
+                'model_type' => ReportFile::class,
+                'model' => $report_file,
+                'selectedretrieveaction' => $selectedretrieveaction,
+            ]
+        );
+
+        $report_file->refresh();
+
+        // on test si l'assertion s'est bien passée
+        $response->assertStatus(200);
+
+        // on test qu'il y a bien 1 objet dans la base de données
+        $this->assertCount(0, $report_file->selectedretrieveactions);
     }
 
 
@@ -189,6 +286,19 @@ class SelectedRetrieveActionTest extends TestCase
             'retrieveaction' => $retrieveaction,
             'status' => $status,
         ];
+    }
+
+
+    private function add_new_reportfile($title): ReportFile
+    {
+        $reporttype = ReportType::defaultReport()->first();
+        $report = Report::createNew("new report",$reporttype,"sdsd");
+
+        return ReportFile::createNew($report,
+            ReportFileType::csv()->first(),
+            Status::active()->first(),
+            $title
+        );
     }
 
     #endregion

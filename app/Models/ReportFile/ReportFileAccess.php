@@ -12,8 +12,12 @@ use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Storage;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\OsAndServer\ReportServer;
+use App\Models\RetrieveAction\RetrieveAction;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
+use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
 /**
  * Class ReportFileAccess
@@ -47,13 +51,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property ReportServer $reportserver
  * @property AccessProtocole $accessprotocole
  */
-class ReportFileAccess extends BaseModel implements Auditable
+class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
 {
-    use HasFactory, HasCode, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasSelectedRetrieveActions, HasCode, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
-    protected $with = [];
+    protected $with = ['selectedretrieveactions'];
 
     public static function defaultRules() {
         return [
@@ -102,6 +106,11 @@ class ReportFileAccess extends BaseModel implements Auditable
 
     public function accessprotocole() {
         return $this->belongsTo(AccessProtocole::class, 'access_protocole_id');
+    }
+
+    public function selectedretrieveactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(SelectedRetrieveAction::class,'report_file_access_id');
     }
 
     #endregion
@@ -155,6 +164,9 @@ class ReportFileAccess extends BaseModel implements Auditable
         // save le new object
         $reportfileaccess->save();
 
+        // set default actions
+        $reportfileaccess->setDefaultSelectedRetrieveActions();
+
         return $reportfileaccess;
     }
 
@@ -205,6 +217,24 @@ class ReportFileAccess extends BaseModel implements Auditable
     }
 
 
+    private function setDefaultSelectedRetrieveActions() {
+        if ( count($this->reportfile->selectedretrieveactions) === 0 ) {
+            // on affecte les atcions par
+            $this->setDefaultActionsFromSettings();
+        } else {
+            $this->selectedretrieveactions()->saveMany(
+                $this->reportfile->selectedretrieveactions
+            );
+        }
+        $this->refresh();
+    }
+
+    public function dissociateSelectedActions(SelectedRetrieveAction $selectedretrieveaction): ?bool
+    {
+        $selectedretrieveaction->reportfileaccess()->dissociate()->save();
+
+        return true;
+    }
 
     public function setFormalizedCodeAndName() {
         //$this->normalizeCodeField();
