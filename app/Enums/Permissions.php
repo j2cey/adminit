@@ -2,12 +2,7 @@
 
 namespace App\Enums;
 
-use App\Models\BaseModel;
-use OwenIt\Auditing\Contracts\Auditable;
-use App\Traits\Permissions\HasPermissions;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-abstract class Permissions extends Enum
+abstract class Permissions
 {
     public static function Role() : PermissionAction {
         $customlevels = ['create' => 1,'update' => 1,'delete' => 1];

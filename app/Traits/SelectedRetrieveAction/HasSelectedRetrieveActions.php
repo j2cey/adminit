@@ -17,10 +17,6 @@ trait HasSelectedRetrieveActions
     public function setDefaultActionsFromSettings() {
         $scopes = config('Settings.selretrieveaction.default_actions_scopes');
         foreach ($scopes as $scope) {
-            /*
-            $this->selectedretrieveactions()->save(
-                SelectedRetrieveAction::createNew(RetrieveAction::$scope()->first())
-            );*/
             $this->addSelectedAction( RetrieveAction::$scope()->first() );
         }
         $this->refresh();

@@ -126,6 +126,7 @@ class ReportFileAccessTest extends TestCase
         );
 
         $reportfileaccess = ReportFileAccess::first();
+        dd($reportfileaccess->executeTreatment());
 
         $another_reportfile = $this->get_new_reportfile("another report", "another file");
         $another_reportserver = $this->get_new_reportserver("another serveur","10.10.10.11","another_serveur_dns");

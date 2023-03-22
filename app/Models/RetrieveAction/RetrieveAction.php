@@ -9,6 +9,7 @@ use App\Traits\Code\HasCode;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Traits\Permissions\HasPermissions;
+use App\Contracts\RetrieveAction\IRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -24,7 +25,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  *
  * @property string $name
- * @property string $action_class
+ * @property IRetrieveAction $action_class
  * @property string $code
  * @property string|null $description
  *
@@ -44,7 +45,7 @@ class RetrieveAction extends BaseModel implements Auditable
     use HasFactory, HasCode, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
-    //protected $with = ['filemimetype'];
+    protected $with = ['retrieveactiontype'];
 
     #region Validation Rules
 
@@ -98,6 +99,7 @@ class RetrieveAction extends BaseModel implements Auditable
         return $query
             ->where('code', "delete_file");
     }
+
     #endregion
 
     #region Eloquent Relationships
