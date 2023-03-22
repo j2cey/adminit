@@ -4,7 +4,9 @@ namespace App\Http\Controllers\RetrieveAction;
 
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Foundation\Application;
 use App\Models\RetrieveAction\RetrieveActionType;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Resources\RetrieveAction\RetrieveActionTypeResource;
 use App\Http\Requests\RetrieveActionType\StoreRetrieveActionTypeRequest;
@@ -19,9 +21,7 @@ class RetrieveActionTypeController extends Controller
      */
     public function fetch(): AnonymousResourceCollection
     {
-        $retrieveactiontypes = RetrieveActionType::all();
-
-        return RetrieveActionTypeResource::collection($retrieveactiontypes);
+        return RetrieveActionTypeResource::collection( RetrieveActionType::all() );
     }
 
     /**
@@ -97,7 +97,7 @@ class RetrieveActionTypeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param RetrieveActionType $retrieveactiontype
-     * @return Response
+     * @return Application|Response|ResponseFactory
      */
     public function destroy(RetrieveActionType $retrieveactiontype)
     {

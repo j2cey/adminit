@@ -236,4 +236,8 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
+    'ftp_host' => env('FTP_HOST', 'FTP_HOST'),
+    'ftp_username' => env('FTP_USERNAME', 'FTP_USERNAME'),
+    'ftp_password' => env('FTP_PASSWORD', 'FTP_PASSWORD'),
+
 ];

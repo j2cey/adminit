@@ -48,9 +48,6 @@ class StoreReportFileAccessRequest extends ReportFileAccessRequest
             'reportserver' => $this->setRelevantReportServer($this->input('reportserver'),'id', false),
             'accessprotocole' => $this->setRelevantAccessProtocole($this->input('accessprotocole'),'id', false),
             'status' => $this->setRelevantStatus($this->input('status'),'code', false),
-
-            'retrieve_by_name' => ReportFileRequest::getRetrieveTypeNormalized($this->input('retrieve_by_name')),
-            'retrieve_by_wildcard' => ReportFileRequest::getRetrieveTypeNormalized($this->input('retrieve_by_wildcard')),
         ]);
     }
 }

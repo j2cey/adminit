@@ -3,12 +3,15 @@
 namespace App\Models\Reports;
 
 
+use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use App\Models\ReportFile\ReportFile;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Models\ReportFile\ReportFileType;
 use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\DynamicAttributes\DynamicAttributeType;
 
 /**
  * Class Report
@@ -112,6 +115,21 @@ class Report extends BaseModel implements Auditable
         $this->save();
 
         return $this;
+    }
+
+    public function addReportFile(ReportFileType $reportfiletype, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true): ReportFile
+    {
+        return ReportFile::createNew(
+            $this,
+            $reportfiletype,
+            Status::default()->first(),
+            $name,
+            $wildcard,
+            $description,
+            $remotedir_relative_path,
+            $remotedir_absolute_path,
+            $use_file_extension
+        );
     }
 
     #endregion

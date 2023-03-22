@@ -39,7 +39,7 @@ class ReportFileController extends Controller
      */
     public function store(StoreReportFileRequest $request): ReportFileResource
     {
-        $reportfile = ReportFile::createNew($request->report, $request->reportfiletype, $request->status, $request->name, $request->wildcard, $request->retrieve_by_name, $request->retrieve_by_wildcard, $request->description);
+        $reportfile = ReportFile::createNew($request->report, $request->reportfiletype, $request->status, $request->name, $request->wildcard, $request->description, $request->remotedir_relative_path, $request->remotedir_absolute_path, $request->use_file_extension);
 
         return new ReportFileResource($reportfile);
     }
@@ -52,7 +52,7 @@ class ReportFileController extends Controller
      */
     public function show(ReportFile $reportfile)
     {
-        dd("reportfiles.show: ",reportfile);
+        dd("reportfiles.show: ",$reportfile);
     }
 
     /**
@@ -75,7 +75,7 @@ class ReportFileController extends Controller
      */
     public function update(UpdateReportFileRequest $request, ReportFile $reportfile)
     {
-        $reportfile->updateOne($request->report, $request->reportfiletype, $request->status, $request->name, $request->wildcard, $request->retrieve_by_name, $request->retrieve_by_wildcard, $request->description);
+        $reportfile->updateOne($request->report, $request->reportfiletype, $request->status, $request->name, $request->wildcard, $request->description, $request->remotedir_relative_path, $request->remotedir_absolute_path, $request->use_file_extension);
 
         return new ReportFileResource($reportfile);
     }

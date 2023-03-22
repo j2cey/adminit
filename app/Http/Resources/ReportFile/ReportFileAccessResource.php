@@ -27,11 +27,9 @@ use App\Http\Resources\OsAndServer\ReportServerResource;
  * @property integer $updated_by
  *
  * @property string $name
+ * @property int $port
  * @property string|null $code
  * @property string|null $description
- *
- * @property bool $retrieve_by_name
- * @property bool $retrieve_by_wildcard
  *
  * @property integer $report_file_id
  * @property integer $report_server_id
@@ -69,8 +67,7 @@ class ReportFileAccessResource extends JsonResource
 
             'code' => $this->code,
             'name' => $this->name,
-            'retrieve_by_name' => $this->retrieve_by_name,
-            'retrieve_by_wildcard' => $this->retrieve_by_wildcard,
+            'port' => $this->port,
 
             'description' => $this->description,
             'created_at' => $this->created_at,

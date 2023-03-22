@@ -40,14 +40,13 @@ class OsFamily extends BaseModel implements Auditable
     {
         return [
             'name' => ['required'],
-            'code' => ['required','unique:os_families,code,NULL,id'],
         ];
     }
 
     public static function createRules()
     {
         return array_merge(self::defaultRules(), [
-
+            'code' => ['required','unique:os_families,code,NULL,id'],
         ]);
     }
 
@@ -76,14 +75,14 @@ class OsFamily extends BaseModel implements Auditable
     #region Custom Functions
 
     /**
-     * Crée (et stocker dans la base de données) un nouvel objet de type OsFamily
-     * @param $name
-     * @param $code
+     * Crée (et stocke dans la base de données) un nouvel objet de type OsFamily
+     * @param string $name
+     * @param string $code
      * @param null|Status $status
      * @param string|null $description
      * @return OsFamily
      */
-    public static function createNew($name, $code, Status $status = null, string $description = null): OsFamily
+    public static function createNew(string $name, string $code, Status $status = null, string $description = null): OsFamily
     {
         $status = is_null($status) ? Status::default()->first() : $status;
 
@@ -100,13 +99,13 @@ class OsFamily extends BaseModel implements Auditable
 
     /**
      * Modifie cet Objet
-     * @param $name
-     * @param $code
+     * @param string $name
+     * @param string $code
      * @param Status|null $status
      * @param string|null $description
      * @return $this
      */
-    public function updateOne($name, $code, Status $status = null, string $description = null): OsFamily
+    public function updateOne(string $name, string $code, Status $status = null, string $description = null): OsFamily
     {
         $this->name = $name;
         $this->code = $code;

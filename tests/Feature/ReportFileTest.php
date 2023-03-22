@@ -10,7 +10,6 @@ use App\Models\Reports\ReportType;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Support\Facades\Config;
 use App\Models\ReportFile\ReportFileType;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -119,9 +118,10 @@ class ReportFileTest extends TestCase
             Status::active()->first(),
             "new report file",
             "rerre_reerre",
-            true,
-            false,
-            "new report desc"
+            "new report desc",
+            "remotedir_relative",
+            "remotedir_absolute",
+            true
         );
 
         $newreportfile = ReportFile::first();
@@ -136,18 +136,20 @@ class ReportFileTest extends TestCase
             $reportfiletype_txt,
             $status_inactive,"new report file edited",
             "new_wildcard",
-            false,
-            true,
-            "new report desc edited"
+            "new report desc upd",
+            "remotedir_relative_upd",
+            "remotedir_absolute_upd",
+            false
         );
 
         $newreportfile->refresh();
 
         $this->assertEquals('new report file edited',$newreportfile->name);
         $this->assertEquals('new_wildcard', $newreportfile->wildcard);
-        $this->assertEquals('new report desc edited', $newreportfile->description);
-        $this->assertEquals(false, $newreportfile->retrieve_by_name);
-        $this->assertEquals(true, $newreportfile->retrieve_by_wildcard);
+        $this->assertEquals('new report desc upd', $newreportfile->description);
+        $this->assertEquals("remotedir_relative_upd", $newreportfile->remotedir_relative_path);
+        $this->assertEquals("remotedir_absolute_upd", $newreportfile->remotedir_absolute_path);
+        $this->assertEquals(false, $newreportfile->use_file_extension);
         $this->assertEquals($status_inactive->code, $newreportfile->status->code);
         $this->assertEquals($reportfiletype_txt->id, $newreportfile->reportfiletype->id);
         $this->assertEquals($another_report->id, $newreportfile->report->id);
@@ -182,14 +184,14 @@ class ReportFileTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_reportfile($report, $reportfiletype, $status, $name, $wildcard = null, $retrieve_by_name = false, $retrieve_by_wildcard = false, $description = "")
+    private function add_new_reportfile($report, $reportfiletype, $status, $name, $wildcard = null, $description = null, $remotedir_relative_path = null, $remotedir_absolute_path = null, $use_file_extension = true)
     {
-        return $this->post('reportfiles', $this->new_data($report, $reportfiletype, $status, $name, $wildcard, $retrieve_by_name, $retrieve_by_wildcard, $description));
+        return $this->post('reportfiles', $this->new_data($report, $reportfiletype, $status, $name, $wildcard, $description, $remotedir_relative_path, $remotedir_absolute_path, $use_file_extension));
     }
 
-    private function update_existing_reportfile($existingreportfile, $report, $reportfiletype, $status, $name, $wildcard = null, $retrieve_by_name = false, $retrieve_by_wildcard = false, $description = "")
+    private function update_existing_reportfile($existingreportfile, $report, $reportfiletype, $status, $name, $wildcard = null, $description = null, $remotedir_relative_path = null, $remotedir_absolute_path = null, $use_file_extension = true)
     {
-        $this->put('reportfiles/' . $existingreportfile->uuid, $this->new_data($report, $reportfiletype, $status, $name, $wildcard, $retrieve_by_name, $retrieve_by_wildcard, $description));
+        $this->put('reportfiles/' . $existingreportfile->uuid, $this->new_data($report, $reportfiletype, $status, $name, $wildcard, $description, $remotedir_relative_path, $remotedir_absolute_path, $use_file_extension));
     }
 
     private function add_new_report($title)
@@ -198,7 +200,7 @@ class ReportFileTest extends TestCase
         return Report::createNew($title,$reporttype,"sdsd");
     }
 
-    private function new_data($report, $reportfiletype, $status, $name, $wildcard = null, $retrieve_by_name = false, $retrieve_by_wildcard = false, $description = "") {
+    private function new_data($report, $reportfiletype, $status, $name, $wildcard = null, $description = null, $remotedir_relative_path = null, $remotedir_absolute_path = null, $use_file_extension = true) {
         return [
             'report' => $report,
             'reportfiletype' => $reportfiletype,
@@ -206,8 +208,10 @@ class ReportFileTest extends TestCase
 
             'name' => $name,
             'wildcard' => $wildcard,
-            'retrieve_by_name' => $retrieve_by_name,
-            'retrieve_by_wildcard' => $retrieve_by_wildcard,
+            'remotedir_relative_path' => $remotedir_relative_path,
+            'remotedir_absolute_path' => $remotedir_absolute_path,
+            'use_file_extension' => $use_file_extension,
+
             'description' => $description,
         ];
     }

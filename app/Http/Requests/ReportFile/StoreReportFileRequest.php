@@ -39,8 +39,6 @@ class StoreReportFileRequest extends ReportFileRequest
             'report' => $this->setRelevantReport($this->input('report'),'id', false),
             'reportfiletype' => $this->setRelevantReportFileType($this->input('reportfiletype'),'id', false),
             'status' => $this->setRelevantStatus($this->input('status'),'code', false),
-            'retrieve_by_name' => ReportFileRequest::getRetrieveTypeNormalized($this->input('retrieve_by_name')),
-            'retrieve_by_wildcard' => ReportFileRequest::getRetrieveTypeNormalized($this->input('retrieve_by_wildcard')),
         ]);
     }
 }

@@ -50,7 +50,7 @@ class ReportFileAccessController extends Controller
      */
     public function store(StoreReportFileAccessRequest $request): ReportFileAccessResource
     {
-        $reportfileaccess = ReportFileAccess::createNew($request->reportfile, $request->accessaccount, $request->reportserver, $request->accessprotocole, $request->name, $request->code, $request->status, $request->retrieve_by_name, $request->retrieve_by_wildcard, $request->description);
+        $reportfileaccess = ReportFileAccess::createNew($request->reportfile, $request->accessaccount, $request->reportserver, $request->accessprotocole, $request->name,$request->port, $request->code, $request->status, $request->description);
 
         return new ReportFileAccessResource($reportfileaccess);
     }
@@ -86,7 +86,7 @@ class ReportFileAccessController extends Controller
      */
     public function update(UpdateReportFileAccessRequest $request, ReportFileAccess $reportfileaccess): ReportFileAccessResource
     {
-        $reportfileaccess->updateOne($request->reportfile, $request->accessaccount, $request->reportserver, $request->accessprotocole, $request->name, $request->code, $request->status, $request->retrieve_by_name, $request->retrieve_by_wildcard, $request->description);
+        $reportfileaccess->updateOne($request->reportfile, $request->accessaccount, $request->reportserver, $request->accessprotocole, $request->name,$request->port, $request->code, $request->status, $request->description);
 
         return new ReportFileAccessResource($reportfileaccess);
     }

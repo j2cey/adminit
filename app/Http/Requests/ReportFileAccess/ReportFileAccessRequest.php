@@ -16,11 +16,9 @@ use App\Models\ReportFile\ReportFileAccess;
  * @package App\Http\Requests\ReportFileAccess
  *
  * @property string $name
+ * @property int $port
  * @property string|null $code
  * @property string|null $description
- *
- * @property bool $retrieve_by_name
- * @property bool $retrieve_by_wildcard
  *
  *
  * @property Status $status

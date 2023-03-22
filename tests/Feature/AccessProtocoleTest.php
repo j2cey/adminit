@@ -44,7 +44,7 @@ class AccessProtocoleTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessprotocole("Anri", "anri","new protocole_class");
+        $response = $this->add_new_accessprotocole("Anri", 21, "anri","new protocole_class");
 
         // on test si l'assertion s'est bien passée
         $response->assertStatus(201);
@@ -64,10 +64,10 @@ class AccessProtocoleTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessprotocole("","", "");
+        $response = $this->add_new_accessprotocole("", null,"", "");
 
         // on doit avoir une erreur de validation des champs ci-dessous
-        $response->assertSessionHasErrors(['name','code','protocole_class']);
+        $response->assertSessionHasErrors(['name', 'default_port','code','protocole_class']);
     }
 
     /**
@@ -83,6 +83,7 @@ class AccessProtocoleTest extends TestCase
 
         $response = $this->add_new_accessprotocole(
             "vcibvfuezb",
+            21,
             "new_code",
             "new protocole_class",
             Status::active()->first(),
@@ -95,6 +96,7 @@ class AccessProtocoleTest extends TestCase
         $this->update_existing_accessprotocole(
             $newaccessprotocole,
             "upd name edited",
+            22,
             "upd code edited",
             "upd protocole_class",
             $status_another,
@@ -104,6 +106,7 @@ class AccessProtocoleTest extends TestCase
         $newaccessprotocole->refresh();
 
         $this->assertEquals('upd name edited',$newaccessprotocole->name);
+        $this->assertEquals(22,$newaccessprotocole->default_port);
         $this->assertEquals('upd code edited',$newaccessprotocole->code);
         $this->assertEquals('upd protocole_class',$newaccessprotocole->protocole_class);
         $this->assertEquals($status_another->id,$newaccessprotocole->status->id);
@@ -121,7 +124,7 @@ class AccessProtocoleTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_accessprotocole("new access protocole", "new_access_protocole", "new protocole_class");
+        $response = $this->add_new_accessprotocole("new access protocole",21, "new_access_protocole", "new protocole_class");
 
         $newaccessprotocole = AccessProtocole::first();
 
@@ -132,19 +135,20 @@ class AccessProtocoleTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_accessprotocole($name, $code, $protocole_class,$status = null, $description = null)
+    private function add_new_accessprotocole($name, $default_port, $code, $protocole_class,$status = null, $description = null)
     {
-        return $this->post('accessprotocoles', $this->new_data($name,$code,$protocole_class,$status,$description));
+        return $this->post('accessprotocoles', $this->new_data($name,$default_port,$code,$protocole_class,$status,$description));
     }
 
-    private function update_existing_accessprotocole($existingaccessprotocole, $name, $code, $protocole_class,$status = null,$description = null)
+    private function update_existing_accessprotocole($existingaccessprotocole, $name, $default_port, $code, $protocole_class,$status = null,$description = null)
     {
-        return $this->put('accessprotocoles/' . $existingaccessprotocole->uuid, $this->new_data($name,$code,$protocole_class,$status,$description));
+        return $this->put('accessprotocoles/' . $existingaccessprotocole->uuid, $this->new_data($name,$default_port,$code,$protocole_class,$status,$description));
     }
 
-    private function new_data($name,$code,$protocole_class,$status = null,$description = null) {
+    private function new_data($name,$default_port,$code,$protocole_class,$status = null,$description = null) {
         return [
             'name' => $name,
+            'default_port' => $default_port,
             'code' => $code,
             'protocole_class' => $protocole_class,
             'status' => $status,

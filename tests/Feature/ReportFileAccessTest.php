@@ -119,10 +119,9 @@ class ReportFileAccessTest extends TestCase
             $reportserver,
             $protocole_ftp,
             "new_reportfileaccess",
+            21,
             "new_code",
             Status::active()->first(),
-            true,
-            false,
             "new reportfile access desc"
         );
 
@@ -142,10 +141,9 @@ class ReportFileAccessTest extends TestCase
             $another_reportserver,
             $protocole_sftp,
             "new reportfileaccess",
+            22,
             "upd_code",
             $status_inactive,
-            false,
-            true,
             "new reportfile access desc"
         );
 
@@ -156,10 +154,9 @@ class ReportFileAccessTest extends TestCase
         $this->assertEquals($another_reportserver->id, $reportfileaccess->reportserver->id);
         $this->assertEquals($protocole_sftp->id, $reportfileaccess->accessprotocole->id);
         $this->assertEquals("new reportfileaccess", $reportfileaccess->name);
+        $this->assertEquals(22, $reportfileaccess->port);
         $this->assertEquals("upd_code", $reportfileaccess->code);
         $this->assertEquals($status_inactive->id, $reportfileaccess->status->id);
-        $this->assertEquals(false, $reportfileaccess->retrieve_by_name);
-        $this->assertEquals(true, $reportfileaccess->retrieve_by_wildcard);
     }
 
     /**
@@ -208,23 +205,22 @@ class ReportFileAccessTest extends TestCase
         return ReportFile::createNew($report, ReportFileType::txt()->first(), Status::default()->first(), $file_name);
     }
 
-    private function add_new_reportfileaccess($reportfile, $accessaccount, $reportserver, $accessprotocole, $name = null, $code = null, $status = null, $retrieve_by_name = null, $retrieve_by_wildcard = null, $description = ""): TestResponse
+    private function add_new_reportfileaccess($reportfile, $accessaccount, $reportserver, $accessprotocole, $name = null, $port = null, $code = null, $status = null, $description = null): TestResponse
     {
-        return $this->post('reportfileaccesses', $this->new_data($reportfile, $accessaccount, $reportserver, $accessprotocole, $name, $code, $status, $retrieve_by_name, $retrieve_by_wildcard, $description));
+        return $this->post('reportfileaccesses', $this->new_data($reportfile, $accessaccount, $reportserver, $accessprotocole, $name, $port, $code, $status, $description));
     }
 
-    private function update_existing_reportfileaccess($existing_reportfileaccess, $reportfile, $accessaccount, $reportserver, $accessprotocole, $name = null, $code = null, $status = null, $retrieve_by_name = null, $retrieve_by_wildcard = null, $description = ""): TestResponse
+    private function update_existing_reportfileaccess($existing_reportfileaccess, $reportfile, $accessaccount, $reportserver, $accessprotocole, $name = null, $port = null, $code = null, $status = null, $description = null): TestResponse
     {
-        return $this->put('reportfileaccesses/' . $existing_reportfileaccess->uuid, $this->new_data($reportfile, $accessaccount, $reportserver, $accessprotocole, $name, $code, $status, $retrieve_by_name, $retrieve_by_wildcard, $description));
+        return $this->put('reportfileaccesses/' . $existing_reportfileaccess->uuid, $this->new_data($reportfile, $accessaccount, $reportserver, $accessprotocole, $name, $port, $code, $status, $description));
     }
 
-    private function new_data($reportfile, $accessaccount, $reportserver, $accessprotocole, $name = null, $code = null, $status = null, $retrieve_by_name = null, $retrieve_by_wildcard = null, $description = ""): array
+    private function new_data($reportfile, $accessaccount, $reportserver, $accessprotocole, $name = null, $port = null, $code = null, $status = null, $description = null): array
     {
         return [
             'name' => $name,
+            'port' => $port,
             'code' => $code,
-            'retrieve_by_name' => $retrieve_by_name,
-            'retrieve_by_wildcard' => $retrieve_by_wildcard,
             'description' => $description,
 
             'status' => $status,

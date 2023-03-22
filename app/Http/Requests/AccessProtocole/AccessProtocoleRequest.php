@@ -12,6 +12,7 @@ use Illuminate\Foundation\Http\FormRequest;
  * @package App\Http\Requests\AccessProtocole
  *
  * @property string $name
+ * @property int $default_port
  * @property string $code
  * @property string $protocole_class
  *

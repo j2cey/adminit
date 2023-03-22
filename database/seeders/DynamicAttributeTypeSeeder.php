@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ValueTypeEnum;
 use Illuminate\Database\Seeder;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 
@@ -14,9 +15,9 @@ class DynamicAttributeTypeSeeder extends Seeder
      */
     public function run()
     {
-        DynamicAttributeType::createNew("String","App\Models\DynamicAttributes\DynamicValueString","");
-        DynamicAttributeType::createNew("Integer","App\Models\DynamicAttributes\DynamicValueInteger","");
-        DynamicAttributeType::createNew("DateTime","App\Models\DynamicAttributes\DynamicValueDatetime","");
-        DynamicAttributeType::createNew("Boolean","App\Models\DynamicAttributes\DynamicValueBoolean","");
+        DynamicAttributeType::createNew("String", ValueTypeEnum::STRING->value,"App\Models\DynamicAttributes\DynamicValueString");
+        DynamicAttributeType::createNew("Integer", ValueTypeEnum::INT->value,"App\Models\DynamicAttributes\DynamicValueInteger");
+        DynamicAttributeType::createNew("DateTime", ValueTypeEnum::DATETIME->value,"App\Models\DynamicAttributes\DynamicValueDatetime");
+        DynamicAttributeType::createNew("Boolean", ValueTypeEnum::BOOLEAN->value,"App\Models\DynamicAttributes\DynamicValueBoolean");
     }
 }
