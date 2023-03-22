@@ -41,7 +41,7 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
     use HasFactory, HasCode, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
-    //protected $with = ['filemimetype'];
+    protected $with = ['retrieveaction','retrieveactionvalues'];
 
     #region Validation Rules
 
@@ -89,6 +89,10 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
     {
         return $this->hasMany(RetrieveActionValue::class, 'selected_retrieve_action_id');
     }
+
+    #endregion
+
+    #region Scopes
 
     #endregion
 

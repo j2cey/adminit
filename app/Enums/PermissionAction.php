@@ -20,9 +20,9 @@ class PermissionAction
     private $_permissionkey;
 
     /**
-     * @param string $permissionkey
-     * @param array|null $customlevels Levels modifiés: ['action' => level]
-     * @param array|null $additionalactions Actions supplémentaires: ['action' => level]
+     * @param string $permissionkey La clé de la permission
+     * @param array|null $customlevels Levels modifiés: ['nom action' => level]
+     * @param array|null $additionalactions Actions supplémentaires: ['nom action' => level]
      */
     public function __construct(string $permissionkey, array $customlevels = null, array $additionalactions = null)
     {

@@ -28,6 +28,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'collectedreportfiles_folder' => env('COLLECTEDREPORTFILES_FOLDER', 'collectedreportfiles'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

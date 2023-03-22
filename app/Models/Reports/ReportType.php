@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @method static defaultReport()
  */
 class ReportType extends BaseModel implements Auditable
 {

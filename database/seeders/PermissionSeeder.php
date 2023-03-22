@@ -15,6 +15,7 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
+        /*
         $permissions = array_merge([],
             Permissions::Role()->getAllPermissions(),
             Permissions::Report()->getAllPermissions(),
@@ -43,9 +44,21 @@ class PermissionSeeder extends Seeder
             Permissions::SelectedRetrieveAction()->getAllPermissions(),
             Permissions::RetrieveActionValue()->getAllPermissions(),
         );
+        */
 
+        $class_methods = get_class_methods(Permissions::class);
+
+        foreach ($class_methods as $class_method) {
+            $permissions = Permissions::$class_method()->getAllPermissions();
+            foreach ($permissions as $permission) {
+                Permission::create(['name' => $permission[0], 'level' => $permission[1]]);
+            }
+        }
+
+        /*
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission[0], 'level' => $permission[1]]);
         }
+        */
     }
 }

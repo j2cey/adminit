@@ -117,7 +117,7 @@ Route::get('reportsetting.index',[ReportsettingController::class,'index'])
 #region permissions & roles
 
 Route::get('permissions.test', function () {
-    dd(\App\Enums\Permissions::Role()->getAllPermissions());
+    dd(\App\Enums\Permissions::AnalysisHighlight()->create());
     //dd(App\Models\RetrieveAction\RetrieveAction::can_create());
 });
 
@@ -346,6 +346,11 @@ Route::get('reportfileaccesses.fetch',[ReportFileAccessController::class,'fetch'
 Route::get('reportfileaccesses.download',[ReportFileAccessController::class,'download'])
     ->name('reportfileaccesses.download')
     ->middleware('auth');
+
+Route::get('reportfileaccesses.test', function () {
+    //$reportfile = App\Models\ReportFile\ReportFile::createNew( \App\Models\Reports\Report::createNew("new Report", App\Models\Reports\ReportType::defaultReport()->first()) )
+    //$reportfileaccess = \App\Models\ReportFile\ReportFileAccess::createNew()
+});
 
 Route::resource('accessaccounts',AccessAccountController::class)->middleware('auth');
 Route::get('accessaccounts.fetch',[AccessAccountController::class,'fetch'])
