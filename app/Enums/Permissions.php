@@ -79,4 +79,9 @@ abstract class Permissions
     public static function RetrieveActionValue() : PermissionAction {
         return new PermissionAction("retrieveactionvalue");
     }
+
+    public static function CollectedReportFile() : PermissionAction
+    {
+        return new PermissionAction("collectedreportfile");
+    }
 }

@@ -35,6 +35,7 @@ use App\Http\Controllers\Reportsetting\ReportsettingController;
 use App\Http\Controllers\ReportFile\ReportFileAccessController;
 use App\Http\Controllers\RetrieveAction\RetrieveActionController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
+use App\Http\Controllers\ReportFile\CollectedReportFileController;
 use App\Http\Controllers\AnalysisRules\AnalysisHighlightController;
 use App\Http\Controllers\AnalysisRules\HighlightTextSizeController;
 use App\Http\Controllers\AnalysisRules\HighlightTextColorController;
@@ -307,6 +308,11 @@ Route::get('filemimetypes.fetch',[FileMimeTypeController::class,'fetch'])
 Route::resource('reportfiletypes',ReportFileTypeController::class)->middleware('auth');
 Route::get('reportfiletypes.fetch',[ReportFileTypeController::class,'fetch'])
     ->name('reportfiletypes.fetch')
+    ->middleware('auth');
+
+Route::resource('collectedreportfiles',CollectedReportFileController::class)->middleware('auth');
+Route::get('collectedreportfiles.fetch',[CollectedReportFileController::class,'fetch'])
+    ->name('collectedreportfiles.fetch')
     ->middleware('auth');
 
 

@@ -126,7 +126,6 @@ class ReportFileAccessTest extends TestCase
         );
 
         $reportfileaccess = ReportFileAccess::first();
-        dd($reportfileaccess->executeTreatment());
 
         $another_reportfile = $this->get_new_reportfile("another report", "another file");
         $another_reportserver = $this->get_new_reportserver("another serveur","10.10.10.11","another_serveur_dns");
@@ -199,11 +198,6 @@ class ReportFileAccessTest extends TestCase
         return ReportServer::createNew($osserver, $serveur_name, $ip_address, $domain_name);
     }
 
-    private function get_new_reportfile($report_title, $file_name): ReportFile {
-        $reporttype = ReportType::defaultReport()->first();
-        $report = Report::createNew($report_title,$reporttype,"new report file");
-        return ReportFile::createNew($report, ReportFileType::txt()->first(), Status::default()->first(), $file_name);
-    }
 
     private function add_new_reportfileaccess($reportfile, $accessaccount, $reportserver, $accessprotocole, $name = null, $port = null, $code = null, $status = null, $description = null): TestResponse
     {

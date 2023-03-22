@@ -21,7 +21,7 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @package App\Models\ReportFile
  *
  * @property integer $id
- *
+ *CollectedReportFile
  * @property string $uuid
  * @property bool $is_default
  * @property integer $created_by
@@ -147,7 +147,7 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
      * @param Report $report Le Rapport auquel le fichier appartient
      * @param ReportFileType $reportfiletype Le Type de fichier
      * @param Status $status Le statut du fichier
-     * @param string $name Le Nomn du fichier
+     * @param string $name Le Nom du fichier
      * @param string|null $wildcard Le Wildcard
      * @param string|null $description Description du Fichier
      * @param string|null $remotedir_relative_path Chemin relatif du fichier sur le serveur distant
@@ -189,7 +189,7 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
      * @param Report $report Le Rapport auquel le fichier appartient
      * @param ReportFileType $reportfiletype Le Type de fichier
      * @param Status $status Le statut du fichier
-     * @param string $name Le Nomn du fichier
+     * @param string $name Le Nom du fichier
      * @param string|null $wildcard Le Wildcard
      * @param string|null $description Description du Fichier
      * @param string|null $remotedir_relative_path Chemin relatif du fichier sur le serveur distant
