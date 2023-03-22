@@ -25,8 +25,10 @@ class CreateReportFilesTable extends Migration
 
             $table->string('name')->comment("nom du fichier");
             $table->string('wildcard')->nullable()->comment("caractère générique du fichier");
-            $table->boolean('retrieve_by_name')->default(false)->comment("Indique si le fichier doit être retrouvé par/ou en utilisant le nom");
-            $table->boolean('retrieve_by_wildcard')->default(false)->comment("Indique si le fichier doit être retrouvé par/ou en utilisant le caractère générique");
+
+            $table->string('remotedir_relative_path')->nullable()->comment("chemin relatif du fichier sur le serveur distant");
+            $table->string('remotedir_absolute_path')->nullable()->comment("chemin absolu du fichier sur le serveur distant");
+            $table->string('use_file_extension')->default(true)->comment("détermine si l extension du fichier doit être utilisé");
 
             $table->string('description', 500)->nullable()->comment("description du fichier");
 

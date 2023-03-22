@@ -3,6 +3,7 @@
 namespace App\Http\Resources\DynamicAttributes;
 
 use JsonSerializable;
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
@@ -21,11 +22,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property integer|null $status_id
  *
  * @property string $name
+ * @property string $code
  * @property string $model_type
- * @property string $description
+ * @property string|null $description
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property Status $status
  */
 class DynamicAttributeTypeResource extends JsonResource
 {
@@ -43,6 +47,7 @@ class DynamicAttributeTypeResource extends JsonResource
             'status' => StatusResource::make($this->status),
 
             'name' => $this->name,
+            'code' => $this->code,
             'model_type' => $this->model_type,
             'description' => $this->description,
 

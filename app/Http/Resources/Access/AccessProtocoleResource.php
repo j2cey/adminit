@@ -22,6 +22,7 @@ use function route;
  *
  *
  * @property string $name
+ * @property int $default_port
  * @property string|null $description
  *
  *
@@ -47,6 +48,7 @@ class AccessProtocoleResource extends JsonResource
             'status' => StatusResource::make($this->status),
 
             'name' => $this->name,
+            'default_port' => $this->default_port,
             'description' => $this->description,
 
             'created_at' => $this->created_at,

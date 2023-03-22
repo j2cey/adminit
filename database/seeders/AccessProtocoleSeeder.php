@@ -16,7 +16,7 @@ class AccessProtocoleSeeder extends Seeder
      */
     public function run()
     {
-        AccessProtocole::createNew("FTP", "ftp", FtpProtocole::class);
-        AccessProtocole::createNew("SFTP", "sftp", SftpProtocole::class);
+        AccessProtocole::createNew("FTP",21, "ftp", FtpProtocole::class);
+        AccessProtocole::createNew("SFTP",22, "sftp", SftpProtocole::class);
     }
 }

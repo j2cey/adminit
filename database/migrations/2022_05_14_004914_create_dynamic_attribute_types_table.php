@@ -23,8 +23,9 @@ class CreateDynamicAttributeTypesTable extends Migration
             $table->id();
 
             $table->string('name')->comment('name of the attribute type');
+            $table->string('code')->unique()->comment('code of the attribute type');
             $table->string('model_type')->comment('referenced model (class name)');
-            $table->string('description')->nullable()->comment('attribute type description');
+            $table->string('description', 500)->nullable()->comment('attribute type description');
 
             $table->baseFields();
         });

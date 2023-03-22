@@ -10,9 +10,7 @@ use Illuminate\Support\Carbon;
 use App\Models\Access\AccessAccount;
 use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Storage;
-use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\OsAndServer\ReportServer;
-use App\Models\RetrieveAction\RetrieveAction;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,11 +29,9 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property integer $updated_by
  *
  * @property string $name
+ * @property int $port
  * @property string|null $code
  * @property string|null $description
- *
- * @property bool $retrieve_by_name
- * @property bool $retrieve_by_wildcard
  *
  * @property integer|null $report_file_id
  * @property integer|null $access_account_id
@@ -129,20 +125,18 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
      * @param ReportServer $reportserver Le Serveur
      * @param AccessProtocole $accessprotocole Le Protocole d'accès
      * @param string|null $name Le Nom de l'accès
+     * @param int|null $port Le Port d'accès
      * @param string|null $code Le Code de l'accès
      * @param Status|null $status Le Statut
-     * @param bool|null $retrieve_by_name Valeur déterminant si le fichier doit être récupéré par nom
-     * @param bool|null $retrieve_by_wildcard Valeur déterminant si le fichier doit être récupéré par Wildcard
      * @param string|null $description Description
      * @return ReportFileAccess
      */
-    public static function createNew(ReportFile $reportfile, AccessAccount $accessaccount, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, string $code = null, Status $status = null, bool $retrieve_by_name = null, bool $retrieve_by_wildcard = null, string $description = null): ReportFileAccess
+    public static function createNew(ReportFile $reportfile, AccessAccount $accessaccount, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, int $port = null, string $code = null, Status $status = null, string $description = null): ReportFileAccess
     {
         $reportfileaccess = ReportFileAccess::create([
             'name' => $name,
+            'port' => $port ?? $accessprotocole->default_port,
             'code' => $code,
-            'retrieve_by_name' => is_null($retrieve_by_name) ? $reportfile->retrieve_by_name : $retrieve_by_name,
-            'retrieve_by_wildcard' => is_null($retrieve_by_wildcard) ? $reportfile->retrieve_by_wildcard : $retrieve_by_wildcard,
             'description' => $description,
         ]);
 
@@ -177,19 +171,17 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
      * @param ReportServer $reportserver Le Serveur
      * @param AccessProtocole $accessprotocole Le Protocole d'accès
      * @param string|null $name Le Nom de l'accès
+     * @param int|null $port Le Port d'accès
      * @param string|null $code Le Code de l'accès
      * @param Status|null $status Le Statut
-     * @param bool|null $retrieve_by_name Valeur déterminant si le fichier doit être récupéré par nom
-     * @param bool|null $retrieve_by_wildcard Valeur déterminant si le fichier doit être récupéré par Wildcard
      * @param string|null $description Description
      * @return $this
      */
-    public function updateOne(ReportFile $reportfile, AccessAccount $accessaccount, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, string $code = null, Status $status = null, bool $retrieve_by_name = null, bool $retrieve_by_wildcard = null, string $description = null): ReportFileAccess
+    public function updateOne(ReportFile $reportfile, AccessAccount $accessaccount, ReportServer $reportserver, AccessProtocole $accessprotocole, string $name = null, int $port = null, string $code = null, Status $status = null, string $description = null): ReportFileAccess
     {
         $this->name = $name;
+        $this->port = $port ?? $accessprotocole->default_port;
         $this->code = $code;
-        $this->retrieve_by_name = $retrieve_by_name;
-        $this->retrieve_by_wildcard = $retrieve_by_wildcard;
         $this->description = $description;
 
         // associate ReportFile

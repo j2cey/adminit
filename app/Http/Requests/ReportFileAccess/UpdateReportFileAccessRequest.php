@@ -5,7 +5,6 @@ namespace App\Http\Requests\ReportFileAccess;
 use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ReportFile\ReportFileAccess;
-use App\Http\Requests\ReportFile\ReportFileRequest;
 
 /**
  * Class UpdateReportFileAccessRequest
@@ -48,9 +47,6 @@ class UpdateReportFileAccessRequest extends ReportFileAccessRequest
             'reportserver' => $this->setRelevantReportServer($this->input('reportserver'),'id', true),
             'accessprotocole' => $this->setRelevantAccessProtocole($this->input('accessprotocole'),'id', true),
             'status' => $this->setRelevantStatus($this->input('status'),'code', true),
-
-            'retrieve_by_name' => ReportFileRequest::getRetrieveTypeNormalized($this->input('retrieve_by_name')),
-            'retrieve_by_wildcard' => ReportFileRequest::getRetrieveTypeNormalized($this->input('retrieve_by_wildcard')),
         ]);
     }
 }

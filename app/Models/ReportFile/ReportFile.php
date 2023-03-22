@@ -6,7 +6,10 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
+use App\Models\Access\AccessAccount;
+use App\Models\Access\AccessProtocole;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Models\OsAndServer\ReportServer;
 use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,8 +29,10 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  *
  * @property string $name
  * @property string|null $wildcard
- * @property bool|null $retrieve_by_name
- * @property bool|null $retrieve_by_wildcard
+ *
+ * @property string|null $remotedir_relative_path
+ * @property string|null $remotedir_absolute_path
+ * @property bool $use_file_extension
  *
  * @property string|null $description
  *
@@ -144,18 +149,20 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
      * @param Status $status Le statut du fichier
      * @param string $name Le Nomn du fichier
      * @param string|null $wildcard Le Wildcard
-     * @param bool $retrieve_by_name Détermine si le fichier doit être récupéré par Nom
-     * @param bool $retrieve_by_wildcard Détermine si le fichier doit être récupéré par Wildcard
      * @param string|null $description Description du Fichier
+     * @param string|null $remotedir_relative_path Chemin relatif du fichier sur le serveur distant
+     * @param string|null $remotedir_absolute_path Chemin absolu du fichier sur le serveur distant
+     * @param bool $use_file_extension Détermine si l extension du fichier doit être utilisé
      * @return ReportFile
      */
-    public static function createNew(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $wildcard = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false, string $description = null): ReportFile
+    public static function createNew(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true): ReportFile
     {
         $reportfile = ReportFile::create([
             'name' => $name,
             'wildcard' => $wildcard,
-            'retrieve_by_name' => $retrieve_by_name,
-            'retrieve_by_wildcard' => $retrieve_by_wildcard,
+            'remotedir_relative_path' => $remotedir_relative_path ?? "/",
+            'remotedir_absolute_path' => $remotedir_absolute_path ?? "/",
+            'use_file_extension' => $use_file_extension,
             'description' => $description,
         ]);
 
@@ -184,17 +191,19 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
      * @param Status $status Le statut du fichier
      * @param string $name Le Nomn du fichier
      * @param string|null $wildcard Le Wildcard
-     * @param bool $retrieve_by_name Détermine si le fichier doit être récupéré par Nom
-     * @param bool $retrieve_by_wildcard Détermine si le fichier doit être récupéré par Wildcard
-     * @param string $description Description du Fichier
+     * @param string|null $description Description du Fichier
+     * @param string|null $remotedir_relative_path Chemin relatif du fichier sur le serveur distant
+     * @param string|null $remotedir_absolute_path Chemin absolu du fichier sur le serveur distant
+     * @param bool $use_file_extension Détermine si l extension du fichier doit être utilisé
      * @return $this
      */
-    public function updateOne(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $wildcard = null, bool $retrieve_by_name = false, bool $retrieve_by_wildcard = false, string $description = ""): ReportFile
+    public function updateOne(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true): ReportFile
     {
         $this->name = $name;
         $this->wildcard = $wildcard;
-        $this->retrieve_by_name = $retrieve_by_name;
-        $this->retrieve_by_wildcard = $retrieve_by_wildcard;
+        $this->remotedir_relative_path = $remotedir_relative_path ?? "/";
+        $this->remotedir_absolute_path = $remotedir_absolute_path ?? "/";
+        $this->use_file_extension = $use_file_extension;
         $this->description = $description;
 
         // associate reportfiletype
@@ -210,6 +219,16 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
         $this->save();
 
         return $this;
+    }
+
+    public function addReportFileAccess(AccessAccount $accessaccount, ReportServer $reportserver, AccessProtocole $accessprotocole): ReportFileAccess
+    {
+        return ReportFileAccess::createNew(
+            $this,
+            $accessaccount,
+            $reportserver,
+            $accessprotocole
+        );
     }
 
     private function setDefaultSelectedRetrieveActions() {

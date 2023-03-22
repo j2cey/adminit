@@ -15,8 +15,9 @@ use Illuminate\Foundation\Http\FormRequest;
  *
  * @property string $name
  * @property string|null $wildcard
- * @property bool|null $retrieve_by_name
- * @property bool|null $retrieve_by_wildcard
+ * @property string|null $remotedir_relative_path
+ * @property string|null $remotedir_absolute_path
+ * @property bool $use_file_extension
  *
  * @property string|null $description
  *
@@ -58,9 +59,5 @@ class ReportFileRequest extends FormRequest
     public function messages()
     {
         return ReportFile::messagesRules();
-    }
-
-    public static function getRetrieveTypeNormalized($value) {
-        return is_null($value) ? false : $value;
     }
 }

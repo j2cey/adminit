@@ -2,11 +2,19 @@
 
 namespace App\Http\Requests\DynamicAttributeType;
 
+use App\Models\Status;
 use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\DynamicAttributes\DynamicAttributeType;
 
-class UpdateDynamicAttributeTypeRequest extends FormRequest
+/**
+ * Class UpdateDynamicAttributeTypeRequest
+ * @package App\Http\Requests\DynamicAttributeType
+ *
+ * @property DynamicAttributeType $dynamicattributetype
+ *
+ */
+class UpdateDynamicAttributeTypeRequest extends DynamicAttributeTypeRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +31,20 @@ class UpdateDynamicAttributeTypeRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
-        return [
-            //
-        ];
+        return DynamicAttributeType::updateRules($this->dynamicattributetype);
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'status' => $this->getRelevantModel(Status::class, $this->input('status'),'code', true),
+        ]);
     }
 }

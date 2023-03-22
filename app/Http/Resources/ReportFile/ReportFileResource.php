@@ -21,8 +21,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *
  * @property string $name
  * @property string|null $wildcard
- * @property bool|null $retrieve_by_name
- * @property bool|null $retrieve_by_wildcard
+ *
+ * @property string|null $remotedir_relative_path
+ * @property string|null $remotedir_absolute_path
+ * @property bool $use_file_extension
  *
  * @property string|null $description
  *
@@ -57,8 +59,10 @@ class ReportFileResource extends JsonResource
 
             'name' => $this->name,
             'wildcard' => $this->wildcard,
-            'retrieve_by_name' => $this->retrieve_by_name,
-            'retrieve_by_wildcard' => $this->retrieve_by_wildcard,
+
+            'remotedir_relative_path' => $this->remotedir_relative_path,
+            'remotedir_absolute_path' => $this->remotedir_absolute_path,
+            'use_file_extension' => $this->use_file_extension,
 
             'retrieve_by_wildcard_label' => $this->retrieve_by_wildcard_label,
             'retrieve_by_name_label' => $this->retrieve_by_name_label,

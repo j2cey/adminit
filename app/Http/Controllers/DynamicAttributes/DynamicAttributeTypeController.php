@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\DynamicAttributes;
 
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Resources\DynamicAttributes\DynamicAttributeTypeResource;
@@ -49,11 +52,13 @@ class DynamicAttributeTypeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreDynamicAttributeTypeRequest $request
-     * @return void
+     * @return DynamicAttributeTypeResource
      */
     public function store(StoreDynamicAttributeTypeRequest $request)
     {
-        //
+        $dynamicattributetype = DynamicAttributeType::createNew($request->name, $request->code, $request->model_type, $request->status, $request->description);
+
+        return new DynamicAttributeTypeResource($dynamicattributetype);
     }
 
     /**
@@ -83,21 +88,25 @@ class DynamicAttributeTypeController extends Controller
      *
      * @param UpdateDynamicAttributeTypeRequest $request
      * @param DynamicAttributeType $dynamicattributetype
-     * @return void
+     * @return DynamicAttributeTypeResource
      */
     public function update(UpdateDynamicAttributeTypeRequest $request, DynamicAttributeType $dynamicattributetype)
     {
-        //
+        $dynamicattributetype->updateOne($request->name, $request->code, $request->model_type, $request->status, $request->description);
+
+        return new DynamicAttributeTypeResource($dynamicattributetype);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param DynamicAttributeType $dynamicattributetype
-     * @return void
+     * @return Application|Response|ResponseFactory
      */
     public function destroy(DynamicAttributeType $dynamicattributetype)
     {
-        //
+        $dynamicattributetype->delete();
+
+        return response('Delete Successfull', 200);
     }
 }

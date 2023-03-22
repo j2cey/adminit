@@ -25,9 +25,7 @@ class CreateReportFileAccessesTable extends Migration
 
             $table->string('name')->comment("nom de l accès");
             $table->string('code')->unique()->comment("code de l accès");
-
-            $table->boolean('retrieve_by_name')->default(false)->comment("Indique si le fichier doit être retrouvé par/ou en utilisant le nom");
-            $table->boolean('retrieve_by_wildcard')->default(false)->comment("Indique si le fichier doit être retrouvé par/ou en utilisant le caractère générique");
+            $table->string('port')->comment("port d accès");
 
             $table->string('description', 500)->nullable()->comment("description de l accès");
 

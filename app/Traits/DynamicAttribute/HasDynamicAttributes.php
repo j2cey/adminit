@@ -40,7 +40,7 @@ trait HasDynamicAttributes
 
     #region Custom Functions
 
-    public function addDynamicAttribute($name,DynamicAttributeType $attribute_type,$description) {
+    public function addDynamicAttribute($name,DynamicAttributeType $attribute_type, $description = null) {
         $num_ord = $this->dynamicattributes()->count() + 1;         // set the attribute number order
         $dynamicattribute = $this->dynamicattributes()->create([
             'name' => $name,
@@ -51,6 +51,21 @@ trait HasDynamicAttributes
         $dynamicattribute->save();                          // save the association from the DynamicAttribute
 
         return $dynamicattribute;
+    }
+
+    /**
+     * Add Many DynamicAttribute at once
+     * @param array $attributes Attributes array: [['name' => "name", 'type' => DynamicAttributeType, 'description' => "description"]]
+     * @return int
+     */
+    public function addDynamicAttributeMany(array $attributes) {
+        $nb_created = 0;
+
+        foreach ($attributes as $attribute) {
+            $this->addDynamicAttribute($attribute['name'], $attribute['type'], $attribute['description'] ?? null);
+        }
+
+        return $nb_created;
     }
 
     #endregion
