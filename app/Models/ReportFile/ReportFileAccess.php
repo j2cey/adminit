@@ -11,8 +11,10 @@ use App\Models\Access\AccessAccount;
 use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Storage;
 use App\Models\OsAndServer\ReportServer;
+use App\Models\RetrieveAction\RetrieveAction;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\Models\RetrieveAction\RetrieveActionType;
+use App\Contracts\RetrieveAction\IRetrieveAction;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
@@ -47,6 +49,8 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property AccessAccount $accessaccount
  * @property ReportServer $reportserver
  * @property AccessProtocole $accessprotocole
+ *
+ * @method static ReportFileAccess|null first()
  */
 class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
 {
@@ -240,69 +244,94 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
     public function executeTreatment() {
 
         // 1. Définir le disk en fonction du protocole
-        //$remoteDisk = $this->getDisk();
+        $remoteDisk = $this->getDisk();
+        //dd($this->getToPerformAfterRetrievingAction());
 
-        // 2. Récupère l'action à axécuter pour la Récupération du fichier (retrieve_mode)
+        // 2. Récupère l'action à exécuter pour la Récupération du fichier (retrieve_mode)
         $retrievemode_action = $this->getRetrieveModeAction();
-        //$retrievemode_action->action_class::execRetrieveAction($this->reportfile);
-        return $retrievemode_action;
-
-        // 3. Récupère l'action à axécuter après la Récupération du fichier (to_perform_after_retrieving)
-
+        $result = $retrievemode_action::execAction($remoteDisk ,$this->reportfile);
+        if ($result[0]){
+            // 3. Récupère l'action à exécuter après la Récupération du fichier (to_perform_after_retrieving)
+            $to_perform_after_retrieving = $this->getToPerformAfterRetrievingAction();
+            $result = $to_perform_after_retrieving::execAction($remoteDisk ,$this->reportfile);
+            dd($result);
+        }else {
+            dd($result);
+        }
     }
 
+    /**
+     * @return Filesystem
+     */
     private function getDisk(): Filesystem {
         return $this->accessprotocole->innerprotocole()::getDisk($this->accessaccount, $this->reportserver,21);// $this->getDisk(21);
     }
 
-    private function getRetrieveModeAction(): ?RetrieveAction
+    /**
+     * @return IRetrieveAction|null
+     */
+    private function getRetrieveModeAction()
     {
-        $retrievemode_action = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
+        $selected_retrievemode_action = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
             $query->with(['retrieveactiontype' => function () {
                 RetrieveActionType::retrieveMode();
             }]);
         }])->first();
-        return $retrievemode_action->retrieveaction ?? null;
+
+        return $selected_retrievemode_action->retrieveaction->action_class ?? null;
     }
 
-    private function getToPerformAfterRetrievingAction(): ?RetrieveAction
+    /**
+     * @return IRetrieveAction|null
+     */
+    private function getToPerformAfterRetrievingAction()
     {
-        $retrievemode_action = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
-            $query->with(['retrieveactiontype' => function () {
-                RetrieveActionType::retrieveMode();
+        foreach ($this->selectedretrieveactions as $selectedretrieveaction) {
+            if ($selectedretrieveaction->retrieveaction->retrieveactiontype->code === "to_perform_after_retrieving") {
+                return $selectedretrieveaction->retrieveaction->action_class;
+            }
+        }
+
+        return null;
+
+        $to_perform_after_retrieving = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
+            $query->with(['retrieveactiontype' => function ($query) {
+                RetrieveActionType::toPerformAfterRetrieving($query);
             }]);
         }])->first();
-        return $retrievemode_action->retrieveaction ?? null;
+        return $to_perform_after_retrieving->retrieveaction->action_class ?? null;
     }
 
 
 
 
+    public function renameRemoteFileStart(){
 
+    }
+
+
+    public function renameRemoteFileEnd(){
+
+    }
 
     public function renameRemoteFile(){
-        $file_name = "laravel_test" . "." . $this->reportfile->extension;
+        $file_name = "output_data_portal_files" . "." . $this->reportfile->extension;
         $remotedir_path = "/";
         $file_path_from = $remotedir_path . "/" . $file_name;
         $file_path_to = $remotedir_path . "/" . "laravel_test2" . "." . $this->reportfile->extension;
 
         $remoteDisk = $this->getDisk();
 
-        $result = $remoteDisk->rename($file_path_from, $file_path_to);
+        $remoteDisk->rename($file_path_from, $file_path_to);
+
+        $result = $remoteDisk;
 
         dd($result);
     }
 
-    public function renameRemoteFileStart(){
-
-    }
-
-    public function renameRemoteFileEnd(){
-
-    }
 
     public function deleteRemoteFile(){
-        $file_name = "laravel_test" . "." . $this->reportfile->extension;
+        $file_name = "output_data_portal_files" . "." . $this->reportfile->extension;
         $remotedir_path = "/";
         $file_path_from = $remotedir_path . "/" . $file_name;
 
@@ -314,7 +343,7 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
     }
 
     public function appendRemoteFile(){
-        $file_name = "laravel_test" . "." . $this->reportfile->extension;
+        $file_name = "output_data_portal_files" . "." . $this->reportfile->extension;
         $remotedir_path = "/";
         $file_path_from = $remotedir_path . "/" . $file_name;
         $text_to_append = 'onof';
@@ -327,7 +356,7 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
     }
 
     public function prependRemoteFile(){
-        $file_name = "laravel_test" . "." . $this->reportfile->extension;
+        $file_name = "output_data_portal_files" . "." . $this->reportfile->extension;
         $remotedir_path = "/";
         $file_path_from = $remotedir_path . "/" . $file_name;
         $text_to_prepend = 'gourde';
@@ -344,8 +373,9 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
         //$this->deleteRemoteFile();
         //$this->appendRemoteFile();
         //$this->prependRemoteFile();
-        $this->downloadByWildcard();
-        $file_name = "laravel_t.*"."." . $this->reportfile->extension; //$this->reportfile->name . $this->reportfile->extension; //
+        //$this->downloadByWildcard();
+        //$this->downloadByName();
+        $file_name = "output_data_portal_files"."." . $this->reportfile->extension; //$this->reportfile->name . $this->reportfile->extension; //
         $remotedir_path = "/";
         $file_path_from = $remotedir_path . "/" . $file_name;
 
@@ -404,6 +434,26 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
         }
         dd($nbrfiles);
     }
+
+    public function downloadByName(){
+    $file_name = "*." . "." . $this->reportfile->extension;
+    $remotedir_path = "/";
+    $file_path_from = $remotedir_path . "/" . $file_name;
+    $remoteDisk = $this->getDisk();
+    $name = "*". '.' . $this->reportfile->extension;
+    $files = $remoteDisk->allfiles();
+    $nbrfiles = 0;
+
+    foreach($files as $file){
+        if(str::is($file, $name)){
+            $nbrfiles += 1;
+            $local_file_name = md5($file . '_' . time() ). '.' . $this->reportfile->extension;
+            $result = storage::disk('public')->put('/collectedreportfiles/' . $local_file_name, $remoteDisk->readStream($remotedir_path . "/" .$file));
+
+        }
+    }
+     dd($nbrfiles);
+}
 
 
 

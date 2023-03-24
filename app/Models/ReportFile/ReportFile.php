@@ -44,6 +44,7 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  *
  * @property ReportFileType $reportfiletype
  * @property string $extension
+ * @property string $fileRemotePath
  * @property mixed $selectedretrieveactions
  */
 class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
@@ -118,6 +119,12 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
     public function getExtensionAttribute() {
         return $this->reportfiletype->extension;
     }
+
+    public function getFileRemotePathAttribute() {
+        //variable contenant le chemin , le nom , l'extension du rapport de fichier
+        return $file_path_from = $this->remotedir_relative_path . "/" . $this->name . ( $this->use_file_extension ? "." . $this->extension : "");
+    }
+
 
     /**
      * Retourne le type de récupération
