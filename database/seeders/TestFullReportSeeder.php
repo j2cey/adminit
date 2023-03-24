@@ -31,21 +31,22 @@ class TestFullReportSeeder extends Seeder
         $type_int = DynamicAttributeType::int()->first();
         $type_datetime = DynamicAttributeType::datetime()->first();
 
+        $the_report->addDynamicAttribute("label",$type_string,"Libellé");
+        $attribute_data = $the_report->addDynamicAttribute("data",$type_int,"La donnée");
+
         $the_report->addDynamicAttributeMany([
-            ['name' => "label", 'type' => $type_string],
-            ['name' => "data", 'type' => $type_int],
-            ['name' => "trend", 'type' => $type_string],
-            ['name' => "trend_date", 'type' => $type_datetime],
-            ['name' => "trend_times", 'type' => $type_int],
-            ['name' => "trend_step", 'type' => $type_int],
-            ['name' => "trend_cumul", 'type' => $type_int],
-            ['name' => "trend_age", 'type' => $type_string],
-            ['name' => "data_treated", 'type' => $type_int],
-            ['name' => "trend_hourOfWeek", 'type' => $type_string],
-            ['name' => "trend_hourOfWeek_date", 'type' => $type_datetime],
-            ['name' => "trend_hourOfWeek_times", 'type' => $type_int],
-            ['name' => "trend_hourOfWeek_step", 'type' => $type_int],
-            ['name' => "report_date", 'type' => $type_datetime],
+            ['name' => "trend", 'type' => $type_string,'description' => "La Tendance des changements de la donnée"],
+            ['name' => "trend_date", 'type' => $type_datetime, 'description' => "Date de la Tendance"],
+            ['name' => "trend_times", 'type' => $type_int, 'description' => "Nombre de repétition de la Tendance actuelle"],
+            ['name' => "trend_step", 'type' => $type_int, 'description' => "Différence (bond) vis-à-vis de la dernière donnée"],
+            ['name' => "trend_cumul", 'type' => $type_int, 'description' => "Cumule de données dans la tendance actuelle"],
+            ['name' => "trend_age", 'type' => $type_string, 'description' => "Age de la Tendance hh:mm:ss (différence entre ce date et le début de la Tendance actuelle)"],
+            ['name' => "data_treated", 'type' => $type_int, 'description' => "Cumule de Données traitées"],
+            ['name' => "trend_hourOfWeek", 'type' => $type_string, 'description' => "Tendance sur cette heure du jour dans la semaine"],
+            ['name' => "trend_hourOfWeek_date", 'type' => $type_datetime, 'description' => "Date de Tendance sur cette heure du jour dans la semaine"],
+            ['name' => "trend_hourOfWeek_times", 'type' => $type_int, 'description' => "Nombre de repétition ce cette Tendance sur cette heure du jour dans la semaine"],
+            ['name' => "trend_hourOfWeek_step", 'type' => $type_int, 'description' => "Différence (bond) vis-à-vis de la dernière donnée sur cette heure du jour dans la semaine"],
+            ['name' => "report_date", 'type' => $type_datetime, 'description' => "Date de génération du Rapport"],
         ]);
 
         $the_report_file = $the_report->addReportFile(

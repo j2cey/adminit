@@ -6,6 +6,11 @@ use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AnalysisRules\AnalysisRule;
 
+/**
+ * Class AnalysisRuleRequest
+ * @package App\Http\Requests\AnalysisRule
+ *
+ */
 class StoreAnalysisRuleRequest extends AnalysisRuleRequest
 {
     /**
@@ -36,9 +41,8 @@ class StoreAnalysisRuleRequest extends AnalysisRuleRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'dynamicattribute' => $this->setRelevantDynamicAttribute(
-                json_encode( ['id' => $this->input('dynamic_attribute_id')] ),'id', true
-            ),
+            'status' => $this->setRelevantStatus($this->input('status'),'code', false),
+            'dynamicattribute' => $this->setRelevantDynamicAttribute($this->input('dynamicattribute'),'id', false),
             'alert_when_allowed' => $this->setCheckOrOptionValue($this->input('alert_when_allowed')),
             'alert_when_broken' => $this->setCheckOrOptionValue($this->input('alert_when_broken')),
             'analysisruletype' => $this->setAnalysisRuleType($this->input('analysisruletype'), 'id'),

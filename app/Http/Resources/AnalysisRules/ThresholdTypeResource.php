@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources\AnalysisRules;
 
-use JsonSerializable;
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -22,10 +21,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *
  * @property string $label
  * @property string $code
+ * @property string $inner_threshold_class
  * @property string $description
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property Status $status
  */
 class ThresholdTypeResource extends JsonResource
 {
@@ -33,7 +35,7 @@ class ThresholdTypeResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param  Request  $request
-     * @return array|Arrayable|JsonSerializable
+     * @return array
      */
     public function toArray($request)
     {
@@ -44,6 +46,7 @@ class ThresholdTypeResource extends JsonResource
 
             'label' => $this->label,
             'code' => $this->code,
+            'inner_threshold_class' => $this->inner_threshold_class,
             'description' => $this->description,
 
             'created_at' => $this->created_at,

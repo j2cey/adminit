@@ -9,8 +9,8 @@ class CreateHighlightTextSizesTable extends Migration
 {
     use BaseMigrationTrait;
 
-    public $table_name = 'highlight_text_sizes';
-    public $table_comment = 'analysis analysishighlights text size';
+    public string $table_name = 'highlight_text_sizes';
+    public string $table_comment = 'analysis analysishighlights text size';
 
     /**
      * Run the migrations.
@@ -27,6 +27,7 @@ class CreateHighlightTextSizesTable extends Migration
 
             $table->baseFields();
         });
+        $this->setTableComment($this->table_name,$this->table_comment);
     }
 
     /**

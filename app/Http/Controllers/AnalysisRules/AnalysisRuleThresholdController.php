@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\AnalysisRules;
 
 use App\Http\Controllers\Controller;
-use App\Models\AnalysisRules\AnalysisRuleThreshold;
+use App\Models\AnalysisRuleThreshold\AnalysisRuleThreshold;
 use App\Http\Resources\AnalysisRules\AnalysisRuleThresholdResource;
 use App\Http\Requests\AnalysisRuleThreshold\StoreAnalysisRuleThresholdRequest;
 use App\Http\Requests\AnalysisRuleThreshold\UpdateAnalysisRuleThresholdRequest;

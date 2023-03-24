@@ -4,7 +4,7 @@ namespace App\Http\Requests\AnalysisHighlightType;
 
 use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\AnalysisRules\AnalysisHighlightType;
+use App\Models\AnalysisHighlight\AnalysisHighlightType;
 
 class AnalysisHighlightTypeRequest extends FormRequest
 {

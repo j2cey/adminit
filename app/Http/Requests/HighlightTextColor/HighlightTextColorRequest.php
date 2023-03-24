@@ -4,7 +4,7 @@ namespace App\Http\Requests\HighlightTextColor;
 
 use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\AnalysisRules\HighlightTextColor;
+use App\Models\AnalysisHighlight\HighlightTextColor;
 
 /**
  * Class HighlightTextColorRequest

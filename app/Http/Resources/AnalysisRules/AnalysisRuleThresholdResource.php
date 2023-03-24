@@ -3,6 +3,7 @@
 namespace App\Http\Resources\AnalysisRules;
 
 use JsonSerializable;
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
@@ -26,6 +27,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property Status $status
  */
 class AnalysisRuleThresholdResource extends JsonResource
 {

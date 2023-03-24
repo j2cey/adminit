@@ -9,8 +9,8 @@ class CreateThresholdTypesTable extends Migration
 {
     use BaseMigrationTrait;
 
-    public $table_name = 'threshold_types';
-    public $table_comment = 'threshold analysis rule types';
+    public string $table_name = 'threshold_types';
+    public string $table_comment = 'threshold analysis rule types';
 
     /**
      * Run the migrations.
@@ -24,10 +24,12 @@ class CreateThresholdTypesTable extends Migration
 
             $table->string('label')->comment('the threshold type label');
             $table->string('code')->comment('the threshold type code');
+            $table->string('inner_threshold_class')->comment('the inner threshold class name');
             $table->string('description')->nullable()->comment('the threshold type description');
 
             $table->baseFields();
         });
+        $this->setTableComment($this->table_name,$this->table_comment);
     }
 
     /**

@@ -33,6 +33,7 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property string|null $remotedir_relative_path
  * @property string|null $remotedir_absolute_path
  * @property bool $use_file_extension
+ * @property bool $has_headers
  *
  * @property string|null $description
  *
@@ -153,9 +154,10 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
      * @param string|null $remotedir_relative_path Chemin relatif du fichier sur le serveur distant
      * @param string|null $remotedir_absolute_path Chemin absolu du fichier sur le serveur distant
      * @param bool $use_file_extension Détermine si l extension du fichier doit être utilisé
+     * @param bool $has_headers Détermine si le fichier a les en-têtes en première ligne
      * @return ReportFile
      */
-    public static function createNew(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true): ReportFile
+    public static function createNew(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true, bool $has_headers = true): ReportFile
     {
         $reportfile = ReportFile::create([
             'name' => $name,
@@ -163,6 +165,7 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
             'remotedir_relative_path' => $remotedir_relative_path ?? "/",
             'remotedir_absolute_path' => $remotedir_absolute_path ?? "/",
             'use_file_extension' => $use_file_extension,
+            'has_headers' => $has_headers,
             'description' => $description,
         ]);
 
@@ -195,15 +198,17 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
      * @param string|null $remotedir_relative_path Chemin relatif du fichier sur le serveur distant
      * @param string|null $remotedir_absolute_path Chemin absolu du fichier sur le serveur distant
      * @param bool $use_file_extension Détermine si l extension du fichier doit être utilisé
+     * @param bool $has_headers Détermine si le fichier a les en-têtes en première ligne
      * @return $this
      */
-    public function updateOne(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true): ReportFile
+    public function updateOne(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true, bool $has_headers = false): ReportFile
     {
         $this->name = $name;
         $this->wildcard = $wildcard;
         $this->remotedir_relative_path = $remotedir_relative_path ?? "/";
         $this->remotedir_absolute_path = $remotedir_absolute_path ?? "/";
         $this->use_file_extension = $use_file_extension;
+        $this->has_headers = $has_headers;
         $this->description = $description;
 
         // associate reportfiletype

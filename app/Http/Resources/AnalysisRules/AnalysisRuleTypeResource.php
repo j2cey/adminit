@@ -3,6 +3,7 @@
 namespace App\Http\Resources\AnalysisRules;
 
 use JsonSerializable;
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
@@ -21,12 +22,15 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property integer|null $status_id
  *
  * @property string $name
+ * @property string $code
  * @property string $model_type
  * @property string $view_name
  * @property string $description
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property Status $status
  */
 class AnalysisRuleTypeResource extends JsonResource
 {
@@ -34,7 +38,7 @@ class AnalysisRuleTypeResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param  Request  $request
-     * @return array|Arrayable|JsonSerializable
+     * @return array
      */
     public function toArray($request)
     {
@@ -44,6 +48,7 @@ class AnalysisRuleTypeResource extends JsonResource
             'status' => StatusResource::make($this->status),
 
             'name' => $this->name,
+            'code' => $this->code,
             'model_type' => $this->model_type,
             'view_name' => $this->view_name,
             'description' => $this->description,

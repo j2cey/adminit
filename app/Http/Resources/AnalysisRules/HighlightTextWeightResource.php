@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\AnalysisRules\HighlightTextWeight;
+use App\Models\AnalysisHighlight\HighlightTextWeight;
 
 /**
  * Class HighlightTextWeightResource

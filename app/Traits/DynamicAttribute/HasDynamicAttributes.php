@@ -40,7 +40,8 @@ trait HasDynamicAttributes
 
     #region Custom Functions
 
-    public function addDynamicAttribute($name,DynamicAttributeType $attribute_type, $description = null) {
+    public function addDynamicAttribute($name,DynamicAttributeType $attribute_type, $description = null): DynamicAttribute
+    {
         $num_ord = $this->dynamicattributes()->count() + 1;         // set the attribute number order
         $dynamicattribute = $this->dynamicattributes()->create([
             'name' => $name,

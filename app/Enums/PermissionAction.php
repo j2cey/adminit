@@ -11,13 +11,13 @@ namespace App\Enums;
 class PermissionAction
 {
 
-    private $_actions = [
+    private array $_actions = [
         'list' => 4,
         'create' => 3,
         'update' => 1,
         'delete' => 1,
     ];
-    private $_permissionkey;
+    private string $_permissionkey;
 
     /**
      * @param string $permissionkey La clé de la permission

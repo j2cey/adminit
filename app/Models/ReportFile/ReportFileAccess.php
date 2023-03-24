@@ -11,6 +11,7 @@ use App\Models\Access\AccessAccount;
 use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Storage;
 use App\Models\OsAndServer\ReportServer;
+use App\Models\RetrieveAction\RetrieveAction;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\Models\RetrieveAction\RetrieveActionType;
 use App\Models\RetrieveAction\SelectedRetrieveAction;

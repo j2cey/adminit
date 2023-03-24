@@ -5,8 +5,8 @@ namespace App\Http\Requests\AnalysisHighlight;
 use App\Traits\Request\RequestTraits;
 use App\Models\AnalysisRules\AnalysisRule;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\AnalysisRules\AnalysisHighlight;
-use App\Models\AnalysisRules\AnalysisHighlightType;
+use App\Models\AnalysisHighlight\AnalysisHighlight;
+use App\Models\AnalysisHighlight\AnalysisHighlightType;
 
 /**
  * Class AnalysisHighlightRequest
