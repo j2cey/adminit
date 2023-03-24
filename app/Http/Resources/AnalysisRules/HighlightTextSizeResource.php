@@ -2,13 +2,12 @@
 
 namespace App\Http\Resources\AnalysisRules;
 
-use JsonSerializable;
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
-use Illuminate\Contracts\Support\Arrayable;
-use App\Models\AnalysisRules\HighlightTextSize;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\AnalysisHighlight\HighlightTextSize;
 
 /**
  * Class HighlightTextSizeResource
@@ -26,6 +25,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property Status $status
  */
 class HighlightTextSizeResource extends JsonResource
 {
@@ -33,7 +34,7 @@ class HighlightTextSizeResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param  Request  $request
-     * @return array|Arrayable|JsonSerializable
+     * @return array
      */
     public function toArray($request)
     {

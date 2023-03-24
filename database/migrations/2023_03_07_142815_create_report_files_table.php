@@ -29,6 +29,7 @@ class CreateReportFilesTable extends Migration
             $table->string('remotedir_relative_path')->nullable()->comment("chemin relatif du fichier sur le serveur distant");
             $table->string('remotedir_absolute_path')->nullable()->comment("chemin absolu du fichier sur le serveur distant");
             $table->string('use_file_extension')->default(true)->comment("détermine si l extension du fichier doit être utilisé");
+            $table->string('has_headers')->default(true)->comment("détermine si le fichier a les en-têtes en première ligne");
 
             $table->string('description', 500)->nullable()->comment("description du fichier");
 
@@ -43,7 +44,6 @@ class CreateReportFilesTable extends Migration
 
             $table->baseFields();
         });
-
         $this->setTableComment($this->table_name,$this->table_comment);
 
     }

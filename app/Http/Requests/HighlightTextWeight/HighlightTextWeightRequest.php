@@ -4,7 +4,7 @@ namespace App\Http\Requests\HighlightTextWeight;
 
 use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\AnalysisRules\HighlightTextWeight;
+use App\Models\AnalysisHighlight\HighlightTextWeight;
 
 /**
  * Class HighlightTextWeightRequest

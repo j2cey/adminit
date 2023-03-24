@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\AnalysisRules;
 
 use App\Http\Controllers\Controller;
-use App\Models\AnalysisRules\ThresholdType;
+use App\Models\AnalysisRuleThreshold\ThresholdType;
+use App\Http\Resources\AnalysisRules\ThresholdTypeResource;
 use App\Http\Requests\ThresholdType\StoreThresholdTypeRequest;
 use App\Http\Requests\ThresholdType\UpdateThresholdTypeRequest;
-use App\Http\Resources\AnalysisRules\ThresholdTypeResource;
 
 class ThresholdTypeController extends Controller
 {
     public function fetchall() {
         return ThresholdTypeResource::collection(ThresholdType::all());
     }
-
 
     public function fetch()
     {

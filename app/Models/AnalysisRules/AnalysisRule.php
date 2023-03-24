@@ -2,6 +2,7 @@
 
 namespace App\Models\AnalysisRules;
 
+use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -9,6 +10,7 @@ use App\Contracts\AnalysisRules\IInnerRule;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Models\AnalysisHighlight\AnalysisHighlight;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -36,6 +38,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property DynamicAttribute $dynamicattribute
+ * @property IInnerRule $innerrule
+ * @property AnalysisRuleType $analysisruletype
+ *
+ * @property mixed $whenallowedhighlights
+ * @property mixed $whenbrokenhighlights
  */
 class AnalysisRule extends BaseModel implements Auditable
 {
@@ -71,7 +80,8 @@ class AnalysisRule extends BaseModel implements Auditable
     public static function messagesRules()
     {
         return [
-
+            'title.required' => "Prière de renseigner le Titre",
+            'analysisruletype.required' => "Prière de renseigner le Type de Règle d'analyse",
         ];
     }
 
@@ -126,13 +136,71 @@ class AnalysisRule extends BaseModel implements Auditable
 
     #region Custom Functions
 
+    /**
+     * Crée (et stocke dans la base de données) une nouvelle Règle d'Analyse (AnalysisRule)
+     * @param DynamicAttribute $dynamicattribute L'Attribut
+     * @param AnalysisRuleType $analysisruletype Le Type de Règle d'Analyse
+     * @param string $title Le Titre
+     * @param Status|null $status Le Statut
+     * @param bool $alert_when_allowed Détermine si l'alerte doit être déclenchée si cette règle est respectée
+     * @param bool $alert_when_broken Détermine si l'alerte doit être déclenchée si cette règle est brisée
+     * @param string|null $description La Description
+     * @return AnalysisRule
+     */
+    public static function createNew(DynamicAttribute $dynamicattribute, AnalysisRuleType $analysisruletype, string $title, Status $status = null, bool $alert_when_allowed = false, bool $alert_when_broken = true, string $description = null): AnalysisRule
+    {
+        $innerrule = self::createInnerRule($analysisruletype);
+
+        $analysisrule = $innerrule->analysisrule()->create([
+            'title' => $title,
+            'alert_when_allowed' => $alert_when_allowed,
+            'alert_when_broken' => $alert_when_broken,
+            'description' => $description,
+        ]);
+
+        $analysisrule->dynamicattribute()->associate($dynamicattribute);
+        $analysisrule->analysisruletype()->associate($analysisruletype);
+
+        $analysisrule->status()->associate( $status ?? Status::default()->first() );
+
+        $analysisrule->save();
+
+        return $analysisrule;
+    }
+
+    /**
+     * Modifie (et stocke dans la base de données) cette Règle d'Analyse (AnalysisRule)
+     * @param AnalysisRuleType $analysisruletype Le Type de Règle d'Analyse
+     * @param string $title Le Titre
+     * @param Status|null $status Le Statut
+     * @param bool $alert_when_allowed Détermine si l'alerte doit être déclenchée si cette règle est respectée
+     * @param bool $alert_when_broken Détermine si l'alerte doit être déclenchée si cette règle est brisée
+     * @param string|null $description La Description
+     * @return $this
+     */
+    public function updateOne(AnalysisRuleType $analysisruletype, string $title, Status $status = null, bool $alert_when_allowed = false, bool $alert_when_broken = true, string $description = null): AnalysisRule {
+
+        $this->syncInnerRule($analysisruletype, $this->innerrule);
+
+        $this->title = $title;
+        $this->alert_when_allowed = $alert_when_allowed;
+        $this->alert_when_broken = $alert_when_broken;
+        $this->description = $description;
+
+        $this->status()->associate( $status ?? Status::default()->first() );
+
+        $this->save();
+
+        return $this;
+    }
+
     public static function createInnerRule(AnalysisRuleType $ruletype) : IInnerRule {
         return $ruletype->model_type::createNew();
     }
 
     private function syncInnerRule(AnalysisRuleType $ruletype, IInnerRule $innerrule) : IInnerRule {
 
-        if ( $this->highlighttype->id !== $ruletype->id ) {
+        if ( $this->analysisruletype->id !== $ruletype->id ) {
             // remove the old innerrule
             $this->removeInnerRule();
 
@@ -157,41 +225,6 @@ class AnalysisRule extends BaseModel implements Auditable
     public function removeInnerRule()
     {
         $this->innerrule->delete();
-    }
-
-    public static function createNew(DynamicAttribute $dynamicattribute, AnalysisRuleType $ruletype, $title, $alert_when_allowed, $alert_when_broken, $description): AnalysisRule {
-
-        $innerrule = self::createInnerRule($ruletype);
-
-        $analysisrule = $innerrule->analysisrule()->create([
-            'title' => $title,
-            'alert_when_allowed' => $alert_when_allowed,
-            'alert_when_broken' => $alert_when_broken,
-            'description' => $description,
-        ]);
-
-        $analysisrule->dynamicattribute()->associate($dynamicattribute);
-        $analysisrule->analysisruletype()->associate($ruletype);
-
-        $analysisrule->save();
-
-        return $analysisrule;
-    }
-
-    public function updateOne(AnalysisRuleType $ruletype, $title, $alert_when_allowed, $alert_when_broken, $description): AnalysisRule {
-
-        $this->syncInnerRule($ruletype, $this->innerrule);
-
-        $this->update([
-            'title' => $title,
-            'alert_when_allowed' => $alert_when_allowed,
-            'alert_when_broken' => $alert_when_broken,
-            'description' => $description,
-        ]);
-
-        $this->save();
-
-        return $this;
     }
 
     // Analysis Rule broken

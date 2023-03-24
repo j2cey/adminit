@@ -21,10 +21,10 @@ use Illuminate\Foundation\Http\FormRequest;
  * @property Status $status
  * @property AccessAccount $accessaccount
  */
-
 class AccessAccountRequest extends FormRequest
 {
     use RequestTraits;
+
     /**
      * Determine if the user is authorized to make this request.
      *

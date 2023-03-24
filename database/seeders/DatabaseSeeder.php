@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DynamicAttributeTypeSeeder::class);
 
         $this->call(ThresholdTypeSeeder::class);
+        $this->call(ComparisonTypeSeeder::class);
         $this->call(AnalysisRuleTypeSeeder::class);
         $this->call(AnalysisHighlightTypeSeeder::class);
 
@@ -48,5 +49,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RetrieveActionTypeSeeder::class);
         $this->call(RetrieveActionSeeder::class);
+
     }
 }

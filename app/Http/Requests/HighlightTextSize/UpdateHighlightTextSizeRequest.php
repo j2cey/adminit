@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\HighlightTextSize;
 
-use App\Models\AnalysisRules\HighlightTextSize;
+use App\Models\AnalysisHighlight\HighlightTextSize;
 
 class UpdateHighlightTextSizeRequest extends HighlightTextSizeRequest
 {

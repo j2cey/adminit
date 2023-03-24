@@ -90,7 +90,7 @@
             this.alert_when_broken = analysisrule.alert_when_broken || ''
             this.analysisruletype = analysisrule.analysisruletype || ''
             this.description = analysisrule.description || ''
-            this.dynamic_attribute_id = analysisrule.dynamic_attribute_id || ''
+            this.dynamicattribute = analysisrule.dynamicattribute || {}
         }
     }
     export default {
@@ -104,7 +104,7 @@
                 console.log('create_new_analysisrule received: ', attribute)
 
                 this.editing = false
-                this.analysisrule = new Analysisrule({})
+                this.analysisrule = new Analysisrule({'dynamicattribute': attribute})
                 this.analysisruleForm = new Form(this.analysisrule)
 
                 this.analysisruleForm.dynamic_attribute_id = attribute.id

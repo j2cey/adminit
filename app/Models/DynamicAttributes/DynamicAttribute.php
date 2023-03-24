@@ -6,6 +6,7 @@ use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\AnalysisRules\AnalysisRule;
+use App\Models\AnalysisRules\AnalysisRuleType;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -67,10 +68,9 @@ class DynamicAttribute extends BaseModel implements Auditable
         ]);
     }
 
-    public static function messagesRules()
-    {
+    public static function messagesRules() {
         return [
-
+            'name.required' => "Prière de renseigner le nom",
         ];
     }
 
@@ -122,6 +122,13 @@ class DynamicAttribute extends BaseModel implements Auditable
     #endregion
 
     #region Custom Functions
+
+    public function addAnalysisRule(AnalysisRuleType $analysisruletype, string $title, bool $alert_when_allowed, bool $alert_when_broken, string $description = null): AnalysisRule
+    {
+        return AnalysisRule::createNew($this,$analysisruletype,$title,$alert_when_allowed,$alert_when_broken,$description);
+    }
+
+
 
     public function addValue($thevalue, $new_row = false) {
         if ($new_row) {

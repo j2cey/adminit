@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\HighlightTextColor;
 
-use App\Models\AnalysisRules\HighlightTextColor;
+use App\Models\AnalysisHighlight\HighlightTextColor;
 
 class StoreHighlightTextColorRequest extends HighlightTextColorRequest
 {

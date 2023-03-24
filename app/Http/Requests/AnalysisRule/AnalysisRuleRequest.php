@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\AnalysisRule;
 
+use App\Models\Status;
 use App\Traits\Request\RequestTraits;
 use App\Models\AnalysisRules\AnalysisRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -25,6 +26,8 @@ use App\Models\DynamicAttributes\DynamicAttribute;
  *
  * @property AnalysisRuleType $analysisruletype
  * @property DynamicAttribute $dynamicattribute
+ *
+ * @property Status $status
  */
 class AnalysisRuleRequest extends FormRequest
 {
@@ -48,5 +51,15 @@ class AnalysisRuleRequest extends FormRequest
     public function rules()
     {
         return AnalysisRule::defaultRules();
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return AnalysisRule::messagesRules();
     }
 }

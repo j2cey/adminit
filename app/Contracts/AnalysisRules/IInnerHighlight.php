@@ -4,7 +4,7 @@
 namespace App\Contracts\AnalysisRules;
 
 use OwenIt\Auditing\Contracts\Auditable;
-use App\Models\AnalysisRules\AnalysisHighlight;
+use App\Models\AnalysisHighlight\AnalysisHighlight;
 
 interface IInnerHighlight extends Auditable
 {

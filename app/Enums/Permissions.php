@@ -42,8 +42,18 @@ abstract class Permissions
     public static function ReportFile() : PermissionAction {
         return new PermissionAction("reportfile");
     }
+
     public static function ThresholdType() : PermissionAction {
         return new PermissionAction("thresholdtype");
+    }
+    public static function AnalysisRuleThreshold() : PermissionAction {
+        return new PermissionAction("analysisrulethreshold");
+    }
+    public static function ThresholdMax() : PermissionAction {
+        return new PermissionAction("thresholdmax");
+    }
+    public static function ThresholdMin() : PermissionAction {
+        return new PermissionAction("thresholdmin");
     }
 
     public static function AccessAccount() : PermissionAction {
@@ -78,5 +88,24 @@ abstract class Permissions
     }
     public static function RetrieveActionValue() : PermissionAction {
         return new PermissionAction("retrieveactionvalue");
+    }
+
+    public static function ComparisonType() : PermissionAction {
+        return new PermissionAction("comparisontype");
+    }
+    public static function AnalysisRuleComparison() : PermissionAction {
+        return new PermissionAction("analysisrulecomparison");
+    }
+    public static function ComparisonLessThan() : PermissionAction {
+        return new PermissionAction("comparisonlessthan");
+    }
+    public static function ComparisonGreaterThan() : PermissionAction {
+        return new PermissionAction("comparisongreaterthan");
+    }
+    public static function ComparisonEqual() : PermissionAction {
+        return new PermissionAction("comparisonequal");
+    }
+    public static function ComparisonNotEqual() : PermissionAction {
+        return new PermissionAction("comparisonnotequal");
     }
 }

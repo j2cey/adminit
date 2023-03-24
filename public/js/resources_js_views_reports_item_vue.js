@@ -1199,33 +1199,11 @@ var render = function render() {
     staticClass: "col-md-6 col-sm-4 col-12 text-right"
   }, [_c("span", {
     staticClass: "text text-sm"
-  }, [_c("a", {
-    staticClass: "btn btn-tool text-success",
-    attrs: {
-      type: "button",
-      "data-toggle": "tooltip"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.showFlowchart(_vm.report);
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fa fa-eye"
-  })]), _vm._v(" "), _c("a", {
-    staticClass: "btn btn-tool text-warning",
-    attrs: {
-      type: "button",
-      "data-toggle": "tooltip"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.editReport(_vm.report);
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fa fa-pencil-square-o"
-  })]), _vm._v(" "), _c("a", {
+  }, [_vm.report.reportfiles.length > 0 ? _c("span", {
+    staticClass: "badge badge-success"
+  }, [_vm._v("\n                                " + _vm._s(_vm.report.attributes.length) + "\n                            ")]) : _c("span", {
+    staticClass: "badge badge-danger"
+  }, [_vm._v("\n                                " + _vm._s(_vm.report.attributes.length) + "\n                            ")]), _vm._v(" "), _c("a", {
     staticClass: "btn btn-tool",
     attrs: {
       type: "button",
@@ -1240,18 +1218,6 @@ var render = function render() {
     }
   }, [_c("i", {
     "class": _vm.currentCollapseIcon
-  })]), _vm._v(" "), _c("a", {
-    staticClass: "btn btn-tool text-danger",
-    attrs: {
-      type: "button"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.deleteReport(_vm.report.uuid, _vm.index);
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-trash"
   })])])])])]), _vm._v(" "), _c("div", {
     staticClass: "card-content panel-collapse collapse in",
     attrs: {
@@ -1406,7 +1372,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "dt[data-v-60b93169] {\n  float: left;\n  clear: left;\n  width: 110px;\n  font-weight: bold;\n}\ndt[data-v-60b93169]::after {\n  content: \":\";\n}\ndd[data-v-60b93169] {\n  margin: 0 0 0 80px;\n  padding: 0 0 0.5em 0;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "dt[data-v-60b93169] {\n  float: left;\n  clear: left;\n  width: 110px;\n  font-weight: bold;\n}\ndt[data-v-60b93169]::after {\n  content: \":\";\n}\ndd[data-v-60b93169] {\n  margin: 0 0 0 80px;\n  padding: 0 0 0.5em 0;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 

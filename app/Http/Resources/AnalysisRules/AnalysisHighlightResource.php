@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
 use Illuminate\Contracts\Support\Arrayable;
-use App\Models\AnalysisRules\AnalysisHighlight;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\AnalysisHighlight\AnalysisHighlight;
 
 /**
  * Class AnalysisHighlightResource

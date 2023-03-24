@@ -5,9 +5,13 @@ namespace Tests;
 use Closure;
 use App\Models\User;
 use Illuminate\Support\Fluent;
+use App\Models\Reports\Report;
+use App\Models\Reports\ReportType;
 use Illuminate\Database\SQLiteConnection;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\SQLiteBuilder;
+use App\Models\DynamicAttributes\DynamicAttribute;
+use App\Models\DynamicAttributes\DynamicAttributeType;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -70,5 +74,25 @@ abstract class TestCase extends BaseTestCase
         $this->assertAuthenticated();
 
         return $user;
+    }
+
+    /**
+     * @param $title
+     * @return Report
+     */
+    protected function create_new_report($title)
+    {
+        $reporttype = ReportType::defaultReport()->first();
+        return Report::createNew($title,$reporttype,"new report desc");
+    }
+
+    /**
+     * @param $title
+     * @return DynamicAttribute
+     */
+    protected function create_new_dynamicattribute($title)
+    {
+        return $this->create_new_report("new report")
+            ->addDynamicAttribute("new dynamicattribute",DynamicAttributeType::string()->first());
     }
 }

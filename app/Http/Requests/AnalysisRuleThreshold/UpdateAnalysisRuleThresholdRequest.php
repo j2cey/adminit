@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests\AnalysisRuleThreshold;
 
-use App\Models\AnalysisRules\AnalysisRuleThreshold;
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
+use App\Models\AnalysisRuleThreshold\AnalysisRuleThreshold;
 
 /**
  * Class UpdateAnalysisRuleThresholdRequest
  * @package App\Http\Requests\AnalysisRuleThreshold
  *
+ * @property AnalysisRuleThreshold $analysisrulethreshold
  */
 class UpdateAnalysisRuleThresholdRequest extends AnalysisRuleThresholdRequest
 {
@@ -18,7 +21,7 @@ class UpdateAnalysisRuleThresholdRequest extends AnalysisRuleThresholdRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can( Permissions::AnalysisRuleThreshold()->update() );
     }
 
     /**
@@ -40,6 +43,7 @@ class UpdateAnalysisRuleThresholdRequest extends AnalysisRuleThresholdRequest
     {
         $this->merge([
             'thresholdtype' => $this->setRelevantThresholdType($this->input('thresholdtype'), "code", true),
+            'status' => $this->setRelevantStatus($this->input('status'),'code', true),
         ]);
     }
 }

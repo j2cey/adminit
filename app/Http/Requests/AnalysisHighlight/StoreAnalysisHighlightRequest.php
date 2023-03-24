@@ -4,7 +4,7 @@ namespace App\Http\Requests\AnalysisHighlight;
 
 use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
-use App\Models\AnalysisRules\AnalysisHighlight;
+use App\Models\AnalysisHighlight\AnalysisHighlight;
 
 class StoreAnalysisHighlightRequest extends AnalysisHighlightRequest
 {

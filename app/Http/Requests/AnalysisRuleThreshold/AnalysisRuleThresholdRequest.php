@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\AnalysisRuleThreshold;
 
+use App\Models\Status;
 use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\AnalysisRules\AnalysisRuleThreshold;
+use App\Models\AnalysisRuleThreshold\ThresholdType;
+use App\Models\AnalysisRuleThreshold\AnalysisRuleThreshold;
 
 /**
  * Class AnalysisRuleThresholdRequest
@@ -13,7 +15,9 @@ use App\Models\AnalysisRules\AnalysisRuleThreshold;
  * @property integer $threshold
  *
  * @property string $comment
- * @property mixed $thresholdtype
+ *
+ * @property Status $status
+ * @property ThresholdType $thresholdtype
  */
 class AnalysisRuleThresholdRequest extends FormRequest
 {
@@ -37,5 +41,15 @@ class AnalysisRuleThresholdRequest extends FormRequest
     public function rules()
     {
         return AnalysisRuleThreshold::defaultRules();
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return AnalysisRuleThreshold::messagesRules();
     }
 }

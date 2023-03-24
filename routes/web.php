@@ -30,22 +30,30 @@ use App\Http\Controllers\OsAndServer\ReportServerController;
 use App\Http\Controllers\ReportFile\ReportFileTypeController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleController;
 use App\Http\Controllers\OsAndServer\OsArchitectureController;
+use App\Http\Controllers\AnalysisRules\ThresholdMinController;
+use App\Http\Controllers\AnalysisRules\ThresholdMaxController;
 use App\Http\Controllers\AnalysisRules\ThresholdTypeController;
 use App\Http\Controllers\Reportsetting\ReportsettingController;
 use App\Http\Controllers\ReportFile\ReportFileAccessController;
 use App\Http\Controllers\RetrieveAction\RetrieveActionController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
-use App\Http\Controllers\AnalysisRules\AnalysisHighlightController;
-use App\Http\Controllers\AnalysisRules\HighlightTextSizeController;
-use App\Http\Controllers\AnalysisRules\HighlightTextColorController;
 use App\Http\Controllers\RetrieveAction\RetrieveActionTypeController;
-use App\Http\Controllers\AnalysisRules\HighlightTextWeightController;
 use App\Http\Controllers\DynamicAttributes\DynamicAttributeController;
 use App\Http\Controllers\RetrieveAction\RetrieveActionValueController;
+use App\Http\Controllers\AnalysisHighlight\AnalysisHighlightController;
+use App\Http\Controllers\AnalysisHighlight\HighlightTextSizeController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleThresholdController;
-use App\Http\Controllers\AnalysisRules\AnalysisHighlightTypeController;
+use App\Http\Controllers\AnalysisHighlight\HighlightTextColorController;
+use App\Http\Controllers\AnalysisHighlight\HighlightTextWeightController;
+use App\Http\Controllers\AnalysisRuleComparison\ComparisonTypeController;
 use App\Http\Controllers\RetrieveAction\SelectedRetrieveActionController;
+use App\Http\Controllers\AnalysisRuleComparison\ComparisonEqualController;
 use App\Http\Controllers\DynamicAttributes\DynamicAttributeTypeController;
+use App\Http\Controllers\AnalysisHighlight\AnalysisHighlightTypeController;
+use App\Http\Controllers\AnalysisRuleComparison\ComparisonNotEqualController;
+use App\Http\Controllers\AnalysisRuleComparison\ComparisonLessThanController;
+use App\Http\Controllers\AnalysisRuleComparison\ComparisonGreaterThanController;
+use App\Http\Controllers\AnalysisRuleComparison\AnalysisRuleComparisonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -382,4 +390,33 @@ Route::resource('retrieveactionvalues',RetrieveActionValueController::class)->mi
 Route::get('retrieveactionvalues.fetch',[RetrieveActionValueController::class,'fetch'])
     ->name('retrieveactionvalues.fetch')
     ->middleware('auth');
+
+Route::resource('thresholdmins',ThresholdMinController::class)->middleware('auth');
+Route::get('thresholdmins.fetch',[ThresholdMinController::class,'fetch'])
+    ->name('thresholdmins.fetch')
+    ->middleware('auth');
+
+Route::resource('thresholdmaxes',ThresholdMaxController::class)->middleware('auth');
+Route::get('thresholdmaxes.fetch',[ThresholdMaxController::class,'fetch'])
+    ->name('thresholdmaxes.fetch')
+    ->middleware('auth');
+
+Route::resource('comparisontypes',ComparisonTypeController::class)->middleware('auth');
+Route::get('comparisontypes.fetchall',[ComparisonTypeController::class,'fetchall'])
+    ->name('comparisontypes.fetchall')
+    ->middleware('auth');
+
+Route::resource('analysisrulecomparisons',AnalysisRuleComparisonController::class)->middleware('auth');
+Route::get('analysisrulecomparisons.fetchall',[AnalysisRuleComparisonController::class,'fetchall'])
+    ->name('analysisrulecomparisons.fetchall')
+    ->middleware('auth');
+
+Route::resource('comparisonlessthans',ComparisonLessThanController::class)->middleware('auth');
+
+Route::resource('comparisongreaterthans',ComparisonGreaterThanController::class)->middleware('auth');
+
+Route::resource('comparisonequals',ComparisonEqualController::class)->middleware('auth');
+
+Route::resource('comparisonnotequals',ComparisonNotEqualController::class)->middleware('auth');
+
 

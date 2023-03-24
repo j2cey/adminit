@@ -9,8 +9,8 @@ class CreateAnalysisRuleThresholdsTable extends Migration
 {
     use BaseMigrationTrait;
 
-    public $table_name = 'analysis_rule_thresholds';
-    public $table_comment = 'threshold analysis rules';
+    public string $table_name = 'analysis_rule_thresholds';
+    public string $table_comment = 'threshold analysis rules';
 
     /**
      * Run the migrations.
@@ -30,8 +30,12 @@ class CreateAnalysisRuleThresholdsTable extends Migration
 
             $table->string('comment')->nullable()->comment('analysis threshold rule comment');
 
+            $table->string('innerthreshold_type')->comment('referenced inner threshold model (class name)');
+            $table->bigInteger('innerthreshold_id')->comment('referenced inner threshold model id (object id)');
+
             $table->baseFields();
         });
+        $this->setTableComment($this->table_name,$this->table_comment);
     }
 
     /**

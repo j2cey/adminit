@@ -26,7 +26,7 @@ var Analysisrule = /*#__PURE__*/_createClass(function Analysisrule(analysisrule)
   this.alert_when_broken = analysisrule.alert_when_broken || '';
   this.analysisruletype = analysisrule.analysisruletype || '';
   this.description = analysisrule.description || '';
-  this.dynamic_attribute_id = analysisrule.dynamic_attribute_id || '';
+  this.dynamicattribute = analysisrule.dynamicattribute || {};
 });
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "analysisrule-addupdate",
@@ -40,7 +40,9 @@ var Analysisrule = /*#__PURE__*/_createClass(function Analysisrule(analysisrule)
       var attribute = _ref.attribute;
       console.log('create_new_analysisrule received: ', attribute);
       _this.editing = false;
-      _this.analysisrule = new Analysisrule({});
+      _this.analysisrule = new Analysisrule({
+        'dynamicattribute': attribute
+      });
       _this.analysisruleForm = new Form(_this.analysisrule);
       _this.analysisruleForm.dynamic_attribute_id = attribute.id;
       _this.formTitle = 'Create New Analysis Rule';
