@@ -108,4 +108,8 @@ abstract class Permissions
     public static function ComparisonNotEqual() : PermissionAction {
         return new PermissionAction("comparisonnotequal");
     }
+    public static function CollectedReportFile() : PermissionAction
+    {
+        return new PermissionAction("collectedreportfile");
+    }
 }

@@ -4,11 +4,14 @@ namespace Tests;
 
 use Closure;
 use App\Models\User;
+use App\Models\Status;
 use Illuminate\Support\Fluent;
 use App\Models\Reports\Report;
 use App\Models\Reports\ReportType;
+use App\Models\ReportFile\ReportFile;
 use Illuminate\Database\SQLiteConnection;
 use Illuminate\Database\Schema\Blueprint;
+use App\Models\ReportFile\ReportFileType;
 use Illuminate\Database\Schema\SQLiteBuilder;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\DynamicAttributes\DynamicAttributeType;
@@ -94,5 +97,11 @@ abstract class TestCase extends BaseTestCase
     {
         return $this->create_new_report("new report")
             ->addDynamicAttribute("new dynamicattribute",DynamicAttributeType::string()->first());
+    }
+
+    public function create_new_reportfile($report_title, $file_name): ReportFile {
+        $reporttype = ReportType::defaultReport()->first();
+        $report = Report::createNew($report_title,$reporttype,"new report file");
+        return ReportFile::createNew($report, ReportFileType::txt()->first(), Status::default()->first(), $file_name);
     }
 }
