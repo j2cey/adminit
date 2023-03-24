@@ -90,18 +90,21 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param $title
+     * @param $name
      * @return DynamicAttribute
      */
-    protected function create_new_dynamicattribute($title)
+    protected function create_new_dynamicattribute($name)
     {
         return $this->create_new_report("new report")
-            ->addDynamicAttribute("new dynamicattribute",DynamicAttributeType::string()->first());
+            ->addDynamicAttribute($name,DynamicAttributeType::string()->first());
     }
 
-    public function create_new_reportfile($report_title, $file_name): ReportFile {
-        $reporttype = ReportType::defaultReport()->first();
-        $report = Report::createNew($report_title,$reporttype,"new report file");
-        return ReportFile::createNew($report, ReportFileType::txt()->first(), Status::default()->first(), $file_name);
+    /**
+     * @param $file_name
+     * @return ReportFile
+     */
+    public function create_new_reportfile($file_name) {
+        return $this->create_new_report("new report")
+            ->addReportFile(ReportFileType::txt()->first(),$file_name);
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use App\Enums\ValueTypeEnum;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -29,10 +30,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $updated_at
  *
  * @method static DynamicAttributeType create(array $array)
- * @method static string()
- * @method static int()
- * @method static datetime()
- * @method static boolean()
+ * @method static Builder string()
+ * @method static Builder int()
+ * @method static Builder datetime()
+ * @method static Builder boolean()
+ * @method static DynamicAttributeType first()
  */
 class DynamicAttributeType extends BaseModel implements Auditable
 {

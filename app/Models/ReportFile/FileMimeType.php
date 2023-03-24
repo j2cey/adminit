@@ -5,6 +5,7 @@ namespace App\Models\ReportFile;
 use App\Models\BaseModel;
 use App\Traits\Code\HasCode;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -27,11 +28,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @method static jpg()
- * @method static png()
- * @method static bmp()
- * @method static csv()
- * @method static txt()
+ * @method static Builder jpg()
+ * @method static Builder png()
+ * @method static Builder bmp()
+ * @method static Builder csv()
+ * @method static Builder txt()
  */
 class FileMimeType extends BaseModel implements Auditable
 {

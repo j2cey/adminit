@@ -708,3 +708,7 @@ Did you mean one of these?
 #62 /var/www/adminit/vendor/phpunit/phpunit/phpunit(98): PHPUnit\\TextUI\\Command::main()
 #63 {main}
 "} 
+[2023-03-24 06:26:53] local.ERROR: Cannot use App\Http\Controllers\AnalysisHighlight\AnalysisHighlightController as AnalysisHighlightController because the name is already in use {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot use App\\Http\\Controllers\\AnalysisHighlight\\AnalysisHighlightController as AnalysisHighlightController because the name is already in use at /var/www/adminit/routes/web.php:47)
+[stacktrace]
+#0 {main}
+"} 

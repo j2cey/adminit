@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Base\Uuidable;
 use Illuminate\Support\Carbon;
 use App\Traits\Base\HasDefault;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,9 +28,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @method static default()
- * @method static active()
- * @method static inactive()
+ * @method static Builder default()
+ * @method static Builder active()
+ * @method static Builder inactive()
  */
 class Status extends Model implements Auditable
 {

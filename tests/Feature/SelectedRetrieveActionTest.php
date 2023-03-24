@@ -182,7 +182,7 @@ class SelectedRetrieveActionTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $report_file = $this->add_new_reportfile("new reportfile");
+        $report_file = $this->create_new_reportfile("new reportfile");
         $report_file->removeAllSelectedActions(true);
 
         $response = $this->put('selectedretrieveactions.addtomodel/',
@@ -212,7 +212,7 @@ class SelectedRetrieveActionTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $report_file = $this->add_new_reportfile("new reportfile");
+        $report_file = $this->create_new_reportfile("new reportfile");
         $report_file->removeAllSelectedActions(true);
 
         $response = $this->put('selectedretrieveactions.addtomodel/',
@@ -242,7 +242,7 @@ class SelectedRetrieveActionTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $report_file = $this->add_new_reportfile("new reportfile");
+        $report_file = $this->create_new_reportfile("new reportfile");
         $report_file->removeAllSelectedActions(true);
 
         $selectedretrieveaction = $report_file->addSelectedAction(RetrieveAction::retrieveByName()->first());
@@ -286,19 +286,6 @@ class SelectedRetrieveActionTest extends TestCase
             'retrieveaction' => $retrieveaction,
             'status' => $status,
         ];
-    }
-
-
-    private function add_new_reportfile($title): ReportFile
-    {
-        $reporttype = ReportType::defaultReport()->first();
-        $report = Report::createNew("new report",$reporttype,"sdsd");
-
-        return ReportFile::createNew($report,
-            ReportFileType::csv()->first(),
-            Status::active()->first(),
-            $title
-        );
     }
 
     #endregion

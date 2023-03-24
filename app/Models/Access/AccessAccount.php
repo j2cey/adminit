@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $updated_at
  *
  * @property Status $status
+ * @method static AccessAccount first()
  */
 class AccessAccount extends BaseModel implements Auditable
 {

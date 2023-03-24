@@ -48,6 +48,8 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property AccessAccount $accessaccount
  * @property ReportServer $reportserver
  * @property AccessProtocole $accessprotocole
+ *
+ * @method static ReportFileAccess first()
  */
 class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
 {
