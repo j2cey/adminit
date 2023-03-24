@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @method static OsFamily first()
  */
 class OsFamily extends BaseModel implements Auditable
 {

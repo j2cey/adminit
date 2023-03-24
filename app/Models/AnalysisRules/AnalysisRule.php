@@ -45,6 +45,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property mixed $whenallowedhighlights
  * @property mixed $whenbrokenhighlights
+ * @method static AnalysisRule first()
  */
 class AnalysisRule extends BaseModel implements Auditable
 {

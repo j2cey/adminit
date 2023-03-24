@@ -55,7 +55,7 @@ class ReportFileAccessTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $reportfile = $this->get_new_reportfile("new report", "new file");
+        $reportfile = $this->create_new_reportfile("new report", "new file");
         $reportserver = $this->get_new_reportserver("new serveur","10.10.10.10","new_serveur_dns");
         $protocole_ftp = AccessProtocole::ftp()->first();
         $accessaccount = AccessAccount::createNew("new_accout","new_account_pwd","new_account@email.com","new account");
@@ -108,7 +108,7 @@ class ReportFileAccessTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $reportfile = $this->get_new_reportfile("new report", "new file");
+        $reportfile = $this->create_new_reportfile("new report", "new file");
         $reportserver = $this->get_new_reportserver("new serveur","10.10.10.10","new_serveur_dns");
         $protocole_ftp = AccessProtocole::ftp()->first();
         $accessaccount = AccessAccount::createNew("new_accout","new_account_pwd","new_account@email.com","new account");
@@ -127,7 +127,7 @@ class ReportFileAccessTest extends TestCase
 
         $reportfileaccess = ReportFileAccess::first();
 
-        $another_reportfile = $this->get_new_reportfile("another report", "another file");
+        $another_reportfile = $this->create_new_reportfile("another report", "another file");
         $another_reportserver = $this->get_new_reportserver("another serveur","10.10.10.11","another_serveur_dns");
         $protocole_sftp = AccessProtocole::sftp()->first();
         $another_accessaccount = AccessAccount::createNew("another_accout","another_account_pwd","another_account@email.com","another account");
@@ -169,7 +169,7 @@ class ReportFileAccessTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $reportfile = $this->get_new_reportfile("new report", "new file");
+        $reportfile = $this->create_new_reportfile("new report", "new file");
         $reportserver = $this->get_new_reportserver("new serveur","10.10.10.10","new_serveur_dns");
         $protocole_ftp = AccessProtocole::ftp()->first();
         $accessaccount = AccessAccount::createNew("new_accout","new_account_pwd","new_account@email.com","new account");

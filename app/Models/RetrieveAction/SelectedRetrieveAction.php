@@ -8,6 +8,7 @@ use App\Traits\Code\HasCode;
 use App\Enums\ValueTypeEnum;
 use Illuminate\Support\Carbon;
 use App\Models\ReportFile\ReportFile;
+use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\ReportFile\ReportFileAccess;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,7 +36,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property ReportFileAccess $reportfileaccess
  * @property RetrieveAction $retrieveaction
  * @property mixed $retrieveactionvalues
-*/
+ *
+ * @method static SelectedRetrieveAction first()
+ */
 class SelectedRetrieveAction extends BaseModel implements Auditable
 {
     use HasFactory, HasCode, \OwenIt\Auditing\Auditable;
@@ -100,13 +103,13 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
 
     /**
      * Crée (et stocke dans la base de données) une nouvelle action de récupération (RetrieveAction)
-     * @param RetrieveAction $retrieveaction L'action
+     * @param Model|RetrieveAction $retrieveaction L'action
      * @param string|null $code Code de selection
      * @param Status|null $status Statut
      * @param string|null $description Description de la sélection
      * @return SelectedRetrieveAction
      */
-    public static function createNew(RetrieveAction $retrieveaction, string $code = null, Status $status = null, string $description = null): SelectedRetrieveAction
+    public static function createNew(Model|RetrieveAction $retrieveaction, string $code = null, Status $status = null, string $description = null): SelectedRetrieveAction
     {
         $selectedretrieveaction = SelectedRetrieveAction::create([
             'code' => $code,

@@ -4,6 +4,7 @@ namespace App\Models\AnalysisRules;
 
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Contracts\AnalysisRules\IInnerRule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,8 +29,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @method static threshold()
- * @method static comparison()
+ * @method static Builder threshold()
+ * @method static Builder comparison()
+ * @method static AnalysisRuleType first()
  */
 class AnalysisRuleType extends BaseModel implements Auditable
 {

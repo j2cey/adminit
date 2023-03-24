@@ -7,6 +7,7 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use App\Models\ReportFile\ReportFile;
+use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\ReportFile\ReportFileType;
 use App\Traits\DynamicAttribute\HasDynamicAttributes;
@@ -81,11 +82,11 @@ class Report extends BaseModel implements Auditable
     /**
      * Crée (et stocke dans la base de données) un nouvel objet Report
      * @param string $title Le Titre du Rapport
-     * @param ReportType $reporttype Le Type du Rapport
+     * @param Model|ReportType $reporttype Le Type du Rapport
      * @param string $description La Description
      * @return Report
      */
-    public static function createNew(string $title, ReportType $reporttype, string $description): Report {
+    public static function createNew(string $title, Model|ReportType $reporttype, string $description): Report {
         $report = Report::create([
             'title' => $title,
             'description' => $description,
@@ -117,7 +118,17 @@ class Report extends BaseModel implements Auditable
         return $this;
     }
 
-    public function addReportFile(ReportFileType $reportfiletype, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true): ReportFile
+    /**
+     * @param Model|ReportFileType $reportfiletype
+     * @param string $name
+     * @param string|null $wildcard
+     * @param string|null $description
+     * @param string|null $remotedir_relative_path
+     * @param string|null $remotedir_absolute_path
+     * @param bool $use_file_extension
+     * @return ReportFile
+     */
+    public function addReportFile(Model|ReportFileType $reportfiletype, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true): ReportFile
     {
         return ReportFile::createNew(
             $this,

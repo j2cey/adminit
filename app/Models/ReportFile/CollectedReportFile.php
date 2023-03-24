@@ -37,6 +37,7 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property Carbon $updated_at
  *
  * @property ReportFile $reportfile
+ * @method static CollectedReportFile first()
  */
 class CollectedReportFile extends BaseModel implements Auditable
 {
