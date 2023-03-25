@@ -6,6 +6,7 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use App\Traits\Code\HasCode;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -28,8 +29,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @method static retrieveMode()
- * @method static toPerformAfterRetrieving()
+ * @method static Builder retrieveMode()
+ * @method static Builder toPerformAfterRetrieving()
+ * @method static Builder toPerformBeforeRetrieving()
+ * @method static RetrieveActionType first()
  */
 class RetrieveActionType extends BaseModel implements Auditable
 {

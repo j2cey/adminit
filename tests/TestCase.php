@@ -13,6 +13,8 @@ use Illuminate\Database\SQLiteConnection;
 use Illuminate\Database\Schema\Blueprint;
 use App\Models\ReportFile\ReportFileType;
 use Illuminate\Database\Schema\SQLiteBuilder;
+use App\Models\DynamicAttributes\DynamicAttribute;
+use App\Models\DynamicAttributes\DynamicAttributeType;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -77,9 +79,32 @@ abstract class TestCase extends BaseTestCase
         return $user;
     }
 
-    public function get_new_reportfile($report_title, $file_name): ReportFile {
+    /**
+     * @param $title
+     * @return Report
+     */
+    protected function create_new_report($title)
+    {
         $reporttype = ReportType::defaultReport()->first();
-        $report = Report::createNew($report_title,$reporttype,"new report file");
-        return ReportFile::createNew($report, ReportFileType::txt()->first(), Status::default()->first(), $file_name);
+        return Report::createNew($title,$reporttype,"new report desc");
+    }
+
+    /**
+     * @param $name
+     * @return DynamicAttribute
+     */
+    protected function create_new_dynamicattribute($name)
+    {
+        return $this->create_new_report("new report")
+            ->addDynamicAttribute($name,DynamicAttributeType::string()->first());
+    }
+
+    /**
+     * @param $file_name
+     * @return ReportFile
+     */
+    public function create_new_reportfile($file_name) {
+        return $this->create_new_report("new report")
+            ->addReportFile(ReportFileType::txt()->first(),$file_name);
     }
 }

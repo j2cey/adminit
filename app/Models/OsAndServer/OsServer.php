@@ -28,6 +28,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property OsArchitecture $osarchitecture
+ * @property OsFamily $osfamily
+ *
+ * @method static OsServer first()
  */
 class OsServer extends BaseModel  implements Auditable
 {

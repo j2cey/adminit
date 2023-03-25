@@ -4,6 +4,7 @@ namespace App\Models\Reports;
 
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -25,7 +26,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @method static defaultReport()
+ * @method static Builder defaultReport()
  */
 class ReportType extends BaseModel implements Auditable
 {

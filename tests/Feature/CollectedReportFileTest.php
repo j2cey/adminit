@@ -47,7 +47,7 @@ class CollectedReportFileTest extends TestCase
         //$collectedreportfile_count_before_test = CollectedReportFile::all()->count();
 
         $user = $this->authenticated_user_admin();
-        $reportfile = $this->get_new_reportfile("new report", "new file");
+        $reportfile = $this->create_new_reportfile("new file");
 
         $response = $this->add_new_collectedreportfile($reportfile,
             "new i name",
@@ -90,7 +90,7 @@ class CollectedReportFileTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $reportfile = $this->get_new_reportfile("new report", "new file");
+        $reportfile = $this->create_new_reportfile("new file");
         $response = $this->add_new_collectedreportfile($reportfile,
             "new initial name",
             "new local name",
@@ -132,7 +132,7 @@ class CollectedReportFileTest extends TestCase
         //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
-        $reportfile = $this->get_new_reportfile("new report", "new file");
+        $reportfile = $this->create_new_reportfile("new file");
 
         $response = $this->add_new_collectedreportfile($reportfile,
             "new initial name",

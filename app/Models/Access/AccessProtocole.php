@@ -6,6 +6,7 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use App\Traits\Code\HasCode;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Contracts\AccessProtocole\IProtocole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,8 +31,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @method static ftp()
- * @method static sftp()
+ *
+ * @method static Builder ftp()
+ * @method static Builder sftp()
+ * @method static AccessProtocole first()
  */
 class AccessProtocole extends BaseModel implements Auditable
 

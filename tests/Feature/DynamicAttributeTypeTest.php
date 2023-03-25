@@ -104,7 +104,7 @@ class DynamicAttributeTypeTest extends TestCase
      */
     public function test_aDynamicAttributeType_can_be_updated_from_the_database()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
@@ -145,7 +145,7 @@ class DynamicAttributeTypeTest extends TestCase
      */
     public function test_aDynamicAttributeType_can_be_deleted()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 

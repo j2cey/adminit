@@ -47,17 +47,14 @@
                         </div>
                         <div class="col-md-6 col-sm-4 col-12 text-right">
                             <span class="text text-sm">
-                                <a type="button" class="btn btn-tool text-success" data-toggle="tooltip" @click="showFlowchart(report)">
-                                    <i class="fa fa-eye"></i>
-                                </a>
-                                <a type="button" class="btn btn-tool text-warning" data-toggle="tooltip" @click="editReport(report)">
-                                    <i class="fa fa-pencil-square-o"></i>
-                                </a>
+                                <span v-if="report.reportfiles.length > 0" class="badge badge-success">
+                                    {{ report.attributes.length }}
+                                </span>
+                                <span v-else class="badge badge-danger">
+                                    {{ report.attributes.length }}
+                                </span>
                                 <a type="button" class="btn btn-tool" @click="collapseClicked(collapse_icon)" data-toggle="collapse" :data-parent="'#reportwrapper_' + report.uuid" :href="'#collapse-reports-'+index">
                                     <i :class="currentCollapseIcon"></i>
-                                </a>
-                                <a type="button" class="btn btn-tool text-danger" @click="deleteReport(report.uuid, index)">
-                                    <i class="fas fa-trash"></i>
                                 </a>
                             </span>
                         </div>

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\AnalysisRules\AnalysisHighlightType;
+use App\Models\AnalysisHighlight\AnalysisHighlightType;
 
 class AnalysisHighlightTypeSeeder extends Seeder
 {

@@ -23,6 +23,7 @@ class CreateAnalysisRuleTypesTable extends Migration
             $table->id();
 
             $table->string('name')->comment('name of the analysis rule type');
+            $table->string('code')->comment('code of the analysis rule type');
             $table->string('model_type')->comment('referenced model (class name)');
             $table->string('view_name')->comment('name view of the inner rule');
             $table->string('description')->nullable()->comment('analysis rule type description');

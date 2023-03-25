@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\AnalysisRules;
 
+use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Models\AnalysisRules\AnalysisRule;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Http\Resources\AnalysisRules\AnalysisRuleResource;
 use App\Http\Requests\AnalysisRule\StoreAnalysisRuleRequest;
 use App\Http\Requests\AnalysisRule\UpdateAnalysisRuleRequest;
@@ -40,7 +43,7 @@ class AnalysisRuleController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreAnalysisRuleRequest $request
-     * @return AnalysisRuleResource|DynamicAttributeResource|void
+     * @return AnalysisRuleResource
      */
     public function store(StoreAnalysisRuleRequest $request)
     {
@@ -48,6 +51,7 @@ class AnalysisRuleController extends Controller
             $request->dynamicattribute,
             $request->analysisruletype,
             $request->title,
+            $request->status,
             $request->alert_when_allowed,
             $request->alert_when_broken,
             $request->description
@@ -82,13 +86,14 @@ class AnalysisRuleController extends Controller
      *
      * @param UpdateAnalysisRuleRequest $request
      * @param AnalysisRule $analysisrule
-     * @return AnalysisRuleResource|void
+     * @return AnalysisRuleResource
      */
     public function update(UpdateAnalysisRuleRequest $request, AnalysisRule $analysisrule)
     {
         $analysisrule->updateOne(
             $request->analysisruletype,
             $request->title,
+            $request->status,
             $request->alert_when_allowed,
             $request->alert_when_broken,
             $request->description
@@ -101,12 +106,12 @@ class AnalysisRuleController extends Controller
      * Remove the specified resource from storage.
      *
      * @param AnalysisRule $analysisrule
-     * @return JsonResponse|void
+     * @return Application|ResponseFactory|Response
      */
     public function destroy(AnalysisRule $analysisrule)
     {
         $analysisrule->delete();
 
-        return response()->json(['status' => 'ok'], 200);
+        return response('Delete Successfull', 200);
     }
 }

@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @method static ReportServer first()
  */
 class ReportServer extends BaseModel implements Auditable
 {
@@ -89,7 +91,7 @@ class ReportServer extends BaseModel implements Auditable
 
     /**
      * Crée (et stocke dans la base de données) un nouveau Serveur
-     * @param OsServer $osserver Le Système d'exploitation
+     * @param Model|OsServer $osserver Le Système d'exploitation
      * @param string $name Le Nom du Serveur
      * @param string $ip_address L'adresse IP du Serveur
      * @param string $domain_name Le nom DNS du Serveur
@@ -97,7 +99,7 @@ class ReportServer extends BaseModel implements Auditable
      * @param string $description La Description
      * @return ReportServer
      */
-    public static function createNew(OsServer $osserver, string $name, string $ip_address, string $domain_name, Status $status = null, string $description = ""): ReportServer
+    public static function createNew(Model|OsServer $osserver, string $name, string $ip_address, string $domain_name, Status $status = null, string $description = ""): ReportServer
     {
         $reportserver = ReportServer::create([
             'name' => $name,
@@ -117,7 +119,7 @@ class ReportServer extends BaseModel implements Auditable
 
     /**
      * Met à jour (et stocke dans la base de données) ce Serveur
-     * @param OsServer $osserver Le Système d'exploitation
+     * @param Model|OsServer $osserver Le Système d'exploitation
      * @param string $name Le Nom du Serveur
      * @param string $ip_address L'adresse IP du Serveur
      * @param string $domain_name Le nom DNS du Serveur
@@ -125,7 +127,7 @@ class ReportServer extends BaseModel implements Auditable
      * @param string $description La Description
      * @return $this
      */
-    public function updateOne(OsServer $osserver, string $name, string $ip_address, string $domain_name, Status $status = null, string $description = ""): ReportServer
+    public function updateOne(Model|OsServer $osserver, string $name, string $ip_address, string $domain_name, Status $status = null, string $description = ""): ReportServer
     {
         $this->name = $name;
         $this->domain_name = $domain_name;

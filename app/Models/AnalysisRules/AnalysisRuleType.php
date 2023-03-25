@@ -4,6 +4,7 @@ namespace App\Models\AnalysisRules;
 
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Contracts\AnalysisRules\IInnerRule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,12 +21,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer|null $status_id
  *
  * @property string $name
+ * @property string $code
  * @property string|IInnerRule $model_type
  * @property string $view_name
  * @property string $description
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @method static Builder threshold()
+ * @method static Builder comparison()
+ * @method static AnalysisRuleType first()
  */
 class AnalysisRuleType extends BaseModel implements Auditable
 {
@@ -38,6 +44,7 @@ class AnalysisRuleType extends BaseModel implements Auditable
     public static function defaultRules() {
         return [
             'name' => ['required'],
+            'code' => ['required'],
             'model_type' => ['required'],
             'view_name' => ['required'],
         ];
@@ -61,16 +68,29 @@ class AnalysisRuleType extends BaseModel implements Auditable
 
     #endregion
 
+    #region Scopes
+    public function scopeThreshold($query) {
+
+        return $query
+            ->where('code', "threshold");
+    }
+    public function scopeComparison($query) {
+        return $query
+            ->where('code', "comparison");
+    }
+    #endregion
+
     #region Eloquent Relationships
 
     #endregion
 
     #region Custom Functions
 
-    public static function createNew($name,$model_type,$view_name,$description): AnalysisRuleType {
+    public static function createNew($name,$code,$model_type,$view_name,$description): AnalysisRuleType {
 
         $attributetype = AnalysisRuleType::create([
             'name' => $name,
+            'code' => $code,
             'model_type' => $model_type,
             'view_name' => $view_name,
             'description' => $description,

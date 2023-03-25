@@ -2,8 +2,16 @@
 
 namespace App\Http\Requests\AnalysisRuleThreshold;
 
-use App\Models\AnalysisRules\AnalysisRuleThreshold;
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
+use App\Models\AnalysisRuleThreshold\ThresholdType;
+use App\Models\AnalysisRuleThreshold\AnalysisRuleThreshold;
 
+/**
+ * Class StoreAnalysisRuleThresholdRequest
+ * @package App\Http\Requests\StoreAnalysisRuleThreshold
+ *
+ */
 class StoreAnalysisRuleThresholdRequest extends AnalysisRuleThresholdRequest
 {
     /**
@@ -13,7 +21,7 @@ class StoreAnalysisRuleThresholdRequest extends AnalysisRuleThresholdRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->can( Permissions::AnalysisRuleThreshold()->create() );
     }
 
     /**
@@ -24,5 +32,18 @@ class StoreAnalysisRuleThresholdRequest extends AnalysisRuleThresholdRequest
     public function rules()
     {
         return AnalysisRuleThreshold::createRules();
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'status' => $this->setRelevantStatus($this->input('status'),'code', false),
+            'thresholdtype' => $this->getRelevantModel(ThresholdType::class, $this->input('thresholdtype'),'id', false),
+        ]);
     }
 }

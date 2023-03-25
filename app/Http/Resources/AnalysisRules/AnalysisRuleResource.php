@@ -8,6 +8,8 @@ use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
 use App\Models\AnalysisRules\AnalysisRule;
 use Illuminate\Contracts\Support\Arrayable;
+use App\Contracts\AnalysisRules\IInnerRule;
+use App\Models\AnalysisRules\AnalysisRuleType;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -35,6 +37,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property IInnerRule $innerrule
+ * @property AnalysisRuleType $analysisruletype
+ *
+ * @property mixed $whenallowedhighlights
+ * @property mixed $whenbrokenhighlights
  */
 class AnalysisRuleResource extends JsonResource
 {

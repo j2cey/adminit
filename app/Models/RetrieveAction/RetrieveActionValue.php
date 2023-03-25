@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  *
  * @property SelectedRetrieveAction $selectedretrieveaction
+ * @method static RetrieveActionValue first()
  */
 class RetrieveActionValue extends BaseModel implements Auditable
 {

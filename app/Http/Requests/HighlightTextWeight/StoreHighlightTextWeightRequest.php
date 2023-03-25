@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\HighlightTextWeight;
 
-use App\Models\AnalysisRules\HighlightTextWeight;
+use App\Models\AnalysisHighlight\HighlightTextWeight;
 
 class StoreHighlightTextWeightRequest extends HighlightTextWeightRequest
 {

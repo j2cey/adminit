@@ -18,12 +18,12 @@ use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
 use App\Models\AnalysisRules\AnalysisRule;
 use App\Models\OsAndServer\OsArchitecture;
-use App\Models\AnalysisRules\ThresholdType;
 use App\Models\AnalysisRules\AnalysisRuleType;
 use App\Models\RetrieveAction\RetrieveActionType;
 use App\Models\DynamicAttributes\DynamicAttribute;
-use App\Models\AnalysisRules\AnalysisHighlightType;
+use App\Models\AnalysisRuleThreshold\ThresholdType;
 use App\Models\DynamicAttributes\DynamicAttributeType;
+use App\Models\AnalysisHighlight\AnalysisHighlightType;
 
 trait RequestTraits
 {

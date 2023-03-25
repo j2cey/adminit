@@ -3,16 +3,17 @@
 
 namespace App\Traits\AnalysisRules;
 
-use App\Models\AnalysisRules\AnalysisHighlight;
+use App\Models\AnalysisHighlight\AnalysisHighlight;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 trait IsInnerHighlight
 {
     use \OwenIt\Auditing\Auditable;
 
+    public $highlight_value;
+
     #region Eloquent Relationships
 
-    public $highlight_value;
 
     /**
      * @return morphOne

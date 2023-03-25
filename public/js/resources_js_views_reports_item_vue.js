@@ -1199,33 +1199,11 @@ var render = function render() {
     staticClass: "col-md-6 col-sm-4 col-12 text-right"
   }, [_c("span", {
     staticClass: "text text-sm"
-  }, [_c("a", {
-    staticClass: "btn btn-tool text-success",
-    attrs: {
-      type: "button",
-      "data-toggle": "tooltip"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.showFlowchart(_vm.report);
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fa fa-eye"
-  })]), _vm._v(" "), _c("a", {
-    staticClass: "btn btn-tool text-warning",
-    attrs: {
-      type: "button",
-      "data-toggle": "tooltip"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.editReport(_vm.report);
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fa fa-pencil-square-o"
-  })]), _vm._v(" "), _c("a", {
+  }, [_vm.report.reportfiles.length > 0 ? _c("span", {
+    staticClass: "badge badge-success"
+  }, [_vm._v("\n                                " + _vm._s(_vm.report.attributes.length) + "\n                            ")]) : _c("span", {
+    staticClass: "badge badge-danger"
+  }, [_vm._v("\n                                " + _vm._s(_vm.report.attributes.length) + "\n                            ")]), _vm._v(" "), _c("a", {
     staticClass: "btn btn-tool",
     attrs: {
       type: "button",
@@ -1240,18 +1218,6 @@ var render = function render() {
     }
   }, [_c("i", {
     "class": _vm.currentCollapseIcon
-  })]), _vm._v(" "), _c("a", {
-    staticClass: "btn btn-tool text-danger",
-    attrs: {
-      type: "button"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.deleteReport(_vm.report.uuid, _vm.index);
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-trash"
   })])])])])]), _vm._v(" "), _c("div", {
     staticClass: "card-content panel-collapse collapse in",
     attrs: {

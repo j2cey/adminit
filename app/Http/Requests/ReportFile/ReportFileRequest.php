@@ -18,6 +18,7 @@ use Illuminate\Foundation\Http\FormRequest;
  * @property string|null $remotedir_relative_path
  * @property string|null $remotedir_absolute_path
  * @property bool $use_file_extension
+ * @property bool $has_headers
  *
  * @property string|null $description
  *

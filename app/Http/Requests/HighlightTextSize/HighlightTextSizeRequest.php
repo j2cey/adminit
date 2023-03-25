@@ -4,7 +4,7 @@ namespace App\Http\Requests\HighlightTextSize;
 
 use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\AnalysisRules\HighlightTextSize;
+use App\Models\AnalysisHighlight\HighlightTextSize;
 
 /**
  * Class HighlightTextSizeRequest

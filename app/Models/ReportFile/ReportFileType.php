@@ -5,6 +5,7 @@ namespace App\Models\ReportFile;
 use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -29,8 +30,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @method static csv()
- * @method static txt()
+ * @method static Builder csv()
+ * @method static Builder txt()
  */
 class ReportFileType extends BaseModel implements Auditable
 {
