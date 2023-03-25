@@ -31,6 +31,8 @@ use App\Models\DynamicAttributes\DynamicAttributeType;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @method static create(string[] $array)
  */
 class Report extends BaseModel implements Auditable
 {

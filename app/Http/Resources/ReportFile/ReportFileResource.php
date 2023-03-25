@@ -11,8 +11,8 @@ use App\Models\ReportFile\ReportFileType;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * Class StatusResource
- * @package App\Http\Resources
+ * Class ReportFileResource
+ * @package App\Http\Resources\ReportFile
  *
  * @property integer $id
  * @property string $uuid

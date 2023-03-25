@@ -28,13 +28,20 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property string $local_file_name
  * @property string|null $file_size
  *
- *
  * @property string|null $description
  *
  * @property integer|null $report_file_id
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property int $nb_rows
+ * @property int $nb_rows_import_success
+ * @property int $nb_rows_import_failed
+ * @property int $nb_rows_import_processing
+ * @property int $nb_rows_import_processed
+ * @property int $row_last_import_processed
+ * @property int $nb_import_try
  *
  * @property ReportFile $reportfile
  * @method static CollectedReportFile first()

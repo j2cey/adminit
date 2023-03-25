@@ -38,6 +38,7 @@ use App\Http\Controllers\ReportFile\ReportFileAccessController;
 use App\Http\Controllers\RetrieveAction\RetrieveActionController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
 use App\Http\Controllers\ReportFile\CollectedReportFileController;
+use App\Http\Controllers\ReportTreatments\OperationResultController;
 use App\Http\Controllers\RetrieveAction\RetrieveActionTypeController;
 use App\Http\Controllers\DynamicAttributes\DynamicAttributeController;
 use App\Http\Controllers\RetrieveAction\RetrieveActionValueController;
@@ -48,11 +49,13 @@ use App\Http\Controllers\AnalysisHighlight\HighlightTextColorController;
 use App\Http\Controllers\AnalysisHighlight\HighlightTextWeightController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonTypeController;
 use App\Http\Controllers\RetrieveAction\SelectedRetrieveActionController;
+use App\Http\Controllers\ReportTreatments\ReportTreatmentResultController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonEqualController;
 use App\Http\Controllers\DynamicAttributes\DynamicAttributeTypeController;
 use App\Http\Controllers\AnalysisHighlight\AnalysisHighlightTypeController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonNotEqualController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonLessThanController;
+use App\Http\Controllers\ReportTreatments\ReportTreatmentStepResultController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonGreaterThanController;
 use App\Http\Controllers\AnalysisRuleComparison\AnalysisRuleComparisonController;
 
@@ -424,5 +427,9 @@ Route::resource('comparisongreaterthans',ComparisonGreaterThanController::class)
 Route::resource('comparisonequals',ComparisonEqualController::class)->middleware('auth');
 
 Route::resource('comparisonnotequals',ComparisonNotEqualController::class)->middleware('auth');
+
+Route::resource('reporttreatmentresults',ReportTreatmentResultController::class)->middleware('auth');
+Route::resource('reporttreatmentstepresults',ReportTreatmentStepResultController::class)->middleware('auth');
+Route::resource('operationresults',OperationResultController::class)->middleware('auth');
 
 

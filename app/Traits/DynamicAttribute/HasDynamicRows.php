@@ -5,6 +5,9 @@ namespace App\Traits\DynamicAttribute;
 
 use App\Models\DynamicAttributes\DynamicRow;
 
+/**
+ * @property DynamicRow $latestDynamicrow
+ */
 trait HasDynamicRows
 {
     /**

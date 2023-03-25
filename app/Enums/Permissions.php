@@ -112,4 +112,16 @@ abstract class Permissions
     {
         return new PermissionAction("collectedreportfile");
     }
+    public static function ReportTreatmentResult() : PermissionAction
+    {
+        return new PermissionAction("reporttreatmentresult");
+    }
+    public static function ReportTreatmentStepResult() : PermissionAction
+    {
+        return new PermissionAction("reporttreatmentstepresult");
+    }
+    public static function OperationResult() : PermissionAction
+    {
+        return new PermissionAction("operationresult");
+    }
 }
