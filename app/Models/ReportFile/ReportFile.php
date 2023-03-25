@@ -44,6 +44,7 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * @property Report $report
  * @property ReportFileType $reportfiletype
  * @property string $extension
  * @property mixed $selectedretrieveactions

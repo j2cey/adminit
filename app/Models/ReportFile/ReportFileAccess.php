@@ -14,6 +14,7 @@ use App\Models\OsAndServer\ReportServer;
 use App\Models\RetrieveAction\RetrieveAction;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\Models\RetrieveAction\RetrieveActionType;
+use App\Contracts\RetrieveAction\IRetrieveAction;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
@@ -247,8 +248,7 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
 
         // 2. Récupère l'action à axécuter pour la Récupération du fichier (retrieve_mode)
         $retrievemode_action = $this->getRetrieveModeAction();
-        //$retrievemode_action->action_class::execRetrieveAction($this->reportfile);
-        return $retrievemode_action;
+        $retrievemode_action::execRetrieveAction($this->reportfile);
 
         // 3. Récupère l'action à axécuter après la Récupération du fichier (to_perform_after_retrieving)
 
@@ -258,24 +258,24 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
         return $this->accessprotocole->innerprotocole()::getDisk($this->accessaccount, $this->reportserver,21);// $this->getDisk(21);
     }
 
-    private function getRetrieveModeAction(): ?RetrieveAction
+    private function getRetrieveModeAction(): ?IRetrieveAction
     {
         $retrievemode_action = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
             $query->with(['retrieveactiontype' => function () {
                 RetrieveActionType::retrieveMode();
             }]);
         }])->first();
-        return $retrievemode_action->retrieveaction ?? null;
+        return $retrievemode_action->retrieveaction->action_class ?? null;
     }
 
-    private function getToPerformAfterRetrievingAction(): ?RetrieveAction
+    private function getToPerformAfterRetrievingAction(): ?IRetrieveAction
     {
         $retrievemode_action = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
             $query->with(['retrieveactiontype' => function () {
                 RetrieveActionType::retrieveMode();
             }]);
         }])->first();
-        return $retrievemode_action->retrieveaction ?? null;
+        return $retrievemode_action->retrieveaction->action_class ?? null;
     }
 
 

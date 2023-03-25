@@ -3,9 +3,13 @@
 
 namespace App\Traits\DynamicAttribute;
 
+use Illuminate\Database\Eloquent\Model;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 
+/**
+ * @property DynamicAttribute[] $dynamicattributes
+ */
 trait HasDynamicAttributes
 {
     use HasDynamicRows;
@@ -40,7 +44,13 @@ trait HasDynamicAttributes
 
     #region Custom Functions
 
-    public function addDynamicAttribute($name,DynamicAttributeType $attribute_type, $description = null): DynamicAttribute
+    /**
+     * @param $name
+     * @param Model|DynamicAttributeType $attribute_type
+     * @param string|null $description
+     * @return DynamicAttribute
+     */
+    public function addDynamicAttribute($name,Model|DynamicAttributeType $attribute_type, string $description = null): DynamicAttribute
     {
         $num_ord = $this->dynamicattributes()->count() + 1;         // set the attribute number order
         $dynamicattribute = $this->dynamicattributes()->create([

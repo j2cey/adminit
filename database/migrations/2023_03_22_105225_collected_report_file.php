@@ -10,8 +10,8 @@ class CollectedReportFile extends Migration
 {
     use BaseMigrationTrait;
 
-    public $table_name = 'collected_report_files';
-    public $table_comment = 'liste des rapports de fichiers collectés';
+    public string $table_name = 'collected_report_files';
+    public string $table_comment = 'liste des rapports de fichiers collectés';
 
     /**
      * Run the migrations.
@@ -27,6 +27,14 @@ class CollectedReportFile extends Migration
             $table->string('local_file_name')->comment("nom local du rapport du fichier collecté");
             $table->string('file_size')->comment("Taille du rapport du fichier collecté");
             $table->string('description', 500)->nullable()->comment("description du type de fichier");
+
+            $table->integer('nb_rows')->default(0)->comment("total rows");
+            $table->integer('nb_rows_import_success')->default(0)->comment("total number of rows successfully imported");
+            $table->integer('nb_rows_import_failed')->default(0)->comment("total number of rows import failed");
+            $table->integer('nb_rows_import_processing')->default(0)->comment("total number of rows import processing");
+            $table->integer('nb_rows_import_processed')->default(0)->comment("total number of rows import processed");
+            $table->integer('row_last_import_processed')->default(0)->comment("last line import processed");
+            $table->integer('nb_import_try')->default(0)->comment("number of import processing attempts");
 
             $table->foreignId('report_file_id')->nullable()
                 ->comment('clé reférence du report_file')

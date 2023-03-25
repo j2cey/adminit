@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property DynamicAttributeType $attributetype
  */
 class DynamicAttribute extends BaseModel implements Auditable
 {
@@ -125,7 +126,7 @@ class DynamicAttribute extends BaseModel implements Auditable
 
     public function addAnalysisRule(AnalysisRuleType $analysisruletype, string $title, bool $alert_when_allowed, bool $alert_when_broken, string $description = null): AnalysisRule
     {
-        return AnalysisRule::createNew($this,$analysisruletype,$title,$alert_when_allowed,$alert_when_broken,$description);
+        return AnalysisRule::createNew($this,$analysisruletype,$title,null,$alert_when_allowed,$alert_when_broken,$description);
     }
 
 
