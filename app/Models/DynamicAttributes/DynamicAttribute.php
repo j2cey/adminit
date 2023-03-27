@@ -4,9 +4,11 @@ namespace App\Models\DynamicAttributes;
 
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\AnalysisRules\AnalysisRule;
 use App\Models\AnalysisRules\AnalysisRuleType;
+use App\Models\ReportFile\CollectedReportFile;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -131,13 +133,13 @@ class DynamicAttribute extends BaseModel implements Auditable
 
 
 
-    public function addValue($thevalue, $new_row = false) {
+    public function addValue(Model|CollectedReportFile $collectedfile, $thevalue, $new_row = false) {
         if ($new_row) {
             // get new row
-            $values_row = DynamicRow::createNew($this->hasdynamicattribute);
+            $values_row = DynamicRow::createNew($collectedfile);
         } else {
             // get last row
-            $values_row = $this->hasdynamicattribute->latestDynamicrow;
+            $values_row = $collectedfile->latestDynamicrow;
         }
 
         return $this->values()->create()        // create new value object

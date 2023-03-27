@@ -49,6 +49,7 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property string $extension
  * @property string $fileRemotePath
  * @property mixed $selectedretrieveactions
+ * @property CollectedReportFile[] $collectedreportfiles
  *
  * @method static ReportFile first()
  */
@@ -111,6 +112,10 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
     {
         return $this->hasMany(SelectedRetrieveAction::class,'report_file_id');
     }
+    public function collectedreportfiles(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CollectedReportFile::class,'report_file_id');
+    }
 
     #endregion
 
@@ -127,7 +132,7 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
 
     public function getFileRemotePathAttribute() {
         //variable contenant le chemin , le nom , l'extension du rapport de fichier
-        return $file_path_from = $this->remotedir_relative_path . "/" . $this->name . ( $this->use_file_extension ? "." . $this->extension : "");
+        return $this->remotedir_relative_path . "/" . $this->name . ( $this->use_file_extension ? "." . $this->extension : "");
     }
 
 
@@ -237,7 +242,7 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
         return $this;
     }
 
-    public function addReportFileAccess(AccessAccount $accessaccount, ReportServer $reportserver, AccessProtocole $accessprotocole): ReportFileAccess
+    public function addReportFileAccess(Model|AccessAccount $accessaccount, Model|ReportServer $reportserver, Model|AccessProtocole $accessprotocole): ReportFileAccess
     {
         return ReportFileAccess::createNew(
             $this,

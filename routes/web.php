@@ -221,6 +221,12 @@ Route::resource('reports',ReportController::class)->middleware('auth');
 Route::get('reports.fetch',[ReportController::class,'fetch'])
     ->name('reports.fetch')
     ->middleware('auth');
+Route::get('reports.reportfiles/{uuid}',[ReportController::class,'reportfiles'])
+    ->name('reports.reportfiles')
+    ->middleware('auth');
+Route::get('reports.attributes/{uuid}',[ReportController::class,'attributes'])
+    ->name('reports.attributes')
+    ->middleware('auth');
 
 Route::resource('dynamicattributes',DynamicAttributeController::class)->middleware('auth');
 Route::get('dynamicattributes.fetch',[DynamicAttributeController::class,'fetch'])

@@ -36,10 +36,6 @@ class CreateOperationResultsTable extends Migration
                 ->comment('report treatment step result reference')
                 ->constrained()->onDelete('set null');
 
-            $table->foreignId('parent_operation_id')->nullable()
-                ->comment('report treatment step result reference')
-                ->constrained('operation_results')->onDelete('set null');
-
             $table->baseFields();
         });
         $this->setTableComment($this->table_name,$this->table_comment);
@@ -56,7 +52,6 @@ class CreateOperationResultsTable extends Migration
             $table->dropBaseForeigns();
 
             $table->dropForeign(['report_treatment_step_result_id']);
-            $table->dropForeign(['parent_operation_id']);
         });
         Schema::dropIfExists($this->table_name);
     }

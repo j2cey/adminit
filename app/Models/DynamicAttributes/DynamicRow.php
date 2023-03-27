@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $hasdynamicrow_type
  * @property integer $hasdynamicrow_id
  *
+ * @property string $columns_values
+ *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
@@ -36,6 +38,9 @@ class DynamicRow extends BaseModel implements Auditable
 
     protected $guarded = [];
     protected $with = ['dynamicvalues'];
+    protected $casts = [
+        //'columns_values' => 'array'
+    ];
 
     #region Validation Rules
 
@@ -92,6 +97,7 @@ class DynamicRow extends BaseModel implements Auditable
         return $related_object->dynamicrows()->create([
             'line_num' => $line_num,
             'firstinserted_at' => Carbon::now(),
+            'columns_values' => "[]",
         ]);
     }
 
@@ -104,6 +110,15 @@ class DynamicRow extends BaseModel implements Auditable
         $this->update([
             'lastinserted_at' => $finaldate,
         ]);
+    }
+
+    public function addColumnValue($column_name, $thevalue) {
+        $columns_values = (array) json_decode( $this->columns_values );
+        $columns_values[$column_name] = $thevalue;
+
+        $this->columns_values = json_encode( $columns_values );
+
+        $this->save();
     }
 
     #endregion

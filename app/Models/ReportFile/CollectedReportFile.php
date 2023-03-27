@@ -6,8 +6,10 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Contracts\AuditDriver;
+use App\Traits\DynamicAttribute\HasDynamicRows;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
@@ -43,16 +45,26 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property int $row_last_import_processed
  * @property int $nb_import_try
  *
+ * @property int $imported
+ * @property int $import_processing
+ * @property string $lines_values
+ *
  * @property ReportFile $reportfile
+ * @property string $fileLocalRelativePath
+ * @property string $fileLocalAbsolutePath
  * @method static CollectedReportFile first()
+ * @method static toImport()
  */
 class CollectedReportFile extends BaseModel implements Auditable
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasDynamicRows, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
     protected $with = ['reportfile'];
+    protected $casts = [
+        //'lines_values' => 'array'
+    ];
 
     public static function defaultRules() {
         return [
@@ -81,6 +93,29 @@ class CollectedReportFile extends BaseModel implements Auditable
         ];
     }
 
+    #region Accessors & Mutators
+
+    public function getFileLocalRelativePathAttribute() {
+        $collectedreportfiles_folder = config('app.collectedreportfiles_folder');
+        return $collectedreportfiles_folder . "/" . $this->local_file_name;
+    }
+
+    public function getFileLocalAbsolutePathAttribute() {
+        $collectedreportfiles_folder = config('app.collectedreportfiles_folder');
+        return Storage::disk('public')->path($collectedreportfiles_folder . "/" . $this->local_file_name);
+    }
+
+    #endregion
+
+    #region Scopes
+
+    public function scopeToImport($query) {
+        return $query
+            ->where('imported', 0)
+            ->where('import_processing', 0);
+    }
+
+    #endregion
 
     #region Eloquent Relationships
 
@@ -97,18 +132,19 @@ class CollectedReportFile extends BaseModel implements Auditable
      * @param ReportFile $reportfile
      * @param string $initial_file_name
      * @param string $local_file_name
-     * @param string $file_size
+     * @param int $file_size
      * @param Status|null $status
      * @param null $description
      * @return CollectedReportFile
      */
-    public static function createNew(ReportFile $reportfile, string $initial_file_name, string $local_file_name, string $file_size, Status $status = null, $description = null) : CollectedReportFile
+    public static function createNew(ReportFile $reportfile, string $initial_file_name, string $local_file_name, int $file_size, Status $status = null, $description = null, string $lines_values = "[]") : CollectedReportFile
     {
         $collectedreportfile = CollectedReportFile::create([
             'initial_file_name' => $initial_file_name,
             'local_file_name' => $local_file_name,
             'file_size' => $file_size,
             'description' => $description,
+            'lines_values' => $lines_values,
         ]);
 
         // Assignation du type de report file
@@ -149,7 +185,22 @@ class CollectedReportFile extends BaseModel implements Auditable
         return $this;
     }
 
+    public function addLineValues($linevalues) {
+        $lines_values =  (array) json_decode( $this->lines_values );
+        $lines_values[] = $linevalues;
 
+        $this->lines_values = json_encode( $lines_values );
+
+        $this->save();
+    }
+
+    /**
+     * @return CollectedReportFile[]
+     */
+    public static function getFilesToImport()
+    {
+        return self::toImport()->get();
+    }
 
 
     /*protected static function boot(){

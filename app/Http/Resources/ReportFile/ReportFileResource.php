@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\ReportFile;
 
+use App\Models\ReportFile\CollectedReportFile;
 use function route;
 use App\Models\Status;
 use Illuminate\Support\Carbon;
@@ -42,6 +43,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *
  * @property Report $report
  * @property mixed $reportfileaccesses
+ * @property CollectedReportFile[] $collectedreportfiles
  */
 class ReportFileResource extends JsonResource
 {
@@ -55,6 +57,7 @@ class ReportFileResource extends JsonResource
 
             'reportfiletype' => ReportFileTypeResource::make($this->reportfiletype),
             'reportfileaccesses' => ReportFileAccessResource::collection($this->reportfileaccesses),
+            'collectedreportfiles' => CollectedReportFileResource::collection($this->collectedreportfiles),
 
             'report' => $this->report,
 

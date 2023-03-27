@@ -98,12 +98,39 @@ class ReportController extends Controller
      * Display the specified resource.
      *
      * @param Report $report
-     * @return Application|Factory|View|void
+     * @return Application|Factory|View
      */
     public function show(Report $report)
     {
         return view('reports.show')
             ->with('report', new ReportResource($report))
+            ;
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param Report $report
+     * @return Application|Factory|View
+     */
+    public function reportfiles($uuid)
+    {
+        $report = Report::where('uuid', $uuid)->first();
+        return view('reportfiles.index')
+            ->with('report', new ReportResource($report))
+            ;
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param Report $report
+     * @return Application|Factory|View
+     */
+    public function attributes($uuid)
+    {
+        $report = new ReportResource( Report::where('uuid', $uuid)->first() );
+
+        return view('attributes.index')
+            ->with('report', $report)
             ;
     }
 

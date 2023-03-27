@@ -58,7 +58,7 @@
                             {{ props.row[column.field] }}
                         </span>
                         <span v-else-if="column.field === 'name'" class="has-text-primary is-italic text-xs">
-                            <a @click="editReportFile(props.row)">
+                            <a @click="showReportFile(props.row)">
                                 {{ props.row[column.field] }}
                             </a>
                         </span>
@@ -98,40 +98,7 @@
 
             <template #detail="props">
 
-                <b-tabs size="is-small" type="is-boxed">
-                    <b-tab-item>
-                        <template #header>
-                            <b-icon icon="information-outline"></b-icon>
-                            <span> Infos </span>
-                        </template>
-
-                        <div class="card card-default">
-                            <div class="card-body">
-                                <dl>
-                                    <dt class="text text-xs">Name</dt>
-                                    <dd class="text text-xs">{{ props.row.name }}</dd>
-                                    <dt class="text text-xs">Wildcard</dt>
-                                    <dd class="text text-xs">{{ props.row.wildcard }}</dd>
-                                    <dt class="text text-xs">Type de fichier</dt>
-                                    <dd class="text text-xs">{{ props.row.reportfiletype.name }}</dd>
-                                    <dt class="text text-xs">Created at</dt>
-                                    <dd class="text text-xs">{{ props.row.created_at | formatDate}}</dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </b-tab-item>
-
-                    <b-tab-item>
-                        <template #header>
-                            <b-icon icon="source-pull"></b-icon>
-                            <span class="help-inline pr-1 text-sm"> Accès </span>
-                            <b-tag type="is-info is-light">{{ props.row.reportfileaccesses.length }}</b-tag>
-                        </template>
-
-                        <ReportFileAccessList list_title_prop="Accès au fichier" :reportfile_prop="props.row" :reportfileaccesses_list_prop="props.row.reportfileaccesses" ></ReportFileAccessList>
-
-                    </b-tab-item>
-                </b-tabs>
+                <ReportFileItem :reportfile_prop="props.row"></ReportFileItem>
 
             </template>
 
@@ -154,10 +121,10 @@ export default {
         report_prop: {},
         reportfiles_prop: {}
     },
-    name: "report-files-list",
+    name: "reportfile-list",
     components: {
         AddUpdateReportFile: () => import('../reportfiles/addupdate'),
-        ReportFileAccessList: () => import('../reportfileaccesses/list'),
+        ReportFileItem: () => import('../reportfiles/item'),
     },
     mounted() {
         ReportFileBus.$on('reportfile_created', (reportfile) => {
@@ -231,6 +198,9 @@ export default {
         };
     },
     methods: {
+        showReportFile(reportfile) {
+            window.location = reportfile.show_url
+        },
         createReportFile() {
             let report = this.report
             ReportFileBus.$emit('create_new_reportfile', { report })

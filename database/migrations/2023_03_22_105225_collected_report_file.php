@@ -36,6 +36,11 @@ class CollectedReportFile extends Migration
             $table->integer('row_last_import_processed')->default(0)->comment("last line import processed");
             $table->integer('nb_import_try')->default(0)->comment("number of import processing attempts");
 
+            $table->integer('imported')->default(0)->comment("determine if the file has already been imported into DB");
+            $table->integer('import_processing')->default(0)->comment("determine if the file import is processing");
+
+            $table->json('lines_values')->comment('all lines values for this file');
+
             $table->foreignId('report_file_id')->nullable()
                 ->comment('clé reférence du report_file')
                 ->constrained('report_files')->onDelete('set null');

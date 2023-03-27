@@ -12,8 +12,6 @@ use App\Models\DynamicAttributes\DynamicAttributeType;
  */
 trait HasDynamicAttributes
 {
-    use HasDynamicRows;
-
     /**
      * Get all of the model's dynamic attributes
      * @return mixed

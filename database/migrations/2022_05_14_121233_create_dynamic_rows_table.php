@@ -29,6 +29,8 @@ class CreateDynamicRowsTable extends Migration
             $table->string('hasdynamicrow_type')->comment('referenced value row');
             $table->bigInteger('hasdynamicrow_id')->comment('referenced value row id');
 
+            $table->json('columns_values')->comment('all columns values for this line');
+
             $table->baseFields();
         });
         $this->setTableComment($this->table_name,$this->table_comment);

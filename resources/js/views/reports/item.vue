@@ -47,11 +47,11 @@
                         </div>
                         <div class="col-md-6 col-sm-4 col-12 text-right">
                             <span class="text text-sm">
-                                <span v-if="report.reportfiles.length > 0" class="badge badge-success">
-                                    {{ report.attributes.length }}
+                                <span v-if="report.dynamicattributes.length > 0" class="badge badge-success">
+                                    {{ report.dynamicattributes.length }}
                                 </span>
                                 <span v-else class="badge badge-danger">
-                                    {{ report.attributes.length }}
+                                    {{ report.dynamicattributes.length }}
                                 </span>
                                 <a type="button" class="btn btn-tool" @click="collapseClicked(collapse_icon)" data-toggle="collapse" :data-parent="'#reportwrapper_' + report.uuid" :href="'#collapse-reports-'+index">
                                     <i :class="currentCollapseIcon"></i>
@@ -68,7 +68,7 @@
 
                         <div class="col-md-12 col-sm-6 col-12">
 
-                            <ReportAttributes :report_prop="report" :reportattributes_prop="report.attributes"></ReportAttributes>
+                            <ReportAttributes :report_prop="report" :reportattributes_prop="report.dynamicattributes"></ReportAttributes>
 
                         </div>
                         <!-- /.col -->
