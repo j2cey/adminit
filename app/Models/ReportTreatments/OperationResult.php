@@ -37,6 +37,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property ReportTreatmentStepResult|null $reporttreatmentstepresult
  * @property OperationResult|null $parentoperation
+ * @property boolean $isSuccess
+ * @property boolean $isFailed
  * @method static OperationResult create(string[] $array)
  */
 class OperationResult extends BaseModel implements Auditable
@@ -70,6 +72,17 @@ class OperationResult extends BaseModel implements Auditable
         return [
             'name.required' => "Prière de renseigner le nom de l'opération"
         ];
+    }
+
+    #endregion
+
+    #region Accessors & Mutators
+
+    public function getIsSuccessAttribute() {
+        return ($this->state == TreatmentStateEnum::SUCCESS);
+    }
+    public function getIsFailedAttribute() {
+        return ($this->state == TreatmentStateEnum::FAILED);
     }
 
     #endregion
@@ -133,6 +146,20 @@ class OperationResult extends BaseModel implements Auditable
         $this->save();
 
         return $this;
+    }
+
+    public function endWithSuccess(string $message = null) {
+        $this->state = TreatmentStateEnum::SUCCESS->value;
+        $this->message = $message ?? "Success";
+        $this->end_at = Carbon::now();
+        $this->save();
+    }
+
+    public function endWithFailure(string $message = null) {
+        $this->state = TreatmentStateEnum::FAILED->value;
+        $this->message = $message ?? "Failed";
+        $this->end_at = Carbon::now();
+        $this->save();
     }
 
     public function setReportTreatmentStepResult(Model|ReportTreatmentStepResult|null $reporttreatmentstepresult) {

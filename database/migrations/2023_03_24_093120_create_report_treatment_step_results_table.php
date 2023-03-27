@@ -34,8 +34,8 @@ class CreateReportTreatmentStepResultsTable extends Migration
                 ->comment('report treatment result reference')
                 ->constrained()->onDelete('set null');
 
-            $table->integer('retry_no')->default(1)->comment('retry number');
-            $table->integer('retry_session_count')->default(0)->comment('retry count for current session');
+            $table->integer('retry_no')->nullable()->comment('retry number');
+            $table->integer('retry_session_count')->nullable()->comment('retry count for current session');
 
             $table->baseFields();
         });

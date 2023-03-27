@@ -48,6 +48,8 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
     use HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
+    protected $with = ['operationresults'];
+
     protected $casts = [
         'state' => TreatmentStateEnum::class,
     ];
