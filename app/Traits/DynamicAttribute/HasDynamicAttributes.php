@@ -9,9 +9,13 @@ use App\Models\DynamicAttributes\DynamicAttributeType;
 
 /**
  * @property DynamicAttribute[] $dynamicattributes
+ * @property DynamicAttribute[] $dynamicattributesOrdered
  */
 trait HasDynamicAttributes
 {
+    public abstract function setAddAttributeToList(DynamicAttribute $dynamicattribute);
+    public abstract function setAttributesList();
+
     /**
      * Get all of the model's dynamic attributes
      * @return mixed
@@ -19,6 +23,15 @@ trait HasDynamicAttributes
     public function dynamicattributes()
     {
         return $this->morphMany(DynamicAttribute::class, 'hasdynamicattribute');
+    }
+    /**
+     * Get all of the model's dynamic attributes ordered
+     * @return mixed
+     */
+    public function dynamicattributesOrdered()
+    {
+        return $this->dynamicattributes()
+            ->orderBy('num_ord');
     }
 
 
@@ -58,6 +71,8 @@ trait HasDynamicAttributes
         ])                                                  // create and attach a new DynamicAttribute to the current model object
         ->attributetype()->associate($attribute_type);      // associate the created DynamicAttribute with the given DynamicAttributeType
         $dynamicattribute->save();                          // save the association from the DynamicAttribute
+
+        $this->setAddAttributeToList($dynamicattribute);
 
         return $dynamicattribute;
     }

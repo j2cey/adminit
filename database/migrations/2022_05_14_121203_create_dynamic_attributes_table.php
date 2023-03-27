@@ -36,6 +36,9 @@ class CreateDynamicAttributesTable extends Migration
             $table->integer('offset')->default(0)->comment('offset if any');
             $table->integer('max_length')->default(0)->comment('max length if any');
 
+            $table->boolean('searchable')->default(0)->comment('determine whether the attribute(field) is searchable');
+            $table->boolean('sortable')->default(0)->comment('determine whether the attribute(field) is sortable');
+
             $table->baseFields();
         });
         $this->setTableComment($this->table_name,$this->table_comment);

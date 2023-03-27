@@ -31,6 +31,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property string $offset
  * @property integer $max_length
+ * @property bool $searchable
+ * @property bool $sortable
  *
  * @property string $hasdynamicattribute_type
  * @property integer $hasdynamicattribute_id
@@ -47,6 +49,10 @@ class DynamicAttribute extends BaseModel implements Auditable
 
     protected $guarded = [];
     protected $with = ['attributetype'];
+    protected $casts = [
+        'searchable' => 'boolean',
+        'sortable' => 'boolean',
+    ];
 
     #region Validation Rules
 

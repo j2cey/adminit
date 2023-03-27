@@ -27,6 +27,8 @@ use App\Http\Resources\AnalysisRules\AnalysisRuleResource;
  *
  * @property string $offset
  * @property integer $max_length
+ * @property bool $searchable
+ * @property bool $sortable
  *
  * @property string $hasdynamicattribute_type
  * @property integer $hasdynamicattribute_id
@@ -55,6 +57,9 @@ class DynamicAttributeResource extends JsonResource
 
             'offset' => $this->offset,
             'max_length' => $this->max_length,
+            'searchable' => $this->searchable,
+            'sortable' => $this->sortable,
+
             'hasdynamicattribute_type' => $this->hasdynamicattribute_type,
             'hasdynamicattribute_id' => $this->hasdynamicattribute_id,
 

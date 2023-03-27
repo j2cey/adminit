@@ -15,8 +15,11 @@ use App\Http\Resources\Report\ReportResource;
 use App\Http\Requests\Report\StoreReportRequest;
 use Illuminate\Contracts\Foundation\Application;
 use App\Http\Requests\Report\UpdateReportRequest;
+use App\Models\DynamicAttributes\DynamicAttribute;
+use App\Http\Resources\ReportFile\ReportFileResource;
 use App\Repositories\Contracts\IReportRepositoryContract;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Resources\DynamicAttributes\DynamicAttributeResource;
 
 class ReportController extends Controller
 {
@@ -115,8 +118,10 @@ class ReportController extends Controller
     public function reportfiles($uuid)
     {
         $report = Report::where('uuid', $uuid)->first();
+        $reportfiles = ReportFileResource::collection($report->reportfiles);
         return view('reportfiles.index')
-            ->with('report', new ReportResource($report))
+            ->with('report', new ReportResource( $report) )
+            ->with('reportfiles', $reportfiles)
             ;
     }
     /**
@@ -127,10 +132,12 @@ class ReportController extends Controller
      */
     public function attributes($uuid)
     {
-        $report = new ReportResource( Report::where('uuid', $uuid)->first() );
+        $report = Report::where('uuid', $uuid)->first();
+        $dynamicattributes = DynamicAttributeResource::collection($report->dynamicattributes);
 
         return view('attributes.index')
-            ->with('report', $report)
+            ->with('report', new ReportResource( $report) )
+            ->with('dynamicattributes', $dynamicattributes)
             ;
     }
 

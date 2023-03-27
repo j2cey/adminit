@@ -15,7 +15,7 @@
                         <dd class="text text-xs">{{ reportfile.wildcard }}</dd>
                         <dt class="text text-xs">Type de fichier</dt>
                         <dd class="text text-xs">{{ reportfile.reportfiletype.name }}</dd>
-                        <dt class="text text-xs">Created at</dt>
+                        <dt class="text text-xs">Date Création</dt>
                         <dd class="text text-xs">{{ reportfile.created_at | formatDate}}</dd>
                     </dl>
                 </div>
@@ -40,7 +40,7 @@
                 <b-tag rounded type="is-info is-light">{{ reportfile.collectedreportfiles.length }}</b-tag>
             </template>
 
-
+            <CollectedReportFileList :collectedreportfiles_prop="reportfile.collectedreportfiles"></CollectedReportFileList>
 
         </b-tab-item>
     </b-tabs>
@@ -54,6 +54,7 @@ export default {
     name: "reportfile-item",
     components: {
         ReportFileAccessList: () => import('../reportfileaccesses/list'),
+        CollectedReportFileList: () => import('../collectedreportfiles/index'),
     },
     data() {
         return {
