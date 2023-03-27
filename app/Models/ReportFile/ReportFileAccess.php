@@ -17,6 +17,7 @@ use App\Models\RetrieveAction\RetrieveActionType;
 use App\Contracts\RetrieveAction\IRetrieveAction;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ReportTreatments\ReportTreatmentStepResult;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
@@ -241,7 +242,9 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
         }
     }
 
-    public function executeTreatment() {
+    public function executeTreatment(): ReportTreatmentStepResult {
+
+        $reporttreatmentstepresult = ReportTreatmentStepResult::createNew(null,start_at: Carbon::now());
 
         // 1. Définir le disk en fonction du protocole
         $remoteDisk = $this->getDisk();
@@ -249,15 +252,14 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
 
         // 2. Récupère l'action à exécuter pour la Récupération du fichier (retrieve_mode)
         $retrievemode_action = $this->getRetrieveModeAction();
-        $result = $retrievemode_action::execAction($remoteDisk ,$this->reportfile);
-        if ($result[0]){
+        $result = $retrievemode_action::execAction($remoteDisk ,$this->reportfile, $reporttreatmentstepresult);
+
+        if ($result->isSuccess){
             // 3. Récupère l'action à exécuter après la Récupération du fichier (to_perform_after_retrieving)
             $to_perform_after_retrieving = $this->getToPerformAfterRetrievingAction();
-            $result = $to_perform_after_retrieving::execAction($remoteDisk ,$this->reportfile);
-            dd($result);
-        }else {
-            dd($result);
+            $to_perform_after_retrieving::execAction($remoteDisk ,$this->reportfile, $reporttreatmentstepresult);
         }
+        return $reporttreatmentstepresult;
     }
 
     /**
@@ -272,13 +274,21 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
      */
     private function getRetrieveModeAction()
     {
-        $selected_retrievemode_action = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
+        foreach ($this->selectedretrieveactions as $selectedretrieveaction) {
+            if ( $selectedretrieveaction->retrieveaction->retrieveactiontype->code === RetrieveActionType::retrieveMode()->first()->code ) {
+                return $selectedretrieveaction->retrieveaction->action_class;
+            }
+        }
+
+        return null;
+
+        /*$selected_retrievemode_action = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
             $query->with(['retrieveactiontype' => function () {
                 RetrieveActionType::retrieveMode();
             }]);
         }])->first();
 
-        return $selected_retrievemode_action->retrieveaction->action_class ?? null;
+        return $selected_retrievemode_action->retrieveaction->action_class ?? null;*/
     }
 
     /**
@@ -287,19 +297,19 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
     private function getToPerformAfterRetrievingAction()
     {
         foreach ($this->selectedretrieveactions as $selectedretrieveaction) {
-            if ($selectedretrieveaction->retrieveaction->retrieveactiontype->code === "to_perform_after_retrieving") {
+            if ( $selectedretrieveaction->retrieveaction->retrieveactiontype->code === RetrieveActionType::toPerformAfterRetrieving()->first()->code ) {
                 return $selectedretrieveaction->retrieveaction->action_class;
             }
         }
 
         return null;
 
-        $to_perform_after_retrieving = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
+        /*$to_perform_after_retrieving = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
             $query->with(['retrieveactiontype' => function ($query) {
                 RetrieveActionType::toPerformAfterRetrieving($query);
             }]);
         }])->first();
-        return $to_perform_after_retrieving->retrieveaction->action_class ?? null;
+        return $to_perform_after_retrieving->retrieveaction->action_class ?? null;*/
     }
 
 

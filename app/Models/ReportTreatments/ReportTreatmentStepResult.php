@@ -38,7 +38,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property ReportTreatmentResult|null $reporttreatmentresult
  * @property ReportTreatmentStepResult $retryof
- * @property Collection $retries
+ * @property ReportTreatmentStepResult[] $retries
+ * @property OperationResult[] $operationresults
  *
  * @method static ReportTreatmentStepResult create(string[] $array)
  */
@@ -47,6 +48,8 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
     use HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
+    protected $with = ['operationresults'];
+
     protected $casts = [
         'state' => TreatmentStateEnum::class,
     ];
@@ -85,6 +88,9 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
     }
     public function retries() {
         return $this->hasMany(ReportTreatmentStepResult::class, "retryof_id");
+    }
+    public function operationresults() {
+        return $this->hasMany(OperationResult::class, "report_treatment_step_result_id");
     }
     #endregion
 

@@ -2,11 +2,15 @@
 
 namespace App\Models\RetrieveAction;
 
+use Illuminate\Support\Carbon;
+use App\Enums\TreatmentStateEnum;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ReportFile\CollectedReportFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use App\Models\ReportTreatments\OperationResult;
 use App\Contracts\RetrieveAction\IRetrieveAction;
+use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 /**
  * Class ByName Logique de Récupération du ReportFile par Nom
@@ -15,8 +19,9 @@ use App\Contracts\RetrieveAction\IRetrieveAction;
  */
 class ByName implements IRetrieveAction
 {
-    public static function execAction(Filesystem $disk, ReportFile $file): array
+    public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult): OperationResult
     {
+        $operationresult = OperationResult::createNew("Récupération du ReportFile par Nom",1,$reporttreatmentstepresult, Carbon::now());
         // récupère le chemin du répertoire des CollectedReportFile
         $collectedreportfiles_folder = config('app.collectedreportfiles_folder');
 
@@ -29,14 +34,18 @@ class ByName implements IRetrieveAction
             if ($result) {
                 //crée un nouveau fichier
                 $collectedreportfile = CollectedReportFile::createNew($file, $file->fileRemotePath, $local_file_name, $disk->size($file->fileRemotePath));
-                return [true, "succès"];
+
+                $operationresult->endWithSuccess("Download success !");
+                return $operationresult;
             } else {
-                return [false, "erreur download"];
+                $operationresult->endWithFailure("Error download by name !");
+                return $operationresult;
             }
         }
 
         catch (\Exception $e){
-           return [false, $e->getMessage()];
+            $operationresult->endWithFailure($e->getMessage());
+            return $operationresult;
         }
     }
 }

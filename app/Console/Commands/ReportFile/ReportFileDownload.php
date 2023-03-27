@@ -42,9 +42,10 @@ class ReportFileDownload extends Command
 
         $reportfileaccess = ReportFileAccess::first();
         if( ! is_null($reportfileaccess) ) {
-            $reportfileaccess->executeTreatment();
+            $result = $reportfileaccess->executeTreatment();
+            //dd($result->operationresults,$result->operationresults[0]->isSuccess,$result->operationresults[0]->state);
         }
-
+        $this->info("Traitement termine.");
         \Log::info("Traitement termine.");
         return 0;
     }
