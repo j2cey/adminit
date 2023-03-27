@@ -136,51 +136,74 @@
 
                             <template v-if="records.length">
 
-                                <table class="table-auto">
-                                    <thead>
-                                    <tr>
-                                        <th class="tw-px-4 tw-py-2">#</th>
-                                        <th class="tw-px-4 tw-py-2">Title</th>
-                                        <th class="tw-px-4 tw-py-2">Description</th>
-                                        <th class="tw-px-4 tw-py-2">Report Type</th>
-                                        <th class="tw-px-4 tw-py-2">Status</th>
-                                        <th class="tw-px-4 tw-py-2">Details</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr v-for="record in records"
-                                        :key="record.id"
-                                        class="tw-px-4 tw-border-b tw-border-dashed tw-border-gray-400 tw-text-gray-700 hover:tw-bg-gray-100"
-                                    >
-                                        <td class="tw-px-4 tw-py-2">
-                                            <span class="tw-text-sm">@{{ record.id }}</span>
-                                        </td>
-                                        <td class="tw-px-4 tw-py-2">
-                                            <span class="tw-text-sm">@{{ record.title }}</span>
-                                        </td>
-                                        <td class="tw-px-4 tw-py-2">
-                                            <span class="tw-text-sm">@{{ record.description }}</span>
-                                        </td>
-                                        <td class="tw-px-4 tw-py-2">
-                                            <span class="tw-text-sm" v-if="record.reporttype">
-                                                @{{ record.reporttype.name }}
-                                            </span>
-                                        </td>
-                                        <td class="tw-px-6 tw-py-2">
-                                            <span class="tw-text-sm" v-if="record.status">
-                                                <span v-if="record.status.code === 'active'" class="tw-text-xs tw-font-semibold tw-inline-block tw-py-1 tw-px-2 tw-rounded tw-text-green-600 tw-bg-green-200 tw-w-32 last:tw-mr-0 tw-mr-1">@{{ record.status.name }}</span>
-                                                <span v-else class="tw-text-xs tw-font-semibold tw-inline-block tw-py-1 tw-px-2 tw-rounded tw-text-teal-600 tw-bg-red-200 tw-w-32 last:tw-mr-0 tw-mr-1">@{{ record.status.name }}</span>
-                                            </span>
-                                        </td>
-                                        <td class="tw-px-4 tw-py-2">
-                                            <a :href="record.show_url" class="tw-inline-block tw-mr-3 tw-text-green-500">
-                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
 
-                                    </tbody>
-                                </table>
+                                <div class="tw-p-2 tw-grid tw-grid-cols-1 sm:tw-grid-cols-1 md:tw-grid-cols-3 lg:tw-grid-cols-3 xl:tw-grid-cols-3 tw-gap-5">
+
+
+                                    <div v-for="record in records"
+                                         :key="record.id" class="tw-rounded tw-overflow-hidden tw-shadow-lg tw-w-90">
+                                        <img class="tw-w-full" src="assets/images/thumbnail-default.jpg" alt="Mountain">
+                                        <div class="tw-px-2 tw-py-4">
+                                            <div class="tw-font-bold tw-text-sm tw-mb-2">
+                                                <a :href="record.show_url" class="tw-inline-block">
+                                                    @{{ record.title }}
+                                                </a>
+                                            </div>
+                                            <div class="tw-font-thin tw-text-xs tw-mb-2">@{{ record.description }}</div>
+
+                                            <p class="tw-font-thin tw-text-xs tw-mb-2">@{{ record.created_at | formatDate }}</p>
+                                        </div>
+                                        <div class="tw-px-2 tw-py-4">
+
+                                            <p>
+                                                <a class="btn btn-app btn-sm" data-toggle="collapse" :href="'#more-infos-1-' + record.id" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                    <span class="badge bg-success">@{{ record.reportfiles.length }}</span>
+                                                    <i class="fas fa-paperclip"></i> Fichiers
+                                                </a>
+                                                <a class="btn btn-app btn-sm" data-toggle="collapse" :href="'#more-infos-2-' + record.id" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                    <span class="badge bg-success">@{{ record.dynamicattributes.length }}</span>
+                                                    <i class="fas fa-table"></i> Champs
+                                                </a>
+                                            </p>
+
+                                            <div class="collapse" :id="'more-infos-1-' + record.id">
+                                                <div class="card card-body">
+                                                    <h6><a :href="record.reportfiles_url" class="tw-inline-block tw-text-gray-500">
+                                                        Fichier(s) du Rapport</a>
+                                                    </h6>
+                                                    <p>
+                                                        <span class="tw-inline-block tw-bg-gray-200 tw-rounded-full tw-px-2 tw-py-1 tw-text-xs tw-font-thin tw-text-gray-700 tw-mr-2 tw-mb-2"  v-for="reportfile in record.reportfiles" :key="reportfile.uuid">
+                                                            <a :href="reportfile.show_url" class="tw-inline-block tw-text-blue-500">
+                                                                <i class="fa fa-file-pdf-o"></i> @{{ reportfile.name }}
+                                                            </a>
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="collapse" :id="'more-infos-2-' + record.id">
+                                                <div class="card card-body">
+                                                    <h6><a :href="record.attributes_url" class="tw-inline-block tw-text-gray-500">Champ(s) du Rapport
+                                                        </a>
+                                                    </h6>
+
+                                                    <ol class="list-group list-group">
+                                                        <li class="list-group-item d-flex justify-content-between align-items-start" v-for="attribute in record.dynamicattributes" :key="attribute.uuid">
+
+                                                            <div class="ms-2 me-auto">
+                                                                <div class="fw-bold tw-font-thin tw-text-xs tw-mb-2"><span class="tw-font-bold tw-text-xs tw-mb-2">@{{ attribute.name }}</span> @{{ attribute.attributetype.name }} </div>
+                                                            </div>
+
+                                                        </li>
+                                                    </ol>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
 
                             </template>
 

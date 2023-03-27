@@ -35,10 +35,6 @@ class CreateReportTreatmentStepResultsTable extends Migration
 
             $table->integer('retry_no')->default(1)->comment('retry number');
             $table->integer('retry_session_count')->default(0)->comment('retry count for current session');
-            $table->foreignId('retryof_id')->nullable()
-                ->comment('report treatment step (for what this step is a retry) result reference')
-                ->constrained('report_treatment_step_results')->onDelete('set null');
-
 
             $table->baseFields();
         });
@@ -56,7 +52,6 @@ class CreateReportTreatmentStepResultsTable extends Migration
             $table->dropBaseForeigns();
 
             $table->dropForeign(['report_treatment_result_id']);
-            $table->dropForeign(['retryof_id']);
         });
         Schema::dropIfExists($this->table_name);
     }

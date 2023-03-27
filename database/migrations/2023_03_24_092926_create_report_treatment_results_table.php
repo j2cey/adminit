@@ -28,14 +28,11 @@ class CreateReportTreatmentResultsTable extends Migration
 
             $table->string('description', 500)->nullable()->comment('treatment description');
 
-            $table->integer('currentstep_num')->default(0)->comment('current step number');
-            $table->foreignId('currentstep_id')->nullable()
-                ->comment('report treatment (current) step result reference')
-                ->constrained('report_treatment_step_results')->onDelete('set null');
-
             $table->foreignId('report_id')->nullable()
                 ->comment('report reference')
                 ->constrained()->onDelete('set null');
+
+            $table->integer('currentstep_num')->default(0)->comment('current step number');
 
             $table->baseFields();
         });
@@ -53,7 +50,6 @@ class CreateReportTreatmentResultsTable extends Migration
             $table->dropBaseForeigns();
 
             $table->dropForeign(['report_id']);
-            $table->dropForeign(['currentstep_id']);
         });
         Schema::dropIfExists($this->table_name);
     }

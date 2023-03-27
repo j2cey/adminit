@@ -37,6 +37,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property int $row_last_processed
  * @property int $nb_import_try
  *
+ * @property int $imported
+ * @property int $import_processing
+ *
  * @property Status $status
  */
 class CollectedReportFileResource extends JsonResource
@@ -59,7 +62,7 @@ class CollectedReportFileResource extends JsonResource
             'file_size' => $this->file_size,
             'description' => $this->description,
 
-            'reportfile' => ReportFileResource::make($this->reportfile),
+            'reportfile' => $this->reportfile,
 
             'created_at' => $this->created_at,
 
@@ -70,6 +73,9 @@ class CollectedReportFileResource extends JsonResource
             'nb_rows_import_processed' => $this->nb_rows_import_processed,
             'row_last_processed' => $this->row_last_processed,
             'nb_import_try' => $this->nb_import_try,
+
+            'imported' => $this->imported,
+            'import_processing' => $this->import_processing,
 
             'show_url' => route('collectedreportfiles.show', $this->uuid),
             'edit_url' => route('collectedreportfiles.edit', $this->uuid),

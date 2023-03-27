@@ -7,6 +7,9 @@ use App\Models\DynamicAttributes\DynamicRow;
 use App\Models\DynamicAttributes\DynamicValue;
 use App\Models\DynamicAttributes\DynamicAttribute;
 
+/**
+ * @property DynamicAttribute $dynamicattribute
+ */
 trait IsDynamicValue
 {
     abstract public function getFormattedValue($thevalue);
@@ -41,6 +44,8 @@ trait IsDynamicValue
             ->save();                       // save the association from the DynamicValue (the wrapper)
 
         $row->setLastInserted();            // update the row's last inserted date
+
+        $row->addColumnValue($this->dynamicattribute->name,$thevalue);    // add the value to the json columns values field
 
         return $this;
     }

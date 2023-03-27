@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\ReportFile;
 
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use App\Models\ReportFile\ReportFile;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\Foundation\Application;
 use App\Http\Resources\ReportFile\ReportFileResource;
 use App\Http\Requests\ReportFile\StoreReportFileRequest;
 use App\Http\Requests\ReportFile\UpdateReportFileRequest;
@@ -48,11 +51,13 @@ class ReportFileController extends Controller
      * Display the specified resource.
      *
      * @param ReportFile $reportfile
-     * @return Response
+     * @return Application|Factory|View
      */
     public function show(ReportFile $reportfile)
     {
-        dd("reportfiles.show: ",$reportfile);
+        return view('reportfiles.show')
+            ->with('reportfile', new ReportFileResource($reportfile))
+            ;
     }
 
     /**

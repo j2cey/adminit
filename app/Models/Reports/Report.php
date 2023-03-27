@@ -12,7 +12,6 @@ use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\ReportFile\ReportFileType;
 use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\DynamicAttributes\DynamicAttributeType;
 
 /**
  * Class Report

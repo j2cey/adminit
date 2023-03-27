@@ -59,12 +59,14 @@ class ReportFilesImport implements ToModel, WithChunkReading, WithEvents, WithVa
         foreach ($this->_collectedreportfile->reportfile->report->dynamicattributes as $dynamicattribute) {
             $row_index = $dynamicattribute->num_ord - 1;
             $new_row = ($row_index === 0);
-            $last_inserted_value = $dynamicattribute->addValue($row[$row_index], $new_row);
+            $last_inserted_value = $dynamicattribute->addValue($this->_collectedreportfile,$row[$row_index], $new_row);
         }
 
         $this->_collectedreportfile->row_last_import_processed = $currentRowNumber;
 
         $this->_collectedreportfile->save();
+
+        $this->_collectedreportfile->addLineValues($this->_collectedreportfile->latestDynamicrow->columns_values);
 
         $this->nextRow();
 

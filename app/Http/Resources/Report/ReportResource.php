@@ -56,7 +56,7 @@ class ReportResource extends JsonResource
             'description' => $this->description,
 
             'reporttype' => ReportTypeResource::make($this->reporttype),
-            'attributes' => DynamicAttributeResource::collection($this->dynamicattributes),
+            'dynamicattributes' => DynamicAttributeResource::collection($this->dynamicattributes),
             'reportfiles' => ReportFileResource::collection($this->reportfiles),
 
             'model_type' => Report::class,
@@ -66,6 +66,9 @@ class ReportResource extends JsonResource
             'show_url' => route('reports.show', $this->uuid),
             'edit_url' => route('reports.edit', $this->uuid),
             'destroy_url' => route('reports.destroy', $this->uuid),
+
+            'reportfiles_url' => route('reports.reportfiles', $this->uuid),
+            'attributes_url' => route('reports.attributes', $this->uuid),
         ];
     }
 }

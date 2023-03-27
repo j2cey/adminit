@@ -7,6 +7,7 @@ use App\Models\DynamicAttributes\DynamicRow;
 
 /**
  * @property DynamicRow $latestDynamicrow
+ * @property DynamicRow $oldestDynamicrow
  */
 trait HasDynamicRows
 {

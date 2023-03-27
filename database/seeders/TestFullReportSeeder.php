@@ -9,6 +9,7 @@ use App\Models\Access\AccessProtocole;
 use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
 use App\Models\Access\AccessAccount;
+use App\Models\ReportFile\CollectedReportFile;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 
 class TestFullReportSeeder extends Seeder
@@ -67,6 +68,14 @@ class TestFullReportSeeder extends Seeder
             $the_report_file_access->accessaccount->username,
             $the_report_file_access->accessaccount->status,
             $the_report_file_access->accessaccount->description
+        );
+
+        // insert Collected File
+        $the_report_file_collected = CollectedReportFile::createNew(
+            $the_report_file,
+            "//output_data_portal_files.csv",
+            "40dae48d3ef7bf73850d5250afc86043.csv",
+            1801
         );
     }
 }

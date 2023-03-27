@@ -154,6 +154,10 @@ Vue.component('accessaccount-index', require('./views/accessaccounts/index').def
 Vue.component('accessaccount-list', require('./views/accessaccounts/list').default);
 Vue.component('reportserver-index', require('./views/reportservers/index').default);
 
+Vue.component('reportfile-item', require('./views/reportfiles/item').default);
+Vue.component('reportfile-index', require('./views/reportfiles/list').default);
+Vue.component('reportattribute-index', require('./views/reportattributes/list').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
