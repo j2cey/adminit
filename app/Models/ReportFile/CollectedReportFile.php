@@ -5,6 +5,7 @@ namespace App\Models\ReportFile;
 use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
+use App\Imports\ReportFilesImport;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -12,6 +13,7 @@ use OwenIt\Auditing\Contracts\AuditDriver;
 use App\Traits\DynamicAttribute\HasDynamicRows;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ReportTreatments\ReportTreatmentStepResult;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
@@ -183,6 +185,35 @@ class CollectedReportFile extends BaseModel implements Auditable
         $this->save();
 
         return $this;
+    }
+
+    public function importToDb(ReportTreatmentStepResult $reporttreatmentstepresult) {
+        $this->update([
+            'import_processing' => 1,
+        ]);
+
+        $this->deleteImportedData($reporttreatmentstepresult);
+
+        $import = new ReportFilesImport($this, $reporttreatmentstepresult);
+        $import->import($this->fileLocalAbsolutePath);
+
+        $this->update([
+            'import_processing' => 0,
+            'imported' => 1
+        ]);
+    }
+
+    public function deleteImportedData(ReportTreatmentStepResult $reporttreatmentstepresult) {
+        $operation_result = $reporttreatmentstepresult->addOperationResult("Suppression Données importées");
+        try {
+            $this->dynamicrows()->each(function ($dynamicrow) {
+                $dynamicrow->delete(); // <-- direct deletion
+            });
+            $this->lines_values = "[]";
+
+        } catch (\Exception $e) {
+
+        }
     }
 
     public function addLineValues($linevalues) {

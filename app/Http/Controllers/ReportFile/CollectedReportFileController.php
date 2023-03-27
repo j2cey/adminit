@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\ReportFile;
 
+use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Response;
 use App\Models\ReportFile\CollectedReportFile;
 use Illuminate\Contracts\Foundation\Application;
@@ -52,11 +54,13 @@ class CollectedReportFileController extends Controller
      * Display the specified resource.
      *
      * @param CollectedReportFile $collectedreportfile
-     * @return Response
+     * @return Application|Factory|View
      */
     public function show(CollectedReportFile $collectedreportfile)
     {
-        dd("reportfiles.show: ",$collectedreportfile);
+        return view('collectedreportfiles.show')
+            ->with('collectedreportfile', new CollectedReportFileResource($collectedreportfile))
+            ;
     }
 
     /**

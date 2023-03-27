@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $tags
  * @property integer|null $status_id
  *
+ * @property string $name
  * @property Carbon $start_at
  * @property Carbon $end_at
  * @property string $state
@@ -86,9 +87,10 @@ class ReportTreatmentResult extends BaseModel implements Auditable
 
     #region Custom Functions
 
-    public static function createNew(Model|Report $report, Model|ReportTreatmentStepResult $currentstep = null, Carbon $start_at = null, Carbon $end_at = null, string $state = null, string $description = null): ReportTreatmentResult
+    public static function createNew(Model|Report $report, string $name = null, Model|ReportTreatmentStepResult $currentstep = null, Carbon $start_at = null, Carbon $end_at = null, string $state = null, string $description = null): ReportTreatmentResult
     {
         $reporttreatmentresult = ReportTreatmentResult::create([
+            'name' => $name,
             'start_at' => $start_at ?? Carbon::now(),
             'end_at' => $end_at ?? Carbon::now(),
             'state' => $state ?? TreatmentStateEnum::WAITING->value,
@@ -103,8 +105,9 @@ class ReportTreatmentResult extends BaseModel implements Auditable
         return $reporttreatmentresult;
     }
 
-    public function updateThis(Model|Report $report, Model|ReportTreatmentStepResult $currentstep = null, int $currentstep_num = null, Carbon $start_at = null, Carbon $end_at = null, string $state = null, string $description = null): ReportTreatmentResult
+    public function updateThis(Model|Report $report, string $name = null, Model|ReportTreatmentStepResult $currentstep = null, int $currentstep_num = null, Carbon $start_at = null, Carbon $end_at = null, string $state = null, string $description = null): ReportTreatmentResult
     {
+        $this->name = $name;
         $this->start_at = $start_at ?? Carbon::now();
         $this->end_at = $end_at ?? Carbon::now();
         $this->state = $state ?? TreatmentStateEnum::WAITING->value;

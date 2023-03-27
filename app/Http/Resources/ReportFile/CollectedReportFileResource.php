@@ -4,8 +4,10 @@ namespace App\Http\Resources\ReportFile;
 
 use App\Models\Status;
 use Illuminate\Support\Carbon;
+use App\Models\ReportFile\ReportFile;
 use App\Http\Resources\StatusResource;
 use Illuminate\Support\Facades\Request;
+use App\Models\ReportFile\ReportFileType;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -24,7 +26,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $file_size
  * @property string|null $description
  *
- * @property mixed $reportfile
+ * @property ReportFile[] $reportfile
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -39,6 +41,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *
  * @property int $imported
  * @property int $import_processing
+ *
+ * @property string $lines_values
  *
  * @property Status $status
  */
@@ -76,6 +80,7 @@ class CollectedReportFileResource extends JsonResource
 
             'imported' => $this->imported,
             'import_processing' => $this->import_processing,
+            'lines_values' => json_decode( $this->lines_values ),
 
             'show_url' => route('collectedreportfiles.show', $this->uuid),
             'edit_url' => route('collectedreportfiles.edit', $this->uuid),

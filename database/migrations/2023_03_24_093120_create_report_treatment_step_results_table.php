@@ -22,6 +22,7 @@ class CreateReportTreatmentStepResultsTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
+            $table->string('name')->nullable()->comment('treatment step name');
             $table->timestamp('start_at')->nullable()->comment('treatment step start date');
             $table->timestamp('end_at')->nullable()->comment('treatment step end date');
             $table->string('state')->nullable()->comment('treatment step state: [waiting, running, success, failed]');

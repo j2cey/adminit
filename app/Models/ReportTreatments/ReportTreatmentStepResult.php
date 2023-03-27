@@ -7,7 +7,6 @@ use Illuminate\Support\Carbon;
 use App\Enums\TreatmentStateEnum;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -20,6 +19,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $tags
  * @property integer|null $status_id
  *
+ * @property string $name
  * @property Carbon $start_at
  * @property Carbon $end_at
  * @property string $state
@@ -38,7 +38,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property ReportTreatmentResult|null $reporttreatmentresult
  * @property ReportTreatmentStepResult $retryof
- * @property Collection $retries
+ * @property ReportTreatmentStepResult[] $retries
+ * @property OperationResult[] $operationresults
  *
  * @method static ReportTreatmentStepResult create(string[] $array)
  */
@@ -86,19 +87,23 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
     public function retries() {
         return $this->hasMany(ReportTreatmentStepResult::class, "retryof_id");
     }
+    public function operationresults() {
+        return $this->hasMany(OperationResult::class, "report_treatment_step_result_id");
+    }
     #endregion
 
     #region Custom Functions
 
-    public static function createNew(Model|ReportTreatmentResult $reporttreatmentresult = null, Carbon $start_at = null, Carbon $end_at = null, string $state = null, string $message = null, string $description = null, ReportTreatmentStepResult $retryof = null, int $retry_no = null, int $retry_session_count = null): ReportTreatmentStepResult
+    public static function createNew(string $name = null, Model|ReportTreatmentResult $reporttreatmentresult = null, Carbon $start_at = null, Carbon $end_at = null, string $state = null, string $message = null, string $description = null, ReportTreatmentStepResult $retryof = null, int $retry_no = null, int $retry_session_count = null): ReportTreatmentStepResult
     {
         $reporttreatmentstepresult = ReportTreatmentStepResult::create([
+            'name' => $name,
             'start_at' => $start_at ?? Carbon::now(),
             'end_at' => $end_at ?? Carbon::now(),
             'state' => $state ?? TreatmentStateEnum::WAITING->value,
             'message' => $message,
             'description' => $description,
-            'retry_no' => $retry_no,
+            'retry_no' => $retry_no ?? 0,
             'retry_session_count' => $retry_session_count,
         ]);
 
@@ -110,8 +115,9 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
         return $reporttreatmentstepresult;
     }
 
-    public function updateThis(Model|ReportTreatmentResult $reporttreatmentresult = null, Carbon $start_at = null, Carbon $end_at = null, string $state = null, string $message = null, string $description = null, ReportTreatmentStepResult $retryof = null, int $retry_no = null, int $retry_session_count = null): ReportTreatmentStepResult
+    public function updateThis(string $name = null, Model|ReportTreatmentResult $reporttreatmentresult = null, Carbon $start_at = null, Carbon $end_at = null, string $state = null, string $message = null, string $description = null, ReportTreatmentStepResult $retryof = null, int $retry_no = null, int $retry_session_count = null): ReportTreatmentStepResult
     {
+        $this->name = $name;
         $this->start_at = $start_at ?? Carbon::now();
         $this->end_at = $end_at ?? Carbon::now();
         $this->state = $state ?? TreatmentStateEnum::WAITING->value;
@@ -134,7 +140,9 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
         $retry_no = $this->retries()->count() + 1;
 
         return self::createNew(
-            null,Carbon::now(),
+            null,
+            null,
+            Carbon::now(),
             null,
             TreatmentStateEnum::WAITING->value,
             null,
@@ -143,6 +151,11 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
             $retry_no,
             $retry_session_count
         );
+    }
+
+    public function addOperationResult($operation_name): OperationResult {
+        $operation_no = $this->operationresults()->count() + 1;
+        return OperationResult::createNew($operation_name,$operation_no);
     }
 
     #endregion

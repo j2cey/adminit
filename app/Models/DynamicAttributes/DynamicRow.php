@@ -122,4 +122,16 @@ class DynamicRow extends BaseModel implements Auditable
     }
 
     #endregion
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::deleting(function ($model) {
+            $model->dynamicvalues()->each(function($dynamicvalue) {
+                $dynamicvalue->delete(); // <-- direct deletion
+            });
+            $model->columns_values = "[]";
+        });
+    }
 }

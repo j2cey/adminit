@@ -27,6 +27,7 @@ use App\Http\Resources\DynamicAttributes\DynamicAttributeResource;
  * @property string $title
  * @property integer|null $report_type_id
  * @property string|null $description
+ * @property string|null $attributes_list
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -54,6 +55,7 @@ class ReportResource extends JsonResource
 
             'title' => $this->title,
             'description' => $this->description,
+            'attributes_list' => $this->attributes_list,
 
             'reporttype' => ReportTypeResource::make($this->reporttype),
             'dynamicattributes' => DynamicAttributeResource::collection($this->dynamicattributes),

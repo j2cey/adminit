@@ -157,6 +157,7 @@ Vue.component('reportserver-index', require('./views/reportservers/index').defau
 Vue.component('reportfile-item', require('./views/reportfiles/item').default);
 Vue.component('reportfile-index', require('./views/reportfiles/list').default);
 Vue.component('reportattribute-index', require('./views/reportattributes/list').default);
+Vue.component('collectedreportfile-item', require('./views/collectedreportfiles/item').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -29,6 +29,8 @@ class CreateReportsTable extends Migration
                 ->comment('report type reference')
                 ->constrained()->onDelete('set null');
 
+            $table->json('attributes_list')->nullable()->comment('all report attributes');
+
             $table->baseFields();
         });
         $this->setTableComment($this->table_name,$this->table_comment);

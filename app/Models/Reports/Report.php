@@ -5,11 +5,13 @@ namespace App\Models\Reports;
 
 use App\Models\Status;
 use App\Models\BaseModel;
+use App\Enums\ValueTypeEnum;
 use Illuminate\Support\Carbon;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\ReportFile\ReportFileType;
+use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -26,7 +28,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property string $title
  * @property integer|null $report_type_id
+ *
  * @property string|null $description
+ * @property string|null $attributes_list
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -142,6 +146,42 @@ class Report extends BaseModel implements Auditable
             $remotedir_absolute_path,
             $use_file_extension
         );
+    }
+
+    /**
+     * Rajoute un attribut à la liste JSON
+     * @param DynamicAttribute $dynamicattribute
+     * @return void
+     */
+    public function setAddAttributeToList(DynamicAttribute $dynamicattribute) {
+        $attributes_list =  (array) json_decode( $this->attributes_list );
+        $new_attribute = [
+            'field' => $dynamicattribute->name,
+            'key' => $dynamicattribute->name,
+            'label' => $dynamicattribute->name,
+            'numeric' => ($dynamicattribute->attributetype->code === ValueTypeEnum::INT->value),
+            'searchable' => (bool)$dynamicattribute->searchable,
+            'sortable' => (bool)$dynamicattribute->sortable,
+        ];
+        $attributes_list[] = $new_attribute;
+
+        $this->attributes_list = json_encode( $attributes_list );
+
+        $this->save();
+    }
+
+    /**
+     * Reset puis refait la liste JSON des attributs
+     * @return void
+     */
+    public function setAttributesList() {
+        $this->attributes_list = "[]";
+        $this->save();
+
+        $dynamicattributes_ordered = $this->dynamicattributesOrdered;
+        foreach ($dynamicattributes_ordered as $dynamicattribute) {
+            $this->setAddAttributeToList($dynamicattribute);
+        }
     }
 
     #endregion

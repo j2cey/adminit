@@ -73,7 +73,7 @@ class DynamicAttributeController extends Controller
      *
      * @param UpdateDynamicAttributeRequest $request
      * @param DynamicAttribute $dynamicattribute
-     * @return DynamicAttributeResource|void
+     * @return DynamicAttributeResource
      */
     public function update(UpdateDynamicAttributeRequest $request, DynamicAttribute $dynamicattribute)
     {
