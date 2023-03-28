@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use App\Models\ReportFile\CollectedReportFile;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use App\Models\ReportTreatments\OperationResult;
 use Maatwebsite\Excel\Concerns\RemembersRowNumber;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
@@ -25,11 +26,13 @@ class ReportFilesImport implements ToModel, WithChunkReading, WithEvents, WithVa
     private int $_totalrows = 0;
     private CollectedReportFile $_collectedreportfile;
     private ReportTreatmentStepResult $_reporttreatmentstepresult;
+    private OperationResult $_operation_result;
 
     public function __construct(CollectedReportFile $collectedreportfile, ReportTreatmentStepResult $reporttreatmentstepresult)
     {
         $this->_collectedreportfile = $collectedreportfile;
         $this->_reporttreatmentstepresult = $reporttreatmentstepresult;
+        $this->_operation_result = $reporttreatmentstepresult->addOperationResult("Exécution du ReportFilesImport");
     }
 
     /**
@@ -47,11 +50,21 @@ class ReportFilesImport implements ToModel, WithChunkReading, WithEvents, WithVa
             $this->nextRow();
             $this->registerEvents();
             $this->_collectedreportfile->update(['nb_rows' => $this->_totalrows]);
+
+            if ($this->_collectedreportfile->reportfile->has_headers) {
+                $this->_operation_result->endWithSuccess("file has headers.");
+                return null;
+            }
+        }
+
+        if ($currentRowNumber <= $this->_collectedreportfile->row_last_import_processed) {
+            $this->nextRow();
+            $this->_operation_result->endWithSuccess("row no " . $currentRowNumber . " already imported.");
             return null;
         }
 
-        if ($currentRowNumber < $this->_collectedreportfile->row_last_import_processed) {
-            $this->nextRow();
+        if ( $this->_collectedreportfile->imported ) {
+            $this->_operation_result->endWithSuccess("file already imported. " . $this->_collectedreportfile->imported);
             return null;
         }
 
@@ -63,12 +76,16 @@ class ReportFilesImport implements ToModel, WithChunkReading, WithEvents, WithVa
         }
 
         $this->_collectedreportfile->row_last_import_processed = $currentRowNumber;
+        $this->_collectedreportfile->nb_rows_import_processed += 1;
+        $this->_collectedreportfile->nb_rows_import_success += 1;
 
         $this->_collectedreportfile->save();
 
         $this->_collectedreportfile->addLineValues($this->_collectedreportfile->latestDynamicrow->columns_values);
 
         $this->nextRow();
+
+        $this->_operation_result->endWithSuccess();
 
         return $last_inserted_value;
     }

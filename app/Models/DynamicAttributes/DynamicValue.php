@@ -81,4 +81,13 @@ class DynamicValue extends Model
     }*/
 
     #endregion
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::deleting(function ($model) {
+            $model->hasdynamicvalue->delete();
+        });
+    }
 }

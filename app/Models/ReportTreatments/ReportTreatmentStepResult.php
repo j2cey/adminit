@@ -101,7 +101,7 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
         $reporttreatmentstepresult = ReportTreatmentStepResult::create([
             'name' => $name,
             'start_at' => $start_at ?? Carbon::now(),
-            'end_at' => $end_at ?? Carbon::now(),
+            'end_at' => $end_at,
             'state' => $state ?? TreatmentStateEnum::WAITING->value,
             'message' => $message,
             'description' => $description,

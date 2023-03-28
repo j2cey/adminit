@@ -6,6 +6,7 @@ use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Response;
+use App\Http\Resources\Report\ReportResource;
 use App\Models\ReportFile\CollectedReportFile;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -58,8 +59,11 @@ class CollectedReportFileController extends Controller
      */
     public function show(CollectedReportFile $collectedreportfile)
     {
+        //dd(CollectedReportFileResource::make($collectedreportfile->load(['reportfile','reportfile.report'])));
+        dd( json_decode( $collectedreportfile->lines_values ) );
         return view('collectedreportfiles.show')
             ->with('collectedreportfile', new CollectedReportFileResource($collectedreportfile))
+            ->with('report', new ReportResource($collectedreportfile->reportfile->report))
             ;
     }
 
