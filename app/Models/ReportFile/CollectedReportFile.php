@@ -215,6 +215,8 @@ class CollectedReportFile extends BaseModel implements Auditable
                 'imported' => 1
             ]);
 
+            $this->mergeLinesValues();
+
             $this->endImport();
             return $operation_result->endWithSuccess();
         } catch (\Exception $e) {
@@ -239,12 +241,37 @@ class CollectedReportFile extends BaseModel implements Auditable
     }
 
     public function addLineValues($linevalues) {
-        $lines_values =  json_decode( $this->lines_values );
-        $lines_values[] = json_decode( $linevalues, true );
+        $last_line = $this->latestDynamicrow;
+        $lines_values_arr_curr =  json_decode( $this->lines_values );
+        $lines_values_arr_new =  $lines_values_arr_curr;
+        if ( $this->lines_values == "[]" ) {
+            $lines_values_arr_new = [ json_decode( $last_line->columns_values, true) ];
+        } else {
+            $lines_values_arr_new[] = json_decode( $last_line->columns_values, true);
+        }
 
-        $this->lines_values = json_encode( $lines_values );
+        /*if ( $this->lines_values != "[]" ) {
+            //dd($last_line);
+            dd($linevalues, json_decode( $linevalues, true ), $this->lines_values, $lines_values_arr_curr, $lines_values_arr_new, json_encode( $lines_values_arr_new ));
+        }*/
+
+        $this->lines_values = json_encode( $lines_values_arr_new );
 
         $this->save();
+    }
+
+    public function mergeLinesValues() {
+        $this->lines_values = "";
+        $merged_values = [];
+        $dynamicrows = $this->dynamicrows;
+
+        foreach ($dynamicrows as $dynamicrow) {
+            $merged_values[] = $dynamicrow->mergeColumnsValues();
+        }
+        $this->lines_values = json_encode($merged_values);
+        $this->save();
+
+        return $merged_values;
     }
 
     /**

@@ -26,8 +26,12 @@ class CreateDynamicValuesTable extends Migration
                 ->comment('dynamic value row reference')
                 ->constrained()->onDelete('set null');
 
-            $table->string('hasdynamicvalue_type')->comment('referenced value');
-            $table->bigInteger('hasdynamicvalue_id')->comment('referenced value id');
+            $table->foreignId('dynamic_attribute_id')->nullable()
+                ->comment('dynamic attribute reference')
+                ->constrained()->onDelete('set null');
+
+            $table->string('innerdynamicvalue_type')->comment('referenced value');
+            $table->bigInteger('innerdynamicvalue_id')->comment('referenced value id');
 
             $table->timestamps();
         });
@@ -42,6 +46,7 @@ class CreateDynamicValuesTable extends Migration
     {
         Schema::table($this->table_name, function (Blueprint $table) {
             $table->dropForeign(['dynamic_row_id']);
+            $table->dropForeign(['dynamic_attribute_id']);
         });
         Schema::dropIfExists($this->table_name);
     }

@@ -5,6 +5,7 @@ namespace App\Models\DynamicAttributes;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Contracts\DynamicAttribute\IInnerDynamicValue;
 
 /**
  * Class DynamicValue
@@ -13,18 +14,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $id
  *
  * @property integer $dynamic_row_id
- * @property string $hasdynamicvalue_type
- * @property integer $hasdynamicvalue_id
+ * @property integer $dynamic_attribute_id
+ *
+ * @property string $innerdynamicvalue_type
+ * @property integer $innerdynamicvalue_id
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property IInnerDynamicValue $innerdynamicvalue
+ * @property DynamicRow $dynamicrow
+ * @property DynamicAttribute $dynamicattribute
+ * @method static DynamicValue create(array $array)
  */
 class DynamicValue extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
-    protected $with = ['hasdynamicvalue'];
+    protected $with = ['innerdynamicvalue'];
 
     #region Validation Rules
 
@@ -60,11 +68,18 @@ class DynamicValue extends Model
 
     #region Eloquent Relationships
 
-    public function valuerow() {
+    public function dynamicrow() {
         return $this->belongsTo(DynamicRow::class,"dynamic_row_id");
     }
 
-    public function hasdynamicvalue()
+    public function dynamicattribute() {
+        return $this->belongsTo(DynamicAttribute::class,"dynamic_attribute_id");
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function innerdynamicvalue()
     {
         return $this->morphTo();
     }
@@ -73,12 +88,15 @@ class DynamicValue extends Model
 
     #region Custom Functions
 
-    /*public static function createNew($thevalue, DynamicAttribute $dynamicattribute, DynamicRow $row) {
-        $dynamicvalue = DynamicValue::create([
-            'dynamic_row_id' => $row->id,
-        ]);
-        return $dynamicvalue;
+    /*public static function createInnerDynamicValue( $thevalue, DynamicAttribute $dynamicattribute, DynamicRow $row ) : IInnerDynamicValue {
+        //
     }*/
+
+    public static function createNew($thevalue, DynamicAttribute $dynamicattribute, DynamicRow $row) {
+        return $dynamicattribute
+            ->attributetype->model_type::createNew($thevalue,$dynamicattribute,$row)
+            ->dynamicvalue;
+    }
 
     #endregion
 
@@ -87,7 +105,7 @@ class DynamicValue extends Model
         parent::boot();
 
         self::deleting(function ($model) {
-            $model->hasdynamicvalue->delete();
+            $model->innerdynamicvalue->delete();
         });
     }
 }

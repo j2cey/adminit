@@ -24,10 +24,6 @@ class CreateDynamicValueDatetimesTable extends Migration
 
             $table->dateTime('thevalue')->nullable()->comment('the definitive value');
 
-            $table->foreignId('dynamic_attribute_id')->nullable()
-                ->comment('dynamic attribute reference')
-                ->constrained()->onDelete('set null');
-
             $table->timestamps();
         });
         $this->setTableComment($this->table_name,$this->table_comment);
@@ -41,7 +37,7 @@ class CreateDynamicValueDatetimesTable extends Migration
     public function down()
     {
         Schema::table($this->table_name, function (Blueprint $table) {
-            $table->dropForeign(['dynamic_attribute_id']);
+
         });
         Schema::dropIfExists($this->table_name);
     }

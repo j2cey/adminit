@@ -174,6 +174,7 @@ class Report extends BaseModel implements Auditable
             'numeric' => ($dynamicattribute->attributetype->code === ValueTypeEnum::INT->value),
             'searchable' => (bool)$dynamicattribute->searchable,
             'sortable' => (bool)$dynamicattribute->sortable,
+            'date' => (bool)($dynamicattribute->attributetype->code === ValueTypeEnum::DATETIME->value),
         ];
         $attributes_list[] = $new_attribute;
 

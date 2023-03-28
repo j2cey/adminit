@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Events\BeforeImport;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
+use App\Models\DynamicAttributes\DynamicRow;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use App\Models\ReportFile\CollectedReportFile;
@@ -69,10 +70,13 @@ class ReportFilesImport implements ToModel, WithChunkReading, WithEvents, WithVa
         }
 
         $last_inserted_value = null;
-        foreach ($this->_collectedreportfile->reportfile->report->dynamicattributes as $dynamicattribute) {
+        $new_row = true;
+        $new_dynamicrow = DynamicRow::createNew($this->_collectedreportfile);
+        foreach ($this->_collectedreportfile->reportfile->report->dynamicattributesOrdered as $dynamicattribute) {
             $row_index = $dynamicattribute->num_ord - 1;
-            $new_row = ($row_index === 0);
-            $last_inserted_value = $dynamicattribute->addValue($this->_collectedreportfile,$row[$row_index], $new_row);
+
+            $last_inserted_value = $dynamicattribute->addValue($this->_collectedreportfile,$row[$row_index], $new_dynamicrow);
+            $new_row = false;
         }
 
         $this->_collectedreportfile->row_last_import_processed = $currentRowNumber;
@@ -81,7 +85,7 @@ class ReportFilesImport implements ToModel, WithChunkReading, WithEvents, WithVa
 
         $this->_collectedreportfile->save();
 
-        $this->_collectedreportfile->addLineValues($this->_collectedreportfile->latestDynamicrow->columns_values);
+        //$this->_collectedreportfile->addLineValues($this->_collectedreportfile->latestDynamicrow->columns_values);
 
         $this->nextRow();
 

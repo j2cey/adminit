@@ -9,9 +9,9 @@
                 <option value="20">20 per page</option>
             </b-select>
         </b-field>
-        <b-table
+        <b-table class="card-body table-responsive p-0"
             :data="importedlines"
-            ref="table"
+            ref="table" striped
             :debounce-search="1000"
             :paginated="isPaginated"
             :per-page="perPage"
@@ -55,7 +55,7 @@
                             {{ props.row[column.field] }}
                         </span>
                         <span v-else-if="column.date" class="tag is-success">
-                            {{ new Date( props.row[column.field] ).toLocaleDateString() }}
+                            {{ props.row[column.field] | formatDate }}
                         </span>
                         <span v-else-if="column.field === 'actions'" class="text-xs">
                             <div class="block">
@@ -113,7 +113,7 @@ export default {
             importedlines: JSON.parse( this.importedlines_prop ),
             isPaginated: true,
             isPaginationSimple: false,
-            isPaginationRounded: true,
+            isPaginationRounded: false,
             paginationPosition: 'bottom',
             defaultSortDirection: 'asc',
             sortIcon: 'arrow-up',

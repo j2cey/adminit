@@ -27,10 +27,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $hasdynamicrow_type
  * @property integer $hasdynamicrow_id
  *
- * @property string $columns_values
+ * @property array $columns_values
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property DynamicValue[] $dynamicvalues
  */
 class DynamicRow extends BaseModel implements Auditable
 {
@@ -39,7 +41,7 @@ class DynamicRow extends BaseModel implements Auditable
     protected $guarded = [];
     protected $with = ['dynamicvalues'];
     protected $casts = [
-        //'columns_values' => 'array'
+        'columns_values' => 'array'
     ];
 
     #region Validation Rules
@@ -85,14 +87,6 @@ class DynamicRow extends BaseModel implements Auditable
     #region Custom Functions
 
     public static function createNew($related_object) {
-        /*$line_num = DynamicRow::where('hasdynamicrow_type',$dynamicattribute->hasdynamicattribute_type)
-                ->where('hasdynamicrow_id', $dynamicattribute->hasdynamicattribute_id)->count() + 1;
-        return DynamicRow::create([
-            'line_num' => $line_num,
-            'firstinserted_at' => Carbon::now(),
-            'hasdynamicrow_type' => $dynamicattribute->hasdynamicattribute_type,
-            'hasdynamicrow_id' => $dynamicattribute->hasdynamicattribute_id,
-        ]);*/
         $line_num = $related_object->dynamicrows()->count() + 1;
         return $related_object->dynamicrows()->create([
             'line_num' => $line_num,
@@ -112,15 +106,19 @@ class DynamicRow extends BaseModel implements Auditable
         ]);
     }
 
-    public function addColumnValue($column_name, $thevalue) {
-        $columns_values_arr = (array) json_decode( $this->columns_values, true );
-        $columns_values_arr = array_merge($columns_values_arr, [$column_name => $thevalue]);
-        //$new_column_value_arr = [$column_name => $thevalue];
-        //$new_columns_values_arr = $columns_values_arr + $new_column_value_arr;
+    public function mergeColumnsValues() {
+        $this->columns_values = [];
+        $merged_values = [];
+        $dynamicvalues = $this->dynamicvalues;
 
-        $this->columns_values = json_encode( $columns_values_arr );
-
+        foreach ($dynamicvalues as $dynamicValue) {
+            $new_arr = [ $dynamicValue->dynamicattribute->name => $dynamicValue->innerdynamicvalue->getValue() ];
+            $merged_values = array_merge($new_arr, $merged_values);
+        }
+        $this->columns_values = array_merge( $merged_values, $this->columns_values );
         $this->save();
+
+        return $merged_values;
     }
 
     #endregion
