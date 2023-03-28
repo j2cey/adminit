@@ -60,7 +60,7 @@ trait IsDynamicValue
     public static function bootIsDynamicValue()
     {
         static::deleting(function ($model) {
-            $model->dynamicvalue()->delete();
+            //$model->dynamicvalue()->delete();
         });
     }
 }

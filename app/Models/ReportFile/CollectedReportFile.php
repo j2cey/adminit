@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Contracts\AuditDriver;
 use App\Traits\DynamicAttribute\HasDynamicRows;
+use App\Models\ReportTreatments\OperationResult;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
@@ -65,6 +66,7 @@ class CollectedReportFile extends BaseModel implements Auditable
 
     protected $with = ['reportfile'];
     protected $casts = [
+        'imported' => 'boolean'
         //'lines_values' => 'array'
     ];
 
@@ -123,6 +125,9 @@ class CollectedReportFile extends BaseModel implements Auditable
 
     public function reportfile() {
         return $this->belongsTo(ReportFile::class, 'report_file_id');
+    }
+    public function report() {
+        return $this->reportfile->report;
     }
 
     #endregion
@@ -187,23 +192,39 @@ class CollectedReportFile extends BaseModel implements Auditable
         return $this;
     }
 
-    public function importToDb(ReportTreatmentStepResult $reporttreatmentstepresult) {
-        $this->update([
-            'import_processing' => 1,
-        ]);
+    public function importToDb(ReportTreatmentStepResult $reporttreatmentstepresult, bool $reset_imported = false): OperationResult
+    {
+        $operation_result = $reporttreatmentstepresult->addOperationResult("Importion des Données du fichier");
 
-        $this->deleteImportedData($reporttreatmentstepresult);
+        $this->startImport($reset_imported);
 
-        $import = new ReportFilesImport($this, $reporttreatmentstepresult);
-        $import->import($this->fileLocalAbsolutePath);
+        if ($reset_imported) {
+            $delete_operation_result = $this->deleteImportedData($reporttreatmentstepresult);
+            if ($delete_operation_result->isFailed) {
+                $this->endImport();
+                return $operation_result->endWithFailure("Erreur Suppression Données importées");
+            }
+        }
 
-        $this->update([
-            'import_processing' => 0,
-            'imported' => 1
-        ]);
+        try {
+            $import = new ReportFilesImport($this, $reporttreatmentstepresult);
+            $import->import($this->fileLocalAbsolutePath);
+
+            $this->update([
+                'import_processing' => 0,
+                'imported' => 1
+            ]);
+
+            $this->endImport();
+            return $operation_result->endWithSuccess();
+        } catch (\Exception $e) {
+            $this->endImport();
+            return $operation_result->endWithFailure($e->getMessage());
+        }
     }
 
-    public function deleteImportedData(ReportTreatmentStepResult $reporttreatmentstepresult) {
+    public function deleteImportedData(ReportTreatmentStepResult $reporttreatmentstepresult): OperationResult
+    {
         $operation_result = $reporttreatmentstepresult->addOperationResult("Suppression Données importées");
         try {
             $this->dynamicrows()->each(function ($dynamicrow) {
@@ -211,14 +232,15 @@ class CollectedReportFile extends BaseModel implements Auditable
             });
             $this->lines_values = "[]";
 
+            return $operation_result->endWithSuccess();
         } catch (\Exception $e) {
-
+            return $operation_result->endWithFailure($e->getMessage());
         }
     }
 
     public function addLineValues($linevalues) {
-        $lines_values =  (array) json_decode( $this->lines_values );
-        $lines_values[] = $linevalues;
+        $lines_values =  json_decode( $this->lines_values );
+        $lines_values[] = json_decode( $linevalues, true );
 
         $this->lines_values = json_encode( $lines_values );
 
@@ -232,6 +254,44 @@ class CollectedReportFile extends BaseModel implements Auditable
     {
         return self::toImport()->get();
     }
+
+    #endregion
+
+    #region Private Functions
+    /**
+     * Prépare l'objet pour démarrer une importation
+     * @param bool $reset_imported
+     * @return void
+     */
+    private function startImport(bool $reset_imported = false) {
+        $this->import_processing = 1;
+        $this->nb_import_try += 1;
+
+        if ($reset_imported) {
+
+            $this->nb_rows = 0;
+            $this->nb_rows_import_success = 0;
+            $this->nb_rows_import_failed = 0;
+            $this->nb_rows_import_processing = 0;
+            $this->nb_rows_import_processed = 0;
+            $this->row_last_import_processed = 0;
+            $this->imported = false;
+        }
+
+        $this->save();
+    }
+
+    /**
+     * Marque la fin d'une importation
+     * @return void
+     */
+    private function endImport() {
+        $this->import_processing = 0;
+        $this->imported = ($this->nb_rows_import_success >= $this->nb_rows_import_processed);
+
+        $this->save();
+    }
+    #endregion
 
 
     /*protected static function boot(){
@@ -247,6 +307,4 @@ class CollectedReportFile extends BaseModel implements Auditable
             $model->setFormalizedExtension();
         });
     }*/
-
-    #endregion
 }

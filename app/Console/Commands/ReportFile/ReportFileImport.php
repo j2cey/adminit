@@ -42,31 +42,15 @@ class ReportFileImport extends Command
     {
         \Log::info("Importation Fichiers Rapport en cours de traitement...");
 
-        $files_to_import = CollectedReportFile::getFilesToImport();
-
-        $nb_to_import = 1;
-        $nb_to_imported = 0;
-
-        foreach ($files_to_import as $file_to_import) {
-            if ($nb_to_imported < $nb_to_import) {
-
-                $file_to_import->update([
-                    'import_processing' => 1,
-                ]);
-
-                $import = new ReportFilesImport($file_to_import,new ReportTreatmentStepResult());
-                $import->import($file_to_import->fileLocalAbsolutePath);
-
-                $file_to_import->update([
-                    'import_processing' => 0,
-                    'imported' => 1
-                ]);
-            }
-            $nb_to_imported++;
+        $file_to_import = CollectedReportFile::first();
+        if ( ! is_null($file_to_import) ) {
+            $treatmentstepresult = ReportTreatmentStepResult::createNew("Chargement du Fichier Rapport dans la BD");
+            //$file_to_import->deleteImportedData($treatmentstepresult);
+            $file_to_import->importToDb($treatmentstepresult,true);
         }
 
-
         \Log::info("Traitement termine.");
+
         return 0;
     }
 }

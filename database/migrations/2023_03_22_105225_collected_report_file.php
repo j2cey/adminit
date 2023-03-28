@@ -36,7 +36,7 @@ class CollectedReportFile extends Migration
             $table->integer('row_last_import_processed')->default(0)->comment("last line import processed");
             $table->integer('nb_import_try')->default(0)->comment("number of import processing attempts");
 
-            $table->integer('imported')->default(0)->comment("determine if the file has already been imported into DB");
+            $table->boolean('imported')->default(false)->comment("determine if the file has already been imported into DB");
             $table->integer('import_processing')->default(0)->comment("determine if the file import is processing");
 
             $table->json('lines_values')->nullable()->comment('all lines values for this file');

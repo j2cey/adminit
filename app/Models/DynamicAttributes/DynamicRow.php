@@ -113,10 +113,12 @@ class DynamicRow extends BaseModel implements Auditable
     }
 
     public function addColumnValue($column_name, $thevalue) {
-        $columns_values = (array) json_decode( $this->columns_values );
-        $columns_values[$column_name] = $thevalue;
+        $columns_values_arr = (array) json_decode( $this->columns_values, true );
+        $columns_values_arr = array_merge($columns_values_arr, [$column_name => $thevalue]);
+        //$new_column_value_arr = [$column_name => $thevalue];
+        //$new_columns_values_arr = $columns_values_arr + $new_column_value_arr;
 
-        $this->columns_values = json_encode( $columns_values );
+        $this->columns_values = json_encode( $columns_values_arr );
 
         $this->save();
     }

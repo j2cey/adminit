@@ -44,7 +44,7 @@
                 <span class="help-inline pr-1 text-sm"> Résultat Importation </span>
                 <b-tag rounded type="is-info is-light">{{ collectedreportfile.nb_rows_import_success }}</b-tag>
             </template>
-
+                <ImportedLines :importedlines_prop="collectedreportfile.lines_values" :columns_prop="report.attributes_list"></ImportedLines>
         </b-tab-item>
     </b-tabs>
 </template>
@@ -52,14 +52,18 @@
 <script>
 export default {
     props: {
+        report_prop: {},
         collectedreportfile_prop: {},
     },
     name: "collectedreportfile-item",
     components: {
+        ImportedLines: () => import('../collectedreportfiles/importedlines'),
     },
     data() {
         return {
             collectedreportfile: this.collectedreportfile_prop,
+            report: this.report_prop,
+            lines_values: JSON.parse( this.collectedreportfile_prop.lines_values ),
         };
     },
     methods: {

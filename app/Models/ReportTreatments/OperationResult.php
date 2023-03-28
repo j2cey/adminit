@@ -148,18 +148,24 @@ class OperationResult extends BaseModel implements Auditable
         return $this;
     }
 
-    public function endWithSuccess(string $message = null) {
+    public function endWithSuccess(string $message = null): OperationResult
+    {
         $this->state = TreatmentStateEnum::SUCCESS->value;
         $this->message = $message ?? "Success";
         $this->end_at = Carbon::now();
         $this->save();
+
+        return $this;
     }
 
-    public function endWithFailure(string $message = null) {
+    public function endWithFailure(string $message = null): OperationResult
+    {
         $this->state = TreatmentStateEnum::FAILED->value;
         $this->message = $message ?? "Failed";
         $this->end_at = Carbon::now();
         $this->save();
+
+        return $this;
     }
 
     public function setReportTreatmentStepResult(Model|ReportTreatmentStepResult|null $reporttreatmentstepresult) {

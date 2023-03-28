@@ -26,7 +26,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $file_size
  * @property string|null $description
  *
- * @property ReportFile[] $reportfile
+ * @property ReportFile $reportfile
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -80,11 +80,20 @@ class CollectedReportFileResource extends JsonResource
 
             'imported' => $this->imported,
             'import_processing' => $this->import_processing,
-            'lines_values' => json_decode( $this->lines_values ),
+            'lines_values' => $this->lines_values,//json_decode( $this->lines_values, true ),
 
             'show_url' => route('collectedreportfiles.show', $this->uuid),
             'edit_url' => route('collectedreportfiles.edit', $this->uuid),
             'destroy_url' => route('collectedreportfiles.destroy', $this->uuid),
         ];
+    }
+
+    private function getLineValues(){
+        $first_arr = json_decode( $this->lines_values );
+        $final_arr = [];
+        foreach ($first_arr as $json_arr) {
+            $final_arr[] = json_decode($json_arr);
+        }
+        return $final_arr;
     }
 }
