@@ -5,6 +5,7 @@ namespace App\Models\ReportTreatments;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use App\Enums\TreatmentStateEnum;
+use App\Enums\CriticalityLevelEnum;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $end_at
  * @property int $operation_duration
  * @property string $state
+ * @property string $criticality_level
  * @property string $message
  *
  * @property string $description
@@ -103,7 +105,7 @@ class OperationResult extends BaseModel implements Auditable
         int $operation_no = null,
         Model|ReportTreatmentStepResult $reporttreatmentstepresult = null,
         Carbon $start_at = null, Carbon $end_at = null, int $operation_duration = null,
-        string $state = null, string $message = null, string $description = null, Model|OperationResult $parentoperation = null): OperationResult
+        string $state = null, string $criticality_level = null, string $message = null, string $description = null, Model|OperationResult $parentoperation = null): OperationResult
     {
         $operationresult = OperationResult::create([
             'name' => $name,
@@ -112,6 +114,7 @@ class OperationResult extends BaseModel implements Auditable
             'end_at' => $end_at ?? Carbon::now(),
             'operation_duration' => $operation_duration,
             'state' => $state ?? TreatmentStateEnum::WAITING->value,
+            'criticality_level' => $criticality_level ?? CriticalityLevelEnum::MEDIUM->value,
             'message' => $message,
             'description' => $description,
         ]);
@@ -129,7 +132,7 @@ class OperationResult extends BaseModel implements Auditable
         int $operation_no = null,
         Model|ReportTreatmentStepResult $reporttreatmentstepresult = null,
         Carbon $start_at = null, Carbon $end_at = null, int $operation_duration = null,
-        string $state = null, string $message = null, string $description = null, Model|OperationResult $parentoperation = null): OperationResult
+        string $state = null, string $criticality_level = null, string $message = null, string $description = null, Model|OperationResult $parentoperation = null): OperationResult
     {
         $this->name = $name;
         $this->operation_no = $operation_no;
@@ -137,6 +140,7 @@ class OperationResult extends BaseModel implements Auditable
         $this->end_at = $end_at ?? Carbon::now();
         $this->operation_duration = $operation_duration;
         $this->state = $state ?? TreatmentStateEnum::WAITING->value;
+        $this->criticality_level = $criticality_level ?? CriticalityLevelEnum::MEDIUM->value;
         $this->message = $message;
         $this->description = $description;
 
@@ -163,6 +167,14 @@ class OperationResult extends BaseModel implements Auditable
         $this->state = TreatmentStateEnum::FAILED->value;
         $this->message = $message ?? "Failed";
         $this->end_at = Carbon::now();
+        $this->save();
+
+        return $this;
+    }
+
+    public function setCriticalityLevel(CriticalityLevelEnum $criticalitylevel): OperationResult
+    {
+        $this->criticality_level = $criticalitylevel->value;
         $this->save();
 
         return $this;

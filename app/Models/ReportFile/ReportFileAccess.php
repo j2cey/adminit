@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use Illuminate\Support\Str;
 use App\Traits\Code\HasCode;
 use Illuminate\Support\Carbon;
+use App\Enums\CriticalityLevelEnum;
 use App\Models\Access\AccessAccount;
 use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Storage;
@@ -244,7 +245,7 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
 
     public function executeTreatment(): ReportTreatmentStepResult {
 
-        $reporttreatmentstepresult = ReportTreatmentStepResult::createNew("Récup",start_at: Carbon::now());
+        $reporttreatmentstepresult = ReportTreatmentStepResult::createNew("Etape de Récupération du fichier",start_at: Carbon::now());
 
         // 1. Définir le disk en fonction du protocole
         $remoteDisk = $this->getDisk();
@@ -252,12 +253,13 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
 
         // 2. Récupère l'action à exécuter pour la Récupération du fichier (retrieve_mode)
         $retrievemode_action = $this->getRetrieveModeAction();
-        $result = $retrievemode_action::execAction($remoteDisk ,$this->reportfile, $reporttreatmentstepresult);
+        $result = $retrievemode_action::execAction($remoteDisk ,$this->reportfile, $reporttreatmentstepresult, CriticalityLevelEnum::HIGH);
 
         if ($result->isSuccess){
             // 3. Récupère l'action à exécuter après la Récupération du fichier (to_perform_after_retrieving)
             $to_perform_after_retrieving = $this->getToPerformAfterRetrievingAction();
-            $to_perform_after_retrieving::execAction($remoteDisk ,$this->reportfile, $reporttreatmentstepresult);
+
+            $to_perform_after_retrieving::execAction($remoteDisk, $this->reportfile, $reporttreatmentstepresult, CriticalityLevelEnum::MEDIUM);
         }
         return $reporttreatmentstepresult;
     }

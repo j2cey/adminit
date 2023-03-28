@@ -3,6 +3,7 @@
 namespace App\Models\RetrieveAction;
 
 use Illuminate\Support\Carbon;
+use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\Models\ReportTreatments\OperationResult;
@@ -17,28 +18,25 @@ class RenameFile implements IRetrieveAction
      * @param ReportTreatmentStepResult $reporttreatmentstepresult
      * @return OperationResult
      */
-    public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult): OperationResult
+    public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum): OperationResult
     {
-        $operationresult = OperationResult::createNew("Renommage du ReportFile",1,$reporttreatmentstepresult, Carbon::now());
+        $operationresult = $reporttreatmentstepresult->addOperationResult("Renommage du ReportFile")->setCriticalityLevel($criticalitylevelenum);
 
         // variable du nom en local avec nom , temps , extension
         $local_file_name = md5($file->name . '_' . time()) . '.' . $file->extension;
 
         try{
-            $result = $disk->move($file->fileRemotePath,$local_file_name);
+            $result = $disk->move($file->fileRemotePath, $local_file_name);
 
             if($result) {
-                $operationresult->endWithSuccess("Rename success !");
-                return $operationresult;
+                return $operationresult->endWithSuccess("Rename success !");
             } else{
-                $operationresult->endWithFailure("Error rename !");
-                return $operationresult;
+                return $operationresult->endWithFailure("Error rename !");
             }
         }
         catch (\Exception $e){
-            $operationresult->endWithFailure($e->getMessage());
-            return $operationresult;}
-
+            return $operationresult->endWithFailure($e->getMessage());
+        }
     }
 
 }
