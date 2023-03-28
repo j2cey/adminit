@@ -6,6 +6,7 @@ namespace App\Traits\DynamicAttribute;
 use App\Models\DynamicAttributes\DynamicRow;
 
 /**
+ * @property DynamicRow[] $dynamicrows
  * @property DynamicRow $latestDynamicrow
  * @property DynamicRow $oldestDynamicrow
  */

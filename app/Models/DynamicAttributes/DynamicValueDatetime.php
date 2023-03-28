@@ -2,11 +2,11 @@
 
 namespace App\Models\DynamicAttributes;
 
-
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\DynamicAttribute\IsDynamicValue;
+use App\Traits\DynamicAttribute\InnerDynamicValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Contracts\DynamicAttribute\IInnerDynamicValue;
 
 /**
  * Class DynamicValueDatetime
@@ -25,9 +25,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class DynamicValueDatetime extends Model
+class DynamicValueDatetime extends Model implements IInnerDynamicValue
 {
-    use IsDynamicValue, HasFactory;
+    use InnerDynamicValue, HasFactory;
 
     protected $guarded = [];
 
@@ -71,9 +71,13 @@ class DynamicValueDatetime extends Model
 
     #region Custom Functions
 
-    public function getFormattedValue($thevalue)
+    public static function getFormattedValue($thevalue)
     {
         return empty($thevalue) ? new \DateTime() : $thevalue;
+    }
+
+    public function getValue() {
+        return $this->thevalue;
     }
 
     #endregion

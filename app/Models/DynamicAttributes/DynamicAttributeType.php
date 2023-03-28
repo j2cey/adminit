@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Contracts\DynamicAttribute\IInnerDynamicValue;
 
 /**
  * Class DynamicAttributeType
@@ -23,7 +24,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property string $name
  * @property string $code
- * @property string $model_type
+ * @property IInnerDynamicValue $model_type
  * @property string|null $description
  *
  * @property Carbon $created_at

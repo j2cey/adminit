@@ -60,7 +60,7 @@ class CollectedReportFileController extends Controller
     public function show(CollectedReportFile $collectedreportfile)
     {
         //dd(CollectedReportFileResource::make($collectedreportfile->load(['reportfile','reportfile.report'])));
-        dd( json_decode( $collectedreportfile->lines_values ) );
+        //dd( json_decode( $collectedreportfile->lines_values ) );
         return view('collectedreportfiles.show')
             ->with('collectedreportfile', new CollectedReportFileResource($collectedreportfile))
             ->with('report', new ReportResource($collectedreportfile->reportfile->report))

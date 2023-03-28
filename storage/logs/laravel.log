@@ -193,3 +193,262 @@
 [2023-03-27 22:32:53] local.INFO: Traitement termine.  
 [2023-03-27 22:34:34] local.INFO: Importation Fichiers Rapport en cours de traitement...  
 [2023-03-27 22:34:50] local.INFO: Traitement termine.  
+[2023-03-28 08:08:51] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 08:08:55] local.INFO: Traitement termine.  
+[2023-03-28 08:39:51] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 08:39:52] local.ERROR: Class App\Models\DynamicAttributes\DynamicValueString contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (App\Contracts\DynamicAttribute\IInnerDynamicValue::dynamicattribute) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Class App\\Models\\DynamicAttributes\\DynamicValueString contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (App\\Contracts\\DynamicAttribute\\IInnerDynamicValue::dynamicattribute) at /var/www/adminit/app/Models/DynamicAttributes/DynamicValueString.php:30)
+[stacktrace]
+#0 {main}
+"} 
+[2023-03-28 08:42:30] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 08:42:31] local.INFO: Traitement termine.  
+[2023-03-28 09:18:10] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 09:18:12] local.INFO: Traitement termine.  
+[2023-03-28 09:38:03] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 09:38:04] local.INFO: Traitement termine.  
+[2023-03-28 09:56:11] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 09:56:12] local.INFO: Traitement termine.  
+[2023-03-28 10:09:25] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 10:09:27] local.INFO: Traitement termine.  
+[2023-03-28 10:15:44] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 10:15:45] local.ERROR: Class App\Models\DynamicAttributes\DynamicValueString contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (App\Contracts\DynamicAttribute\IInnerDynamicValue::valuerow) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Class App\\Models\\DynamicAttributes\\DynamicValueString contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (App\\Contracts\\DynamicAttribute\\IInnerDynamicValue::valuerow) at /var/www/adminit/app/Models/DynamicAttributes/DynamicValueString.php:30)
+[stacktrace]
+#0 {main}
+"} 
+[2023-03-28 10:16:21] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 10:16:22] local.INFO: Traitement termine.  
+[2023-03-28 10:17:52] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 10:17:53] local.INFO: Traitement termine.  
+[2023-03-28 11:07:54] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 11:07:55] local.ERROR: Cannot make static method App\Traits\DynamicAttribute\InnerDynamicValue::getFormattedValue() non static in class App\Models\DynamicAttributes\DynamicValueString {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot make static method App\\Traits\\DynamicAttribute\\InnerDynamicValue::getFormattedValue() non static in class App\\Models\\DynamicAttributes\\DynamicValueString at /var/www/adminit/app/Models/DynamicAttributes/DynamicValueString.php:76)
+[stacktrace]
+#0 {main}
+"} 
+[2023-03-28 12:44:56] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 12:45:00] local.INFO: Traitement termine.  
+[2023-03-28 12:58:38] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 13:28:49] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 13:31:50] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 13:33:44] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 13:41:23] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 13:41:26] local.ERROR: Cannot use object of type stdClass as array {"exception":"[object] (Error(code: 0): Cannot use object of type stdClass as array at /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php:247)
+[stacktrace]
+#0 /var/www/adminit/app/Imports/ReportFilesImport.php(84): App\\Models\\ReportFile\\CollectedReportFile->addLineValues()
+#1 /var/www/adminit/vendor/maatwebsite/excel/src/Imports/ModelManager.php(91): App\\Imports\\ReportFilesImport->model()
+#2 /var/www/adminit/vendor/maatwebsite/excel/src/Imports/ModelManager.php(143): Maatwebsite\\Excel\\Imports\\ModelManager->toModels()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(245): Maatwebsite\\Excel\\Imports\\ModelManager->Maatwebsite\\Excel\\Imports\\{closure}()
+#4 /var/www/adminit/vendor/maatwebsite/excel/src/Imports/ModelManager.php(142): Illuminate\\Support\\Collection->each()
+#5 /var/www/adminit/vendor/maatwebsite/excel/src/Imports/ModelManager.php(73): Maatwebsite\\Excel\\Imports\\ModelManager->singleFlush()
+#6 /var/www/adminit/vendor/maatwebsite/excel/src/Imports/ModelImporter.php(82): Maatwebsite\\Excel\\Imports\\ModelManager->flush()
+#7 /var/www/adminit/vendor/maatwebsite/excel/src/Sheet.php(258): Maatwebsite\\Excel\\Imports\\ModelImporter->import()
+#8 /var/www/adminit/vendor/maatwebsite/excel/src/Jobs/ReadChunk.php(167): Maatwebsite\\Excel\\Sheet->import()
+#9 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Concerns/ManagesTransactions.php(29): Maatwebsite\\Excel\\Jobs\\ReadChunk->Maatwebsite\\Excel\\Jobs\\{closure}()
+#10 /var/www/adminit/vendor/maatwebsite/excel/src/Transactions/DbTransactionHandler.php(30): Illuminate\\Database\\Connection->transaction()
+#11 /var/www/adminit/vendor/maatwebsite/excel/src/Jobs/ReadChunk.php(166): Maatwebsite\\Excel\\Transactions\\DbTransactionHandler->__invoke()
+#12 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Maatwebsite\\Excel\\Jobs\\ReadChunk->handle()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#14 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#16 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#17 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Bus/Dispatcher.php(128): Illuminate\\Container\\Container->call()
+#18 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Bus\\Dispatcher->Illuminate\\Bus\\{closure}()
+#19 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#20 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Bus/Dispatcher.php(132): Illuminate\\Pipeline\\Pipeline->then()
+#21 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php(421): Illuminate\\Bus\\Dispatcher->dispatchNow()
+#22 /var/www/adminit/vendor/maatwebsite/excel/src/ChunkReader.php(105): dispatch_now()
+#23 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(245): Maatwebsite\\Excel\\ChunkReader->Maatwebsite\\Excel\\{closure}()
+#24 /var/www/adminit/vendor/maatwebsite/excel/src/ChunkReader.php(102): Illuminate\\Support\\Collection->each()
+#25 /var/www/adminit/vendor/maatwebsite/excel/src/Reader.php(105): Maatwebsite\\Excel\\ChunkReader->read()
+#26 /var/www/adminit/vendor/maatwebsite/excel/src/Excel.php(146): Maatwebsite\\Excel\\Reader->read()
+#27 /var/www/adminit/vendor/maatwebsite/excel/src/Concerns/Importable.php(35): Maatwebsite\\Excel\\Excel->import()
+#28 /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php(211): App\\Imports\\ReportFilesImport->import()
+#29 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileImport.php(49): App\\Models\\ReportFile\\CollectedReportFile->importToDb()
+#30 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileImport->handle()
+#31 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#32 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#33 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#34 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#35 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#36 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#37 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#38 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#39 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#40 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#41 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#42 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#43 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#44 {main}
+"} 
+[2023-03-28 13:44:12] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 13:46:59] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 13:52:26] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 13:53:14] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 13:54:34] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 13:57:16] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 14:01:37] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 14:04:46] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 14:06:21] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 14:06:27] local.INFO: Traitement termine.  
+[2023-03-28 14:16:35] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 14:17:23] local.INFO: Traitement termine.  
+[2023-03-28 14:36:50] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 14:36:56] local.INFO: Traitement termine.  
+[2023-03-28 14:41:03] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 14:41:31] local.INFO: Traitement termine.  
+[2023-03-28 14:47:52] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 14:47:57] local.ERROR: SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'message' at row 1 (SQL: update `operation_results` set `end_at` = 2023-03-28 14:47:57, `state` = failed, `message` = SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'columns_values' at row 1 (SQL: update `dynamic_rows` set `columns_values` = {"label":"ARCSMS2 GTARC|HSMSC2","data":1,"trend":"ou","trend_date":"2022-05-08 12:39:41","trend_times":9,"trend_step":0,"trend_cumul":0,"trend_age":"0:0:45","data_treated":1,"trend_hourOfWeek":"ou","trend_hourOfWeek_date":"2022-05-08 12:39:41","trend_hourOfWeek_times":9,"trend_hourOfWeek_step":0,"report_date":"2023-03-21 21:17:21"}, `dynamic_rows`.`updated_at` = 2023-03-28 14:47:57 where `id` = 1), `operation_results`.`updated_at` = 2023-03-28 14:47:57 where `id` = 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 22001): SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'message' at row 1 (SQL: update `operation_results` set `end_at` = 2023-03-28 14:47:57, `state` = failed, `message` = SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'columns_values' at row 1 (SQL: update `dynamic_rows` set `columns_values` = {\"label\":\"ARCSMS2 GTARC|HSMSC2\",\"data\":1,\"trend\":\"ou\",\"trend_date\":\"2022-05-08 12:39:41\",\"trend_times\":9,\"trend_step\":0,\"trend_cumul\":0,\"trend_age\":\"0:0:45\",\"data_treated\":1,\"trend_hourOfWeek\":\"ou\",\"trend_hourOfWeek_date\":\"2022-05-08 12:39:41\",\"trend_hourOfWeek_times\":9,\"trend_hourOfWeek_step\":0,\"report_date\":\"2023-03-21 21:17:21\"}, `dynamic_rows`.`updated_at` = 2023-03-28 14:47:57 where `id` = 1), `operation_results`.`updated_at` = 2023-03-28 14:47:57 where `id` = 1) at /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php:712)
+[stacktrace]
+#0 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(514): Illuminate\\Database\\Connection->run()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(466): Illuminate\\Database\\Connection->affectingStatement()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3062): Illuminate\\Database\\Connection->update()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(921): Illuminate\\Database\\Query\\Builder->update()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1072): Illuminate\\Database\\Eloquent\\Builder->update()
+#6 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(987): Illuminate\\Database\\Eloquent\\Model->performUpdate()
+#7 /var/www/adminit/app/Models/ReportTreatments/OperationResult.php(166): Illuminate\\Database\\Eloquent\\Model->save()
+#8 /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php(224): App\\Models\\ReportTreatments\\OperationResult->endWithFailure()
+#9 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileImport.php(49): App\\Models\\ReportFile\\CollectedReportFile->importToDb()
+#10 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileImport->handle()
+#11 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#12 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#14 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#16 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#17 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#18 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#19 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#20 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#21 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#22 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#23 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#24 {main}
+
+[previous exception] [object] (Doctrine\\DBAL\\Driver\\PDO\\Exception(code: 22001): SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'message' at row 1 at /var/www/adminit/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDO/Exception.php:18)
+[stacktrace]
+#0 /var/www/adminit/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php(119): Doctrine\\DBAL\\Driver\\PDO\\Exception::new()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(526): Doctrine\\DBAL\\Driver\\PDOStatement->execute()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(705): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(514): Illuminate\\Database\\Connection->run()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(466): Illuminate\\Database\\Connection->affectingStatement()
+#6 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3062): Illuminate\\Database\\Connection->update()
+#7 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(921): Illuminate\\Database\\Query\\Builder->update()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1072): Illuminate\\Database\\Eloquent\\Builder->update()
+#9 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(987): Illuminate\\Database\\Eloquent\\Model->performUpdate()
+#10 /var/www/adminit/app/Models/ReportTreatments/OperationResult.php(166): Illuminate\\Database\\Eloquent\\Model->save()
+#11 /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php(224): App\\Models\\ReportTreatments\\OperationResult->endWithFailure()
+#12 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileImport.php(49): App\\Models\\ReportFile\\CollectedReportFile->importToDb()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileImport->handle()
+#14 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#16 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#17 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#18 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#19 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#20 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#21 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#22 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#23 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#24 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#25 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#26 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#27 {main}
+
+[previous exception] [object] (PDOException(code: 22001): SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'message' at row 1 at /var/www/adminit/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:117)
+[stacktrace]
+#0 /var/www/adminit/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php(117): PDOStatement->execute()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(526): Doctrine\\DBAL\\Driver\\PDOStatement->execute()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(705): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(514): Illuminate\\Database\\Connection->run()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(466): Illuminate\\Database\\Connection->affectingStatement()
+#6 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3062): Illuminate\\Database\\Connection->update()
+#7 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(921): Illuminate\\Database\\Query\\Builder->update()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1072): Illuminate\\Database\\Eloquent\\Builder->update()
+#9 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(987): Illuminate\\Database\\Eloquent\\Model->performUpdate()
+#10 /var/www/adminit/app/Models/ReportTreatments/OperationResult.php(166): Illuminate\\Database\\Eloquent\\Model->save()
+#11 /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php(224): App\\Models\\ReportTreatments\\OperationResult->endWithFailure()
+#12 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileImport.php(49): App\\Models\\ReportFile\\CollectedReportFile->importToDb()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileImport->handle()
+#14 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#16 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#17 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#18 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#19 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#20 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#21 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#22 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#23 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#24 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#25 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#26 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#27 {main}
+"} 
+[2023-03-28 14:53:59] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 14:54:07] local.INFO: Traitement termine.  
+[2023-03-28 15:00:45] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 15:01:13] local.INFO: Traitement termine.  
+[2023-03-28 15:08:02] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 15:08:12] local.INFO: Traitement termine.  
+[2023-03-28 15:16:00] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 15:16:26] local.INFO: Traitement termine.  
+[2023-03-28 15:28:57] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 15:29:06] local.ERROR: Call to a member function merge() on string {"exception":"[object] (Error(code: 0): Call to a member function merge() on string at /var/www/adminit/app/Models/DynamicAttributes/DynamicRow.php:144)
+[stacktrace]
+#0 /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php(269): App\\Models\\DynamicAttributes\\DynamicRow->mergeColumnsValues()
+#1 /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php(218): App\\Models\\ReportFile\\CollectedReportFile->mergeLinesValues()
+#2 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileImport.php(49): App\\Models\\ReportFile\\CollectedReportFile->importToDb()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileImport->handle()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#6 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#7 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#9 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#10 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#11 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#12 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#13 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#14 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#16 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#17 {main}
+"} 
+[2023-03-28 15:30:21] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 15:30:54] local.ERROR: Call to a member function merge() on array {"exception":"[object] (Error(code: 0): Call to a member function merge() on array at /var/www/adminit/app/Models/DynamicAttributes/DynamicRow.php:144)
+[stacktrace]
+#0 /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php(269): App\\Models\\DynamicAttributes\\DynamicRow->mergeColumnsValues()
+#1 /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php(218): App\\Models\\ReportFile\\CollectedReportFile->mergeLinesValues()
+#2 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileImport.php(49): App\\Models\\ReportFile\\CollectedReportFile->importToDb()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileImport->handle()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#6 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#7 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#9 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#10 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#11 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#12 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#13 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#14 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#16 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#17 {main}
+"} 
+[2023-03-28 15:32:50] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 15:33:14] local.INFO: Traitement termine.  
+[2023-03-28 15:47:18] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 15:47:23] local.INFO: Traitement termine.  
+[2023-03-28 15:49:19] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 15:49:42] local.INFO: Traitement termine.  
+[2023-03-28 15:59:34] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 16:00:13] local.INFO: Traitement termine.  
+[2023-03-28 16:07:12] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 16:08:15] local.INFO: Traitement termine.  
+[2023-03-28 16:10:25] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 16:11:03] local.INFO: Traitement termine.  
+[2023-03-28 16:54:42] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-28 16:55:01] local.INFO: Traitement termine.  

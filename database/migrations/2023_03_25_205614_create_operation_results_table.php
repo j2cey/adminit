@@ -28,7 +28,7 @@ class CreateOperationResultsTable extends Migration
             $table->timestamp('end_at')->nullable()->comment('operation end date');
             $table->integer('operation_duration')->nullable()->comment('operation duration');
             $table->string('state')->nullable()->comment('operation state: [waiting, running, success, failed]');
-            $table->string('message', 500)->nullable()->comment('operation message');
+            $table->string('message', 1000)->nullable()->comment('operation message');
 
             $table->string('description', 500)->nullable()->comment('operation description');
 

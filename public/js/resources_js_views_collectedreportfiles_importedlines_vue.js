@@ -21,7 +21,7 @@ __webpack_require__.r(__webpack_exports__);
       importedlines: JSON.parse(this.importedlines_prop),
       isPaginated: true,
       isPaginationSimple: false,
-      isPaginationRounded: true,
+      isPaginationRounded: false,
       paginationPosition: 'bottom',
       defaultSortDirection: 'asc',
       sortIcon: 'arrow-up',
@@ -95,8 +95,10 @@ var render = function render() {
     }
   }, [_vm._v("20 per page")])])], 1), _vm._v(" "), _c("b-table", {
     ref: "table",
+    staticClass: "card-body table-responsive p-0",
     attrs: {
       data: _vm.importedlines,
+      striped: "",
       "debounce-search": 1000,
       paginated: _vm.isPaginated,
       "per-page": _vm.perPage,
@@ -180,7 +182,7 @@ var render = function render() {
             staticClass: "text-xs"
           }, [_vm._v("\n                        " + _vm._s(props.row[column.field]) + "\n                    ")]) : column.date ? _c("span", {
             staticClass: "tag is-success"
-          }, [_vm._v("\n                        " + _vm._s(new Date(props.row[column.field]).toLocaleDateString()) + "\n                    ")]) : column.field === "actions" ? _c("span", {
+          }, [_vm._v("\n                        " + _vm._s(_vm._f("formatDate")(props.row[column.field])) + "\n                    ")]) : column.field === "actions" ? _c("span", {
             staticClass: "text-xs"
           }, [_c("div", {
             staticClass: "block"

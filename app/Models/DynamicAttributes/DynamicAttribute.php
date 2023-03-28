@@ -111,7 +111,7 @@ class DynamicAttribute extends BaseModel implements Auditable
      * @return HasMany
      */
     public function values() {
-        return $this->hasMany($this->attributetype->model_type, "dynamic_attribute_id");
+        return $this->hasMany(DynamicValue::class, "dynamic_attribute_id");
     }
 
     /**
@@ -139,7 +139,8 @@ class DynamicAttribute extends BaseModel implements Auditable
 
 
 
-    public function addValue(Model|CollectedReportFile $collectedfile, $thevalue, $new_row = false) {
+    public function addValue(Model|CollectedReportFile $collectedfile, $thevalue, DynamicRow $new_dynamicrow) {
+        /*
         if ($new_row) {
             // get new row
             $values_row = DynamicRow::createNew($collectedfile);
@@ -147,9 +148,11 @@ class DynamicAttribute extends BaseModel implements Auditable
             // get last row
             $values_row = $collectedfile->latestDynamicrow;
         }
+        */
 
-        return $this->values()->create()        // create new value object
-            ->setValue($thevalue, $values_row); // set the inner (formatted) value to the just created value object
+        //return $this->values()->create()        // create new value object
+        //    ->setValue($thevalue, $values_row); // set the inner (formatted) value to the just created value object
+        return DynamicValue::createNew($thevalue,$this,$new_dynamicrow);
     }
 
     #endregion

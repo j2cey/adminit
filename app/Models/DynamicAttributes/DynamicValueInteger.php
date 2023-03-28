@@ -5,8 +5,9 @@ namespace App\Models\DynamicAttributes;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\DynamicAttribute\IsDynamicValue;
+use App\Traits\DynamicAttribute\InnerDynamicValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Contracts\DynamicAttribute\IInnerDynamicValue;
 
 /**
  * Class DynamicValueInteger
@@ -25,9 +26,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class DynamicValueInteger extends Model
+class DynamicValueInteger extends Model implements IInnerDynamicValue
 {
-    use IsDynamicValue, HasFactory;
+    use InnerDynamicValue, HasFactory;
 
     protected $guarded = [];
 
@@ -69,9 +70,13 @@ class DynamicValueInteger extends Model
 
     #region Custom Functions
 
-    public function getFormattedValue($thevalue)
+    public static function getFormattedValue($thevalue)
     {
         return intval($thevalue);
+    }
+
+    public function getValue() {
+        return $this->thevalue;
     }
 
     #endregion
