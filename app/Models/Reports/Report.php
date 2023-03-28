@@ -178,7 +178,7 @@ class Report extends BaseModel implements Auditable
     public function setAttributesList() {
         $this->attributes_list = "[]";
         $this->save();
-        
+
         $dynamicattributes_ordered = $this->dynamicattributesOrdered;
         foreach ($dynamicattributes_ordered as $dynamicattribute) {
             $this->setAddAttributeToList($dynamicattribute);
