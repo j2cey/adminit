@@ -51,9 +51,11 @@ trait HasSelectedRetrieveActions
 
     /**
      * Retire et supprime un objet SelectedRetrieveAction du modèle qui utilise ce trait et implémente l'interface y rattachée (HasSelectedRetrieveActions)
+     * @param Model|SelectedRetrieveAction $selectedaction
+     * @param bool $delete
      * @return bool|null
      */
-    public function removeSelectedAction(SelectedRetrieveAction $selectedaction, bool $delete = false): ?bool
+    public function removeSelectedAction(Model|SelectedRetrieveAction $selectedaction, bool $delete = false): ?bool
     {
         $this->dissociateSelectedActions($selectedaction);
         $this->refresh();

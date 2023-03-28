@@ -122,5 +122,20 @@ class ReportTreatmentResult extends BaseModel implements Auditable
         return $this;
     }
 
+    public function addStep(string $name = null) {
+
+        $step = ReportTreatmentStepResult::createNew($name,$this);
+        if ( ! $this->currentstep ) {
+            $this->setCurrentStep($step);
+        }
+
+        return $step;
+    }
+    public function setCurrentStep(Model|ReportTreatmentStepResult $currentstep) {
+        $this->currentstep()->associate($currentstep);
+
+        return $this->currentstep;
+    }
+
     #endregion
 }

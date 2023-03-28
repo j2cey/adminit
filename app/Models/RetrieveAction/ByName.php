@@ -3,7 +3,7 @@
 namespace App\Models\RetrieveAction;
 
 use Illuminate\Support\Carbon;
-use App\Enums\TreatmentStateEnum;
+use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ReportFile\CollectedReportFile;
@@ -19,9 +19,9 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  */
 class ByName implements IRetrieveAction
 {
-    public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult): OperationResult
+    public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum): OperationResult
     {
-        $operationresult = OperationResult::createNew("Récupération du ReportFile par Nom",1,$reporttreatmentstepresult, Carbon::now());
+        $operationresult = $reporttreatmentstepresult->addOperationResult("Récupération du ReportFile par Nom")->setCriticalityLevel($criticalitylevelenum);
         // récupère le chemin du répertoire des CollectedReportFile
         $collectedreportfiles_folder = config('app.collectedreportfiles_folder');
 

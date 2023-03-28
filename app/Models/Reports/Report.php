@@ -7,6 +7,7 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use App\Enums\ValueTypeEnum;
 use Illuminate\Support\Carbon;
+use App\Enums\TreatmentStateEnum;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -14,6 +15,8 @@ use App\Models\ReportFile\ReportFileType;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ReportTreatments\ReportTreatmentResult;
+use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 /**
  * Class Report
@@ -34,6 +37,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property ReportTreatmentResult[] $reporttreatmentresultswaiting
  *
  * @method static create(string[] $array)
  */
@@ -42,7 +46,7 @@ class Report extends BaseModel implements Auditable
     use HasDynamicAttributes, HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
-    protected $with = ['reporttype'];
+    protected array $with = ['reporttype'];
 
     #region Validation Rules
 
@@ -78,6 +82,14 @@ class Report extends BaseModel implements Auditable
 
     public function reportfiles() {
         return $this->hasMany(ReportFile::class, "report_id");
+    }
+
+    public function reporttreatmentresults() {
+        return $this->belongsTo(ReportTreatmentResult::class, "report_id");
+    }
+    public function reporttreatmentresultswaiting() {
+        return $this->reporttreatmentresults()
+            ->where('state', TreatmentStateEnum::WAITING->value);
     }
 
     #endregion
@@ -182,6 +194,38 @@ class Report extends BaseModel implements Auditable
         $dynamicattributes_ordered = $this->dynamicattributesOrdered;
         foreach ($dynamicattributes_ordered as $dynamicattribute) {
             $this->setAddAttributeToList($dynamicattribute);
+        }
+    }
+
+    public function exec() {
+
+        // On recherche récupère les traitements en cours (le cas échéant)
+        $waitingtreatments = $this->reporttreatmentresultswaiting;
+        //$nb_critical_waiting = 0;
+
+        foreach ($waitingtreatments as $waitingtreatment) {
+            // si l'étape en cours est success, on passe suivant
+
+            // si l'étape en cours est waiting ou failed non critique
+            // l'exécute
+            // sinon on s'arrête
+        }
+
+        $reporttreatmentresult = ReportTreatmentResult::createNew($this,"Traitement Rapport " . $this->title);
+        $first_step = $reporttreatmentresult->addStep("Récupération du fichier");
+    }
+
+    private function execStep(ReportTreatmentStepResult $step, int $step_no) {
+        if ($step_no === 1) {
+            // Récupération Fichier
+        } elseif ($step_no === 2) {
+            // Import
+        } elseif ($step_no === 3) {
+            // Formmat
+        } elseif ($step_no === 4) {
+            // Alert
+        } else {
+            return null;
         }
     }
 
