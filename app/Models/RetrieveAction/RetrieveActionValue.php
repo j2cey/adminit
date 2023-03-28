@@ -6,6 +6,7 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use App\Enums\ValueTypeEnum;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -96,11 +97,11 @@ class RetrieveActionValue extends BaseModel implements Auditable
      * @param string|null $value_string Valeur string
      * @param int|null $value_int valeur integer
      * @param Carbon|null $value_datetime Valeur DateTime
-     * @param Status|null $status Statut
+     * @param Model|Status|null $status Statut
      * @param string|null $description Description de l'action
      * @return RetrieveActionValue
      */
-    public static function createNew(SelectedRetrieveAction $selectedretrieveaction, string $label, string $type, string $value_string = null, int $value_int = null, Carbon $value_datetime = null, Status $status = null, string $description = null): RetrieveActionValue
+    public static function createNew(SelectedRetrieveAction $selectedretrieveaction, string $label, string $type, string $value_string = null, int $value_int = null, Carbon $value_datetime = null, Model|Status $status = null, string $description = null): RetrieveActionValue
     {
         $retrieveactionvalue = RetrieveActionValue::create([
             'label' => $label,
@@ -121,17 +122,17 @@ class RetrieveActionValue extends BaseModel implements Auditable
 
     /**
      * Modifie (et stocke dans la base de données) cette action de récupération (RetrieveAction)
-     * @param SelectedRetrieveAction $selectedretrieveaction Type d'action
+     * @param Model|SelectedRetrieveAction $selectedretrieveaction Type d'action
      * @param string $label Libellé
      * @param string $type Type de donnée
      * @param string|null $value_string Valeur string
      * @param int|null $value_int valeur integer
      * @param Carbon|null $value_datetime Valeur DateTime
-     * @param Status|null $status Statut
+     * @param Model|Status|null $status Statut
      * @param string|null $description Description de l'action
      * @return $this
      */
-    public function updateOne(SelectedRetrieveAction $selectedretrieveaction, string $label, string $type, string $value_string = null, int $value_int = null, Carbon $value_datetime = null, Status $status = null, string $description = null)
+    public function updateOne(Model|SelectedRetrieveAction $selectedretrieveaction, string $label, string $type, string $value_string = null, int $value_int = null, Carbon $value_datetime = null, Model|Status $status = null, string $description = null)
     {
         $this->label = $label;
         $this->type = $type;

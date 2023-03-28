@@ -49,7 +49,7 @@ class SettingSeeder extends Seeder
         // groupe SelectedRetrieveAction
         $group = $this->createNew("selretrieveaction", null, null, "string", ",", "settings SelectedRetrieveAction.");
         // value selretrieveaction.default_actions_scopes
-        $this->createNew("default_actions_scopes", $group->id, "retrieveByName,deleteFile", "array", ",", "liste des actions par défaut.");
+        $this->createNew("default_actions_scopes", $group->id, "retrieveByName,renameFile", "array", ",", "liste des actions par défaut.");
     }
 
     private function createNew($name, $group_id = null, $value = null, $type = null, $array_sep = ",", $description = null)

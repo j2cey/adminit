@@ -105,11 +105,11 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
      * Crée (et stocke dans la base de données) une nouvelle action de récupération (RetrieveAction)
      * @param Model|RetrieveAction $retrieveaction L'action
      * @param string|null $code Code de selection
-     * @param Status|null $status Statut
+     * @param Model|Status|null $status Statut
      * @param string|null $description Description de la sélection
      * @return SelectedRetrieveAction
      */
-    public static function createNew(Model|RetrieveAction $retrieveaction, string $code = null, Status $status = null, string $description = null): SelectedRetrieveAction
+    public static function createNew(Model|RetrieveAction $retrieveaction, string $code = null, Model|Status $status = null, string $description = null): SelectedRetrieveAction
     {
         $selectedretrieveaction = SelectedRetrieveAction::create([
             'code' => $code,
@@ -128,11 +128,11 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
      * Modifie (et stocke dans la base de données) cette action de récupération (RetrieveAction)
      * @param RetrieveAction $retrieveaction L'action
      * @param string|null $code Code de selection
-     * @param Status|null $status Statut
+     * @param Model|Status|null $status Statut
      * @param string|null $description Description de la sélection
      * @return $this
      */
-    public function updateOne(RetrieveAction $retrieveaction, string $code = null, Status $status = null, string $description = null): SelectedRetrieveAction
+    public function updateOne(RetrieveAction $retrieveaction, string $code = null, Model|Status $status = null, string $description = null): SelectedRetrieveAction
     {
         $this->code = $code;
         $this->description = $description;

@@ -244,7 +244,7 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
 
     public function executeTreatment(): ReportTreatmentStepResult {
 
-        $reporttreatmentstepresult = ReportTreatmentStepResult::createNew(null,start_at: Carbon::now());
+        $reporttreatmentstepresult = ReportTreatmentStepResult::createNew("Récup",start_at: Carbon::now());
 
         // 1. Définir le disk en fonction du protocole
         $remoteDisk = $this->getDisk();
@@ -328,15 +328,16 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
         $file_name = "output_data_portal_files" . "." . $this->reportfile->extension;
         $remotedir_path = "/";
         $file_path_from = $remotedir_path . "/" . $file_name;
-        $file_path_to = $remotedir_path . "/" . "laravel_test2" . "." . $this->reportfile->extension;
+        $file_path_to = $remotedir_path . "/" . "output_data_2" . "." . $this->reportfile->extension;
 
         $remoteDisk = $this->getDisk();
 
-        $remoteDisk->rename($file_path_from, $file_path_to);
+        $remoteDisk->move($file_path_from, $file_path_to);
 
         $result = $remoteDisk;
 
         dd($result);
+
     }
 
 
@@ -442,7 +443,7 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
             }
 
         }
-        dd($nbrfiles);
+        //dd($nbrfiles);
     }
 
     public function downloadByName(){
@@ -462,7 +463,7 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
 
         }
     }
-     dd($nbrfiles);
+     //dd($nbrfiles);
 }
 
 

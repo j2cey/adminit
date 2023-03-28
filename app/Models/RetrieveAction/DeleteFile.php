@@ -18,7 +18,8 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  */
 class DeleteFile implements IRetrieveAction
 {
-    public static function execAction(Filesystem $disk, ReportFile $file,ReportTreatmentStepResult $reporttreatmentstepresult): OperationResult {
+    public static function execAction(Filesystem $disk, ReportFile $file,ReportTreatmentStepResult $reporttreatmentstepresult): OperationResult
+    {
         $operationresult = OperationResult::createNew("Suppression du ReportFile",1,$reporttreatmentstepresult, Carbon::now());
 
         try{
