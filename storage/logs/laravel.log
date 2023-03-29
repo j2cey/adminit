@@ -452,3 +452,167 @@
 [2023-03-28 16:11:03] local.INFO: Traitement termine.  
 [2023-03-28 16:54:42] local.INFO: Importation Fichiers Rapport en cours de traitement...  
 [2023-03-28 16:55:01] local.INFO: Traitement termine.  
+[2023-03-29 06:30:46] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-29 06:30:46] local.INFO: Traitement termine.  
+[2023-03-29 07:11:44] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-29 07:11:44] local.INFO: Traitement termine.  
+[2023-03-29 07:12:56] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-29 07:12:56] local.INFO: Traitement termine.  
+[2023-03-29 07:13:06] local.INFO: Download Fichiers Rapport en cours de traitement...  
+[2023-03-29 07:13:08] local.INFO: Traitement termine.  
+[2023-03-29 07:14:33] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-29 07:14:33] local.INFO: Traitement termine.  
+[2023-03-29 07:17:31] local.ERROR: Type of App\Models\Reports\Report::$with must not be defined (as in class Illuminate\Database\Eloquent\Model) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Type of App\\Models\\Reports\\Report::$with must not be defined (as in class Illuminate\\Database\\Eloquent\\Model) at /var/www/adminit/app/Models/Reports/Report.php:44)
+[stacktrace]
+#0 {main}
+"} 
+[2023-03-29 07:19:14] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-29 07:19:15] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'criticality_level' in 'field list' (SQL: insert into `operation_results` (`name`, `operation_no`, `start_at`, `end_at`, `operation_duration`, `state`, `criticality_level`, `message`, `description`, `status_id`, `uuid`, `updated_at`, `created_at`) values (Importion des Données du fichier, 1, 2023-03-29 07:19:14, 2023-03-29 07:19:14, ?, waiting, medium, ?, ?, 1, 98cd4782-efe9-4946-be15-1fe31fe00eef, 2023-03-29 07:19:14, 2023-03-29 07:19:14)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'criticality_level' in 'field list' (SQL: insert into `operation_results` (`name`, `operation_no`, `start_at`, `end_at`, `operation_duration`, `state`, `criticality_level`, `message`, `description`, `status_id`, `uuid`, `updated_at`, `created_at`) values (Importion des Données du fichier, 1, 2023-03-29 07:19:14, 2023-03-29 07:19:14, ?, waiting, medium, ?, ?, 1, 98cd4782-efe9-4946-be15-1fe31fe00eef, 2023-03-29 07:19:14, 2023-03-29 07:19:14)) at /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php:712)
+[stacktrace]
+#0 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(490): Illuminate\\Database\\Connection->run()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(454): Illuminate\\Database\\Connection->statement()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Query/Processors/Processor.php(32): Illuminate\\Database\\Connection->insert()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3028): Illuminate\\Database\\Query\\Processors\\Processor->processInsertGetId()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(1657): Illuminate\\Database\\Query\\Builder->insertGetId()
+#6 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1188): Illuminate\\Database\\Eloquent\\Builder->__call()
+#7 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1153): Illuminate\\Database\\Eloquent\\Model->insertAndSetId()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(994): Illuminate\\Database\\Eloquent\\Model->performInsert()
+#9 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(896): Illuminate\\Database\\Eloquent\\Model->save()
+#10 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Support/helpers.php(263): Illuminate\\Database\\Eloquent\\Builder->Illuminate\\Database\\Eloquent\\{closure}()
+#11 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(895): tap()
+#12 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Support/Traits/ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->create()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2132): Illuminate\\Database\\Eloquent\\Model->forwardCallTo()
+#14 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2144): Illuminate\\Database\\Eloquent\\Model->__call()
+#15 /var/www/adminit/app/Models/ReportTreatments/OperationResult.php(110): Illuminate\\Database\\Eloquent\\Model::__callStatic()
+#16 /var/www/adminit/app/Models/ReportTreatments/ReportTreatmentStepResult.php(160): App\\Models\\ReportTreatments\\OperationResult::createNew()
+#17 /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php(197): App\\Models\\ReportTreatments\\ReportTreatmentStepResult->addOperationResult()
+#18 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileImport.php(49): App\\Models\\ReportFile\\CollectedReportFile->importToDb()
+#19 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileImport->handle()
+#20 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#22 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#23 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#24 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#25 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#26 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#27 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#28 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#29 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#30 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#31 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#32 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#33 {main}
+
+[previous exception] [object] (Doctrine\\DBAL\\Driver\\PDO\\Exception(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'criticality_level' in 'field list' at /var/www/adminit/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDO/Exception.php:18)
+[stacktrace]
+#0 /var/www/adminit/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php(87): Doctrine\\DBAL\\Driver\\PDO\\Exception::new()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(495): Doctrine\\DBAL\\Driver\\PDOConnection->prepare()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(705): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(490): Illuminate\\Database\\Connection->run()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(454): Illuminate\\Database\\Connection->statement()
+#6 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Query/Processors/Processor.php(32): Illuminate\\Database\\Connection->insert()
+#7 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3028): Illuminate\\Database\\Query\\Processors\\Processor->processInsertGetId()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(1657): Illuminate\\Database\\Query\\Builder->insertGetId()
+#9 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1188): Illuminate\\Database\\Eloquent\\Builder->__call()
+#10 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1153): Illuminate\\Database\\Eloquent\\Model->insertAndSetId()
+#11 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(994): Illuminate\\Database\\Eloquent\\Model->performInsert()
+#12 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(896): Illuminate\\Database\\Eloquent\\Model->save()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Support/helpers.php(263): Illuminate\\Database\\Eloquent\\Builder->Illuminate\\Database\\Eloquent\\{closure}()
+#14 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(895): tap()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Support/Traits/ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->create()
+#16 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2132): Illuminate\\Database\\Eloquent\\Model->forwardCallTo()
+#17 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2144): Illuminate\\Database\\Eloquent\\Model->__call()
+#18 /var/www/adminit/app/Models/ReportTreatments/OperationResult.php(110): Illuminate\\Database\\Eloquent\\Model::__callStatic()
+#19 /var/www/adminit/app/Models/ReportTreatments/ReportTreatmentStepResult.php(160): App\\Models\\ReportTreatments\\OperationResult::createNew()
+#20 /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php(197): App\\Models\\ReportTreatments\\ReportTreatmentStepResult->addOperationResult()
+#21 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileImport.php(49): App\\Models\\ReportFile\\CollectedReportFile->importToDb()
+#22 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileImport->handle()
+#23 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#24 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#25 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#26 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#27 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#28 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#29 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#30 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#31 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#32 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#33 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#34 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#35 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#36 {main}
+
+[previous exception] [object] (PDOException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'criticality_level' in 'field list' at /var/www/adminit/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:82)
+[stacktrace]
+#0 /var/www/adminit/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php(82): PDO->prepare()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(495): Doctrine\\DBAL\\Driver\\PDOConnection->prepare()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(705): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(672): Illuminate\\Database\\Connection->runQueryCallback()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(490): Illuminate\\Database\\Connection->run()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Connection.php(454): Illuminate\\Database\\Connection->statement()
+#6 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Query/Processors/Processor.php(32): Illuminate\\Database\\Connection->insert()
+#7 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3028): Illuminate\\Database\\Query\\Processors\\Processor->processInsertGetId()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(1657): Illuminate\\Database\\Query\\Builder->insertGetId()
+#9 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1188): Illuminate\\Database\\Eloquent\\Builder->__call()
+#10 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1153): Illuminate\\Database\\Eloquent\\Model->insertAndSetId()
+#11 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(994): Illuminate\\Database\\Eloquent\\Model->performInsert()
+#12 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(896): Illuminate\\Database\\Eloquent\\Model->save()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Support/helpers.php(263): Illuminate\\Database\\Eloquent\\Builder->Illuminate\\Database\\Eloquent\\{closure}()
+#14 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(895): tap()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Support/Traits/ForwardsCalls.php(23): Illuminate\\Database\\Eloquent\\Builder->create()
+#16 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2132): Illuminate\\Database\\Eloquent\\Model->forwardCallTo()
+#17 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2144): Illuminate\\Database\\Eloquent\\Model->__call()
+#18 /var/www/adminit/app/Models/ReportTreatments/OperationResult.php(110): Illuminate\\Database\\Eloquent\\Model::__callStatic()
+#19 /var/www/adminit/app/Models/ReportTreatments/ReportTreatmentStepResult.php(160): App\\Models\\ReportTreatments\\OperationResult::createNew()
+#20 /var/www/adminit/app/Models/ReportFile/CollectedReportFile.php(197): App\\Models\\ReportTreatments\\ReportTreatmentStepResult->addOperationResult()
+#21 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileImport.php(49): App\\Models\\ReportFile\\CollectedReportFile->importToDb()
+#22 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileImport->handle()
+#23 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#24 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#25 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#26 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#27 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#28 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#29 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#30 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#31 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#32 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#33 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#34 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#35 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#36 {main}
+"} 
+[2023-03-29 07:28:42] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-29 07:28:42] local.INFO: Traitement termine.  
+[2023-03-29 07:29:06] local.ERROR: App\Models\Reports\Report::createNew(): Argument #2 ($reporttype) must be of type Illuminate\Database\Eloquent\Model|App\Models\Reports\ReportType, null given, called in /var/www/adminit/database/seeders/TestFullReportSeeder.php on line 25 {"exception":"[object] (TypeError(code: 0): App\\Models\\Reports\\Report::createNew(): Argument #2 ($reporttype) must be of type Illuminate\\Database\\Eloquent\\Model|App\\Models\\Reports\\ReportType, null given, called in /var/www/adminit/database/seeders/TestFullReportSeeder.php on line 25 at /var/www/adminit/app/Models/Reports/Report.php:106)
+[stacktrace]
+#0 /var/www/adminit/database/seeders/TestFullReportSeeder.php(25): App\\Models\\Reports\\Report::createNew()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Database\\Seeders\\TestFullReportSeeder->run()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#6 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Seeder.php(149): Illuminate\\Container\\Container->call()
+#7 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Console/Seeds/SeedCommand.php(66): Illuminate\\Database\\Seeder->__invoke()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/GuardsAttributes.php(157): Illuminate\\Database\\Console\\Seeds\\SeedCommand->Illuminate\\Database\\Console\\Seeds\\{closure}()
+#9 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Console/Seeds/SeedCommand.php(65): Illuminate\\Database\\Eloquent\\Model::unguarded()
+#10 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Seeds\\SeedCommand->handle()
+#11 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#12 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#14 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#16 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#17 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#18 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#19 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#20 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#21 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#22 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#23 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#24 {main}
+"} 
+[2023-03-29 07:34:43] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-03-29 07:34:49] local.INFO: Traitement termine.  

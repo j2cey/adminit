@@ -6,6 +6,7 @@ use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
+use App\Models\RetrieveAction\RetrieveAction;
 use Illuminate\Http\Resources\Json\JsonResource;
 use function route;
 
@@ -29,6 +30,7 @@ use function route;
  * @property Carbon $updated_at
  *
  * @property Status $status
+ * @property RetrieveAction[] $retrieveactions
  */
 class RetrieveActionTypeResource extends JsonResource
 {
@@ -48,6 +50,7 @@ class RetrieveActionTypeResource extends JsonResource
             'name' => $this->name,
             'code' => $this->code,
             'description' => $this->description,
+            'retrieveactions' => $this->retrieveactions,
 
             'created_at' => $this->created_at,
 

@@ -139,7 +139,7 @@ class DynamicAttribute extends BaseModel implements Auditable
 
 
 
-    public function addValue(Model|CollectedReportFile $collectedfile, $thevalue, DynamicRow $new_dynamicrow) {
+    public function addValue($thevalue, DynamicRow $new_dynamicrow) {
         /*
         if ($new_row) {
             // get new row

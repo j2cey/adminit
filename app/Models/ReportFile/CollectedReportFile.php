@@ -210,10 +210,11 @@ class CollectedReportFile extends BaseModel implements Auditable
             $import = new ReportFilesImport($this, $reporttreatmentstepresult);
             $import->import($this->fileLocalAbsolutePath);
 
+            /*
             $this->update([
                 'import_processing' => 0,
                 'imported' => 1
-            ]);
+            ]);*/
 
             $this->mergeLinesValues();
 
@@ -238,26 +239,6 @@ class CollectedReportFile extends BaseModel implements Auditable
         } catch (\Exception $e) {
             return $operation_result->endWithFailure($e->getMessage());
         }
-    }
-
-    public function addLineValues($linevalues) {
-        $last_line = $this->latestDynamicrow;
-        $lines_values_arr_curr =  json_decode( $this->lines_values );
-        $lines_values_arr_new =  $lines_values_arr_curr;
-        if ( $this->lines_values == "[]" ) {
-            $lines_values_arr_new = [ json_decode( $last_line->columns_values, true) ];
-        } else {
-            $lines_values_arr_new[] = json_decode( $last_line->columns_values, true);
-        }
-
-        /*if ( $this->lines_values != "[]" ) {
-            //dd($last_line);
-            dd($linevalues, json_decode( $linevalues, true ), $this->lines_values, $lines_values_arr_curr, $lines_values_arr_new, json_encode( $lines_values_arr_new ));
-        }*/
-
-        $this->lines_values = json_encode( $lines_values_arr_new );
-
-        $this->save();
     }
 
     public function mergeLinesValues() {

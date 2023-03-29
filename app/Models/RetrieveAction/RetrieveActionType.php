@@ -89,7 +89,9 @@ class RetrieveActionType extends BaseModel implements Auditable
 
     #region Eloquent Relationships
 
-
+    public function retrieveactions() {
+        return $this->hasMany(RetrieveAction::class, 'retrieve_action_type_id');
+    }
 
     #endregion
 

@@ -29,13 +29,36 @@
                                                  value=""
                                                  :options="attributetypes"
                                                  :searchable="true"
-                                                 :multiple="false"
+                                                 :multiple="true"
                                                  label="name"
                                                  track-by="id"
                                                  key="id"
                                                  placeholder="Attribute Type"
                                     >
                                     </multiselect>
+
+                                    <div class="form-group row">
+                                        <label for="reportfile_retrieval_type" class="col-sm-4 col-form-label text-xs">Récupération du Fichier:</label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="reportfile_retrieval_type" class="col-sm-2 col-form-label text-xs">
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <b-field id="reportfile_retrieval_type" label="" label-position="on-border" custom-class="is-small">
+                                                <b-radio-button size="is-small" v-model="dynamicattributeForm.searchable"
+                                                                native-value="searchable"
+                                                                type="is-success is-light is-outlined" @input="searchableChange($event)">
+                                                    <span>searchable</span>
+                                                </b-radio-button>
+                                                <b-radio-button size="is-small" v-model="dynamicattributeForm.sortable"
+                                                                native-value="sortable"
+                                                                type="is-warning is-light is-outlined" @input="searchableChange($event)">
+                                                    <span>sortable</span>
+                                                </b-radio-button>
+                                            </b-field>
+                                        </div>
+                                    </div>
+
                                     <span class="invalid-feedback d-block text-xs" role="alert" v-if="dynamicattributeForm.errors.has('dynamicattributetype')" v-text="dynamicattributeForm.errors.get('dynamicattributetype')"></span>
                                 </div>
                             </div>
@@ -73,6 +96,8 @@
         constructor(dynamicattribute) {
             this.name = dynamicattribute.name || ''
             this.attributetype = dynamicattribute.attributetype || ''
+            this.searchable = dynamicattribute.searchable || ''
+            this.sortable = dynamicattribute.sortable || ''
             this.description = dynamicattribute.description || ''
             this.model_type = dynamicattribute.model_type || ''
             this.model_id = dynamicattribute.model_id || ''
@@ -151,6 +176,12 @@
                     this.loading = false
                 });
             },
+
+            searchableChange(event) {
+                this.dynamicattributeForm.attributetype = event;
+                this.updateDynamicattribute();
+            },
+
             updateDynamicattribute() {
                 this.loading = true
 

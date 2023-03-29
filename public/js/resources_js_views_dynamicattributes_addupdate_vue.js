@@ -23,6 +23,8 @@ var Dynamicattribute = /*#__PURE__*/_createClass(function Dynamicattribute(dynam
   _classCallCheck(this, Dynamicattribute);
   this.name = dynamicattribute.name || '';
   this.attributetype = dynamicattribute.attributetype || '';
+  this.searchable = dynamicattribute.searchable || '';
+  this.sortable = dynamicattribute.sortable || '';
   this.description = dynamicattribute.description || '';
   this.model_type = dynamicattribute.model_type || '';
   this.model_id = dynamicattribute.model_id || '';
@@ -98,6 +100,10 @@ var Dynamicattribute = /*#__PURE__*/_createClass(function Dynamicattribute(dynam
       })["catch"](function (error) {
         _this3.loading = false;
       });
+    },
+    searchableChange: function searchableChange(event) {
+      this.dynamicattributeForm.attributetype = event;
+      this.updateDynamicattribute();
     },
     updateDynamicattribute: function updateDynamicattribute() {
       var _this4 = this;
@@ -234,7 +240,7 @@ var render = function render() {
       value: "",
       options: _vm.attributetypes,
       searchable: true,
-      multiple: false,
+      multiple: true,
       label: "name",
       "track-by": "id",
       placeholder: "Attribute Type"
@@ -246,7 +252,59 @@ var render = function render() {
       },
       expression: "dynamicattributeForm.attributetype"
     }
-  }), _vm._v(" "), _vm.dynamicattributeForm.errors.has("dynamicattributetype") ? _c("span", {
+  }), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "form-group row"
+  }, [_c("label", {
+    staticClass: "col-sm-2 col-form-label text-xs",
+    attrs: {
+      "for": "reportfile_retrieval_type"
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-10"
+  }, [_c("b-field", {
+    attrs: {
+      id: "reportfile_retrieval_type",
+      label: "",
+      "label-position": "on-border",
+      "custom-class": "is-small"
+    }
+  }, [_c("b-radio-button", {
+    attrs: {
+      size: "is-small",
+      "native-value": "searchable",
+      type: "is-success is-light is-outlined"
+    },
+    on: {
+      input: function input($event) {
+        return _vm.searchableChange($event);
+      }
+    },
+    model: {
+      value: _vm.dynamicattributeForm.searchable,
+      callback: function callback($$v) {
+        _vm.$set(_vm.dynamicattributeForm, "searchable", $$v);
+      },
+      expression: "dynamicattributeForm.searchable"
+    }
+  }, [_c("span", [_vm._v("searchable")])]), _vm._v(" "), _c("b-radio-button", {
+    attrs: {
+      size: "is-small",
+      "native-value": "sortable",
+      type: "is-warning is-light is-outlined"
+    },
+    on: {
+      input: function input($event) {
+        return _vm.searchableChange($event);
+      }
+    },
+    model: {
+      value: _vm.dynamicattributeForm.sortable,
+      callback: function callback($$v) {
+        _vm.$set(_vm.dynamicattributeForm, "sortable", $$v);
+      },
+      expression: "dynamicattributeForm.sortable"
+    }
+  }, [_c("span", [_vm._v("sortable")])])], 1)], 1)]), _vm._v(" "), _vm.dynamicattributeForm.errors.has("dynamicattributetype") ? _c("span", {
     staticClass: "invalid-feedback d-block text-xs",
     attrs: {
       role: "alert"
@@ -352,6 +410,17 @@ var staticRenderFns = [function () {
       "aria-hidden": "true"
     }
   }, [_vm._v("×")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "form-group row"
+  }, [_c("label", {
+    staticClass: "col-sm-4 col-form-label text-xs",
+    attrs: {
+      "for": "reportfile_retrieval_type"
+    }
+  }, [_vm._v("Récupération du Fichier:")])]);
 }];
 render._withStripped = true;
 

@@ -38,8 +38,8 @@
 [] - Rajouter attribut port
 
 ## AccessPorocole
-[] - Rajouter attribut default_port
-[] - Utiliser les extensions dans les interfaces
+[x] - Rajouter attribut default_port
+[x] - Utiliser les extensions dans les interfaces
 
 ## Settings
 [] - utiliser les classes abstraites (comme avec Permissions) pour renvoyer les clés de config
