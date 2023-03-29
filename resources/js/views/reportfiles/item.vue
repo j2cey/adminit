@@ -11,8 +11,6 @@
                     <dl>
                         <dt class="text text-xs">Name</dt>
                         <dd class="text text-xs">{{ reportfile.name }}</dd>
-                        <dt class="text text-xs">Wildcard</dt>
-                        <dd class="text text-xs">{{ reportfile.wildcard }}</dd>
                         <dt class="text text-xs">Type de fichier</dt>
                         <dd class="text text-xs">{{ reportfile.reportfiletype.name }}</dd>
                         <dt class="text text-xs">Date Création</dt>

@@ -69,6 +69,10 @@ var Reportfile = /*#__PURE__*/_createClass(function Reportfile(reportfile) {
       var data = _ref3.data;
       return _this2.reportfiletypes = data;
     });
+    axios.get('/retrieveactiontypes.fetch').then(function (_ref4) {
+      var data = _ref4.data;
+      return _this2.retrieveactiontypes = data;
+    });
   },
   data: function data() {
     return {
@@ -78,7 +82,8 @@ var Reportfile = /*#__PURE__*/_createClass(function Reportfile(reportfile) {
       reportfileId: null,
       editing: false,
       loading: false,
-      reportfiletypes: []
+      reportfiletypes: [],
+      retrieveactiontypes: []
     };
   },
   methods: {
@@ -254,96 +259,40 @@ var render = function render() {
   }, [_c("label", {
     staticClass: "col-sm-2 col-form-label text-xs",
     attrs: {
-      "for": "reportfile_wildcard"
+      "for": "m_select_retrieveaction"
     }
-  }, [_vm._v("Wildcard")]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-10"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.reportfileForm.wildcard,
-      expression: "reportfileForm.wildcard"
-    }],
-    staticClass: "form-control text-xs",
+  }, [_vm._v("Récupération du Fichier:")]), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-10 text-xs"
+  }, [_c("multiselect", {
+    key: "id",
+    staticClass: "text text-xs",
     attrs: {
-      type: "text",
-      id: "reportfile_wildcard",
-      name: "wildcard",
-      autocomplete: "wildcard",
-      autofocus: "",
-      placeholder: "Wildcard"
+      id: "m_select_retrieveaction",
+      "selected.sync": "reportfileForm.reportfiletype",
+      value: "",
+      options: _vm.retrieveactiontypes,
+      searchable: true,
+      multiple: true,
+      label: "name",
+      "track-by": "id",
+      placeholder: "Récupération du Fichier"
     },
-    domProps: {
-      value: _vm.reportfileForm.wildcard
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.reportfileForm, "wildcard", $event.target.value);
-      }
+    model: {
+      value: _vm.reportfileForm.reportfiletype,
+      callback: function callback($$v) {
+        _vm.$set(_vm.reportfileForm, "reportfiletype", $$v);
+      },
+      expression: "reportfileForm.reportfiletype"
     }
-  }), _vm._v(" "), _vm.reportfileForm.errors.has("wildcard") ? _c("span", {
+  }), _vm._v(" "), _vm.reportfileForm.errors.has("reportfiletype") ? _c("span", {
     staticClass: "invalid-feedback d-block text-xs",
     attrs: {
       role: "alert"
     },
     domProps: {
-      textContent: _vm._s(_vm.reportfileForm.errors.get("wildcard"))
+      textContent: _vm._s(_vm.reportfileForm.errors.get("reportfiletype"))
     }
-  }) : _vm._e()])]), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("div", {
-    staticClass: "form-group row"
-  }, [_c("label", {
-    staticClass: "col-sm-2 col-form-label text-xs",
-    attrs: {
-      "for": "reportfile_retrieval_type"
-    }
-  }), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-10"
-  }, [_c("b-field", {
-    attrs: {
-      id: "reportfile_retrieval_type",
-      label: "",
-      "label-position": "on-border",
-      "custom-class": "is-small"
-    }
-  }, [_c("b-radio-button", {
-    attrs: {
-      size: "is-small",
-      "native-value": "retrieve_by_name",
-      type: "is-success is-light is-outlined"
-    },
-    on: {
-      input: function input($event) {
-        return _vm.retrievalTypeChange($event);
-      }
-    },
-    model: {
-      value: _vm.reportfileForm.retrieval_type,
-      callback: function callback($$v) {
-        _vm.$set(_vm.reportfileForm, "retrieval_type", $$v);
-      },
-      expression: "reportfileForm.retrieval_type"
-    }
-  }, [_c("span", [_vm._v("Par Nom")])]), _vm._v(" "), _c("b-radio-button", {
-    attrs: {
-      size: "is-small",
-      "native-value": "retrieve_by_wildcard",
-      type: "is-warning is-light is-outlined"
-    },
-    on: {
-      input: function input($event) {
-        return _vm.retrievalTypeChange($event);
-      }
-    },
-    model: {
-      value: _vm.reportfileForm.retrieval_type,
-      callback: function callback($$v) {
-        _vm.$set(_vm.reportfileForm, "retrieval_type", $$v);
-      },
-      expression: "reportfileForm.retrieval_type"
-    }
-  }, [_c("span", [_vm._v("Par Wildcard")])])], 1)], 1)]), _vm._v(" "), _c("div", {
+  }) : _vm._e()], 1)]), _vm._v(" "), _c("div", {
     staticClass: "form-group row"
   }, [_c("label", {
     staticClass: "col-sm-2 col-form-label text-xs",
@@ -529,17 +478,6 @@ var staticRenderFns = [function () {
       "aria-hidden": "true"
     }
   }, [_vm._v("×")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "form-group row"
-  }, [_c("label", {
-    staticClass: "col-sm-4 col-form-label text-xs",
-    attrs: {
-      "for": "reportfile_retrieval_type"
-    }
-  }, [_vm._v("Récupération du Fichier:")])]);
 }];
 render._withStripped = true;
 

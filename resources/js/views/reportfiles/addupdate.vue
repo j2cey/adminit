@@ -19,33 +19,25 @@
                                     <span class="invalid-feedback d-block text-xs" role="alert" v-if="reportfileForm.errors.has('name')" v-text="reportfileForm.errors.get('name')"></span>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label for="reportfile_wildcard" class="col-sm-2 col-form-label text-xs">Wildcard</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control text-xs" id="reportfile_wildcard" name="wildcard" autocomplete="wildcard" autofocus placeholder="Wildcard" v-model="reportfileForm.wildcard">
-                                    <span class="invalid-feedback d-block text-xs" role="alert" v-if="reportfileForm.errors.has('wildcard')" v-text="reportfileForm.errors.get('wildcard')"></span>
-                                </div>
-                            </div>
 
                             <div class="form-group row">
-                                <label for="reportfile_retrieval_type" class="col-sm-4 col-form-label text-xs">Récupération du Fichier:</label>
-                            </div>
-                            <div class="form-group row">
-                                <label for="reportfile_retrieval_type" class="col-sm-2 col-form-label text-xs">
-                                </label>
-                                <div class="col-sm-10">
-                                    <b-field id="reportfile_retrieval_type" label="" label-position="on-border" custom-class="is-small">
-                                        <b-radio-button size="is-small" v-model="reportfileForm.retrieval_type"
-                                                        native-value="retrieve_by_name"
-                                                        type="is-success is-light is-outlined" @input="retrievalTypeChange($event)">
-                                            <span>Par Nom</span>
-                                        </b-radio-button>
-                                        <b-radio-button size="is-small" v-model="reportfileForm.retrieval_type"
-                                                        native-value="retrieve_by_wildcard"
-                                                        type="is-warning is-light is-outlined" @input="retrievalTypeChange($event)">
-                                            <span>Par Wildcard</span>
-                                        </b-radio-button>
-                                    </b-field>
+                                <label for="m_select_retrieveaction" class="col-sm-2 col-form-label text-xs">Récupération du Fichier:</label>
+                                <div class="col-sm-10 text-xs">
+                                    <multiselect class="text text-xs"
+                                                 id="m_select_retrieveaction"
+                                                 v-model="reportfileForm.reportfiletype"
+                                                 selected.sync="reportfileForm.reportfiletype"
+                                                 value=""
+                                                 :options="retrieveactiontypes"
+                                                 :searchable="true"
+                                                 :multiple="true"
+                                                 label="name"
+                                                 track-by="id"
+                                                 key="id"
+                                                 placeholder="Récupération du Fichier"
+                                    >
+                                    </multiselect>
+                                    <span class="invalid-feedback d-block text-xs" role="alert" v-if="reportfileForm.errors.has('reportfiletype')" v-text="reportfileForm.errors.get('reportfiletype')"></span>
                                 </div>
                             </div>
 
@@ -170,6 +162,8 @@ export default {
     created() {
         axios.get('/reportfiletypes.fetch')
             .then(({data}) => this.reportfiletypes = data);
+        axios.get('/retrieveactiontypes.fetch')
+            .then(({data}) => this.retrieveactiontypes = data);
     },
     data() {
         return {
@@ -179,7 +173,8 @@ export default {
             reportfileId: null,
             editing: false,
             loading: false,
-            reportfiletypes: []
+            reportfiletypes: [],
+            retrieveactiontypes: []
         }
     },
     methods: {

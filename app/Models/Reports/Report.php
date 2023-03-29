@@ -46,7 +46,7 @@ class Report extends BaseModel implements Auditable
     use HasDynamicAttributes, HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
-    protected array $with = ['reporttype'];
+    protected $with = ['reporttype'];
 
     #region Validation Rules
 

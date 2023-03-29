@@ -66,7 +66,6 @@ trait InnerDynamicValue
         ->save();                                                          // save the association from the DynamicValue (the wrapper)
 
         $row->setLastInserted();                                           // update the row's last inserted date
-        //$row->addColumnValue($dynamicattribute->name,$thevalue);           // add the value to the json columns values field
 
         return $innervalue;
     }
