@@ -190,7 +190,7 @@
                                                         <li class="list-group-item d-flex justify-content-between align-items-start" v-for="attribute in record.dynamicattributes" :key="attribute.uuid">
 
                                                             <div class="ms-2 me-auto">
-                                                                <div class="fw-bold tw-font-thin tw-text-xs tw-mb-2"><span class="tw-font-bold tw-text-xs tw-mb-2">@{{ attribute.name }}</span> @{{ attribute.attributetype.name }} </div>
+                                                                <div class="fw-bold tw-font-thin tw-text-xs tw-mb-2"><span class="tw-font-bold tw-text-xs tw-mb-2">@{{ attribute.name }}</span> @{{ attribute.dynamicattributetype.name }} </div>
                                                             </div>
 
                                                         </li>
