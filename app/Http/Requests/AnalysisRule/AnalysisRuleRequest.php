@@ -4,9 +4,9 @@ namespace App\Http\Requests\AnalysisRule;
 
 use App\Models\Status;
 use App\Traits\Request\RequestTraits;
-use App\Models\AnalysisRules\AnalysisRule;
+use App\Models\AnalysisRule\AnalysisRule;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\AnalysisRules\AnalysisRuleType;
+use App\Models\AnalysisRule\AnalysisRuleType;
 use App\Models\DynamicAttributes\DynamicAttribute;
 
 /**

@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ThresholdTypeSeeder::class);
         $this->call(ComparisonTypeSeeder::class);
         $this->call(AnalysisRuleTypeSeeder::class);
-        $this->call(AnalysisHighlightTypeSeeder::class);
+        $this->call(FormatRuleTypeSeeder::class);
 
         $this->call(ReportTypeSeeder::class);
         $this->call(FileMimeTypeSeeder::class);

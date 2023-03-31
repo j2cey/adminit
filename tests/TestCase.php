@@ -4,7 +4,6 @@ namespace Tests;
 
 use Closure;
 use App\Models\User;
-use App\Models\Status;
 use Illuminate\Support\Fluent;
 use App\Models\Reports\Report;
 use App\Models\Reports\ReportType;
@@ -12,7 +11,9 @@ use App\Models\ReportFile\ReportFile;
 use Illuminate\Database\SQLiteConnection;
 use Illuminate\Database\Schema\Blueprint;
 use App\Models\ReportFile\ReportFileType;
+use App\Models\AnalysisRule\AnalysisRule;
 use Illuminate\Database\Schema\SQLiteBuilder;
+use App\Models\AnalysisRule\AnalysisRuleType;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -83,20 +84,20 @@ abstract class TestCase extends BaseTestCase
      * @param $title
      * @return Report
      */
-    protected function create_new_report($title)
+    protected function create_new_report($title = null)
     {
         $reporttype = ReportType::defaultReport()->first();
-        return Report::createNew($title,$reporttype,"new report desc");
+        return Report::createNew($title ?? "New Report",$reporttype,"new report desc");
     }
 
     /**
      * @param $name
      * @return DynamicAttribute
      */
-    protected function create_new_dynamicattribute($name)
+    protected function create_new_dynamicattribute($name = null)
     {
         return $this->create_new_report("new report")
-            ->addDynamicAttribute($name,DynamicAttributeType::string()->first());
+            ->addDynamicAttribute($name ?? "New Dynamic Attribute",DynamicAttributeType::string()->first());
     }
 
     /**
@@ -106,5 +107,9 @@ abstract class TestCase extends BaseTestCase
     public function create_new_reportfile($file_name) {
         return $this->create_new_report("new report")
             ->addReportFile(ReportFileType::txt()->first(),$file_name);
+    }
+
+    public function create_new_analysisrule($title = null): AnalysisRule {
+        return AnalysisRule::createNew($this->create_new_dynamicattribute(),AnalysisRuleType::threshold()->first(),$title ?? "New AnalysisRule");
     }
 }

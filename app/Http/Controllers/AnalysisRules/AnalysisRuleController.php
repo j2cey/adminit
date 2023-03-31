@@ -3,15 +3,13 @@
 namespace App\Http\Controllers\AnalysisRules;
 
 use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use App\Models\AnalysisRules\AnalysisRule;
+use App\Models\AnalysisRule\AnalysisRule;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Http\Resources\AnalysisRules\AnalysisRuleResource;
 use App\Http\Requests\AnalysisRule\StoreAnalysisRuleRequest;
 use App\Http\Requests\AnalysisRule\UpdateAnalysisRuleRequest;
-use App\Http\Resources\DynamicAttributes\DynamicAttributeResource;
 
 class AnalysisRuleController extends Controller
 {

@@ -40,19 +40,12 @@ use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
 use App\Http\Controllers\ReportFile\CollectedReportFileController;
 use App\Http\Controllers\ReportTreatments\OperationResultController;
 use App\Http\Controllers\RetrieveAction\RetrieveActionTypeController;
-use App\Http\Controllers\DynamicAttributes\DynamicAttributeController;
 use App\Http\Controllers\RetrieveAction\RetrieveActionValueController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleThresholdController;
-use App\Http\Controllers\AnalysisHighlight\HighlightTextSizeController;
-use App\Http\Controllers\AnalysisHighlight\AnalysisHighlightController;
-use App\Http\Controllers\AnalysisHighlight\HighlightTextColorController;
-use App\Http\Controllers\AnalysisHighlight\HighlightTextWeightController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonTypeController;
 use App\Http\Controllers\RetrieveAction\SelectedRetrieveActionController;
 use App\Http\Controllers\ReportTreatments\ReportTreatmentResultController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonEqualController;
-use App\Http\Controllers\DynamicAttributes\DynamicAttributeTypeController;
-use App\Http\Controllers\AnalysisHighlight\AnalysisHighlightTypeController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonNotEqualController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonLessThanController;
 use App\Http\Controllers\ReportTreatments\ReportTreatmentStepResultController;
@@ -82,28 +75,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
-
-Route::get('/tests', function () {
-    $report = App\Models\Reports\Report::where("title","Report 01")->first();
-    if ( is_null($report) ) {
-        $report = App\Models\Reports\Report::createNew("Report 01", App\Models\Reports\ReportType::first(), "");
-        $report->addDynamicAttribute("Att Dyn. 01", App\Models\DynamicAttributes\DynamicAttributeType::find(1)->first(), "");
-        $report->latestDynamicattribute->addValue("Test for Add value xxx 1", true);
-        $report->addDynamicAttribute("Att Dyn. 02", App\Models\DynamicAttributes\DynamicAttributeType::find(2)->first(), "");
-        $report->latestDynamicattribute->addValue("241");
-        $report->addDynamicAttribute("Att Dyn. 02", App\Models\DynamicAttributes\DynamicAttributeType::find(4)->first(), "");
-        $report->latestDynamicattribute->addValue("0");
-
-        $report->dynamicattributes[0]->addValue("Test for the new row", true);
-    }
-    //$report->dynamicattributes[0]->addValue("Test for the latest row", true);
-    //dd($report->latestDynamicattribute());
-    //$report->latestDynamicattribute()->addValue("Test for Add value xxx 1", true);
-    //dd($report->oldestDynamicattribute->hasdynamicattribute->latestDynamicvaluerow);
-    dd($report);
-    $first_report = App\Models\Reports\Report::first();
-    dd("first_report: ", $first_report, $first_report->dynamicattributes, $first_report->dynamicattributes[0]->values());
-});
 
 #region System Settings
 
@@ -228,19 +199,6 @@ Route::get('reports.attributes/{uuid}',[ReportController::class,'attributes'])
     ->name('reports.attributes')
     ->middleware('auth');
 
-Route::resource('dynamicattributes',DynamicAttributeController::class)->middleware('auth');
-Route::get('dynamicattributes.fetch',[DynamicAttributeController::class,'fetch'])
-    ->name('dynamicattributes.fetch')
-    ->middleware('auth');
-
-Route::resource('dynamicattributetypes',DynamicAttributeTypeController::class)->middleware('auth');
-Route::get('dynamicattributetypes.fetch',[DynamicAttributeTypeController::class,'fetch'])
-    ->name('dynamicattributetypes.fetch')
-    ->middleware('auth');
-Route::get('dynamicattributetypes.fetchall',[DynamicAttributeTypeController::class,'fetchall'])
-    ->name('dynamicattributetypes.fetchall')
-    ->middleware('auth');
-
 Route::resource('analysisruletypes',AnalysisRuleTypeController::class)->middleware('auth');
 Route::get('analysisruletypes.fetch',[AnalysisRuleTypeController::class,'fetch'])
     ->name('analysisruletypes.fetch')
@@ -274,47 +232,6 @@ Route::get('analysisrulethresholds.fetch',[AnalysisRuleThresholdController::clas
     ->middleware('auth');
 Route::get('analysisrulethresholds.fetchall',[AnalysisRuleThresholdController::class,'fetchall'])
     ->name('analysisrulethresholds.fetchall')
-    ->middleware('auth');
-
-Route::resource('analysishighlighttypes',AnalysisHighlightTypeController::class)->middleware('auth');
-Route::get('analysishighlighttypes.fetch',[AnalysisHighlightTypeController::class,'fetch'])
-    ->name('analysishighlighttypes.fetch')
-    ->middleware('auth');
-Route::get('analysishighlighttypes.fetchall',[AnalysisHighlightTypeController::class,'fetchall'])
-    ->name('analysishighlighttypes.fetchall')
-    ->middleware('auth');
-
-Route::resource('analysishighlights',AnalysisHighlightController::class)->middleware('auth');
-Route::get('analysishighlights.fetch',[AnalysisHighlightController::class,'fetch'])
-    ->name('analysishighlights.fetch')
-    ->middleware('auth');
-Route::get('analysishighlights.fetchall',[AnalysisHighlightController::class,'fetchall'])
-    ->name('analysishighlights.fetchall')
-    ->middleware('auth');
-
-Route::resource('highlighttextcolors',HighlightTextColorController::class)->middleware('auth');
-Route::get('highlighttextcolors.fetch',[HighlightTextColorController::class,'fetch'])
-    ->name('highlighttextcolors.fetch')
-    ->middleware('auth');
-Route::get('highlighttextcolors.fetchall',[HighlightTextColorController::class,'fetchall'])
-    ->name('highlighttextcolors.fetchall')
-    ->middleware('auth');
-
-Route::resource('highlighttextsizes',HighlightTextSizeController::class)->middleware('auth');
-Route::get('highlighttextsizes.fetch',[HighlightTextSizeController::class,'fetch'])
-    ->name('highlighttextsizes.fetch')
-    ->middleware('auth');
-Route::get('highlighttextsizes.fetchall',[HighlightTextSizeController::class,'fetchall'])
-    ->name('highlighttextsizes.fetchall')
-    ->middleware('auth');
-
-Route::resource('highlighttextweights',HighlightTextWeightController::class)->middleware('auth');
-
-Route::get('highlighttextweights.fetch',[HighlightTextWeightController::class,'fetch'])
-    ->name('highlighttextweights.fetch')
-    ->middleware('auth');
-Route::get('highlighttextweights.fetchall',[HighlightTextWeightController::class,'fetchall'])
-    ->name('highlighttextweights.fetchall')
     ->middleware('auth');
 
 Route::resource('filemimetypes',FileMimeTypeController::class)->middleware('auth');

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\AnalysisRules\AnalysisRuleType;
+use App\Models\AnalysisRule\AnalysisRuleType;
 use App\Models\AnalysisRuleThreshold\AnalysisRuleThreshold;
 use App\Models\AnalysisRuleComparison\AnalysisRuleComparison;
 

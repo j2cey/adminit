@@ -8,8 +8,10 @@ use App\Models\Setting;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
-use App\Models\AnalysisRules\AnalysisRule;
-use App\Models\AnalysisRules\AnalysisRuleType;
+use App\Models\AnalysisRule\AnalysisRule;
+use Tests\Feature\Traits\HasFormatRulesTest;
+use App\Models\AnalysisRule\AnalysisRuleType;
+use App\Contracts\FormatRule\IHasFormatRules;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -17,6 +19,7 @@ class AnalysisRuleTest extends TestCase
 {
     use RefreshDatabase;
     use DatabaseMigrations;
+    use HasFormatRulesTest;
 
     public function setUp(): void
     {
@@ -175,4 +178,8 @@ class AnalysisRuleTest extends TestCase
     }
 
     #endregion
+    public function getModel(): IHasFormatRules
+    {
+        return $this->create_new_analysisrule();
+    }
 }

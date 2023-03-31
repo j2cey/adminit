@@ -37,13 +37,13 @@ class DynamicAttributeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreDynamicAttributeRequest $request
-     * @return DynamicAttributeResource|void
+     * @return DynamicAttributeResource
      */
     public function store(StoreDynamicAttributeRequest $request)
     {
-        $dyn_attr = $request->model->addDynamicAttribute($request->name, $request->attributetype, $request->description);
+        $dynamicattribute = $request->model->addDynamicAttribute($request->name, $request->dynamicattributetype, $request->status, $request->description);
 
-        return new DynamicAttributeResource($dyn_attr);
+        return new DynamicAttributeResource($dynamicattribute);
     }
 
     /**
@@ -77,11 +77,13 @@ class DynamicAttributeController extends Controller
      */
     public function update(UpdateDynamicAttributeRequest $request, DynamicAttribute $dynamicattribute)
     {
-        $dynamicattribute->update([
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
-        $dynamicattribute->attributetype()->associate($request->attributetype);
+        //dd("DynamicAttributeController->update: ", $request->status);
+        $dynamicattribute->updateThis(
+            $request->dynamicattributetype,
+            $request->name,
+            $request->status,
+            $request->description
+        );
 
         return new DynamicAttributeResource($dynamicattribute);
     }

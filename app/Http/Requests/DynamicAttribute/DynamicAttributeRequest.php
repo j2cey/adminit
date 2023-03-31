@@ -2,9 +2,27 @@
 
 namespace App\Http\Requests\DynamicAttribute;
 
+use App\Models\Status;
 use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\DynamicAttributes\DynamicAttributeType;
 
+/**
+ * Class DynamicAttributeRequest
+ * @package App\Http\Requests\DynamicAttribute
+ *
+ * @property string $name
+ * @property integer $num_ord
+ * @property string|null $description
+ *
+ * @property string $offset
+ * @property integer $max_length
+ * @property bool $searchable
+ * @property bool $sortable
+ *
+ * @property Status $status
+ * @property DynamicAttributeType $dynamicattributetype
+ */
 class DynamicAttributeRequest extends FormRequest
 {
     use RequestTraits;

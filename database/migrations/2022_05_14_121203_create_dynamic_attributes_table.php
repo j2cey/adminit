@@ -29,8 +29,8 @@ class CreateDynamicAttributesTable extends Migration
                 ->comment('dynamic attribute type reference')
                 ->constrained()->onDelete('set null');
 
-            $table->string('hasdynamicattribute_type')->comment('referenced model (class name)');
-            $table->bigInteger('hasdynamicattribute_id')->comment('referenced model id (object id)');
+            $table->string('hasdynamicattribute_type')->nullable()->comment('referenced model (class name)');
+            $table->bigInteger('hasdynamicattribute_id')->nullable()->comment('referenced model id (object id)');
 
             $table->integer('num_ord')->comment('number order');
             $table->integer('offset')->default(0)->comment('offset if any');

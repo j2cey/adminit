@@ -2,17 +2,19 @@
 
 namespace App\Models\DynamicAttributes;
 
+use App\Models\Status;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
-use App\Models\AnalysisRules\AnalysisRule;
-use App\Models\AnalysisRules\AnalysisRuleType;
-use App\Models\ReportFile\CollectedReportFile;
+use App\Models\AnalysisRule\AnalysisRule;
+use App\Traits\FormatRule\HasFormatRules;
+use App\Models\AnalysisRule\AnalysisRuleType;
+use App\Contracts\FormatRule\IHasFormatRules;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
 
 /**
  * Class DynamicAttribute
@@ -41,14 +43,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property DynamicAttributeType $attributetype
+ * @property DynamicAttributeType $dynamicattributetype
+ *
+ * @method static DynamicAttribute first()
  */
-class DynamicAttribute extends BaseModel implements Auditable
+class DynamicAttribute extends BaseModel implements IHasFormatRules
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasFormatRules, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
-    protected $with = ['attributetype'];
+    protected $with = ['dynamicattributetype'];
     protected $casts = [
         'searchable' => 'boolean',
         'sortable' => 'boolean',
@@ -60,6 +64,7 @@ class DynamicAttribute extends BaseModel implements Auditable
     {
         return [
             'name' => ['required'],
+            'dynamicattributetype' => ['required'],
         ];
     }
 
@@ -80,6 +85,7 @@ class DynamicAttribute extends BaseModel implements Auditable
     public static function messagesRules() {
         return [
             'name.required' => "Prière de renseigner le nom",
+            'dynamicattributetype.required' => "Prière de renseigner le Type",
         ];
     }
 
@@ -87,7 +93,7 @@ class DynamicAttribute extends BaseModel implements Auditable
 
     #region Eloquent Relationships
 
-    public function attributetype() {
+    public function dynamicattributetype() {
         return $this->belongsTo(DynamicAttributeType::class,"dynamic_attribute_type_id");
     }
 
@@ -119,12 +125,12 @@ class DynamicAttribute extends BaseModel implements Auditable
      * @return HasOne
      */
     public function latestValue() {
-        return $this->hasOne($this->attributetype->model_type, "dynamic_attribute_id")
+        return $this->hasOne($this->dynamicattributetype->model_type, "dynamic_attribute_id")
             ->latest();
     }
 
     public function oldestValue() {
-        return $this->hasOne($this->attributetype->model_type, "dynamic_attribute_id")
+        return $this->hasOne($this->dynamicattributetype->model_type, "dynamic_attribute_id")
             ->oldest();
     }
 
@@ -132,7 +138,32 @@ class DynamicAttribute extends BaseModel implements Auditable
 
     #region Custom Functions
 
-    public function addAnalysisRule(AnalysisRuleType $analysisruletype, string $title, bool $alert_when_allowed, bool $alert_when_broken, string $description = null): AnalysisRule
+    /**
+     * @param IHasDynamicAttributes $model
+     * @param Model|DynamicAttributeType $dynamicattributetype
+     * @param string $name
+     * @param string|null $description
+     * @return DynamicAttribute
+     */
+    public static function createNew(IHasDynamicAttributes $model, Model|DynamicAttributeType $dynamicattributetype, string $name, Status $status = null, string $description = null): DynamicAttribute {
+        return $model->addDynamicAttribute($name,$dynamicattributetype, $status,$description);
+    }
+
+    public function updateThis(Model|DynamicAttributeType $dynamicattributetype, string $name, Status $status = null, string $description = null): DynamicAttribute {
+        $this->name = $name;
+        $this->description = $description;
+
+        $this->dynamicattributetype()->associate($dynamicattributetype);
+        if ( ! is_null($status) ) {
+            $this->status()->associate($status);
+        }
+
+        $this->save();
+
+        return $this;
+    }
+
+    public function addAnalysisRule(Model|AnalysisRuleType $analysisruletype, string $title, bool $alert_when_allowed, bool $alert_when_broken, string $description = null): AnalysisRule
     {
         return AnalysisRule::createNew($this,$analysisruletype,$title,null,$alert_when_allowed,$alert_when_broken,$description);
     }
@@ -140,18 +171,6 @@ class DynamicAttribute extends BaseModel implements Auditable
 
 
     public function addValue($thevalue, DynamicRow $new_dynamicrow) {
-        /*
-        if ($new_row) {
-            // get new row
-            $values_row = DynamicRow::createNew($collectedfile);
-        } else {
-            // get last row
-            $values_row = $collectedfile->latestDynamicrow;
-        }
-        */
-
-        //return $this->values()->create()        // create new value object
-        //    ->setValue($thevalue, $values_row); // set the inner (formatted) value to the just created value object
         return DynamicValue::createNew($thevalue,$this,$new_dynamicrow);
     }
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AnalysisRules\AnalysisRuleTypeResource;
 use App\Http\Requests\AnalysisRuleType\StoreAnalysisRuleTypeRequest;
 use App\Http\Requests\AnalysisRuleType\UpdateAnalysisRuleTypeRequest;
-use App\Models\AnalysisRules\AnalysisRuleType;
+use App\Models\AnalysisRule\AnalysisRuleType;
 
 class AnalysisRuleTypeController extends Controller
 {

@@ -12,6 +12,8 @@
         "ext-fileinfo": "*",
         "ext-json": "*",
         "ext-mongodb": "*",
+        "ext-pdo": "*",
+        "abgeo/json-to-popo": "^1.0",
         "adldap2/adldap2-laravel": "^6.1",
         "ahmedsaoud31/laravel-permission-to-vuejs": "dev-master",
         "fideloper/proxy": "^4.4",
@@ -24,8 +26,7 @@
         "owen-it/laravel-auditing": "^12.0",
         "spatie/laravel-permission": "^4.0",
         "spatie/laravel-tags": "^4.3",
-        "tabuna/breadcrumbs": "^2.3",
-      "ext-pdo": "*"
+        "tabuna/breadcrumbs": "^2.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

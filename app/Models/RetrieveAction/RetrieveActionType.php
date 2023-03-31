@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static Builder retrieveMode()
  * @method static Builder toPerformAfterRetrieving()
  * @method static Builder toPerformBeforeRetrieving()
+ *
  * @method static RetrieveActionType first()
  */
 class RetrieveActionType extends BaseModel implements Auditable
