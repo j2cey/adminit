@@ -32,8 +32,8 @@ class TestFullReportSeeder extends Seeder
         $type_int = DynamicAttributeType::int()->first();
         $type_datetime = DynamicAttributeType::datetime()->first();
 
-        $the_report->addDynamicAttribute("label",$type_string,"Libellé");
-        $attribute_data = $the_report->addDynamicAttribute("data",$type_int,"La donnée");
+        $the_report->addDynamicAttribute("label",$type_string, null,"Libellé");
+        $attribute_data = $the_report->addDynamicAttribute("data",$type_int,null,"La donnée");
 
         $the_report->addDynamicAttributeMany([
             ['name' => "trend", 'type' => $type_string,'description' => "La Tendance des changements de la donnée"],

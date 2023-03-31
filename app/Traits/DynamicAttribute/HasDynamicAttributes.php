@@ -92,7 +92,7 @@ trait HasDynamicAttributes
         $nb_created = 0;
 
         foreach ($attributes as $attribute) {
-            $this->addDynamicAttribute($attribute['name'], $attribute['type'], $attribute['description'] ?? null);
+            $this->addDynamicAttribute($attribute['name'], $attribute['type'], null,$attribute['description'] ?? null);
         }
 
         return $nb_created;

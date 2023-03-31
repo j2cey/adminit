@@ -35,6 +35,8 @@ use App\Http\Resources\AnalysisRules\AnalysisRuleResource;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property DynamicAttributeType $dynamicattributetype
  */
 class DynamicAttributeResource extends JsonResource
 {
@@ -63,7 +65,7 @@ class DynamicAttributeResource extends JsonResource
             'hasdynamicattribute_type' => $this->hasdynamicattribute_type,
             'hasdynamicattribute_id' => $this->hasdynamicattribute_id,
 
-            'attributetype' => DynamicAttributeTypeResource::make($this->attributetype),
+            'dynamicattributetype' => DynamicAttributeTypeResource::make($this->dynamicattributetype),
             'analysisrules' => AnalysisRuleResource::collection($this->analysisrules),
 
             'model_type' => DynamicAttribute::class,
