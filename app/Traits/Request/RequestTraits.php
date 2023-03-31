@@ -5,6 +5,7 @@ namespace App\Traits\Request;
 
 use App\Models\User;
 use App\Models\Status;
+use ABGEO\POPO\Composer;
 use App\Models\Reports\Report;
 use Spatie\Permission\Models\Role;
 use App\Models\Reports\ReportType;
@@ -16,14 +17,14 @@ use App\Models\Access\AccessProtocole;
 use App\Models\ReportFile\FileMimeType;
 use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
-use App\Models\AnalysisRules\AnalysisRule;
+use App\Models\AnalysisRule\AnalysisRule;
+use App\Models\FormatRule\FormatRuleType;
 use App\Models\OsAndServer\OsArchitecture;
-use App\Models\AnalysisRules\AnalysisRuleType;
+use App\Models\AnalysisRule\AnalysisRuleType;
 use App\Models\RetrieveAction\RetrieveActionType;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\AnalysisRuleThreshold\ThresholdType;
 use App\Models\DynamicAttributes\DynamicAttributeType;
-use App\Models\AnalysisHighlight\AnalysisHighlightType;
 
 trait RequestTraits
 {
@@ -62,13 +63,52 @@ trait RequestTraits
     }
 
     public function getRelevantModel($model_type, $value, $field = 'íd', $json_decode_before = false) {
+
         if (is_null($value)) {
             return null;
         }
         if ($json_decode_before || is_string($value)) {
             $value = $this->decodeJsonField($value);
         }
+
         return $value ? $model_type::where($field, $value[$field])->first() : null;
+    }
+
+    public function getrelevantModelById($model_type, $value, $json_decode_before = false) {
+
+        if (is_null($value)) {
+            return null;
+        }
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+
+        //dd($value, $value['id'], $model_type::where('id', $value['id'])->first());
+
+        //$composer = new Composer();
+        //$resultObject = $composer->composeObject($value, $model_type);
+
+        //dd($resultObject);
+
+        return $model_type::where('id', $value['id'])->first();
+    }
+    public function getrelevantModelByCode($model_type, $value, $json_decode_before = false) {
+
+        if (is_null($value)) {
+            return null;
+        }
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+
+        //dd($value, $value['id'], $model_type::where('id', $value['id'])->first());
+
+        //$composer = new Composer();
+        //$resultObject = $composer->composeObject($value, $model_type);
+
+        //dd($resultObject);
+
+        return $model_type::where('code', $value['code'])->first();
     }
 
 
@@ -154,17 +194,18 @@ trait RequestTraits
         return $value ? ThresholdType::where($field, $value[$field])->first() : null;
     }
 
-    public function setAnalysisHighlightType($value, $field = 'íd', $json_decode_before = false) {
+    public function setFormatRuleType($value, $field = 'íd', $json_decode_before = false) {
         if (is_null($value)) {
             return null;
         }
         if ($json_decode_before || is_string($value)) {
             $value = $this->decodeJsonField($value);
         }
-        return $value ? AnalysisHighlightType::where($field, $value[$field])->first() : null;
+        return $value ? FormatRuleType::where($field, $value[$field])->first() : null;
     }
 
     public function setRelevantStatus($value, $field = 'íd', $json_decode_before = false) {
+
         if (is_null($value)) {
             return null;
         }

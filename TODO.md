@@ -43,3 +43,7 @@
 
 ## Settings
 [] - utiliser les classes abstraites (comme avec Permissions) pour renvoyer les clés de config
+
+
+## Format Rule
+[] - Remplacer when_rule_result_is par un ENUM RuleResultEnum => followed, broken

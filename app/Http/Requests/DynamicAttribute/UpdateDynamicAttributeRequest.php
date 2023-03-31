@@ -2,10 +2,17 @@
 
 namespace App\Http\Requests\DynamicAttribute;
 
+use App\Models\Status;
 use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DynamicAttributes\DynamicAttribute;
 
+/**
+ * Class UpdateDynamicAttributeRequest
+ * @package App\Http\Requests\DynamicAttribute
+ *
+ * @property DynamicAttribute $dynamicattribute
+ */
 class UpdateDynamicAttributeRequest extends DynamicAttributeRequest
 {
     /**
@@ -36,7 +43,8 @@ class UpdateDynamicAttributeRequest extends DynamicAttributeRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'attributetype' => $this->setRelevantDynamicAttributeType($this->input('attributetype'), true),
+            'dynamicattributetype' => $this->setRelevantDynamicAttributeType($this->input('dynamicattributetype'), true),
+            'status' => $this->getrelevantModelByCode(Status::class, $this->status, true),
         ]);
     }
 }

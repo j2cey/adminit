@@ -5,12 +5,13 @@ namespace App\Http\Requests\DynamicAttribute;
 use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DynamicAttributes\DynamicAttribute;
+use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
 
 /**
  * Class StoreDynamicAttributeRequest
  * @package App\Http\Requests\DynamicAttribute
  *
- * @property mixed $model
+ * @property IHasDynamicAttributes $model
  */
 class StoreDynamicAttributeRequest extends DynamicAttributeRequest
 {
@@ -43,7 +44,8 @@ class StoreDynamicAttributeRequest extends DynamicAttributeRequest
     {
         $this->merge([
             'model' => $this->input('model_type')::find($this->input('model_id'))->first(),
-            'attributetype' => $this->setRelevantDynamicAttributeType($this->input('attributetype')),
+            'dynamicattributetype' => $this->setRelevantDynamicAttributeType($this->input('dynamicattributetype')),
+            'status' => $this->setRelevantStatus($this->input('status'), "íd", false),
         ]);
     }
 }

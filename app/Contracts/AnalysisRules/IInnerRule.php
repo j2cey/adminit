@@ -4,7 +4,7 @@
 namespace App\Contracts\AnalysisRules;
 
 use OwenIt\Auditing\Contracts\Auditable;
-use App\Models\AnalysisRules\AnalysisRule;
+use App\Models\AnalysisRule\AnalysisRule;
 
 /**
  * Interface IInnerRule

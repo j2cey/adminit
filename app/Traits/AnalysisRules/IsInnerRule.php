@@ -3,7 +3,7 @@
 
 namespace App\Traits\AnalysisRules;
 
-use App\Models\AnalysisRules\AnalysisRule;
+use App\Models\AnalysisRule\AnalysisRule;
 
 trait IsInnerRule
 {

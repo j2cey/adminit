@@ -4,7 +4,7 @@ namespace App\Http\Requests\AnalysisRuleType;
 
 use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
-use App\Models\AnalysisRules\AnalysisRuleType;
+use App\Models\AnalysisRule\AnalysisRuleType;
 
 class StoreAnalysisRuleTypeRequest extends AnalysisRuleTypeRequest
 {

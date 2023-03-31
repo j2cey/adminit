@@ -16,6 +16,7 @@ use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentResult;
+use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 /**
@@ -41,7 +42,7 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  *
  * @method static create(string[] $array)
  */
-class Report extends BaseModel implements Auditable
+class Report extends BaseModel implements IHasDynamicAttributes
 {
     use HasDynamicAttributes, HasFactory, \OwenIt\Auditing\Auditable;
 
@@ -171,10 +172,10 @@ class Report extends BaseModel implements Auditable
             'field' => $dynamicattribute->name,
             'key' => $dynamicattribute->name,
             'label' => $dynamicattribute->name,
-            'numeric' => ($dynamicattribute->attributetype->code === ValueTypeEnum::INT->value),
+            'numeric' => ($dynamicattribute->dynamicattributetype->code === ValueTypeEnum::INT->value),
             'searchable' => (bool)$dynamicattribute->searchable,
             'sortable' => (bool)$dynamicattribute->sortable,
-            'date' => (bool)($dynamicattribute->attributetype->code === ValueTypeEnum::DATETIME->value),
+            'date' => (bool)($dynamicattribute->dynamicattributetype->code === ValueTypeEnum::DATETIME->value),
         ];
         $attributes_list[] = $new_attribute;
 

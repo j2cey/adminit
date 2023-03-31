@@ -3,7 +3,9 @@
 
 namespace App\Traits\DynamicAttribute;
 
+use App\Models\Status;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 
@@ -61,16 +63,20 @@ trait HasDynamicAttributes
      * @param string|null $description
      * @return DynamicAttribute
      */
-    public function addDynamicAttribute($name,Model|DynamicAttributeType $attribute_type, string $description = null): DynamicAttribute
+    public function addDynamicAttribute($name,Model|DynamicAttributeType $dynamicattributetype, Status $status = null, string $description = null): DynamicAttribute
     {
         $num_ord = $this->dynamicattributes()->count() + 1;         // set the attribute number order
         $dynamicattribute = $this->dynamicattributes()->create([
             'name' => $name,
             'num_ord' => $num_ord,
             'description' => $description,
-        ])                                                  // create and attach a new DynamicAttribute to the current model object
-        ->attributetype()->associate($attribute_type);      // associate the created DynamicAttribute with the given DynamicAttributeType
-        $dynamicattribute->save();                          // save the association from the DynamicAttribute
+        ])                                                          // create and attach a new DynamicAttribute to the current model object
+        ->dynamicattributetype()->associate($dynamicattributetype);              // associate the created DynamicAttribute with the given DynamicAttributeType
+        $dynamicattribute->save();                                  // save the association from the DynamicAttribute
+
+        if ( ! is_null($status) ) {
+            $dynamicattribute->status()->associate($status);        // set status
+        }
 
         $this->setAddAttributeToList($dynamicattribute);
 

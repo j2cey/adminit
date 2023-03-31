@@ -3,7 +3,7 @@
 namespace App\Http\Requests\AnalysisRuleType;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\AnalysisRules\AnalysisRuleType;
+use App\Models\AnalysisRule\AnalysisRuleType;
 
 class AnalysisRuleTypeRequest extends FormRequest
 {

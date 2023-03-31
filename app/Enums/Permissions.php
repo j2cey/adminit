@@ -27,12 +27,6 @@ abstract class Permissions
     public static function AnalysisRule() : PermissionAction {
         return new PermissionAction("analysisrule");
     }
-    public static function AnalysisHighlightType() : PermissionAction {
-        return new PermissionAction("analysishighlighttype");
-    }
-    public static function AnalysisHighlight() : PermissionAction {
-        return new PermissionAction("analysishighlight");
-    }
     public static function FileMimeType() : PermissionAction {
         return new PermissionAction("filemimetype");
     }
@@ -108,20 +102,22 @@ abstract class Permissions
     public static function ComparisonNotEqual() : PermissionAction {
         return new PermissionAction("comparisonnotequal");
     }
-    public static function CollectedReportFile() : PermissionAction
-    {
+    public static function CollectedReportFile() : PermissionAction {
         return new PermissionAction("collectedreportfile");
     }
-    public static function ReportTreatmentResult() : PermissionAction
-    {
+    public static function ReportTreatmentResult() : PermissionAction {
         return new PermissionAction("reporttreatmentresult");
     }
-    public static function ReportTreatmentStepResult() : PermissionAction
-    {
+    public static function ReportTreatmentStepResult() : PermissionAction {
         return new PermissionAction("reporttreatmentstepresult");
     }
-    public static function OperationResult() : PermissionAction
-    {
+    public static function OperationResult() : PermissionAction {
         return new PermissionAction("operationresult");
+    }
+    public static function FormatRuleType() : PermissionAction {
+        return new PermissionAction("formatruletype");
+    }
+    public static function FormatRule() : PermissionAction {
+        return new PermissionAction("formatrule");
     }
 }

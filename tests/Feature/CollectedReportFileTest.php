@@ -49,12 +49,14 @@ class CollectedReportFileTest extends TestCase
         $user = $this->authenticated_user_admin();
         $reportfile = $this->create_new_reportfile("new file");
 
-        $response = $this->add_new_collectedreportfile($reportfile,
-            "new i name",
-            "new l name",
-            "size",
-            status::default()->first(),
-            "new desc");
+        $response = $this->add_new_collectedreportfile(
+            $reportfile,
+            "initial file name",
+            "local file name",
+            1,
+            Status::default()->first(),
+            "collected report file desc"
+        );
 
         // on test si l'assertion s'est bien passée
         $response->assertStatus(201);
@@ -73,7 +75,14 @@ class CollectedReportFileTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_collectedreportfile("","", "", "",Status::default()->first(),"desc");
+        $response = $this->add_new_collectedreportfile(
+            "",
+            "",
+            "",
+            null,
+            Status::default()->first(),
+            "desc"
+        );
 
         // on doit avoir une erreur de validation des champs ci-dessous
         $response->assertSessionHasErrors(['reportfile','initial_file_name','local_file_name','file_size']);
@@ -91,35 +100,38 @@ class CollectedReportFileTest extends TestCase
         $user = $this->authenticated_user_admin();
 
         $reportfile = $this->create_new_reportfile("new file");
-        $response = $this->add_new_collectedreportfile($reportfile,
-            "new initial name",
-            "new local name",
-            "new size",
-            status::default()->first(),
-            "new desc"
+        $response = $this->add_new_collectedreportfile(
+            $reportfile,
+            "initial file name",
+            "local file name",
+            1,
+            Status::active()->first(),
+            "collected report file desc"
         );
 
         $newcollectedreportfile = CollectedReportFile::first();
 
+        $reportfile_another = $this->create_new_reportfile("another file");
         $status_another = Status::inactive()->first();
 
         $response = $this->update_existing_collectedreportfile(
             $newcollectedreportfile,
-            $reportfile,
-            "new initial name",
-            "new local name",
-            "new size",
+            $reportfile_another,
+            "initial file name upd",
+            "local file name upd",
+            2,
             $status_another,
-            "new description"
+            "collected report file desc upd"
         );
 
         $newcollectedreportfile->refresh();
 
-        $this->assertEquals($reportfile->id, $newcollectedreportfile->reportfile->id);
-        $this->assertEquals('new initial name',$newcollectedreportfile->initial_file_name);
-        $this->assertEquals('new local name',$newcollectedreportfile->local_file_name);
-        $this->assertEquals('new size', $newcollectedreportfile->file_size);
+        $this->assertEquals($reportfile_another->id, $newcollectedreportfile->reportfile->id);
+        $this->assertEquals('initial file name upd',$newcollectedreportfile->initial_file_name);
+        $this->assertEquals('local file name upd',$newcollectedreportfile->local_file_name);
+        $this->assertEquals(2, $newcollectedreportfile->file_size);
         $this->assertEquals($status_another, $newcollectedreportfile->status);
+        $this->assertEquals('collected report file desc upd',$newcollectedreportfile->description);
     }
 
 /**
@@ -134,11 +146,13 @@ class CollectedReportFileTest extends TestCase
         $user = $this->authenticated_user_admin();
         $reportfile = $this->create_new_reportfile("new file");
 
-        $response = $this->add_new_collectedreportfile($reportfile,
-            "new initial name",
-            "new local name",
-            "new size",
-
+        $response = $this->add_new_collectedreportfile(
+            $reportfile,
+            "initial file name",
+            "local file name",
+            1,
+            Status::default()->first(),
+            "collected report file desc"
         );
 
         $newcollectedreportfile = CollectedReportFile::first();
@@ -151,16 +165,16 @@ class CollectedReportFileTest extends TestCase
     #region Private Functions
 
 
-    private function add_new_collectedreportfile($reportfile, $initial_file_name, $local_file_name, $file_size, $status = null, $description = null)
+    private function add_new_collectedreportfile($reportfile, $initial_file_name, $local_file_name, $file_size, $status = null, $description = null, $lines_values = "[]")
     {
-        return $this->post('collectedreportfiles', $this->new_data($reportfile, $initial_file_name, $local_file_name, $file_size, $status, $description));
+        return $this->post('collectedreportfiles', $this->new_data($reportfile, $initial_file_name, $local_file_name, $file_size, $status, $description, $lines_values));
     }
-    private function update_existing_collectedreportfile($collectedreportfile, $reportfile, $initial_file_name,$local_file_name, $file_size, $status = null, $description = null)
+    private function update_existing_collectedreportfile($collectedreportfile, $reportfile, $initial_file_name,$local_file_name, $file_size, $status = null, $description = null, $lines_values = "[]")
     {
-        return $this->put('collectedreportfiles/' . $collectedreportfile->uuid, $this->new_data($reportfile, $initial_file_name,$local_file_name, $file_size, $status, $description));
+        return $this->put('collectedreportfiles/' . $collectedreportfile->uuid, $this->new_data($reportfile, $initial_file_name,$local_file_name, $file_size, $status, $description, $lines_values));
     }
 
-    private function new_data($reportfile, $initial_file_name,$local_file_name, $file_size, $status = null, $description = null) {
+    private function new_data($reportfile, $initial_file_name, $local_file_name, $file_size, $status = null, $description = null, $lines_values = "[]") {
         return [
             'reportfile' => $reportfile,
             'initial_file_name' => $initial_file_name,
@@ -168,6 +182,7 @@ class CollectedReportFileTest extends TestCase
             'file_size' => $file_size,
             'status' => $status,
             'description' => $description,
+            'lines_values' => $lines_values,
         ];
     }
 

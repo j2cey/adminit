@@ -6,11 +6,12 @@ use JsonSerializable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
-use App\Models\AnalysisRules\AnalysisRule;
+use App\Models\AnalysisRule\AnalysisRule;
 use Illuminate\Contracts\Support\Arrayable;
 use App\Contracts\AnalysisRules\IInnerRule;
-use App\Models\AnalysisRules\AnalysisRuleType;
+use App\Models\AnalysisRule\AnalysisRuleType;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\FormatRule\FormatRuleResource;
 
 /**
  * Class AnalysisRuleResource
@@ -41,8 +42,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property IInnerRule $innerrule
  * @property AnalysisRuleType $analysisruletype
  *
- * @property mixed $whenallowedhighlights
- * @property mixed $whenbrokenhighlights
+ * @property mixed $whenallowedformatrules
+ * @property mixed $whenbrokenformatrules
  */
 class AnalysisRuleResource extends JsonResource
 {
@@ -73,9 +74,9 @@ class AnalysisRuleResource extends JsonResource
             'dynamic_attribute_id' => $this->dynamic_attribute_id,
             'model_type' => AnalysisRule::class,
 
-            //'highlights' => AnalysisHighlightResource::collection($this->highlights),
-            'whenallowedhighlights' => AnalysisHighlightResource::collection($this->whenallowedhighlights),
-            'whenbrokenhighlights' => AnalysisHighlightResource::collection($this->whenbrokenhighlights),
+            //'formatrules' => AnalysisHighlightResource::collection($this->formatrules),
+            'whenallowedformatrules' => FormatRuleResource::collection($this->whenallowedformatrules),
+            'whenbrokenformatrules' => FormatRuleResource::collection($this->whenbrokenformatrules),
 
             'created_at' => $this->created_at,
 
