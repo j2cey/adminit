@@ -2,7 +2,9 @@
 
 namespace App\Models\FormatRule;
 
+use App\Models\Status;
 use App\Models\BaseModel;
+use App\Enums\RuleResultEnum;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -29,7 +31,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property string $hasformatrule_type
  * @property int $hasformatrule_id
- * @property string $when_rule_result_is
+ * @property string $rule_result
  *
  * @property string|null $innerformatrule_type
  * @property int|null $innerformatrule_id
@@ -37,6 +39,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property IInnerFormatRule $innerformatrule
+ * @property FormatRuleType $formatruletype
+ * @method static FormatRule first()
  */
 class FormatRule extends BaseModel implements Auditable
 {
@@ -44,6 +48,9 @@ class FormatRule extends BaseModel implements Auditable
 
     protected $guarded = [];
     protected $with = ["innerformatrule"];
+    protected $casts = [
+        'rule_result' => RuleResultEnum::class,
+    ];
 
     #region Validation Rules
 
@@ -52,7 +59,7 @@ class FormatRule extends BaseModel implements Auditable
         return [
             'title' => ['required'],
             'formatruletype' => ['required'],
-            'when_rule_result_is' => ['required'],
+            'rule_result' => ['required'],
         ];
     }
 
@@ -139,18 +146,19 @@ class FormatRule extends BaseModel implements Auditable
      * Create a new Highlight and attach the relevant inner Highlight from it
      * @param Model|FormatRuleType $formatruletype
      * @param string $title
-     * @param string $when_rule_result_is
+     * @param string $rule_result
      * @param string $description
+     * @param int|null $num_ord
      * @return FormatRule
      */
-    public static function createNew(Model|FormatRuleType $formatruletype, string $title, string $when_rule_result_is, string $description, int $num_ord = null)
+    public static function createNew(Model|FormatRuleType $formatruletype, string $title, string $rule_result, string $description, int $num_ord = null)
     {
         $innerformatrule = self::createInnerFormatRule($formatruletype);
 
         $formatrule = $innerformatrule->formatrule()->create([
             'num_ord' => $num_ord,
             'title' => $title,
-            'when_rule_result_is' => $when_rule_result_is,
+            'rule_result' => $rule_result,
             'description' => $description,
         ]);
 
@@ -161,16 +169,20 @@ class FormatRule extends BaseModel implements Auditable
         return $formatrule;
     }
 
-    public function updateOne(Model|FormatRuleType $formatruletype, string $title, string $when_rule_result_is, string $description, int $num_ord = null) : FormatRule
+    public function updateOne(Model|FormatRuleType $formatruletype, string $title, string $rule_result, Status $status = null, string $description = null, int $num_ord = null) : FormatRule
     {
         $this->syncInnerFormatRule($formatruletype, $this->innerformatrule);
 
-        $this->update([
-            'num_ord' => $num_ord,
-            'title' => $title,
-            'when_rule_result_is' => $when_rule_result_is,
-            'description' => $description,
-        ]);
+        $this->num_ord = $num_ord;
+        $this->title = $title;
+        $this->rule_result = $rule_result;
+        $this->description = $description;
+
+        if ( ! is_null($status) ) {
+            $this->status()->associate($status);      // set status
+        }
+
+        $this->save();
 
         return $this;
     }

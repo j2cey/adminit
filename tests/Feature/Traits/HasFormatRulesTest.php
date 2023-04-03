@@ -14,7 +14,7 @@ trait HasFormatRulesTest
         $model = $this->getModel();
 
         $formatruletype = FormatRuleType::textColor()->first();
-        $model->addFormatRule($formatruletype,"apply red color","broken","");
+        $model->addFormatRule($formatruletype,"apply red color","broken",null,"");
 
         // make sure we have a format rule ...
         $this->assertCount(1, FormatRule::all());

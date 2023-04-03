@@ -27,7 +27,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $formatruleowner_type
  * @property int $formatruleowner_id
  *
- * @property string $when_rule_result_is
+ * @property string $rule_result
  *
  * @property string $innerformatrule_type
  * @property int $innerformatrule_id
@@ -64,7 +64,7 @@ class FormatRuleResource extends JsonResource
             'formatruleowner_type' => $this->formatruleowner_type,
             'formatruleowner_id' => $this->formatruleowner_id,
 
-            'when_rule_result_is' => $this->when_rule_result_is,
+            'rule_result' => $this->rule_result,
 
             'innerformatrule_type' => $this->innerformatrule_type,
             'innerformatrule_id' => $this->innerformatrule_id,

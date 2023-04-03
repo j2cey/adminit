@@ -8,20 +8,20 @@ use App\Http\Controllers\FormatRule\FormatTextWeightController;
 use App\Http\Controllers\FormatRule\FormatRuleTypeController;
 
 
-Route::resource('analysishighlighttypes',FormatRuleTypeController::class)->middleware('auth');
-Route::get('analysishighlighttypes.fetch',[FormatRuleTypeController::class,'fetch'])
-    ->name('analysishighlighttypes.fetch')
+Route::resource('formatruletypes',FormatRuleTypeController::class)->middleware('auth');
+Route::get('formatruletypes.fetch',[FormatRuleTypeController::class,'fetch'])
+    ->name('formatruletypes.fetch')
     ->middleware('auth');
-Route::get('analysishighlighttypes.fetchall',[FormatRuleTypeController::class,'fetchall'])
-    ->name('analysishighlighttypes.fetchall')
+Route::get('formatruletypes.fetchall',[FormatRuleTypeController::class,'fetchall'])
+    ->name('formatruletypes.fetchall')
     ->middleware('auth');
 
-Route::resource('analysishighlights',FormatRuleController::class)->middleware('auth');
-Route::get('analysishighlights.fetch',[FormatRuleController::class,'fetch'])
-    ->name('analysishighlights.fetch')
+Route::resource('formatrules',FormatRuleController::class)->middleware('auth');
+Route::get('formatrules.fetch',[FormatRuleController::class,'fetch'])
+    ->name('formatrules.fetch')
     ->middleware('auth');
-Route::get('analysishighlights.fetchall',[FormatRuleController::class,'fetchall'])
-    ->name('analysishighlights.fetchall')
+Route::get('formatrules.fetchall',[FormatRuleController::class,'fetchall'])
+    ->name('formatrules.fetchall')
     ->middleware('auth');
 
 Route::resource('formattextcolors',FormatTextColorController::class)->middleware('auth');

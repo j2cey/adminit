@@ -25,7 +25,7 @@ var Highlight = /*#__PURE__*/_createClass(function Highlight(highlight) {
   this.highlighttype = highlight.highlighttype || '';
   this.description = highlight.description || '';
   this.analysis_rule_id = highlight.analysis_rule_id || '';
-  this.when_rule_result_is = highlight.when_rule_result_is || '';
+  this.rule_result = highlight.rule_result || '';
 });
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "highlight-addupdate",
@@ -67,7 +67,7 @@ var Highlight = /*#__PURE__*/_createClass(function Highlight(highlight) {
     return {
       formTitle: 'Create Highlight',
       analysisrule: {},
-      when_rule_result_is: "",
+      rule_result: "",
       highlight: {},
       highlightForm: new Form(new Highlight({})),
       highlightId: null,
@@ -421,7 +421,7 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
   null,
   null,
   null
-  
+
 )
 
 /* hot reload */
@@ -439,7 +439,7 @@ component.options.__file = "resources/js/views/analysishighlights/addupdate.vue"
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_addupdate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./addupdate.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/views/analysishighlights/addupdate.vue?vue&type=script&lang=js&");
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_addupdate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_addupdate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),
 

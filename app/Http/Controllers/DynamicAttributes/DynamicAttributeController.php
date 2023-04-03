@@ -41,7 +41,16 @@ class DynamicAttributeController extends Controller
      */
     public function store(StoreDynamicAttributeRequest $request)
     {
-        $dynamicattribute = $request->model->addDynamicAttribute($request->name, $request->dynamicattributetype, $request->status, $request->description);
+        $dynamicattribute = $request->model->addDynamicAttribute(
+            $request->name,
+            $request->dynamicattributetype,
+            $request->status,
+            $request->description,
+            $request->offset,
+            $request->max_length,
+            $request->searchable,
+            $request->sortable
+        );
 
         return new DynamicAttributeResource($dynamicattribute);
     }
@@ -77,12 +86,15 @@ class DynamicAttributeController extends Controller
      */
     public function update(UpdateDynamicAttributeRequest $request, DynamicAttribute $dynamicattribute)
     {
-        //dd("DynamicAttributeController->update: ", $request->status);
         $dynamicattribute->updateThis(
             $request->dynamicattributetype,
             $request->name,
             $request->status,
-            $request->description
+            $request->description,
+            $request->offset,
+            $request->max_length,
+            $request->searchable,
+            $request->sortable
         );
 
         return new DynamicAttributeResource($dynamicattribute);
@@ -92,7 +104,7 @@ class DynamicAttributeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param DynamicAttribute $dynamicattribute
-     * @return Application|ResponseFactory|Response|void
+     * @return Application|Response|ResponseFactory
      */
     public function destroy(DynamicAttribute $dynamicattribute)
     {
