@@ -5,7 +5,6 @@ namespace App\Traits\DynamicAttribute;
 
 use App\Models\Status;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Validator;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 
@@ -59,24 +58,39 @@ trait HasDynamicAttributes
 
     /**
      * @param $name
-     * @param Model|DynamicAttributeType $attribute_type
+     * @param Model|DynamicAttributeType $dynamicattributetype
      * @param string|null $description
      * @return DynamicAttribute
      */
-    public function addDynamicAttribute($name,Model|DynamicAttributeType $dynamicattributetype, Status $status = null, string $description = null): DynamicAttribute
+    public function addDynamicAttribute(
+        $name,Model|DynamicAttributeType $dynamicattributetype,
+        Status $status = null,
+        string $description = null,
+        int $offset = null,
+        int $max_length = null,
+        bool $searchable = null,
+        bool $sortable = null
+    ): DynamicAttribute
     {
-        $num_ord = $this->dynamicattributes()->count() + 1;         // set the attribute number order
-        $dynamicattribute = $this->dynamicattributes()->create([
+        $num_ord = $this->dynamicattributes()->count() + 1;                     // set the attribute number order
+        $data = [
             'name' => $name,
             'num_ord' => $num_ord,
             'description' => $description,
-        ])                                                          // create and attach a new DynamicAttribute to the current model object
-        ->dynamicattributetype()->associate($dynamicattributetype);              // associate the created DynamicAttribute with the given DynamicAttributeType
-        $dynamicattribute->save();                                  // save the association from the DynamicAttribute
+        ];
+        if ( ! is_null($offset) ) $data['offset'] = $offset;
+        if ( ! is_null($max_length) ) $data['max_length'] = $max_length;
+        if ( ! is_null($searchable) ) $data['searchable'] = $searchable;
+        if ( ! is_null($sortable) ) $data['sortable'] = $sortable;
+
+        $dynamicattribute = $this->dynamicattributes()->create($data)           // create and attach a new DynamicAttribute to the current model object
+        ->dynamicattributetype()->associate($dynamicattributetype);             // associate the created DynamicAttribute with the given DynamicAttributeType
 
         if ( ! is_null($status) ) {
-            $dynamicattribute->status()->associate($status);        // set status
+            $dynamicattribute->status()->associate($status);                    // set status
         }
+
+        $dynamicattribute->save();                                              // save the association from the DynamicAttribute
 
         $this->setAddAttributeToList($dynamicattribute);
 
@@ -85,14 +99,23 @@ trait HasDynamicAttributes
 
     /**
      * Add Many DynamicAttribute at once
-     * @param array $attributes Attributes array: [['name' => "name", 'type' => DynamicAttributeType, 'description' => "description"]]
+     * @param array $attributes Attributes array: [['name' => "string", 'type' => DynamicAttributeType, 'status' => Status, 'description' => "string", 'offset' => int, 'max_length' => int, 'searchable' => bool, 'sortable' => bool]]
      * @return int
      */
     public function addDynamicAttributeMany(array $attributes) {
         $nb_created = 0;
 
         foreach ($attributes as $attribute) {
-            $this->addDynamicAttribute($attribute['name'], $attribute['type'], null,$attribute['description'] ?? null);
+            $this->addDynamicAttribute(
+                $attribute['name'],
+                $attribute['type'],
+                $attribute['status'] ?? null,
+                $attribute['description'] ?? null,
+                $attribute['offset'] ?? null,
+                $attribute['max_length'] ?? null,
+                $attribute['searchable'] ?? null,
+                $attribute['sortable'] ?? null
+            );
         }
 
         return $nb_created;

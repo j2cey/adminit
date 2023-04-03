@@ -12,6 +12,7 @@ use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
  * @package App\Http\Requests\DynamicAttribute
  *
  * @property IHasDynamicAttributes $model
+ * @property string $model_type
  */
 class StoreDynamicAttributeRequest extends DynamicAttributeRequest
 {

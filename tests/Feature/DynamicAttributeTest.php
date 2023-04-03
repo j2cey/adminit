@@ -73,7 +73,7 @@ class DynamicAttributeTest extends TestCase
      *
      * @return void
      */
-    public function test_aDynamicAttribute_required_fields_must_be_validated_before_creation()
+    public function test_DynamicAttribute_required_fields_must_be_validated_before_creation()
     {
         //$this->withoutExceptionHandling();
 
@@ -90,6 +90,33 @@ class DynamicAttributeTest extends TestCase
 
         // on doit avoir une erreur de validation des champs ci-dessous
         $response->assertSessionHasErrors(['dynamicattributetype','name']);
+    }
+
+    public function test_DynamicAttribute_unique_fields_must_be_validated_before_creation()
+    {
+        //$this->withoutExceptionHandling();
+
+        $user = $this->authenticated_user_admin();
+
+        $response = $this->add_new_dynamicattribute(
+            $this->create_new_report(),
+            Report::class,
+            DynamicAttributeType::string()->first(),
+            "New Dynamic Attribute",
+            null,
+            "New Dynamic Attribute desc"
+        );
+        $response = $this->add_new_dynamicattribute(
+            $this->create_new_report(),
+            Report::class,
+            DynamicAttributeType::string()->first(),
+            "New Dynamic Attribute",
+            null,
+            "New Dynamic Attribute desc"
+        );
+
+        // on doit avoir une erreur de validation des champs ci-dessous
+        $response->assertSessionHasErrors(['name']);
     }
 
     /**
@@ -109,7 +136,11 @@ class DynamicAttributeTest extends TestCase
             DynamicAttributeType::string()->first(),
             "New Dynamic Attribute",
             Status::active()->first(),
-            "New Dynamic Attribute desc"
+            "New Dynamic Attribute desc",
+            0,
+            1,
+            true,
+            true
         );
 
         $dynamicattribute = DynamicAttribute::first();
@@ -122,7 +153,11 @@ class DynamicAttributeTest extends TestCase
             $dynamicattributetype_another,
             "New Dynamic Attribute upd",
             $status_inactive,
-            "New Dynamic Attribute desc upd"
+            "New Dynamic Attribute desc upd",
+            2,
+            3,
+            false,
+            false
         );
 
         $dynamicattribute->refresh();
@@ -132,6 +167,10 @@ class DynamicAttributeTest extends TestCase
         $this->assertEquals($status_inactive->id, $dynamicattribute->status->id);
         $this->assertEquals($dynamicattributetype_another->id, $dynamicattribute->dynamicattributetype->id);
         $this->assertEquals("New Dynamic Attribute desc upd", $dynamicattribute->description);
+        $this->assertEquals(2, $dynamicattribute->offset);
+        $this->assertEquals(3, $dynamicattribute->max_length);
+        $this->assertEquals(false, $dynamicattribute->searchable);
+        $this->assertEquals(false, $dynamicattribute->sortable);
     }
 
     /**
@@ -165,21 +204,21 @@ class DynamicAttributeTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_dynamicattribute(IHasDynamicAttributes $model, $model_type, $dynamicattributetype, $name, $status = null, $description = null): TestResponse
+    private function add_new_dynamicattribute(IHasDynamicAttributes $model, $model_type, $dynamicattributetype, $name, $status = null, $description = null, $offset = null, $max_length = null, $searchable = null, $sortable = null): TestResponse
     {
         return $this->post('dynamicattributes/',
             array_merge([
                 'model_id' => $model->id,
                 'model_type' => $model_type
-            ], $this->new_data($dynamicattributetype, $name, $status, $description)));
+            ], $this->new_data($dynamicattributetype, $name, $status, $description, $offset, $max_length, $searchable, $sortable)));
     }
 
-    private function update_existing_dynamicattribute($existing_dynamicattribute, $dynamicattributetype, $name, $status = null, $description = null): TestResponse
+    private function update_existing_dynamicattribute($existing_dynamicattribute, $dynamicattributetype, $name, $status = null, $description = null, $offset = null, $max_length = null, $searchable = null, $sortable = null): TestResponse
     {
-        return $this->put('dynamicattributes/' . $existing_dynamicattribute->uuid, $this->new_data($dynamicattributetype, $name, $status, $description));
+        return $this->put('dynamicattributes/' . $existing_dynamicattribute->uuid, $this->new_data($dynamicattributetype, $name, $status, $description, $offset, $max_length, $searchable, $sortable));
     }
 
-    private function new_data($dynamicattributetype, $name, $status = null, $description = null): array
+    private function new_data($dynamicattributetype, $name, $status = null, $description = null, $offset = null, $max_length = null, $searchable = null, $sortable = null): array
     {
         return [
             'name' => $name,
@@ -187,6 +226,10 @@ class DynamicAttributeTest extends TestCase
 
             'dynamicattributetype' => $dynamicattributetype,
             'status' => $status,
+            'offset' => $offset,
+            'max_length' => $max_length,
+            'searchable' => $searchable,
+            'sortable' => $sortable
         ];
     }
 

@@ -49,12 +49,12 @@ class FormatRuleController extends Controller
      */
     public function store(StoreFormatRuleRequest $request)
     {
-        $formatrule = FormatRule::createNew(
+        $formatrule = $request->model->addFormatRule(
             $request->formatruletype,
             $request->title,
-            $request->when_rule_result_is,
+            $request->rule_result,
+            $request->status,
             $request->description,
-            $request->num_ord
         );
         return new FormatRuleResource($formatrule);
     }
@@ -86,12 +86,12 @@ class FormatRuleController extends Controller
      *
      * @param UpdateFormatRuleRequest $request
      * @param FormatRule $formatrule
-     * @return FormatRuleResource|void
+     * @return FormatRuleResource
      */
     public function update(UpdateFormatRuleRequest $request, FormatRule $formatrule)
     {
         $formatrule = $formatrule->updateOne(
-            $request->formatruletype, $request->title, $request->when_rule_result_is, $request->description, $request->num_ord
+            $request->formatruletype, $request->title, $request->rule_result, $request->status, $request->description, $request->num_ord
         );
 
         return new FormatRuleResource($formatrule);

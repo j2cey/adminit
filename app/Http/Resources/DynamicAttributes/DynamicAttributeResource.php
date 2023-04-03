@@ -2,12 +2,15 @@
 
 namespace App\Http\Resources\DynamicAttributes;
 
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
+use App\Models\AnalysisRule\AnalysisRule;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\DynamicAttributes\DynamicAttribute;
+use App\Models\DynamicAttributes\DynamicAttributeType;
 use App\Http\Resources\AnalysisRules\AnalysisRuleResource;
 
 /**
@@ -37,6 +40,8 @@ use App\Http\Resources\AnalysisRules\AnalysisRuleResource;
  * @property Carbon $updated_at
  *
  * @property DynamicAttributeType $dynamicattributetype
+ * @property AnalysisRule $analysisrules
+ * @property Status $status
  */
 class DynamicAttributeResource extends JsonResource
 {

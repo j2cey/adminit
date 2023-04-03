@@ -51,6 +51,8 @@ class RouteServiceProvider extends ServiceProvider
                     require base_path('routes/formatrule.php');
                     /* DynamicAttribute routes */
                     require base_path('routes/dynamicattribute.php');
+                    /* FormattedValue routes */
+                    require base_path('routes/formattedvalue.php');
                 });
         });
     }

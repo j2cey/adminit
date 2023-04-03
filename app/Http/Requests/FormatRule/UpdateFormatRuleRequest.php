@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\FormatRule;
 
+use App\Models\Status;
 use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\FormatRule\FormatRule;
@@ -43,6 +44,7 @@ class UpdateFormatRuleRequest extends FormatRuleRequest
     protected function prepareForValidation()
     {
         $this->merge([
+            'status' => $this->getrelevantModelByCode(Status::class, $this->status, true),
             'formatruletype' => $this->getRelevantModel(FormatRuleType::class, $this->input('formatruletype'), 'id', true),
         ]);
     }

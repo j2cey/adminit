@@ -5,10 +5,10 @@ namespace Database\Seeders;
 use App\Models\Reports\Report;
 use Illuminate\Database\Seeder;
 use App\Models\Reports\ReportType;
+use App\Models\Access\AccessAccount;
 use App\Models\Access\AccessProtocole;
 use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
-use App\Models\Access\AccessAccount;
 use App\Models\ReportFile\CollectedReportFile;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 
@@ -36,18 +36,18 @@ class TestFullReportSeeder extends Seeder
         $attribute_data = $the_report->addDynamicAttribute("data",$type_int,null,"La donnée");
 
         $the_report->addDynamicAttributeMany([
-            ['name' => "trend", 'type' => $type_string,'description' => "La Tendance des changements de la donnée"],
-            ['name' => "trend_date", 'type' => $type_datetime, 'description' => "Date de la Tendance"],
-            ['name' => "trend_times", 'type' => $type_int, 'description' => "Nombre de repétition de la Tendance actuelle"],
-            ['name' => "trend_step", 'type' => $type_int, 'description' => "Différence (bond) vis-à-vis de la dernière donnée"],
-            ['name' => "trend_cumul", 'type' => $type_int, 'description' => "Cumule de données dans la tendance actuelle"],
-            ['name' => "trend_age", 'type' => $type_string, 'description' => "Age de la Tendance hh:mm:ss (différence entre ce date et le début de la Tendance actuelle)"],
-            ['name' => "data_treated", 'type' => $type_int, 'description' => "Cumule de Données traitées"],
-            ['name' => "trend_hourOfWeek", 'type' => $type_string, 'description' => "Tendance sur cette heure du jour dans la semaine"],
-            ['name' => "trend_hourOfWeek_date", 'type' => $type_datetime, 'description' => "Date de Tendance sur cette heure du jour dans la semaine"],
-            ['name' => "trend_hourOfWeek_times", 'type' => $type_int, 'description' => "Nombre de repétition ce cette Tendance sur cette heure du jour dans la semaine"],
-            ['name' => "trend_hourOfWeek_step", 'type' => $type_int, 'description' => "Différence (bond) vis-à-vis de la dernière donnée sur cette heure du jour dans la semaine"],
-            ['name' => "report_date", 'type' => $type_datetime, 'description' => "Date de génération du Rapport"],
+            ['name' => "trend", 'type' => $type_string, 'status' => null,'description' => "La Tendance des changements de la donnée"],
+            ['name' => "trend_date", 'type' => $type_datetime, 'status' => null, 'description' => "Date de la Tendance"],
+            ['name' => "trend_times", 'type' => $type_int, 'status' => null, 'description' => "Nombre de repétition de la Tendance actuelle"],
+            ['name' => "trend_step", 'type' => $type_int, 'status' => null, 'description' => "Différence (bond) vis-à-vis de la dernière donnée"],
+            ['name' => "trend_cumul", 'type' => $type_int, 'status' => null, 'description' => "Cumule de données dans la tendance actuelle"],
+            ['name' => "trend_age", 'type' => $type_string, 'status' => null, 'description' => "Age de la Tendance hh:mm:ss (différence entre ce date et le début de la Tendance actuelle)"],
+            ['name' => "data_treated", 'type' => $type_int, 'status' => null, 'description' => "Cumule de Données traitées"],
+            ['name' => "trend_hourOfWeek", 'type' => $type_string, 'status' => null, 'description' => "Tendance sur cette heure du jour dans la semaine"],
+            ['name' => "trend_hourOfWeek_date", 'type' => $type_datetime, 'status' => null, 'description' => "Date de Tendance sur cette heure du jour dans la semaine"],
+            ['name' => "trend_hourOfWeek_times", 'type' => $type_int, 'status' => null, 'description' => "Nombre de repétition ce cette Tendance sur cette heure du jour dans la semaine"],
+            ['name' => "trend_hourOfWeek_step", 'type' => $type_int, 'status' => null, 'description' => "Différence (bond) vis-à-vis de la dernière donnée sur cette heure du jour dans la semaine"],
+            ['name' => "report_date", 'type' => $type_datetime, 'status' => null, 'description' => "Date de génération du Rapport"],
         ]);
 
         $the_report_file = $the_report->addReportFile(

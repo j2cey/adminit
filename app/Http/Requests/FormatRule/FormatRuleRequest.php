@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\FormatRule;
 
+use App\Models\Status;
 use App\Traits\Request\RequestTraits;
 use App\Models\FormatRule\FormatRule;
 use App\Models\FormatRule\FormatRuleType;
@@ -20,8 +21,9 @@ use Illuminate\Foundation\Http\FormRequest;
  * @property string $formatruleowner_type
  * @property int $formatruleowner_id
  *
- * @property string $when_rule_result_is
+ * @property string $rule_result
  *
+ * @property Status $status
  * @property FormatRuleType $formatruletype
  * @property FormatRule $formatrule
  */

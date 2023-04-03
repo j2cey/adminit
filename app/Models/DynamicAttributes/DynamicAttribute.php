@@ -63,7 +63,6 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
     public static function defaultRules()
     {
         return [
-            'name' => ['required'],
             'dynamicattributetype' => ['required'],
         ];
     }
@@ -71,20 +70,21 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
     public static function createRules()
     {
         return array_merge(self::defaultRules(), [
-
+            'name' => ['required','unique:dynamic_attributes,name,NULL,id'],
         ]);
     }
 
     public static function updateRules($model)
     {
         return array_merge(self::defaultRules(), [
-
+            'name' => ['required','unique:dynamic_attributes,name,'.$model->id.',id'],
         ]);
     }
 
     public static function messagesRules() {
         return [
             'name.required' => "Prière de renseigner le nom",
+            'name.unique' => "Ce nom de projet est déjà utilisé",
             'dynamicattributetype.required' => "Prière de renseigner le Type",
         ];
     }
@@ -142,16 +142,42 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
      * @param IHasDynamicAttributes $model
      * @param Model|DynamicAttributeType $dynamicattributetype
      * @param string $name
+     * @param Status|null $status
      * @param string|null $description
      * @return DynamicAttribute
      */
-    public static function createNew(IHasDynamicAttributes $model, Model|DynamicAttributeType $dynamicattributetype, string $name, Status $status = null, string $description = null): DynamicAttribute {
-        return $model->addDynamicAttribute($name,$dynamicattributetype, $status,$description);
+    public static function createNew(IHasDynamicAttributes $model, Model|DynamicAttributeType $dynamicattributetype, string $name, Status $status = null, string $description = null, int $offset = null, int $max_length = null, bool $searchable = null, bool $sortable = null): DynamicAttribute {
+        return $model->addDynamicAttribute($name, $dynamicattributetype, $status, $description, $offset, $max_length, $searchable, $sortable);
     }
 
-    public function updateThis(Model|DynamicAttributeType $dynamicattributetype, string $name, Status $status = null, string $description = null): DynamicAttribute {
+    /**
+     * @param Model|DynamicAttributeType $dynamicattributetype
+     * @param string $name
+     * @param Status|null $status
+     * @param string|null $description
+     * @param int|null $offset
+     * @param int|null $max_length
+     * @param bool|null $searchable
+     * @param bool|null $sortable
+     * @return $this
+     */
+    public function updateThis(
+        Model|DynamicAttributeType $dynamicattributetype,
+        string $name,
+        Status $status = null,
+        string $description = null,
+        int $offset = null,
+        int $max_length = null,
+        bool $searchable = null,
+        bool $sortable = null
+    ): DynamicAttribute
+    {
         $this->name = $name;
         $this->description = $description;
+        $this->offset = $offset;
+        $this->max_length = $max_length;
+        $this->searchable = $searchable;
+        $this->sortable = $sortable;
 
         $this->dynamicattributetype()->associate($dynamicattributetype);
         if ( ! is_null($status) ) {

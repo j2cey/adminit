@@ -92,7 +92,7 @@ __webpack_require__.r(__webpack_exports__);
     highlights_prop: [],
     list_title_prop: "",
     list_color_prop: "",
-    when_rule_result_is_prop: ""
+    rule_result_prop: ""
   },
   watch: {
     highlights_prop: function highlights_prop(newValue, oldValue) {
@@ -120,7 +120,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     _analysishighlights_analysishighlightBus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('highlight_created', function (highlight) {
-      if (_this.analysisrule.id === highlight.analysis_rule_id && _this.when_rule_result_is === highlight.when_rule_result_is) {
+      if (_this.analysisrule.id === highlight.analysis_rule_id && _this.rule_result === highlight.rule_result) {
         _this.addHighlightToList(highlight);
       }
     });
@@ -477,7 +477,7 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
   null,
   "6a61c163",
   null
-  
+
 )
 
 /* hot reload */
@@ -497,7 +497,7 @@ component.options.__file = "resources/js/views/analysishighlights/list.vue"
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_list_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./list.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/analysishighlights/list.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_list_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_list_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),
 

@@ -6,11 +6,14 @@ use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
 use App\Models\FormatRule\FormatRule;
 use App\Models\FormatRule\FormatRuleType;
+use App\Contracts\FormatRule\IHasFormatRules;
 
 /**
  * Class FormatRuleRequest
  * @package App\Http\Requests\FormatRule
  *
+ * @property IHasFormatRules $model
+ * @property string $model_type
  */
 class StoreFormatRuleRequest extends FormatRuleRequest
 {
@@ -42,6 +45,8 @@ class StoreFormatRuleRequest extends FormatRuleRequest
     protected function prepareForValidation()
     {
         $this->merge([
+            'status' => $this->setRelevantStatus($this->input('status'), "íd", false),
+            'model' => $this->input('model_type')::find($this->input('model_id'))->first(),
             'formatruletype' => $this->getRelevantModel(FormatRuleType::class, $this->input('formatruletype'), 'id'),
         ]);
     }

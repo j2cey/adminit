@@ -2,6 +2,8 @@
 
 namespace App\Traits\FormatRule;
 
+use App\Models\Status;
+use App\Enums\RuleResultEnum;
 use App\Models\FormatRule\FormatRule;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\FormatRule\FormatRuleType;
@@ -37,7 +39,7 @@ trait HasFormatRules
      */
     public function whenallowedformatrules() {
         return $this->formatrules()
-            ->where("when_rule_result_is", 'allowed');
+            ->where("rule_result", RuleResultEnum::ALLOWED->value);
     }
 
     /**
@@ -46,7 +48,7 @@ trait HasFormatRules
      */
     public function whenbrokenformatrules() {
         return $this->formatrules()
-            ->where("when_rule_result_is", 'broken');
+            ->where("rule_result", RuleResultEnum::BROKEN->value);
     }
 
 
@@ -73,21 +75,26 @@ trait HasFormatRules
     /**
      * @param Model|FormatRuleType $formatruletype
      * @param string $title
-     * @param string $when_rule_result_is
+     * @param string $rule_result
+     * @param Status|null $status
      * @param string|null $description
      * @return FormatRule
      */
-    public function addFormatRule(Model|FormatRuleType $formatruletype, string $title, string $when_rule_result_is, string $description = null): FormatRule
+    public function addFormatRule(Model|FormatRuleType $formatruletype, string $title, string $rule_result, Status $status = null, string $description = null): FormatRule
     {
-        $num_ord = $this->formatrules()->count() + 1;         // set the format rule number order
+        $num_ord = $this->formatrules()->count() + 1;       // set the format rule number order
         $formatrule = FormatRule::createNew(
             $formatruletype,
             $title,
-            $when_rule_result_is,
+            $rule_result,
             $description,
             $num_ord
         );                                                  // create new FormatRule + InnerFormatRule
         $this->formatrules()->save($formatrule);            // attach the new FormatRule to the current model object
+
+        if ( ! is_null($status) ) {
+            $formatrule->status()->associate($status);      // set status
+        }
 
         $formatrule->save();                                // save the association from the FormatRule
 
@@ -96,14 +103,20 @@ trait HasFormatRules
 
     /**
      * Add Many DynamicAttribute at once
-     * @param array $attributes Attributes array: [['formatruletype' => FormatRuleType, 'title' => "title", 'when_rule_result_is' => "when_rule_result_is", 'description' => "description"]]
+     * @param array $attributes Attributes array: [['formatruletype' => FormatRuleType, 'title' => "title", 'rule_result' => "when_rule_result_is", 'description' => "description"]]
      * @return int
      */
     public function addFormatRuleMany(array $attributes) {
         $nb_created = 0;
 
         foreach ($attributes as $attribute) {
-            $this->addFormatRule($attribute['formatruletype'], $attribute['title'], $attribute['when_rule_result_is'], $attribute['description']);
+            $this->addFormatRule(
+                $attribute['formatruletype'],
+                $attribute['title'],
+                $attribute['rule_result'],
+                $attribute['status'] ?? null,
+                $attribute['description'] ?? null
+            );
         }
 
         return $nb_created;
