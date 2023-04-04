@@ -7,11 +7,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
+use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
 
 /**
  * Class StoreSelectedRetrieveActionRequest
  * @package App\Http\Requests\SelectedRetrieveAction
  *
+ * @property HasSelectedRetrieveActions $model
  * @property string $code
  * @property string|null $description
  *

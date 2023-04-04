@@ -21,27 +21,6 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="m_select_retrieveaction" class="col-sm-2 col-form-label text-xs">Récupération du Fichier:</label>
-                                <div class="col-sm-10 text-xs">
-                                    <multiselect class="text text-xs"
-                                                 id="m_select_retrieveaction"
-                                                 v-model="reportfileForm.reportfiletype"
-                                                 selected.sync="reportfileForm.reportfiletype"
-                                                 value=""
-                                                 :options="retrieveactiontypes"
-                                                 :searchable="true"
-                                                 :multiple="true"
-                                                 label="name"
-                                                 track-by="id"
-                                                 key="id"
-                                                 placeholder="Récupération du Fichier"
-                                    >
-                                    </multiselect>
-                                    <span class="invalid-feedback d-block text-xs" role="alert" v-if="reportfileForm.errors.has('reportfiletype')" v-text="reportfileForm.errors.get('reportfiletype')"></span>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
                                 <label for="m_select_reportfiletype" class="col-sm-2 col-form-label text-xs">Type du Fichier</label>
                                 <div class="col-sm-10 text-xs">
                                     <multiselect class="text text-xs"
@@ -51,7 +30,7 @@
                                          value=""
                                          :options="reportfiletypes"
                                          :searchable="true"
-                                         :multiple="false"
+                                         :multiple="true"
                                          label="name"
                                          track-by="id"
                                          key="id"
@@ -79,6 +58,30 @@
                                             <span>Inactif</span>
                                         </b-radio-button>
                                     </b-field>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="m_select_retrieveaction" class="col-sm-2 col-form-label text-xs">Récupération du Fichier </label>
+                                <div class="col-sm-10 text-xs">
+                                    <multiselect class="text text-xs"
+                                                 id="m_select_retrieveaction"
+                                                 v-model="reportfileForm.selectedretrieveactions"
+                                                 selected.sync="reportfileForm.selectedretrieveactions"
+                                                 value=""
+                                                 :multiple="true"
+                                                 :options="retrieveactiontypes"
+                                                 group-values="retrieveactions"
+                                                 :searchable="true"
+                                                 group-label="name"
+                                                 :group-select="false"
+                                                 label="name"
+                                                 track-by="id"
+                                                 key="id"
+                                                 placeholder="Récupération du Fichier"
+                                    >
+                                    </multiselect>
+                                    <span class="invalid-feedback d-block text-xs" role="alert" v-if="reportfileForm.errors.has('reportfiletype')" v-text="reportfileForm.errors.get('reportfiletype')"></span>
                                 </div>
                             </div>
 
@@ -113,6 +116,8 @@ import Multiselect from 'vue-multiselect'
 
 import ReportFileBus from "./reportfileBus";
 
+
+
 class Reportfile {
     constructor(reportfile) {
         this.name = reportfile.name || ''
@@ -129,6 +134,7 @@ class Reportfile {
         this.reportfiletype = reportfile.reportfiletype || {}
         this.status = reportfile.status ? reportfile.status.code : 'active'
         this.report = reportfile.report || {}
+        this.selectedretrieveactions = reportfile.selectedretrieveactions || {}
     }
 }
 export default {
@@ -155,6 +161,8 @@ export default {
             this.reportfileId = reportfile.uuid
 
             this.formTitle = 'Modification du fichier'
+
+            console.log(reportfile.selectedretrieveactions)
 
             $('#addUpdateReportfile').modal()
         })

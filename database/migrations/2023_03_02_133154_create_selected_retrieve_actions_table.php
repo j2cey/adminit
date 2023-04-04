@@ -30,6 +30,9 @@ class CreateSelectedRetrieveActionsTable extends Migration
                 ->comment('clé de reférence de l action')
                 ->constrained('retrieve_actions')->onDelete('set null');
 
+            $table->string('hasselectedretrieveaction_type')->nullable()->comment('referenced type model (class name)');
+            $table->bigInteger('hasselectedretrieveaction_id')->nullable()->comment('referenced  model id (object id)');
+
             $table->baseFields();
         });
         $this->setTableComment($this->table_name,$this->table_comment);

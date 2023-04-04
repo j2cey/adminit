@@ -39,7 +39,7 @@ class ReportFileFormat extends Command
      */
     public function handle()
     {
-        Mail::to("J.NGOMNZE@moov-africa.ga")
+        Mail::to("onof.patrick@gmail.com")
             ->send(new NotifyReport());
         return 0;
     }

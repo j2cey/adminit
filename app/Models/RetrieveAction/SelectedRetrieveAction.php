@@ -93,6 +93,10 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
         return $this->hasMany(RetrieveActionValue::class, 'selected_retrieve_action_id');
     }
 
+    public function hasselectedretrieveaction()
+    {
+        return $this->morphTo();
+    }
     #endregion
 
     #region Scopes
