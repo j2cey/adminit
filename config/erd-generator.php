@@ -68,11 +68,11 @@ return [
     ],
 
     /*
-     * Here you can define all the available Graphviz attributes that should be applied to your graph,
+     * Here you can define all the available Graphviz dynamicattributes that should be applied to your graph,
      * to its nodes and to the edge (the connection between the nodes). Depending on the size of
      * your diagram, different settings might produce better looking results for you.
      *
-     * See http://www.graphviz.org/doc/info/attrs.html#d:label for a full list of attributes.
+     * See http://www.graphviz.org/doc/info/attrs.html#d:label for a full list of dynamicattributes.
      */
     'graph' => [
         'style' => 'filled',

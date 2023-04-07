@@ -383,7 +383,7 @@ catch (t) {}
 function _addToZip( zip, obj ) {
 	if ( _ieExcel === undefined ) {
 		// Detect if we are dealing with IE's _awful_ serialiser by seeing if it
-		// drop attributes
+		// drop dynamicattributes
 		_ieExcel = _serialiser
 			.serializeToString(
 				$.parseXML( excelStrings['xl/worksheets/sheet1.xml'] )
@@ -398,7 +398,7 @@ function _addToZip( zip, obj ) {
 		}
 		else {
 			if ( _ieExcel ) {
-				// IE's XML serialiser will drop some name space attributes from
+				// IE's XML serialiser will drop some name space dynamicattributes from
 				// from the root node, so we need to save them. Do this by
 				// replacing the namespace nodes with a regular attribute that
 				// we convert back when serialised. Edge does not have this
@@ -434,14 +434,14 @@ function _addToZip( zip, obj ) {
 					str = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+str;
 				}
 
-				// Return namespace attributes to being as such
+				// Return namespace dynamicattributes to being as such
 				str = str.replace( /_dt_b_namespace_token_/g, ':' );
 
 				// Remove testing name space that IE puts into the space preserve attr
 				str = str.replace( /xmlns:NS[\d]+="" NS[\d]+:/g, '' );
 			}
 
-			// Safari, IE and Edge will put empty name space attributes onto
+			// Safari, IE and Edge will put empty name space dynamicattributes onto
 			// various elements making them useless. This strips them out
 			str = str.replace( /<([^<>]*?) xmlns=""([^<>]*?)>/g, '<$1 $2>' );
 
@@ -451,12 +451,12 @@ function _addToZip( zip, obj ) {
 }
 
 /**
- * Create an XML node and add any children, attributes, etc without needing to
+ * Create an XML node and add any children, dynamicattributes, etc without needing to
  * be verbose in the DOM.
  *
  * @param  {object} doc      XML document
  * @param  {string} nodeName Node name
- * @param  {object} opts     Options - can be `attr` (attributes), `children`
+ * @param  {object} opts     Options - can be `attr` (dynamicattributes), `children`
  *   (child nodes) and `text` (text content)
  * @return {node}            Created node
  */
@@ -1177,13 +1177,13 @@ DataTable.ext.buttons.excelHtml5 = {
 			addRow( data.header, rowPos );
 			$('row:last c', rels).attr( 's', '2' ); // bold
 		}
-	
+
 		dataStartRow = rowPos;
 
 		for ( var n=0, ie=data.body.length ; n<ie ; n++ ) {
 			addRow( data.body[n], rowPos );
 		}
-	
+
 		dataEndRow = rowPos;
 
 		if ( config.footer && data.footer ) {

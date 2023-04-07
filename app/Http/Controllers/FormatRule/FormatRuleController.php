@@ -52,6 +52,7 @@ class FormatRuleController extends Controller
         $formatrule = $request->model->addFormatRule(
             $request->formatruletype,
             $request->title,
+            null,
             $request->rule_result,
             $request->status,
             $request->description,
@@ -90,8 +91,9 @@ class FormatRuleController extends Controller
      */
     public function update(UpdateFormatRuleRequest $request, FormatRule $formatrule)
     {
-        $formatrule = $formatrule->updateOne(
-            $request->formatruletype, $request->title, $request->rule_result, $request->status, $request->description, $request->num_ord
+        //dd("request: ", $request->all(), $formatrule);
+        $formatrule->updateOne(
+            $request->formatruletype, $request->title, $request->innerformatrule, $request->rule_result, $request->status, $request->description, $request->num_ord
         );
 
         return new FormatRuleResource($formatrule);

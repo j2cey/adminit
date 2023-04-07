@@ -40,7 +40,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @property DynamicAttribute $dynamicattribute
+ * @property DynamicAttribute $dynamicattributes
  * @property IInnerRule $innerrule
  * @property AnalysisRuleType $analysisruletype
  *

@@ -2,9 +2,17 @@
 
 namespace App\Http\Requests\FormatType;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\Permissions;
+use Illuminate\Support\Facades\Auth;
+use App\Models\FormattedValue\FormatType;
 
-class UpdateFormatTypeRequest extends FormRequest
+/**
+ * Class UpdateFormatTypeRequest
+ * @package App\Http\Requests\FormatType
+ *
+ * @property FormatType $formattype
+ */
+class UpdateFormatTypeRequest extends FormatTypeRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +21,7 @@ class UpdateFormatTypeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return Auth::user()->can( Permissions::FormatType()->update() );
     }
 
     /**
@@ -23,8 +31,18 @@ class UpdateFormatTypeRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return FormatType::updateRules($this->formattype);
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'status' => $this->setRelevantStatus($this->input('status'),'code', true),
+        ]);
     }
 }

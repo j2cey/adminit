@@ -3,6 +3,7 @@
 namespace App\Models\FormatRule;
 
 use App\Models\Status;
+use mysql_xdevapi\Table;
 use App\Models\BaseModel;
 use App\Enums\RuleResultEnum;
 use Illuminate\Support\Carbon;
@@ -38,6 +39,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
  * @property IInnerFormatRule $innerformatrule
  * @property FormatRuleType $formatruletype
  * @method static FormatRule first()
@@ -52,6 +54,8 @@ class FormatRule extends BaseModel implements Auditable
         'rule_result' => RuleResultEnum::class,
     ];
 
+    const FORMATRULETYPE_FOREIGN_KEY = "format_rule_type_id";
+
     #region Validation Rules
 
     public static function defaultRules()
@@ -59,21 +63,20 @@ class FormatRule extends BaseModel implements Auditable
         return [
             'title' => ['required'],
             'formatruletype' => ['required'],
-            'rule_result' => ['required'],
         ];
     }
 
     public static function createRules()
     {
         return array_merge(self::defaultRules(), [
-
+            'formatruletype_key' => ['unique:' . (new FormatRule())->getTable() . ',' . self::FORMATRULETYPE_FOREIGN_KEY . ',NULL,id'],
         ]);
     }
 
     public static function updateRules($model)
     {
         return array_merge(self::defaultRules(), [
-
+            'formatruletype_key' => ['unique:' . (new FormatRule())->getTable() . ',' . self::FORMATRULETYPE_FOREIGN_KEY . ','.$model->id.',id'],
         ]);
     }
 
@@ -81,8 +84,8 @@ class FormatRule extends BaseModel implements Auditable
         return [
             'title.required' => "Prière de renseigner le Titre",
             'formatruletype.required' => "Prière de renseigner le Type",
+            'formatruletype_key.unique' => "Cette règle est déjà appliquée",
         ];
-
     }
 
     #endregion
@@ -90,7 +93,7 @@ class FormatRule extends BaseModel implements Auditable
     #region Eloquent Relationships
 
     public function formatruletype() {
-        return $this->belongsTo(FormatRuleType::class,"format_rule_type_id");
+        return $this->belongsTo(FormatRuleType::class,self::FORMATRULETYPE_FOREIGN_KEY);
     }
 
     /**
@@ -146,36 +149,42 @@ class FormatRule extends BaseModel implements Auditable
      * Create a new Highlight and attach the relevant inner Highlight from it
      * @param Model|FormatRuleType $formatruletype
      * @param string $title
-     * @param string $rule_result
-     * @param string $description
+     * @param string|null $rule_result
+     * @param Status|null $status
+     * @param string|null $description
      * @param int|null $num_ord
      * @return FormatRule
      */
-    public static function createNew(Model|FormatRuleType $formatruletype, string $title, string $rule_result, string $description, int $num_ord = null)
+    public static function createNew(Model|FormatRuleType $formatruletype, string $title, IInnerFormatRule|string $innerformatrule = null, string $rule_result = null, Status $status = null, string $description = null, int $num_ord = null)
     {
-        $innerformatrule = self::createInnerFormatRule($formatruletype);
+        $newinnerformatrule = self::createInnerFormatRule($formatruletype);
+        $newinnerformatrule->updateOne($innerformatrule);
 
-        $formatrule = $innerformatrule->formatrule()->create([
+        $formatrule = $newinnerformatrule->formatrule()->create([
             'num_ord' => $num_ord,
             'title' => $title,
-            'rule_result' => $rule_result,
+            'rule_result' => $rule_result ?? RuleResultEnum::ALLWAYS,
             'description' => $description,
         ]);
 
         $formatrule->formatruletype()->associate($formatruletype);
+
+        if ( ! is_null($status) ) $formatrule->status()->associate($status);
 
         $formatrule->save();
 
         return $formatrule;
     }
 
-    public function updateOne(Model|FormatRuleType $formatruletype, string $title, string $rule_result, Status $status = null, string $description = null, int $num_ord = null) : FormatRule
+    public function updateOne(Model|FormatRuleType $formatruletype, string $title, IInnerFormatRule|string $innerformatrule = null, string $rule_result = null, Status $status = null, string $description = null, int $num_ord = null) : FormatRule
     {
         $this->syncInnerFormatRule($formatruletype, $this->innerformatrule);
 
-        $this->num_ord = $num_ord;
+        $this->innerformatrule->updateOne($innerformatrule);
+
+        $this->num_ord = $num_ord ?? $this->num_ord;
         $this->title = $title;
-        $this->rule_result = $rule_result;
+        $this->rule_result = $rule_result ?? $this->rule_result;
         $this->description = $description;
 
         if ( ! is_null($status) ) {

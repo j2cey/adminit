@@ -22,7 +22,7 @@ trait InnerDynamicValue
     /**
      * @return BelongsTo
      */
-    /*public function dynamicattribute() {
+    /*public function dynamicattributes() {
         return $this->belongsTo(DynamicAttribute::class,"dynamic_attribute_id");
     }*/
 
@@ -105,7 +105,7 @@ trait InnerDynamicValue
 
     protected function initializeHasDynamicValues()
     {
-        $this->with = array_unique(array_merge($this->with, ['dynamicattribute']));
+        $this->with = array_unique(array_merge($this->with, ['dynamicattributes']));
     }
 
     public static function bootInnerDynamicValue()

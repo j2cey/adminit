@@ -19,7 +19,7 @@ abstract class Permissions
         return new PermissionAction("dynamicattributetype");
     }
     public static function DynamicAttribute() : PermissionAction {
-        return new PermissionAction("dynamicattribute");
+        return new PermissionAction("dynamicattributes");
     }
     public static function AnalysisRuleType() : PermissionAction {
         return new PermissionAction("analysisruletype");
@@ -119,5 +119,17 @@ abstract class Permissions
     }
     public static function FormatRule() : PermissionAction {
         return new PermissionAction("formatrule");
+    }
+    public static function FormatType() : PermissionAction {
+        return new PermissionAction("formattype");
+    }
+    public static function FormattedValueHtml() : PermissionAction {
+        return new PermissionAction("formattedvaluehtml");
+    }
+    public static function FormattedValueSms() : PermissionAction {
+        return new PermissionAction("formattedvaluesms");
+    }
+    public static function FormattedValue() : PermissionAction {
+        return new PermissionAction("formattedvalue");
     }
 }

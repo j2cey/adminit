@@ -4,6 +4,9 @@ namespace App\Models\DynamicAttributes;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\FormattedValue\HasFormattedValues;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Contracts\FormattedValue\IHasFormattedValues;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Contracts\DynamicAttribute\IInnerDynamicValue;
 
@@ -27,9 +30,9 @@ use App\Contracts\DynamicAttribute\IInnerDynamicValue;
  * @property DynamicAttribute $dynamicattribute
  * @method static DynamicValue create(array $array)
  */
-class DynamicValue extends Model
+class DynamicValue extends Model implements IHasFormattedValues
 {
-    use HasFactory;
+    use HasFactory, HasFormattedValues;
 
     protected $guarded = [];
     protected $with = ['innerdynamicvalue'];
@@ -77,7 +80,7 @@ class DynamicValue extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return MorphTo
      */
     public function innerdynamicvalue()
     {
@@ -88,13 +91,19 @@ class DynamicValue extends Model
 
     #region Custom Functions
 
-    /*public static function createInnerDynamicValue( $thevalue, DynamicAttribute $dynamicattribute, DynamicRow $row ) : IInnerDynamicValue {
+    /*public static function createInnerDynamicValue( $thevalue, DynamicAttribute $dynamicattributes, DynamicRow $row ) : IInnerDynamicValue {
         //
     }*/
 
+    /**
+     * @param $thevalue
+     * @param DynamicAttribute $dynamicattribute
+     * @param DynamicRow $row
+     * @return DynamicValue
+     */
     public static function createNew($thevalue, DynamicAttribute $dynamicattribute, DynamicRow $row) {
         return $dynamicattribute
-            ->attributetype->model_type::createNew($thevalue,$dynamicattribute,$row)
+            ->dynamicattributetype->model_type::createNew($thevalue,$dynamicattribute,$row)
             ->dynamicvalue;
     }
 

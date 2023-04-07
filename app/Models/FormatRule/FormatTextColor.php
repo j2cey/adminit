@@ -18,6 +18,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer|null $status_id
  *
  * @property string $format_value
+ *
+ * @property int $alpha
+ * @property int $blue
+ * @property int $green
+ * @property int $hue
+ * @property int $lightness
+ * @property int $red
+ * @property int $saturation
+ *
  * @property string $comment
  *
  * @property Carbon $created_at
@@ -28,7 +37,7 @@ class FormatTextColor extends BaseModel implements IInnerFormatRule
     use HasFactory, InnerFormatRule;
 
     protected $guarded = [];
-    protected $table = 'format_text_colors';
+    //protected $table = 'format_text_colors';
     protected $with = ['status'];
 
     #region Validation Rules
@@ -65,6 +74,30 @@ class FormatTextColor extends BaseModel implements IInnerFormatRule
 
     public static function createNew(): FormatTextColor {
         return FormatTextColor::create();
+    }
+
+    public function updateOne(string|IInnerFormatRule $innerformatrule = null) {
+        if ( ! is_null($innerformatrule) ) {
+            $newvalues = is_string($innerformatrule) ? json_decode($innerformatrule, true) : $innerformatrule;
+
+            $this->update([
+                'format_value' => $newvalues['format_value'],
+
+                'alpha' => $newvalues['alpha'],
+                'blue' => $newvalues['blue'],
+                'green' => $newvalues['green'],
+                'hue' => $newvalues['hue'],
+                'lightness' => $newvalues['lightness'],
+                'red' => $newvalues['red'],
+                'saturation' => $newvalues['saturation'],
+
+                'comment' => $newvalues['comment'],
+            ]);
+        }
+    }
+
+    public function getFormatValue() {
+        return $this->format_value;
     }
 
     public static function getList() : array {

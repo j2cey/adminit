@@ -14,6 +14,7 @@ use App\Models\ReportFile\ReportFileType;
 use App\Models\AnalysisRule\AnalysisRule;
 use Illuminate\Database\Schema\SQLiteBuilder;
 use App\Models\AnalysisRule\AnalysisRuleType;
+use App\Models\ReportFile\CollectedReportFile;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -94,22 +95,28 @@ abstract class TestCase extends BaseTestCase
      * @param $name
      * @return DynamicAttribute
      */
-    protected function create_new_dynamicattribute($name = null)
+    protected function create_new_dynamicattribute($name = null): DynamicAttribute
     {
         return $this->create_new_report("new report")
-            ->addDynamicAttribute($name ?? "New Dynamic Attribute",DynamicAttributeType::string()->first());
+            ->addDynamicAttribute($name ?? "New Dynamic Attribute", DynamicAttributeType::string()->first());
     }
 
     /**
      * @param $file_name
      * @return ReportFile
      */
-    public function create_new_reportfile($file_name) {
+    public function create_new_reportfile($file_name = null): ReportFile
+    {
         return $this->create_new_report("new report")
-            ->addReportFile(ReportFileType::txt()->first(),$file_name);
+            ->addReportFile(ReportFileType::txt()->first(),$file_name ?? "new report file");
     }
 
     public function create_new_analysisrule($title = null): AnalysisRule {
         return AnalysisRule::createNew($this->create_new_dynamicattribute(),AnalysisRuleType::threshold()->first(),$title ?? "New AnalysisRule");
+    }
+
+    public function create_new_collected_reportfile($file_name = null): CollectedReportFile
+    {
+        return CollectedReportFile::createNew($this->create_new_reportfile(),"initial file name", $file_name ?? "local file name",10);
     }
 }

@@ -150,7 +150,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      - height (number)
      - callback (function) #optional callback function which is going to be executed in the context of newly created paper
      * or
-     - all (array) (first 3 or 4 elements in the array are equal to [containerID, width, height] or [x, y, width, height]. The rest are element descriptions in format {type: type, <attributes>}). See @Paper.add.
+     - all (array) (first 3 or 4 elements in the array are equal to [containerID, width, height] or [x, y, width, height]. The rest are element descriptions in format {type: type, <dynamicattributes>}). See @Paper.add.
      - callback (function) #optional callback function which is going to be executed in the context of newly created paper
      * or
      - onReadyCallback (function) function that is going to be called on DOM ready event. You can also subscribe to this event via Eve’s “DOMLoad” event. In this case method returns `undefined`.
@@ -224,8 +224,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
              * Paper.customAttributes
              [ property (object) ]
              **
-             * If you have a set of attributes that you would like to represent
-             * as a function of some number you can do it easily with custom attributes:
+             * If you have a set of dynamicattributes that you would like to represent
+             * as a function of some number you can do it easily with custom dynamicattributes:
              > Usage
              | paper.customAttributes.hue = function (num) {
              |     num = num % 1;
@@ -2963,7 +2963,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      [ property (object) ]
      **
      * You can add your own method to elements. This is useful when you want to hack default functionality or
-     * want to wrap some common transformation or attributes in one method. In difference to canvas methods,
+     * want to wrap some common transformation or dynamicattributes in one method. In difference to canvas methods,
      * you can redefine element method at any time. Expending element methods wouldn’t affect set.
      > Usage
      | Raphael.el.red = function () {
@@ -3904,7 +3904,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      **
      * Return set of elements that create glow-like effect around given element. See @Paper.set.
      *
-     * Note: Glow is not connected to the element. If you change element attributes it won’t adjust itself.
+     * Note: Glow is not connected to the element. If you change element dynamicattributes it won’t adjust itself.
      **
      > Parameters
      **
@@ -4367,7 +4367,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      **
      - el (object) element to sync with
      - anim (object) animation to sync with
-     - params (object) #optional final attributes for the element, see also @Element.attr
+     - params (object) #optional final dynamicattributes for the element, see also @Element.attr
      - ms (number) #optional number of milliseconds for animation to run
      - easing (string) #optional easing type. Accept on of @Raphael.easing_formulas or CSS format: `cubic&#x2010;bezier(XX,&#160;XX,&#160;XX,&#160;XX)`
      - callback (function) #optional callback function. Will be called at the end of animation.
@@ -4726,7 +4726,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      **
      > Parameters
      **
-     - params (object) final attributes for the element, see also @Element.attr
+     - params (object) final dynamicattributes for the element, see also @Element.attr
      - ms (number) number of milliseconds for animation to run
      - easing (string) #optional easing type. Accept one of @Raphael.easing_formulas or CSS format: `cubic&#x2010;bezier(XX,&#160;XX,&#160;XX,&#160;XX)`
      - callback (function) #optional callback function. Will be called at the end of animation.
@@ -4780,7 +4780,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      **
      > Parameters
      **
-     - params (object) final attributes for the element, see also @Element.attr
+     - params (object) final dynamicattributes for the element, see also @Element.attr
      - ms (number) number of milliseconds for animation to run
      - easing (string) #optional easing type. Accept one of @Raphael.easing_formulas or CSS format: `cubic&#x2010;bezier(XX,&#160;XX,&#160;XX,&#160;XX)`
      - callback (function) #optional callback function. Will be called at the end of animation.
@@ -5365,7 +5365,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      * Paper.add
      [ method ]
      **
-     * Imports elements in JSON array in format `{type: type, <attributes>}`
+     * Imports elements in JSON array in format `{type: type, <dynamicattributes>}`
      **
      > Parameters
      **
@@ -6384,7 +6384,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      * Element.transform
      [ method ]
      **
-     * Adds transformation to the element which is separate to other attributes,
+     * Adds transformation to the element which is separate to other dynamicattributes,
      * i.e. translation doesn’t change `x` or `y` of the rectange. The format
      * of transformation string is similar to the path string syntax:
      | "t100,100r30,100,100s2,2,100,100r45s1.5"
@@ -6528,7 +6528,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      * Element.attr
      [ method ]
      **
-     * Sets the attributes of the element.
+     * Sets the dynamicattributes of the element.
      > Parameters
      - attrName (string) attribute’s name
      - value (string) value
@@ -6541,7 +6541,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      = (object) @Element if attrsName & value or params are passed in.
      = (...) value of the attribute if only attrsName is passed in.
      = (array) array of values of the attribute if attrsNames is passed in.
-     = (object) object of attributes if nothing is passed in.
+     = (object) object of dynamicattributes if nothing is passed in.
      > Possible parameters
      # <p>Please refer to the <a href="http://www.w3.org/TR/SVG/" title="The W3C Recommendation for the SVG language describes these properties in detail.">SVG specification</a> for an explanation of these parameters.</p>
      o arrow-end (string) arrowhead on the end of the path. The format for string is `<type>[-<width>[-<length>]]`. Possible types: `classic`, `block`, `open`, `oval`, `diamond`, `none`, width: `wide`, `narrow`, `medium`, length: `long`, `short`, `midium`.
@@ -8004,13 +8004,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -8210,7 +8210,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// Copyright (c)
      - name (array) if you don’t want to use separators, you can use array of strings
      - f (function) event handler function
      **
-     = (function) returned function accepts a single numeric parameter that represents z-index of the handler. It is an optional feature and only used when you need to ensure that some subset of handlers will be invoked in a given order, despite of the order of assignment. 
+     = (function) returned function accepts a single numeric parameter that represents z-index of the handler. It is an optional feature and only used when you need to ensure that some subset of handlers will be invoked in a given order, despite of the order of assignment.
      > Example:
      | eve.on("mouse", eatIt)(2);
      | eve.on("mouse", scream);

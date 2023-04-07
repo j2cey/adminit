@@ -135,7 +135,7 @@ class ReportController extends Controller
         $report = Report::where('uuid', $uuid)->first();
         $dynamicattributes = DynamicAttributeResource::collection($report->dynamicattributes);
 
-        return view('attributes.index')
+        return view('dynamicattributes.index')
             ->with('report', new ReportResource( $report) )
             ->with('dynamicattributes', $dynamicattributes)
             ;

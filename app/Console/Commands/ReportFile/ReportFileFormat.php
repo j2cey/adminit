@@ -5,6 +5,7 @@ namespace App\Console\Commands\ReportFile;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReportFile\NotifyReport;
+use App\Models\ReportFile\CollectedReportFile;
 
 class ReportFileFormat extends Command
 {
@@ -39,8 +40,10 @@ class ReportFileFormat extends Command
      */
     public function handle()
     {
-        Mail::to("onof.patrick@gmail.com")
-            ->send(new NotifyReport());
+        $collectedreportfile = CollectedReportFile::first();
+        //$collectedreportfile->formattedvaluehtml;
+        Mail::to("J.NGOMNZE@moov-africa.ga")
+            ->send(new NotifyReport( $collectedreportfile ));
         return 0;
     }
 }

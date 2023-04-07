@@ -23,6 +23,6 @@ interface IHasFormatRules extends Auditable
     public function latestFormatrule();
     public function oldestFormatrule();
 
-    public function addFormatRule(Model|FormatRuleType $formatruletype, string $title, string $result_is, Status $status = null, string $description = null): FormatRule;
+    public function addFormatRule(Model|FormatRuleType $formatruletype, string $title, IInnerFormatRule|string $innerformatrule = null, string $rule_result = null, Status $status = null, string $description = null): FormatRule;
     public function addFormatRuleMany(array $attributes);
 }

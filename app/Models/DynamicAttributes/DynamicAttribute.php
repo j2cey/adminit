@@ -4,6 +4,7 @@ namespace App\Models\DynamicAttributes;
 
 use App\Models\Status;
 use App\Models\BaseModel;
+use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\AnalysisRule\AnalysisRule;
@@ -44,6 +45,7 @@ use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property DynamicAttributeType $dynamicattributetype
+ * @property IHasDynamicAttributes $hasdynamicattribute
  *
  * @method static DynamicAttribute first()
  */
@@ -197,7 +199,14 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
 
 
     public function addValue($thevalue, DynamicRow $new_dynamicrow) {
-        return DynamicValue::createNew($thevalue,$this,$new_dynamicrow);
+        $dynamicvalue = DynamicValue::createNew($thevalue,$this,$new_dynamicrow);
+
+        // init formatted value
+        $dynamicvalue->setFormattedValues();
+        $dynamicvalue->formattedvaluehtml->setMainTag(HtmlTagKey::TABLE_COL);
+
+
+        return $dynamicvalue;
     }
 
     #endregion

@@ -682,7 +682,7 @@ Licensed under the MIT license.
             overlay.resize(width, height);
         };
 
-        // public attributes
+        // public dynamicattributes
         plot.hooks = hooks;
 
         // initialize

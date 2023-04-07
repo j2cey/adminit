@@ -16,6 +16,8 @@ use App\Models\DynamicAttributes\DynamicAttributeType;
  */
 interface IHasDynamicAttributes extends Auditable
 {
+    public function getModelTypeAttribute(): string;
+
     /**
      * @return morphMany
      */

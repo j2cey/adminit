@@ -2,6 +2,7 @@
 
 namespace App\Models\FormatRule;
 
+use Psy\Util\Json;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use App\Traits\FormatRule\InnerFormatRule;
@@ -19,8 +20,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $tags
  * @property integer|null $status_id
  *
- * @property string $format_value
+ * @property string|Json $format_value
  * @property string $comment
+ *
+ * @property bool $format_bold
+ * @property bool $format_italic
+ * @property bool $format_underline
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -32,6 +37,11 @@ class FormatTextWeight extends BaseModel implements IInnerFormatRule
     protected $guarded = [];
     protected $table = 'format_text_weights';
     protected $with = ['status'];
+    protected $casts = [
+        'format_bold' => 'boolean',
+        'format_italic' => 'boolean',
+        'format_underline' => 'boolean',
+    ];
 
     #region Validation Rules
 
@@ -67,7 +77,33 @@ class FormatTextWeight extends BaseModel implements IInnerFormatRule
 
     public static function createNew(): FormatTextWeight {
 
-        return FormatTextWeight::create();
+        return FormatTextWeight::create([
+            'format_value' => "[]",
+        ]);
+    }
+
+    public function updateOne(string|IInnerFormatRule $innerformatrule = null) {
+        if ( ! is_null($innerformatrule) ) {
+            $newvalues = is_string($innerformatrule) ? json_decode($innerformatrule, true) : $innerformatrule;
+
+            $this->update([
+                'format_value' => $newvalues['format_value'],
+                'comment' => $newvalues['comment'],
+                'format_bold' => $newvalues['format_bold'],
+                'format_italic' => $newvalues['format_italic'],
+                'format_underline' => $newvalues['format_underline'],
+            ]);
+        }
+    }
+
+    public function getFormatValue() {
+        $final_format = [];
+
+        if ($this->format_bold) $final_format[] = 'bold';
+        if ($this->format_italic) $final_format[] = 'italic';
+        if ($this->format_underline) $final_format[] = 'underline';
+
+        return $final_format;
     }
 
     public static function getList() : array {

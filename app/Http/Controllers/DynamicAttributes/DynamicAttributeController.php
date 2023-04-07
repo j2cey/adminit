@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\DynamicAttributes;
 
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Models\DynamicAttributes\DynamicAttribute;
@@ -59,11 +61,13 @@ class DynamicAttributeController extends Controller
      * Display the specified resource.
      *
      * @param DynamicAttribute $dynamicattribute
-     * @return void
+     * @return Application|Factory|View
      */
     public function show(DynamicAttribute $dynamicattribute)
     {
-        //
+        return view('dynamicattributes.show')
+            ->with('dynamicattribute', new DynamicAttributeResource($dynamicattribute) )
+            ->with('model', $dynamicattribute->hasdynamicattribute);//str_replace(["\\"],["\\\\"],$dynamicattribute->hasdynamicattribute->getClass()));
     }
 
     /**

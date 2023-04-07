@@ -1273,7 +1273,7 @@ $.extend( $.validator, {
 		for ( method in $.validator.methods ) {
 			value = $element.data( "rule" + method.charAt( 0 ).toUpperCase() + method.substring( 1 ).toLowerCase() );
 
-			// Cast empty attributes like `data-rule-required` to `true`
+			// Cast empty dynamicattributes like `data-rule-required` to `true`
 			if ( value === "" ) {
 				value = true;
 			}

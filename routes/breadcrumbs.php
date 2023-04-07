@@ -27,11 +27,11 @@ Breadcrumbs::for('reports.show', function (Trail $trail, Report $report) {
     $trail->parent('reports.index')
         ->push($report->title, route('reports.show', $report->uuid));
 });
-// Reports.attributes
-Breadcrumbs::for('reports.attributes', function (Trail $trail, $uuid) {
+// Reports.dynamicattributes
+Breadcrumbs::for('reports.dynamicattributes', function (Trail $trail, $uuid) {
     $report = Report::where('uuid',$uuid)->first();
     $trail->parent('reports.show', $report)
-        ->push("Liste des Champs", route('reports.attributes', $report->uuid));
+        ->push("Liste des Champs", route('reports.dynamicattributes', $report->uuid));
 });
 // Reports.reportfiles
 Breadcrumbs::for('reports.reportfiles', function (Trail $trail, $uuid) {

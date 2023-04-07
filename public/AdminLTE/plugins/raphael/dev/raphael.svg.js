@@ -826,7 +826,7 @@ define(["./raphael.core"], function(R) {
      * Element.transform
      [ method ]
      **
-     * Adds transformation to the element which is separate to other attributes,
+     * Adds transformation to the element which is separate to other dynamicattributes,
      * i.e. translation doesn’t change `x` or `y` of the rectange. The format
      * of transformation string is similar to the path string syntax:
      | "t100,100r30,100,100s2,2,100,100r45s1.5"
@@ -970,7 +970,7 @@ define(["./raphael.core"], function(R) {
      * Element.attr
      [ method ]
      **
-     * Sets the attributes of the element.
+     * Sets the dynamicattributes of the element.
      > Parameters
      - attrName (string) attribute’s name
      - value (string) value
@@ -983,7 +983,7 @@ define(["./raphael.core"], function(R) {
      = (object) @Element if attrsName & value or params are passed in.
      = (...) value of the attribute if only attrsName is passed in.
      = (array) array of values of the attribute if attrsNames is passed in.
-     = (object) object of attributes if nothing is passed in.
+     = (object) object of dynamicattributes if nothing is passed in.
      > Possible parameters
      # <p>Please refer to the <a href="http://www.w3.org/TR/SVG/" title="The W3C Recommendation for the SVG language describes these properties in detail.">SVG specification</a> for an explanation of these parameters.</p>
      o arrow-end (string) arrowhead on the end of the path. The format for string is `<type>[-<width>[-<length>]]`. Possible types: `classic`, `block`, `open`, `oval`, `diamond`, `none`, width: `wide`, `narrow`, `medium`, length: `long`, `short`, `midium`.

@@ -17,8 +17,13 @@ trait HasDynamicAttributes
     public abstract function setAddAttributeToList(DynamicAttribute $dynamicattribute);
     public abstract function setAttributesList();
 
+    public function getModelTypeAttribute(): string
+    {
+        return static::class;
+    }
+
     /**
-     * Get all of the model's dynamic attributes
+     * Get all of the model's dynamic dynamicattributes
      * @return mixed
      */
     public function dynamicattributes()
@@ -26,7 +31,7 @@ trait HasDynamicAttributes
         return $this->morphMany(DynamicAttribute::class, 'hasdynamicattribute');
     }
     /**
-     * Get all of the model's dynamic attributes ordered
+     * Get all of the model's dynamic dynamicattributes ordered
      * @return mixed
      */
     public function dynamicattributesOrdered()
@@ -37,7 +42,7 @@ trait HasDynamicAttributes
 
 
     /**
-     * Get the lastets of the model's dynamic attributes
+     * Get the lastets of the model's dynamic dynamicattributes
      * @return mixed
      */
     public function latestDynamicattribute()
@@ -46,7 +51,7 @@ trait HasDynamicAttributes
     }
 
     /**
-     * Get the oldest of the model's dynamic attributes
+     * Get the oldest of the model's dynamic dynamicattributes
      * @return mixed
      */
     public function oldestDynamicattribute()
@@ -59,7 +64,12 @@ trait HasDynamicAttributes
     /**
      * @param $name
      * @param Model|DynamicAttributeType $dynamicattributetype
+     * @param Status|null $status
      * @param string|null $description
+     * @param int|null $offset
+     * @param int|null $max_length
+     * @param bool|null $searchable
+     * @param bool|null $sortable
      * @return DynamicAttribute
      */
     public function addDynamicAttribute(
@@ -126,6 +136,7 @@ trait HasDynamicAttributes
     protected function initializeHasDynamicAttributes()
     {
         $this->with = array_unique(array_merge($this->with, ['dynamicattributes']));
+        $this->appends = array_unique(array_merge($this->appends, ['modelType']));
     }
 
     public static function bootHasDynamicAttributes()

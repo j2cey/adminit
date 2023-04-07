@@ -59,7 +59,7 @@
                             {{ props.row[column.field] }}
                         </span>
                         <span v-else-if="column.field === 'name'" class="has-text-primary is-italic text-xs">
-                            <a @click="editAttribute(props.row)">
+                            <a @click="showAttribute(props.row)">
                                 {{ props.row[column.field] }}
                             </a>
                         </span>
@@ -99,43 +99,7 @@
 
             <template #detail="props">
 
-                <b-tabs size="is-small" type="is-boxed">
-                    <b-tab-item>
-                        <template #header>
-                            <b-icon icon="information-outline"></b-icon>
-                            <span> Infos </span>
-                        </template>
-
-                        <div class="card card-default">
-                            <div class="card-body">
-                                <dl>
-                                    <dt class="text text-xs">Name</dt>
-                                    <dd class="text text-xs">{{ props.row.name }}</dd>
-                                    <dt class="text text-xs">Type</dt>
-                                    <dd class="text text-xs">{{ props.row.attributetype.name }}</dd>
-                                    <dt class="text text-xs">Num. Order</dt>
-                                    <dd class="text text-xs">{{ props.row.num_ord }}</dd>
-                                    <dt class="text text-xs">Offset</dt>
-                                    <dd class="text text-xs">{{ props.row.offset || 0}}</dd>
-                                    <dt class="text text-xs">Max Length</dt>
-                                    <dd class="text text-xs">{{ props.row.max_length || 0}}</dd>
-                                    <dt class="text text-xs">Creaed at</dt>
-                                    <dd class="text text-xs">{{ props.row.created_at | formatDate}}</dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </b-tab-item>
-                    <b-tab-item>
-                        <template #header>
-                            <b-icon icon="source-pull"></b-icon>
-                            <span class="help-inline pr-1 text-sm"> Analysis </span>
-                            <b-button size="is-small" type="is-ghost" @click="createAnalysisRule(props.row)"><i class="fas fa-plus"></i></b-button>
-                        </template>
-
-                        <AnalysisRuleList :attributeid_prop="props.row.id" :analysisrules_prop="props.row.analysisrules"></AnalysisRuleList>
-
-                    </b-tab-item>
-                </b-tabs>
+                <DynamicAttributeTtem :model_prop="report" :dynamicattribute_prop="props.row"></DynamicAttributeTtem>
 
             </template>
 
@@ -162,9 +126,9 @@
         },
         name: "report-attributes-list",
         components: {
+            DynamicAttributeTtem: () => import('../dynamicattributes/item'),
             AddUpdateAttribute: () => import('../dynamicattributes/addupdate'),
             AddUpdateAnalysisRule: () => import('../analysisrules/addupdate'),
-            AnalysisRuleList: () => import('../analysisrules/list'),
         },
         mounted() {
             DynamicAttributeBus.$on('dynamicattribute_created', (dynamicattribute) => {
@@ -258,6 +222,9 @@
             },
             editAttribute(attribute) {
                 DynamicAttributeBus.$emit('edit_dynamicattribute', { attribute })
+            },
+            showAttribute(attribute) {
+                window.location = `/dynamicattributes/${attribute.uuid}`
             },
             deleteAttribute(attribute) {
                 this.$swal({

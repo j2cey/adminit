@@ -25600,7 +25600,7 @@ var AcroFormMixin = {
    * nodes in a PDF form that are used to specify form name heirarchy and form
    * value defaults.
    * @param {string} name - field name (T attribute in field dictionary)
-   * @param {object} options  - other attributes to include in field dictionary
+   * @param {object} options  - other dynamicattributes to include in field dictionary
    */
   formField: function formField(name) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};

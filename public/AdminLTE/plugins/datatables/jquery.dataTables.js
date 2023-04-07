@@ -1158,7 +1158,7 @@
 			} );
 
 			/* HTML5 attribute detection - build an mData object automatically if the
-			 * attributes are found
+			 * dynamicattributes are found
 			 */
 			if ( rowOne.length ) {
 				var a = function ( cell, name ) {
@@ -2939,7 +2939,7 @@
 				cols[i].sType = null;
 			}
 
-			// Update DataTables special `DT_*` attributes for the row
+			// Update DataTables special `DT_*` dynamicattributes for the row
 			_fnRowAttributes( settings, row );
 		}
 	}
@@ -3150,7 +3150,7 @@
 
 
 	/**
-	 * Add attributes to a row based on the special `DT_*` parameters in a data
+	 * Add dynamicattributes to a row based on the special `DT_*` parameters in a data
 	 * source object.
 	 *  @param {object} settings DataTables settings object
 	 *  @param {object} DataTables row object for the row to be modified
@@ -3749,7 +3749,7 @@
 				if ( nCell.nodeName.toUpperCase() == "TD" ||
 				     nCell.nodeName.toUpperCase() == "TH" )
 				{
-					/* Get the col and rowspan attributes from the DOM and sanitise them */
+					/* Get the col and rowspan dynamicattributes from the DOM and sanitise them */
 					iColspan = nCell.getAttribute('colspan') * 1;
 					iRowspan = nCell.getAttribute('rowspan') * 1;
 					iColspan = (!iColspan || iColspan===0 || iColspan===1) ? 1 : iColspan;
@@ -5631,7 +5631,7 @@
 				}
 			}
 
-			// Tidy the temporary table - remove name attributes so there aren't
+			// Tidy the temporary table - remove name dynamicattributes so there aren't
 			// duplicated in the dom (radio elements for example)
 			$('[name]', tmpTable).removeAttr('name');
 
@@ -6051,8 +6051,8 @@
 		var aSort = _fnSortFlatten( settings );
 		var oAria = settings.oLanguage.oAria;
 
-		// ARIA attributes - need to loop all columns, to update all (removing old
-		// attributes as needed)
+		// ARIA dynamicattributes - need to loop all columns, to update all (removing old
+		// dynamicattributes as needed)
 		for ( var i=0, iLen=columns.length ; i<iLen ; i++ )
 		{
 			var col = columns[i];
@@ -8783,7 +8783,7 @@
 
 			// Otherwise the selector is a node, and there is one last option - the
 			// element might be a child of an element which has dt-row and dt-column
-			// data attributes
+			// data dynamicattributes
 			host = $(s).closest('*[data-dt-row]');
 			return host.length ?
 				[ {
@@ -9722,7 +9722,7 @@
 		"_sManualType": null,
 
 		/**
-		 * Flag to indicate if HTML5 data attributes should be used as the data
+		 * Flag to indicate if HTML5 data dynamicattributes should be used as the data
 		 * source for filtering or sorting. True is either are.
 		 *  @type boolean
 		 *  @default false
@@ -14038,7 +14038,7 @@
 		 * options.
 		 *
 		 * Each property is an array to which functions can be pushed. The functions
-		 * take three attributes:
+		 * take three dynamicattributes:
 		 *
 		 * * Settings object for the host table
 		 * * Options object (`selector-modifier` object type)

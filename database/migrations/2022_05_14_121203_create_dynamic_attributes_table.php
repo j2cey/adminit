@@ -10,7 +10,7 @@ class CreateDynamicAttributesTable extends Migration
     use BaseMigrationTrait;
 
     public $table_name = 'dynamic_attributes';
-    public $table_comment = 'list of dynamic attributes.';
+    public $table_comment = 'list of dynamic dynamicattributes.';
 
     /**
      * Run the migrations.

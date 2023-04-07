@@ -100,6 +100,9 @@ Vue.use(IconsPlugin)
 import Buefy from 'buefy'
 //import 'buefy/dist/buefy.css'
 Vue.use(Buefy)
+
+//import BuefyColor from 'buefy/src/utils/color'
+
 /**
  * end Added
  */
@@ -158,6 +161,7 @@ Vue.component('reportfile-item', require('./views/reportfiles/item').default);
 Vue.component('reportfile-index', require('./views/reportfiles/list').default);
 Vue.component('reportattribute-index', require('./views/reportattributes/list').default);
 Vue.component('collectedreportfile-item', require('./views/collectedreportfiles/item').default);
+Vue.component('dynamicattribute-item', require('./views/dynamicattributes/item').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
