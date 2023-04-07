@@ -3528,7 +3528,7 @@ var effectsEffectSize = $.effects.define( "size", function( options, done ) {
 		vProps = vProps.concat( [ "marginTop", "marginBottom" ] ).concat( cProps );
 		hProps = hProps.concat( [ "marginLeft", "marginRight" ] );
 
-		// Only animate children with width attributes specified
+		// Only animate children with width dynamicattributes specified
 		// TODO: is this right? should we include anything with css width specified as well
 		element.find( "*[width]" ).each( function() {
 			var child = $( this ),
@@ -8273,7 +8273,7 @@ $.extend( Datepicker.prototype, {
 	 *
 	 * @param  format string - the expected format of the date
 	 * @param  value string - the date in the above format
-	 * @param  settings Object - attributes include:
+	 * @param  settings Object - dynamicattributes include:
 	 *					shortYearCutoff  number - the cutoff year for determining the century (optional)
 	 *					dayNamesShort	string[7] - abbreviated names of the days from Sunday (optional)
 	 *					dayNames		string[7] - names of the days from Sunday (optional)
@@ -8487,7 +8487,7 @@ $.extend( Datepicker.prototype, {
 	 *
 	 * @param  format string - the desired format of the date
 	 * @param  date Date - the date value to format
-	 * @param  settings Object - attributes include:
+	 * @param  settings Object - dynamicattributes include:
 	 *					dayNamesShort	string[7] - abbreviated names of the days from Sunday (optional)
 	 *					dayNames		string[7] - names of the days from Sunday (optional)
 	 *					monthNamesShort string[12] - abbreviated names of the months (optional)
@@ -18327,7 +18327,7 @@ $.widget( "ui.tooltip", {
 			that.close( event, true );
 		} );
 
-		// Remove title attributes to prevent native tooltips
+		// Remove title dynamicattributes to prevent native tooltips
 		this.disabledTitles = this.disabledTitles.add(
 			this.element.find( this.options.items ).addBack()
 				.filter( function() {
@@ -18343,7 +18343,7 @@ $.widget( "ui.tooltip", {
 
 	_enable: function() {
 
-		// restore title attributes
+		// restore title dynamicattributes
 		this.disabledTitles.each( function() {
 			var element = $( this );
 			if ( element.data( "ui-tooltip-title" ) ) {
@@ -18456,7 +18456,7 @@ $.widget( "ui.tooltip", {
 		// (we don't want to cause an element to start matching [title])
 		//
 		// We use removeAttr only for key events, to allow IE to export the correct
-		// accessible attributes. For mouse events, set to empty string to avoid
+		// accessible dynamicattributes. For mouse events, set to empty string to avoid
 		// native tooltip showing up (happens only when removing inside mouseover).
 		if ( target.is( "[title]" ) ) {
 			if ( event && event.type === "mouseover" ) {

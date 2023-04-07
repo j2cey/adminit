@@ -5,7 +5,6 @@ namespace App\Traits\Request;
 
 use App\Models\User;
 use App\Models\Status;
-use ABGEO\POPO\Composer;
 use App\Models\Reports\Report;
 use Spatie\Permission\Models\Role;
 use App\Models\Reports\ReportType;
@@ -72,6 +71,18 @@ trait RequestTraits
         }
 
         return $value ? $model_type::where($field, $value[$field])->first() : null;
+    }
+
+    public function getRelevantModelId($value, $json_decode_before = false) {
+
+        if (is_null($value)) {
+            return null;
+        }
+        if ($json_decode_before || is_string($value)) {
+            $value = $this->decodeJsonField($value);
+        }
+
+        return $value ? $value['id'] : null;
     }
 
     public function getrelevantModelById($model_type, $value, $json_decode_before = false) {

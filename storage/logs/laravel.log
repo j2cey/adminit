@@ -1,0 +1,146 @@
+[2023-04-07 12:50:03] local.ERROR: Call to a member function setValue() on null {"exception":"[object] (Error(code: 0): Call to a member function setValue() on null at /var/www/adminit/app/Console/Commands/ReportFile/ReportFileFormat.php:44)
+[stacktrace]
+#0 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileFormat->handle()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#6 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#7 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#8 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#9 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#10 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#11 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#12 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#13 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#14 {main}
+"} 
+[2023-04-07 13:58:37] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 13:58:55] local.INFO: Traitement termine.  
+[2023-04-07 14:01:25] local.ERROR: Attempt to read property "innerformattedvalue" on null {"exception":"[object] (ErrorException(code: 0): Attempt to read property \"innerformattedvalue\" on null at /var/www/adminit/app/Traits/FormattedValue/HasFormattedValues.php:46)
+[stacktrace]
+#0 /var/www/adminit/app/Traits/FormattedValue/HasFormattedValues.php(46): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(620): App\\Models\\ReportFile\\CollectedReportFile->getFormattedvaluehtmlAttribute()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(1991): Illuminate\\Database\\Eloquent\\Model->mutateAttribute()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(451): Illuminate\\Database\\Eloquent\\Model->transformModelValue()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(430): Illuminate\\Database\\Eloquent\\Model->getAttributeValue()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2029): Illuminate\\Database\\Eloquent\\Model->getAttribute()
+#6 /var/www/adminit/app/Mail/ReportFile/NotifyReport.php(28): Illuminate\\Database\\Eloquent\\Model->__get()
+#7 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileFormat.php(46): App\\Mail\\ReportFile\\NotifyReport->__construct()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileFormat->handle()
+#9 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#10 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#11 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#12 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#14 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#16 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#17 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#18 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#19 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#20 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#21 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#22 {main}
+"} 
+[2023-04-07 14:01:49] local.ERROR: Attempt to read property "innerformattedvalue" on null {"exception":"[object] (ErrorException(code: 0): Attempt to read property \"innerformattedvalue\" on null at /var/www/adminit/app/Traits/FormattedValue/HasFormattedValues.php:46)
+[stacktrace]
+#0 /var/www/adminit/app/Traits/FormattedValue/HasFormattedValues.php(46): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(620): App\\Models\\ReportFile\\CollectedReportFile->getFormattedvaluehtmlAttribute()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(1991): Illuminate\\Database\\Eloquent\\Model->mutateAttribute()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(451): Illuminate\\Database\\Eloquent\\Model->transformModelValue()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(430): Illuminate\\Database\\Eloquent\\Model->getAttributeValue()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2029): Illuminate\\Database\\Eloquent\\Model->getAttribute()
+#6 /var/www/adminit/app/Mail/ReportFile/NotifyReport.php(28): Illuminate\\Database\\Eloquent\\Model->__get()
+#7 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileFormat.php(46): App\\Mail\\ReportFile\\NotifyReport->__construct()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileFormat->handle()
+#9 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#10 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#11 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#12 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#14 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#16 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#17 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#18 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#19 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#20 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#21 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#22 {main}
+"} 
+[2023-04-07 14:02:11] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 14:02:46] local.INFO: Traitement termine.  
+[2023-04-07 14:03:51] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 14:04:33] local.INFO: Traitement termine.  
+[2023-04-07 14:06:12] local.ERROR: Attempt to read property "innerformattedvalue" on null {"exception":"[object] (ErrorException(code: 0): Attempt to read property \"innerformattedvalue\" on null at /var/www/adminit/app/Traits/FormattedValue/HasFormattedValues.php:46)
+[stacktrace]
+#0 /var/www/adminit/app/Traits/FormattedValue/HasFormattedValues.php(46): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(620): App\\Models\\ReportFile\\CollectedReportFile->getFormattedvaluehtmlAttribute()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(1991): Illuminate\\Database\\Eloquent\\Model->mutateAttribute()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(451): Illuminate\\Database\\Eloquent\\Model->transformModelValue()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(430): Illuminate\\Database\\Eloquent\\Model->getAttributeValue()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2029): Illuminate\\Database\\Eloquent\\Model->getAttribute()
+#6 /var/www/adminit/app/Mail/ReportFile/NotifyReport.php(28): Illuminate\\Database\\Eloquent\\Model->__get()
+#7 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileFormat.php(46): App\\Mail\\ReportFile\\NotifyReport->__construct()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileFormat->handle()
+#9 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#10 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#11 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#12 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#14 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#16 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#17 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#18 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#19 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#20 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#21 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#22 {main}
+"} 
+[2023-04-07 14:07:25] local.ERROR: Attempt to read property "innerformattedvalue" on null {"exception":"[object] (ErrorException(code: 0): Attempt to read property \"innerformattedvalue\" on null at /var/www/adminit/app/Traits/FormattedValue/HasFormattedValues.php:46)
+[stacktrace]
+#0 /var/www/adminit/app/Traits/FormattedValue/HasFormattedValues.php(46): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError()
+#1 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(620): App\\Models\\ReportFile\\CollectedReportFile->getFormattedvaluehtmlAttribute()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(1991): Illuminate\\Database\\Eloquent\\Model->mutateAttribute()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(451): Illuminate\\Database\\Eloquent\\Model->transformModelValue()
+#4 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php(430): Illuminate\\Database\\Eloquent\\Model->getAttributeValue()
+#5 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(2029): Illuminate\\Database\\Eloquent\\Model->getAttribute()
+#6 /var/www/adminit/app/Mail/ReportFile/NotifyReport.php(28): Illuminate\\Database\\Eloquent\\Model->__get()
+#7 /var/www/adminit/app/Console/Commands/ReportFile/ReportFileFormat.php(46): App\\Mail\\ReportFile\\NotifyReport->__construct()
+#8 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\ReportFile\\ReportFileFormat->handle()
+#9 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#10 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#11 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#12 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Container/Container.php(653): Illuminate\\Container\\BoundMethod::call()
+#13 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#14 /var/www/adminit/vendor/symfony/console/Command/Command.php(298): Illuminate\\Console\\Command->execute()
+#15 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Command.php(120): Symfony\\Component\\Console\\Command\\Command->run()
+#16 /var/www/adminit/vendor/symfony/console/Application.php(1040): Illuminate\\Console\\Command->run()
+#17 /var/www/adminit/vendor/symfony/console/Application.php(301): Symfony\\Component\\Console\\Application->doRunCommand()
+#18 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#19 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#20 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#21 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#22 {main}
+"} 
+[2023-04-07 14:12:26] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 14:12:51] local.INFO: Traitement termine.  
+[2023-04-07 14:24:52] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 14:25:29] local.INFO: Traitement termine.  
+[2023-04-07 14:30:49] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 14:31:41] local.INFO: Traitement termine.  
+[2023-04-07 14:36:58] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 14:37:54] local.INFO: Traitement termine.  
+[2023-04-07 14:52:59] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 14:53:50] local.INFO: Traitement termine.  
+[2023-04-07 15:00:00] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 15:01:02] local.INFO: Traitement termine.  
+[2023-04-07 15:08:36] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 15:09:14] local.INFO: Traitement termine.  
+[2023-04-07 15:32:24] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 15:33:24] local.INFO: Traitement termine.  
+[2023-04-07 15:41:28] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-07 15:42:39] local.INFO: Traitement termine.  

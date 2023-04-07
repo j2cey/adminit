@@ -70,7 +70,7 @@ class ReportResource extends JsonResource
             'destroy_url' => route('reports.destroy', $this->uuid),
 
             'reportfiles_url' => route('reports.reportfiles', $this->uuid),
-            'attributes_url' => route('reports.attributes', $this->uuid),
+            'attributes_url' => route('reports.dynamicattributes', $this->uuid),
         ];
     }
 }

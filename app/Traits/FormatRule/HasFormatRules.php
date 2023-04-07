@@ -7,6 +7,7 @@ use App\Enums\RuleResultEnum;
 use App\Models\FormatRule\FormatRule;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\FormatRule\FormatRuleType;
+use App\Contracts\FormatRule\IInnerFormatRule;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
@@ -24,7 +25,7 @@ trait HasFormatRules
         return $this->morphMany(FormatRule::class, 'hasformatrule');
     }
     /**
-     * Get all of the model's dynamic attributes ordered
+     * Get all of the model's dynamic dynamicattributes ordered
      * @return mixed
      */
     public function formatrulesOrdered()
@@ -53,7 +54,7 @@ trait HasFormatRules
 
 
     /**
-     * Get the lastets of the model's dynamic attributes
+     * Get the lastets of the model's dynamic dynamicattributes
      * @return mixed
      */
     public function latestFormatrule()
@@ -62,7 +63,7 @@ trait HasFormatRules
     }
 
     /**
-     * Get the oldest of the model's dynamic attributes
+     * Get the oldest of the model's dynamic dynamicattributes
      * @return mixed
      */
     public function oldestFormatrule()
@@ -75,26 +76,25 @@ trait HasFormatRules
     /**
      * @param Model|FormatRuleType $formatruletype
      * @param string $title
-     * @param string $rule_result
+     * @param IInnerFormatRule|string|null $innerformatrule
+     * @param string|null $rule_result
      * @param Status|null $status
      * @param string|null $description
      * @return FormatRule
      */
-    public function addFormatRule(Model|FormatRuleType $formatruletype, string $title, string $rule_result, Status $status = null, string $description = null): FormatRule
+    public function addFormatRule(Model|FormatRuleType $formatruletype, string $title, IInnerFormatRule|string $innerformatrule = null, string $rule_result = null, Status $status = null, string $description = null): FormatRule
     {
         $num_ord = $this->formatrules()->count() + 1;       // set the format rule number order
         $formatrule = FormatRule::createNew(
             $formatruletype,
             $title,
+            $innerformatrule,
             $rule_result,
+            $status,
             $description,
             $num_ord
         );                                                  // create new FormatRule + InnerFormatRule
         $this->formatrules()->save($formatrule);            // attach the new FormatRule to the current model object
-
-        if ( ! is_null($status) ) {
-            $formatrule->status()->associate($status);      // set status
-        }
 
         $formatrule->save();                                // save the association from the FormatRule
 

@@ -92,7 +92,7 @@
         if (typeof options !== 'object' || options === null)
             options = {};
 
-        //allow setting options with data attributes
+        //allow setting options with data dynamicattributes
         //data-api options will be overwritten with custom javascript options
         options = $.extend(this.element.data(), options);
 

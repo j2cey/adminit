@@ -3,9 +3,15 @@
 namespace App\Models\DynamicAttributes;
 
 use App\Models\BaseModel;
+use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Traits\FormattedValue\HasFormattedValues;
+use App\Contracts\DynamicAttribute\IHasDynamicRows;
+use App\Contracts\FormattedValue\IHasFormattedValues;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
 
 /**
  * Class DynamicRow
@@ -34,9 +40,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property DynamicValue[] $dynamicvalues
  */
-class DynamicRow extends BaseModel implements Auditable
+class DynamicRow extends BaseModel implements Auditable, IHasFormattedValues
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasFormattedValues, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $with = ['dynamicvalues'];
@@ -86,13 +92,20 @@ class DynamicRow extends BaseModel implements Auditable
 
     #region Custom Functions
 
-    public static function createNew($related_object) {
+    /**
+     * @param IHasDynamicRows $related_object
+     * @return Model|DynamicRow
+     */
+    public static function createNew(IHasDynamicRows $related_object) {
         $line_num = $related_object->dynamicrows()->count() + 1;
-        return $related_object->dynamicrows()->create([
+        $dynamicrow = $related_object->dynamicrows()->create([
             'line_num' => $line_num,
             'firstinserted_at' => Carbon::now(),
             'columns_values' => "[]",
         ]);
+        $dynamicrow->setFormattedValues(HtmlTagKey::TABLE_ROW);
+
+        return $dynamicrow;
     }
 
     /**
@@ -119,6 +132,23 @@ class DynamicRow extends BaseModel implements Auditable
         $this->save();
 
         return $merged_values;
+    }
+
+    public function mergeColumnsFormattedValues() {
+        // get all dynamic values attached to this row
+        $dynamicvalues = $this->dynamicvalues;
+
+        foreach ($dynamicvalues as $dynamicvalue) {
+            // apply formating (without rule) for each value
+            $dynamicvalue->applyFormat($dynamicvalue->innerdynamicvalue->getValue());
+            foreach ($this->formattedvalues as $formattedvalue) {
+                foreach ($dynamicvalue->formattedvalues as $dynamicvalue_formatted) {
+                    // merge each row (this) formatted value with all dynamic values formatted values
+                    $formattedvalue->mergeRawValue($dynamicvalue_formatted, $dynamicvalue_formatted->innerformattedvalue->getFormattedValue());
+                }
+            }
+        }
+        $this->applyFormat();
     }
 
     #endregion

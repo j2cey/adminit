@@ -20,6 +20,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $format_value
  * @property string $comment
  *
+ * @property int $min_value
+ * @property int $max_value
+ *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
@@ -28,7 +31,7 @@ class FormatTextSize extends BaseModel implements IInnerFormatRule
     use HasFactory, InnerFormatRule;
 
     protected $guarded = [];
-    protected $table = 'format_text_sizes';
+    //protected $table = 'format_text_sizes';
     protected $with = ['status'];
 
     #region Validation Rules
@@ -70,6 +73,23 @@ class FormatTextSize extends BaseModel implements IInnerFormatRule
         return $innerformatrule;
     }
 
+    public function updateOne(string|IInnerFormatRule $innerformatrule = null) {
+        if ( ! is_null($innerformatrule) ) {
+            $newvalues = is_string($innerformatrule) ? json_decode($innerformatrule, true) : $innerformatrule;
+
+            $this->update([
+                'format_value' => $newvalues['format_value'],
+                'comment' => $newvalues['comment'],
+                'min_value' => $newvalues['min_value'],
+                'max_value' => $newvalues['max_value'],
+            ]);
+        }
+    }
+
+    public function getFormatValue() {
+        return $this->format_value;
+    }
+
     public static function getList() : array {
         $min = 7;
         $max = 30;
@@ -80,6 +100,10 @@ class FormatTextSize extends BaseModel implements IInnerFormatRule
         }
 
         return $list;
+    }
+
+    public function getSizedText() {
+
     }
 
     #endregion

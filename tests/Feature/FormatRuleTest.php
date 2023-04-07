@@ -55,6 +55,7 @@ class FormatRuleTest extends TestCase
             DynamicAttribute::class,
             FormatRuleType::textColor()->first(),
             "New Format Rule",
+            null,
             RuleResultEnum::ALLOWED->value,
             Status::default()->first(),
             "New Format Rule desc"
@@ -88,7 +89,38 @@ class FormatRuleTest extends TestCase
         );
 
         // on doit avoir une erreur de validation des champs ci-dessous
-        $response->assertSessionHasErrors(['title','formatruletype','rule_result']);
+        $response->assertSessionHasErrors(['title','formatruletype']);
+    }
+
+    public function test_FormatRule_unique_fields_must_be_validated_before_creation()
+    {
+        //$this->withoutExceptionHandling();
+
+        $user = $this->authenticated_user_admin();
+
+        $response = $this->add_new_formatrule(
+            $this->create_new_dynamicattribute(),
+            DynamicAttribute::class,
+            FormatRuleType::textColor()->first(),
+            "New Format Rule",
+            null,
+            RuleResultEnum::ALLOWED->value,
+            Status::default()->first(),
+            "New Format Rule desc"
+        );
+        $response = $this->add_new_formatrule(
+            $this->create_new_dynamicattribute(),
+            DynamicAttribute::class,
+            FormatRuleType::textColor()->first(),
+            "New Format Rule",
+            null,
+            RuleResultEnum::ALLOWED->value,
+            Status::default()->first(),
+            "New Format Rule desc"
+        );
+
+        // on doit avoir une erreur de validation des champs ci-dessous
+        $response->assertSessionHasErrors(['formatruletype_key']);
     }
 
     /**
@@ -107,6 +139,7 @@ class FormatRuleTest extends TestCase
             DynamicAttribute::class,
             FormatRuleType::textColor()->first(),
             "New Format Rule",
+            null,
             RuleResultEnum::ALLOWED->value,
             Status::active()->first(),
             "New Format Rule desc",
@@ -122,6 +155,7 @@ class FormatRuleTest extends TestCase
             $formatrule,
             $formatruletype_another,
             "New Format Rule upd",
+            null,
             RuleResultEnum::BROKEN->value,
             $status_inactive,
             "New Format Rule desc upd",
@@ -154,6 +188,7 @@ class FormatRuleTest extends TestCase
             DynamicAttribute::class,
             FormatRuleType::textColor()->first(),
             "New Format Rule",
+            null,
             RuleResultEnum::ALLOWED->value,
             Status::active()->first(),
             "New Format Rule desc"
@@ -170,24 +205,25 @@ class FormatRuleTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_formatrule(IHasFormatRules $model, $model_type, $formatruletype, $title, $rule_result, $status = null, $description = null, $num_ord = null): TestResponse
+    private function add_new_formatrule(IHasFormatRules $model, $model_type, $formatruletype, $title, $innerformatrule = null, $rule_result = null, $status = null, $description = null, $num_ord = null): TestResponse
     {
         return $this->post('formatrules/',
             array_merge([
                 'model_id' => $model->id,
                 'model_type' => $model_type
-            ], $this->new_data($formatruletype, $title, $rule_result, $status, $description, $num_ord)));
+            ], $this->new_data($formatruletype, $title, $innerformatrule, $rule_result, $status, $description, $num_ord)));
     }
 
-    private function update_existing_formatrule($existing_formatrule, $formatruletype, $title, $rule_result, $status = null, $description = null, $num_ord = null): TestResponse
+    private function update_existing_formatrule($existing_formatrule, $formatruletype, $title, $innerformatrule = null, $rule_result = null, $status = null, $description = null, $num_ord = null): TestResponse
     {
-        return $this->put('formatrules/' . $existing_formatrule->uuid, $this->new_data($formatruletype, $title, $rule_result, $status, $description, $num_ord));
+        return $this->put('formatrules/' . $existing_formatrule->uuid, $this->new_data($formatruletype, $title, $innerformatrule, $rule_result, $status, $description, $num_ord));
     }
 
-    private function new_data($formatruletype, $title, $rule_result, $status = null, $description = null, $num_ord = null): array
+    private function new_data($formatruletype, $title, $innerformatrule = null, $rule_result = null, $status = null, $description = null, $num_ord = null): array
     {
         $data = [
             'title' => $title,
+            'innerformatrule' => $innerformatrule,
             'rule_result' => $rule_result,
             'description' => $description,
 

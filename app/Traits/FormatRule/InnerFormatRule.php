@@ -3,6 +3,7 @@
 namespace App\Traits\FormatRule;
 
 use App\Models\FormatRule\FormatRule;
+use App\Contracts\FormatRule\IInnerFormatRule;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 trait InnerFormatRule

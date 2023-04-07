@@ -37,3 +37,8 @@ cd .vagrant/machines/default/virtualbox
 
 # 4) Save the file and run vagrant up
 
+
+
+## Delete vagrant box
+vagrant global-status --prune
+vagrant destroy -f the_id_of_the_machine

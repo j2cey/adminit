@@ -4,19 +4,17 @@ namespace App\Models\ReportFile;
 
 use App\Models\Status;
 use App\Models\BaseModel;
+use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
 use App\Imports\ReportFilesImport;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use OwenIt\Auditing\Contracts\Auditable;
-use OwenIt\Auditing\Contracts\AuditDriver;
 use App\Traits\DynamicAttribute\HasDynamicRows;
 use App\Models\ReportTreatments\OperationResult;
-use App\Models\RetrieveAction\SelectedRetrieveAction;
+use App\Traits\FormattedValue\HasFormattedValues;
+use App\Contracts\DynamicAttribute\IHasDynamicRows;
+use App\Contracts\FormattedValue\IHasFormattedValues;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
-use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
-use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
 /**
  * Class CollectedReportFile
@@ -58,9 +56,9 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @method static CollectedReportFile first()
  * @method static toImport()
  */
-class CollectedReportFile extends BaseModel implements Auditable
+class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasFormattedValues
 {
-    use HasFactory, HasDynamicRows, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasDynamicRows, HasFormattedValues, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -142,6 +140,7 @@ class CollectedReportFile extends BaseModel implements Auditable
      * @param int $file_size
      * @param Status|null $status
      * @param null $description
+     * @param string $lines_values
      * @return CollectedReportFile
      */
     public static function createNew(ReportFile $reportfile, string $initial_file_name, string $local_file_name, int $file_size, Status $status = null, $description = null, string $lines_values = "[]") : CollectedReportFile
@@ -161,6 +160,8 @@ class CollectedReportFile extends BaseModel implements Auditable
         $collectedreportfile->status()->associate(is_null($status) ? Status::default()->first() : $status);
 
         $collectedreportfile->save();
+
+        $collectedreportfile->setFormattedValues(HtmlTagKey::TABLE);
 
         return $collectedreportfile;
     }
@@ -210,19 +211,14 @@ class CollectedReportFile extends BaseModel implements Auditable
             $import = new ReportFilesImport($this, $reporttreatmentstepresult);
             $import->import($this->fileLocalAbsolutePath);
 
-            /*
-            $this->update([
-                'import_processing' => 0,
-                'imported' => 1
-            ]);*/
-
             $this->mergeLinesValues();
+            $this->mergeLinesFormattedValues();
 
             $this->endImport();
             return $operation_result->endWithSuccess();
         } catch (\Exception $e) {
             $this->endImport();
-            return $operation_result->endWithFailure($e->getMessage());
+            return $operation_result->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
         }
     }
 
@@ -234,6 +230,11 @@ class CollectedReportFile extends BaseModel implements Auditable
                 $dynamicrow->delete(); // <-- direct deletion
             });
             $this->lines_values = "[]";
+            /*
+            $this->formattedvalues()->each(function ($formattedvalue) {
+                $formattedvalue->delete(); // <-- direct deletion
+            });
+            */
 
             return $operation_result->endWithSuccess();
         } catch (\Exception $e) {
@@ -253,6 +254,23 @@ class CollectedReportFile extends BaseModel implements Auditable
         $this->save();
 
         return $merged_values;
+    }
+
+    public function mergeLinesFormattedValues() {
+        // get all dynamic row attached to this object
+        $dynamicrows = $this->dynamicrows;
+
+        foreach ($dynamicrows as $dynamicrow) {
+            // get merged formatted values for each row
+            $dynamicrow->mergeColumnsFormattedValues();
+            foreach ($this->formattedvalues as $formattedvalue) {
+                foreach ($dynamicrow->formattedvalues as $dynamicrow_formatted) {
+                    // merge object (this) formatted values with all rows formatted values
+                    $formattedvalue->mergeRawValue($dynamicrow_formatted, $dynamicrow_formatted->innerformattedvalue->getFormattedValue());
+                }
+            }
+        }
+        $this->applyFormat();
     }
 
     /**
@@ -295,7 +313,7 @@ class CollectedReportFile extends BaseModel implements Auditable
      */
     private function endImport() {
         $this->import_processing = 0;
-        $this->imported = ($this->nb_rows_import_success >= $this->nb_rows_import_processed);
+        $this->imported = ($this->nb_rows_import_processed > 0 && ( $this->nb_rows_import_success >= $this->nb_rows_import_processed ));
 
         $this->save();
     }

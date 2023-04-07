@@ -9,6 +9,8 @@ use App\Models\Access\AccessAccount;
 use App\Models\Access\AccessProtocole;
 use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
+use App\Models\FormattedValue\FormatType;
+use App\Models\FormatRule\FormatRuleType;
 use App\Models\ReportFile\CollectedReportFile;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 
@@ -32,7 +34,11 @@ class TestFullReportSeeder extends Seeder
         $type_int = DynamicAttributeType::int()->first();
         $type_datetime = DynamicAttributeType::datetime()->first();
 
-        $the_report->addDynamicAttribute("label",$type_string, null,"Libellé");
+        $attribute_label = $the_report->addDynamicAttribute("label",$type_string, null,"Libellé");
+        $attribute_label->addFormatRule(FormatRuleType::textSize()->first(),"set size");
+        $attribute_label->addFormatRule(FormatRuleType::textColor()->first(),"set color");
+        $attribute_label->addFormatRule(FormatRuleType::textWeight()->first(),"set weight");
+
         $attribute_data = $the_report->addDynamicAttribute("data",$type_int,null,"La donnée");
 
         $the_report->addDynamicAttributeMany([
@@ -77,5 +83,8 @@ class TestFullReportSeeder extends Seeder
             "40dae48d3ef7bf73850d5250afc86043.csv",
             1801
         );
+
+        $the_report_file_collected->setFormattedValues();
+        //$the_report_file_collected->formattedvalues->setValue();
     }
 }

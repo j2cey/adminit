@@ -22,7 +22,11 @@ class CreateFormatTextWeightsTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
-            $table->string('format_value')->default("normal")->comment('the format value');
+            $table->json('format_value')->nullable()->comment('the format value');
+
+            $table->boolean('format_bold')->default(0)->comment('the format bold value');
+            $table->boolean('format_italic')->default(0)->comment('the format italic value');
+            $table->boolean('format_underline')->default(0)->comment('the format underline value');
             $table->string('comment')->nullable()->comment('format comment');
 
             $table->baseFields();

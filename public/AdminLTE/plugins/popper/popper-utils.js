@@ -951,10 +951,10 @@ function runModifiers(modifiers, data, ends) {
 }
 
 /**
- * Set the attributes to the given popper
+ * Set the dynamicattributes to the given popper
  * @method
  * @memberof Popper.Utils
- * @argument {Element} element - Element to apply the attributes to
+ * @argument {Element} element - Element to apply the dynamicattributes to
  * @argument {Object} styles
  * Object with a list of properties and values which will be applied to the element
  */

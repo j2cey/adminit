@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Traits;
 
+use App\Enums\RuleResultEnum;
 use App\Models\FormatRule\FormatRule;
 use App\Models\FormatRule\FormatRuleType;
 use App\Contracts\FormatRule\IHasFormatRules;
@@ -14,7 +15,7 @@ trait HasFormatRulesTest
         $model = $this->getModel();
 
         $formatruletype = FormatRuleType::textColor()->first();
-        $model->addFormatRule($formatruletype,"apply red color","broken",null,"");
+        $model->addFormatRule($formatruletype,"apply red color", null,RuleResultEnum::BROKEN->value,null,"");
 
         // make sure we have a format rule ...
         $this->assertCount(1, FormatRule::all());

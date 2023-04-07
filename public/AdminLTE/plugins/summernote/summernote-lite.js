@@ -1,14 +1,14 @@
 /*!
- * 
+ *
  * Super simple wysiwyg editor v0.8.16
  * https://summernote.org
- * 
- * 
+ *
+ *
  * Copyright 2013- Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license.
- * 
+ *
  * Date: 2020-02-19T09:12Z
- * 
+ *
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -4852,9 +4852,9 @@ function () {
       }
     }
     /*
-    * Copy attributes from element.
+    * Copy dynamicattributes from element.
     *
-    * @param {object} Element to recover attributes.
+    * @param {object} Element to recover dynamicattributes.
     * @return {string} Copied string elements.
     */
 
@@ -7382,7 +7382,7 @@ function () {
               var $picker = $parent.find('#' + value);
               var $palette = external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default()($parent.find('#' + $picker.data('event')).find('.note-color-row')[0]); // Shift palette chips
 
-              var $chip = $palette.find('.note-color-btn').last().detach(); // Set chip attributes
+              var $chip = $palette.find('.note-color-btn').last().detach(); // Set chip dynamicattributes
 
               var color = $picker.val();
               $chip.css('background-color', color).attr('aria-label', color).attr('data-value', color).attr('data-original-title', color);

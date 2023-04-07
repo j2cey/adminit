@@ -50,4 +50,14 @@ class FormatRuleRequest extends FormRequest
     {
         return FormatRule::defaultRules();
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return FormatRule::messagesRules();
+    }
 }

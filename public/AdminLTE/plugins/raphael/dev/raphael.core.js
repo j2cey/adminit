@@ -20,7 +20,7 @@ define(["eve"], function(eve) {
      - height (number)
      - callback (function) #optional callback function which is going to be executed in the context of newly created paper
      * or
-     - all (array) (first 3 or 4 elements in the array are equal to [containerID, width, height] or [x, y, width, height]. The rest are element descriptions in format {type: type, <attributes>}). See @Paper.add.
+     - all (array) (first 3 or 4 elements in the array are equal to [containerID, width, height] or [x, y, width, height]. The rest are element descriptions in format {type: type, <dynamicattributes>}). See @Paper.add.
      - callback (function) #optional callback function which is going to be executed in the context of newly created paper
      * or
      - onReadyCallback (function) function that is going to be called on DOM ready event. You can also subscribe to this event via Eve’s “DOMLoad” event. In this case method returns `undefined`.
@@ -94,8 +94,8 @@ define(["eve"], function(eve) {
              * Paper.customAttributes
              [ property (object) ]
              **
-             * If you have a set of attributes that you would like to represent
-             * as a function of some number you can do it easily with custom attributes:
+             * If you have a set of dynamicattributes that you would like to represent
+             * as a function of some number you can do it easily with custom dynamicattributes:
              > Usage
              | paper.customAttributes.hue = function (num) {
              |     num = num % 1;
@@ -2833,7 +2833,7 @@ define(["eve"], function(eve) {
      [ property (object) ]
      **
      * You can add your own method to elements. This is useful when you want to hack default functionality or
-     * want to wrap some common transformation or attributes in one method. In difference to canvas methods,
+     * want to wrap some common transformation or dynamicattributes in one method. In difference to canvas methods,
      * you can redefine element method at any time. Expending element methods wouldn’t affect set.
      > Usage
      | Raphael.el.red = function () {
@@ -3774,7 +3774,7 @@ define(["eve"], function(eve) {
      **
      * Return set of elements that create glow-like effect around given element. See @Paper.set.
      *
-     * Note: Glow is not connected to the element. If you change element attributes it won’t adjust itself.
+     * Note: Glow is not connected to the element. If you change element dynamicattributes it won’t adjust itself.
      **
      > Parameters
      **
@@ -4237,7 +4237,7 @@ define(["eve"], function(eve) {
      **
      - el (object) element to sync with
      - anim (object) animation to sync with
-     - params (object) #optional final attributes for the element, see also @Element.attr
+     - params (object) #optional final dynamicattributes for the element, see also @Element.attr
      - ms (number) #optional number of milliseconds for animation to run
      - easing (string) #optional easing type. Accept on of @Raphael.easing_formulas or CSS format: `cubic&#x2010;bezier(XX,&#160;XX,&#160;XX,&#160;XX)`
      - callback (function) #optional callback function. Will be called at the end of animation.
@@ -4596,7 +4596,7 @@ define(["eve"], function(eve) {
      **
      > Parameters
      **
-     - params (object) final attributes for the element, see also @Element.attr
+     - params (object) final dynamicattributes for the element, see also @Element.attr
      - ms (number) number of milliseconds for animation to run
      - easing (string) #optional easing type. Accept one of @Raphael.easing_formulas or CSS format: `cubic&#x2010;bezier(XX,&#160;XX,&#160;XX,&#160;XX)`
      - callback (function) #optional callback function. Will be called at the end of animation.
@@ -4650,7 +4650,7 @@ define(["eve"], function(eve) {
      **
      > Parameters
      **
-     - params (object) final attributes for the element, see also @Element.attr
+     - params (object) final dynamicattributes for the element, see also @Element.attr
      - ms (number) number of milliseconds for animation to run
      - easing (string) #optional easing type. Accept one of @Raphael.easing_formulas or CSS format: `cubic&#x2010;bezier(XX,&#160;XX,&#160;XX,&#160;XX)`
      - callback (function) #optional callback function. Will be called at the end of animation.
@@ -5235,7 +5235,7 @@ define(["eve"], function(eve) {
      * Paper.add
      [ method ]
      **
-     * Imports elements in JSON array in format `{type: type, <attributes>}`
+     * Imports elements in JSON array in format `{type: type, <dynamicattributes>}`
      **
      > Parameters
      **

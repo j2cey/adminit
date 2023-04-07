@@ -6,12 +6,11 @@ use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
-use App\Models\RetrieveAction\RetrieveAction;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * Class ReportFileTypeResource
- * @package App\Http\Resources\ReportFile
+ * Class FormatTypeResource
+ * @package App\Http\Resources\FormattedValue
  *
  * @property integer $id
  *
@@ -30,7 +29,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property Carbon $updated_at
  *
  * @property Status $status
- * @property RetrieveAction[] $retrieveactions
  */
 class FormatTypeResource extends JsonResource
 {

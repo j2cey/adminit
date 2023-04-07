@@ -45,7 +45,7 @@ class User extends Authenticatable implements Auditable
     use HasFactory, Notifiable, HasRoles, \OwenIt\Auditing\Auditable, BaseTrait, LaravelPermissionToVueJS;
 
     /**
-     * The attributes that are mass assignable.
+     * The dynamicattributes that are mass assignable.
      *
      * @var array
      */
@@ -66,7 +66,7 @@ class User extends Authenticatable implements Auditable
     public function getRouteKeyName() { return 'uuid'; }
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The dynamicattributes that should be hidden for arrays.
      *
      * @var array
      */
@@ -76,7 +76,7 @@ class User extends Authenticatable implements Auditable
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The dynamicattributes that should be cast to native types.
      *
      * @var array
      */

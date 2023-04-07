@@ -48,6 +48,7 @@ class Report extends BaseModel implements IHasDynamicAttributes
 
     protected $guarded = [];
     protected $with = ['reporttype'];
+    //protected $appends = [];
 
     #region Validation Rules
 

@@ -955,7 +955,7 @@ function assert( fn ) {
 
 /**
  * Adds the same handler for all of the specified attrs
- * @param {String} attrs Pipe-separated list of attributes
+ * @param {String} attrs Pipe-separated list of dynamicattributes
  * @param {Function} handler The method that will be applied
  */
 function addHandle( attrs, handler ) {
@@ -1100,7 +1100,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	---------------------------------------------------------------------- */
 
 	// Support: IE<8
-	// Verify that getAttribute really returns attributes and not properties
+	// Verify that getAttribute really returns dynamicattributes and not properties
 	// (excepting IE8 booleans)
 	support.attributes = assert(function( div ) {
 		div.className = "i";
@@ -1233,7 +1233,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			}
 
 			// Support: IE8
-			// Boolean attributes and "value" are not treated correctly
+			// Boolean dynamicattributes and "value" are not treated correctly
 			if ( !div.querySelectorAll("[selected]").length ) {
 				rbuggyQSA.push( "\\[" + whitespace + "*(?:value|" + booleans + ")" );
 			}
@@ -1260,7 +1260,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 		assert(function( div ) {
 			// Support: Windows 8 Native Apps
-			// The type and name attributes are restricted during .innerHTML assignment
+			// The type and name dynamicattributes are restricted during .innerHTML assignment
 			var input = document.createElement("input");
 			input.setAttribute( "type", "hidden" );
 			div.appendChild( input ).setAttribute( "name", "D" );
@@ -1995,7 +1995,7 @@ Expr = Sizzle.selectors = {
 			// http://www.w3.org/TR/selectors/#empty-pseudo
 			// :empty is negated by element (1) or content nodes (text: 3; cdata: 4; entity ref: 5),
 			//   but not by others (comment: 8; processing instruction: 7; etc.)
-			// nodeType < 6 works because attributes (2) do not appear as children
+			// nodeType < 6 works because dynamicattributes (2) do not appear as children
 			for ( elem = elem.firstChild; elem; elem = elem.nextSibling ) {
 				if ( elem.nodeType < 6 ) {
 					return false;
@@ -2911,7 +2911,7 @@ var rootjQuery,
 							if ( jQuery.isFunction( this[ match ] ) ) {
 								this[ match ]( context[ match ] );
 
-							// ...and otherwise set as attributes
+							// ...and otherwise set as dynamicattributes
 							} else {
 								this.attr( match, context[ match ] );
 							}
@@ -4513,7 +4513,7 @@ function createSafeFragment( document ) {
 	support.noCloneEvent = !!div.addEventListener;
 
 	// Support: IE<9
-	// Since attributes and properties are the same in IE,
+	// Since dynamicattributes and properties are the same in IE,
 	// cleanData must set properties to undefined rather than use removeAttribute
 	div[ jQuery.expando ] = 1;
 	support.attributes = !div.getAttribute( jQuery.expando );
@@ -6222,7 +6222,7 @@ jQuery.extend( {
 
 						// Support: IE<9
 						// IE does not allow us to delete expando properties from nodes
-						// IE creates expando attributes along with the property
+						// IE creates expando dynamicattributes along with the property
 						// IE does not have a removeAttribute function on Document nodes
 						if ( !attributes && typeof elem.removeAttribute !== "undefined" ) {
 							elem.removeAttribute( internalKey );
@@ -6780,7 +6780,7 @@ if ( window.getComputedStyle ) {
 
 		// If we're not dealing with a regular pixel number
 		// but a number that has a weird ending, we need to convert it to pixels
-		// but not position css attributes, as those are
+		// but not position css dynamicattributes, as those are
 		// proportional to the parent element instead
 		// and we can't measure the parent instead because it
 		// might trigger a "stacking dolls" problem
@@ -7577,7 +7577,7 @@ function defaultPrefilter( elem, props, opts ) {
 	if ( elem.nodeType === 1 && ( "height" in props || "width" in props ) ) {
 
 		// Make sure that nothing sneaks out
-		// Record all 3 overflow attributes because IE does not
+		// Record all 3 overflow dynamicattributes because IE does not
 		// change the overflow attribute when overflowX and
 		// overflowY are set to the same value
 		opts.overflow = [ style.overflow, style.overflowX, style.overflowY ];
@@ -8396,17 +8396,17 @@ jQuery.extend( {
 		var ret, hooks,
 			nType = elem.nodeType;
 
-		// Don't get/set attributes on text, comment and attribute nodes
+		// Don't get/set dynamicattributes on text, comment and attribute nodes
 		if ( nType === 3 || nType === 8 || nType === 2 ) {
 			return;
 		}
 
-		// Fallback to prop when attributes are not supported
+		// Fallback to prop when dynamicattributes are not supported
 		if ( typeof elem.getAttribute === "undefined" ) {
 			return jQuery.prop( elem, name, value );
 		}
 
-		// All attributes are lowercase
+		// All dynamicattributes are lowercase
 		// Grab necessary hook if one is defined
 		if ( nType !== 1 || !jQuery.isXMLDoc( elem ) ) {
 			name = name.toLowerCase();
@@ -8435,7 +8435,7 @@ jQuery.extend( {
 
 		ret = jQuery.find.attr( elem, name );
 
-		// Non-existent attributes return null, we normalize to undefined
+		// Non-existent dynamicattributes return null, we normalize to undefined
 		return ret == null ? undefined : ret;
 	},
 
@@ -8467,7 +8467,7 @@ jQuery.extend( {
 			while ( ( name = attrNames[ i++ ] ) ) {
 				propName = jQuery.propFix[ name ] || name;
 
-				// Boolean attributes get special treatment (#10870)
+				// Boolean dynamicattributes get special treatment (#10870)
 				if ( jQuery.expr.match.bool.test( name ) ) {
 
 					// Set corresponding property to false
@@ -8492,12 +8492,12 @@ jQuery.extend( {
 	}
 } );
 
-// Hooks for boolean attributes
+// Hooks for boolean dynamicattributes
 boolHook = {
 	set: function( elem, value, name ) {
 		if ( value === false ) {
 
-			// Remove boolean attributes when set to false
+			// Remove boolean dynamicattributes when set to false
 			jQuery.removeAttr( elem, name );
 		} else if ( getSetInput && getSetAttribute || !ruseDefault.test( name ) ) {
 
@@ -8560,7 +8560,7 @@ if ( !getSetInput || !getSetAttribute ) {
 	};
 }
 
-// IE6/7 do not support getting/setting some attributes with get/setAttribute
+// IE6/7 do not support getting/setting some dynamicattributes with get/setAttribute
 if ( !getSetAttribute ) {
 
 	// Use this for any attribute in IE6/7
@@ -8585,7 +8585,7 @@ if ( !getSetAttribute ) {
 		}
 	};
 
-	// Some attributes are constructed with empty-string values when not defined
+	// Some dynamicattributes are constructed with empty-string values when not defined
 	attrHandle.id = attrHandle.name = attrHandle.coords =
 		function( elem, name, isXML ) {
 			var ret;
@@ -8727,7 +8727,7 @@ jQuery.extend( {
 	}
 } );
 
-// Some attributes require a special call on IE
+// Some dynamicattributes require a special call on IE
 // http://msdn.microsoft.com/en-us/library/ms536429%28VS.85%29.aspx
 if ( !support.hrefNormalized ) {
 
@@ -8968,7 +8968,7 @@ jQuery.fn.extend( {
 
 
 
-// Return jQuery for attributes-only inclusion
+// Return jQuery for dynamicattributes-only inclusion
 
 
 jQuery.each( ( "blur focus focusin focusout load resize scroll unload click dblclick " +

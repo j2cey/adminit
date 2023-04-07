@@ -195,8 +195,8 @@ Route::get('reports.fetch',[ReportController::class,'fetch'])
 Route::get('reports.reportfiles/{uuid}',[ReportController::class,'reportfiles'])
     ->name('reports.reportfiles')
     ->middleware('auth');
-Route::get('reports.attributes/{uuid}',[ReportController::class,'attributes'])
-    ->name('reports.attributes')
+Route::get('reports.dynamicattributes/{uuid}',[ReportController::class,'attributes'])
+    ->name('reports.dynamicattributes')
     ->middleware('auth');
 
 Route::resource('analysisruletypes',AnalysisRuleTypeController::class)->middleware('auth');

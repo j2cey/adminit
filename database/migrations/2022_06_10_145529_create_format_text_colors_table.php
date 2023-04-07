@@ -22,7 +22,15 @@ class CreateFormatTextColorsTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
-            $table->string('format_value')->nullable()->comment('the format value');
+            $table->string('format_value')->default("#000000")->comment('the format value');
+            $table->integer('alpha')->default(255)->comment('the alpha value');
+            $table->integer('blue')->default(0)->comment('the blue value');
+            $table->integer('green')->default(0)->comment('the green value');
+            $table->integer('hue')->default(0)->comment('the hue value');
+            $table->integer('lightness')->default(0)->comment('the lightness value');
+            $table->integer('red')->default(0)->comment('the red value');
+            $table->integer('saturation')->default(0)->comment('the saturation value');
+
             $table->string('comment')->nullable()->comment('format comment');
 
             $table->baseFields();

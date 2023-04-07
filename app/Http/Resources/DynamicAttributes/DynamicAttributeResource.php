@@ -5,11 +5,13 @@ namespace App\Http\Resources\DynamicAttributes;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\FormatRule\FormatRule;
 use App\Http\Resources\StatusResource;
 use App\Models\AnalysisRule\AnalysisRule;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\DynamicAttributes\DynamicAttribute;
+use App\Http\Resources\FormatRule\FormatRuleResource;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 use App\Http\Resources\AnalysisRules\AnalysisRuleResource;
 
@@ -41,6 +43,7 @@ use App\Http\Resources\AnalysisRules\AnalysisRuleResource;
  *
  * @property DynamicAttributeType $dynamicattributetype
  * @property AnalysisRule $analysisrules
+ * @property FormatRule[] $formatrules
  * @property Status $status
  */
 class DynamicAttributeResource extends JsonResource
@@ -72,6 +75,7 @@ class DynamicAttributeResource extends JsonResource
 
             'dynamicattributetype' => DynamicAttributeTypeResource::make($this->dynamicattributetype),
             'analysisrules' => AnalysisRuleResource::collection($this->analysisrules),
+            'formatrules' => FormatRuleResource::collection($this->formatrules),
 
             'model_type' => DynamicAttribute::class,
 

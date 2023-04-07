@@ -11,7 +11,7 @@ use App\Models\DynamicAttributes\DynamicAttribute;
  * Class UpdateDynamicAttributeRequest
  * @package App\Http\Requests\DynamicAttribute
  *
- * @property DynamicAttribute $dynamicattribute
+ * @property DynamicAttribute $dynamicattributes
  */
 class UpdateDynamicAttributeRequest extends DynamicAttributeRequest
 {

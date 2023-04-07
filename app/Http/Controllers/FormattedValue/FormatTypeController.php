@@ -6,9 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Models\FormattedValue\FormatType;
 use App\Http\Requests\FormatType\StoreFormatTypeRequest;
 use App\Http\Requests\FormatType\UpdateFormatTypeRequest;
+use App\Http\Resources\FormattedValue\FormatTypeResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FormatTypeController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return AnonymousResourceCollection
+     */
+    public function fetchall(): AnonymousResourceCollection
+    {
+        return FormatTypeResource::collection( FormatType::all() );
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -32,21 +44,23 @@ class FormatTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\FormatType\StoreFormatTypeRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreFormatTypeRequest $request
+     * @return FormatTypeResource
      */
     public function store(StoreFormatTypeRequest $request)
     {
-        //
+        $formattype = FormatType::createNew($request->name, $request->code, $request->formattype_class, $request->status, $request->description);
+
+        return new FormatTypeResource($formattype);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\FormattedValue\FormatType  $formatType
+     * @param FormatType $formattype
      * @return \Illuminate\Http\Response
      */
-    public function show(FormatType $formatType)
+    public function show(FormatType $formattype)
     {
         //
     }
@@ -54,10 +68,10 @@ class FormatTypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\FormattedValue\FormatType  $formatType
+     * @param FormatType $formattype
      * @return \Illuminate\Http\Response
      */
-    public function edit(FormatType $formatType)
+    public function edit(FormatType $formattype)
     {
         //
     }
@@ -65,23 +79,27 @@ class FormatTypeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\FormatType\UpdateFormatTypeRequest  $request
-     * @param  \App\Models\FormattedValue\FormatType  $formatType
-     * @return \Illuminate\Http\Response
+     * @param UpdateFormatTypeRequest $request
+     * @param FormatType $formattype
+     * @return FormatTypeResource
      */
-    public function update(UpdateFormatTypeRequest $request, FormatType $formatType)
+    public function update(UpdateFormatTypeRequest $request, FormatType $formattype)
     {
-        //
+        $formattype->updateThis($request->name, $request->code, $request->formattype_class, $request->status, $request->description);
+
+        return new FormatTypeResource($formattype);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\FormattedValue\FormatType  $formatType
+     * @param FormatType $formattype
      * @return \Illuminate\Http\Response
      */
-    public function destroy(FormatType $formatType)
+    public function destroy(FormatType $formattype)
     {
-        //
+        $formattype->delete();
+
+        return response('Delete Successfull', 200);
     }
 }

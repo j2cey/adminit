@@ -663,12 +663,12 @@ function createCellPos( n ){
 }
 
 /**
- * Create an XML node and add any children, attributes, etc without needing to
+ * Create an XML node and add any children, dynamicattributes, etc without needing to
  * be verbose in the DOM.
  *
  * @param  {object} doc      XML document
  * @param  {string} nodeName Node name
- * @param  {object} opts     Options - can be `attr` (attributes), `children`
+ * @param  {object} opts     Options - can be `attr` (dynamicattributes), `children`
  *   (child nodes) and `text` (text content)
  * @return {node}            Created node
  */
@@ -765,7 +765,7 @@ function _excelColWidth( data, col ) {
 function _xlsxToStrings( obj ) {
 	if ( _ieExcel === undefined ) {
 		// Detect if we are dealing with IE's _awful_ serialiser by seeing if it
-		// drop attributes
+		// drop dynamicattributes
 		_ieExcel = _serialiser
 			.serializeToString(
 				$.parseXML( excelStrings['xl/worksheets/sheet1.xml'] )
@@ -779,7 +779,7 @@ function _xlsxToStrings( obj ) {
 		}
 		else {
 			if ( _ieExcel ) {
-				// IE's XML serialiser will drop some name space attributes from
+				// IE's XML serialiser will drop some name space dynamicattributes from
 				// from the root node, so we need to save them. Do this by
 				// replacing the namespace nodes with a regular attribute that
 				// we convert back when serialised. Edge does not have this
@@ -815,11 +815,11 @@ function _xlsxToStrings( obj ) {
 					str = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+str;
 				}
 
-				// Return namespace attributes to being as such
+				// Return namespace dynamicattributes to being as such
 				str = str.replace( /_dt_b_namespace_token_/g, ':' );
 			}
 
-			// Safari, IE and Edge will put empty name space attributes onto
+			// Safari, IE and Edge will put empty name space dynamicattributes onto
 			// various elements making them useless. This strips them out
 			str = str.replace( /<([^<>]*?) xmlns=""([^<>]*?)>/g, '<$1 $2>' );
 
@@ -1396,7 +1396,7 @@ DataTable.ext.buttons.excelFlash = $.extend( {}, flashButton, {
 	},
 
 	extension: '.xlsx',
-	
+
 	createEmptyCells: false
 } );
 

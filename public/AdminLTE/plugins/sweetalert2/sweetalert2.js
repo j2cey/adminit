@@ -904,7 +904,7 @@
     var rerender = !innerParams || params.input !== innerParams.input;
     inputTypes.forEach(function (inputType) {
       var inputClass = swalClasses[inputType];
-      var inputContainer = getChildByClass(content, inputClass); // set attributes
+      var inputContainer = getChildByClass(content, inputClass); // set dynamicattributes
 
       setAttributes(inputType, params.inputAttributes); // set class
 

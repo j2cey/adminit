@@ -23,6 +23,9 @@ class CreateFormatTextSizesTable extends Migration
             $table->id();
 
             $table->integer('format_value')->default(8)->comment('the (size) format');
+            $table->integer('min_value')->default(8)->comment('the min (size) value');
+            $table->integer('max_value')->default(20)->comment('the max (size) value');
+
             $table->string('comment')->nullable()->comment('format comment');
 
             $table->baseFields();
