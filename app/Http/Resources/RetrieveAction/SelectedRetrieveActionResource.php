@@ -44,6 +44,7 @@ class SelectedRetrieveActionResource extends JsonResource
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
+            'name' => $this->retrieveaction->name,
 
             'status' => StatusResource::make($this->status),
             'retrieveaction' => RetrieveActionResource::make($this->retrieveaction),

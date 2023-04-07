@@ -54,7 +54,11 @@ class SelectedRetrieveActionController extends Controller
      */
     public function store(StoreSelectedRetrieveActionRequest $request)
     {
-        $selectedretrieveaction = SelectedRetrieveAction::createNew($request->retrieveaction, $request->code, $request->status, $request->description);
+        $selectedretrieveaction = SelectedRetrieveAction::createNew(
+            $request->retrieveaction,
+            $request->code,
+            $request->status,
+            $request->description);
 
         return new SelectedRetrieveActionResource($selectedretrieveaction);
     }

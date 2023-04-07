@@ -34,6 +34,7 @@ var Reportfile = /*#__PURE__*/_createClass(function Reportfile(reportfile) {
   this.reportfiletype = reportfile.reportfiletype || {};
   this.status = reportfile.status ? reportfile.status.code : 'active';
   this.report = reportfile.report || {};
+  this.selectedretrieveactions = reportfile.selectedretrieveactions || {};
 });
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "reportfile-addupdate",
@@ -60,6 +61,7 @@ var Reportfile = /*#__PURE__*/_createClass(function Reportfile(reportfile) {
       _this.reportfileForm = new Form(_this.reportfile);
       _this.reportfileId = reportfile.uuid;
       _this.formTitle = 'Modification du fichier';
+      console.log(reportfile.selectedretrieveactions);
       $('#addUpdateReportfile').modal();
     });
   },
@@ -259,44 +261,6 @@ var render = function render() {
   }, [_c("label", {
     staticClass: "col-sm-2 col-form-label text-xs",
     attrs: {
-      "for": "m_select_retrieveaction"
-    }
-  }, [_vm._v("Récupération du Fichier:")]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-10 text-xs"
-  }, [_c("multiselect", {
-    key: "id",
-    staticClass: "text text-xs",
-    attrs: {
-      id: "m_select_retrieveaction",
-      "selected.sync": "reportfileForm.reportfiletype",
-      value: "",
-      options: _vm.retrieveactiontypes,
-      searchable: true,
-      multiple: true,
-      label: "name",
-      "track-by": "id",
-      placeholder: "Récupération du Fichier"
-    },
-    model: {
-      value: _vm.reportfileForm.reportfiletype,
-      callback: function callback($$v) {
-        _vm.$set(_vm.reportfileForm, "reportfiletype", $$v);
-      },
-      expression: "reportfileForm.reportfiletype"
-    }
-  }), _vm._v(" "), _vm.reportfileForm.errors.has("reportfiletype") ? _c("span", {
-    staticClass: "invalid-feedback d-block text-xs",
-    attrs: {
-      role: "alert"
-    },
-    domProps: {
-      textContent: _vm._s(_vm.reportfileForm.errors.get("reportfiletype"))
-    }
-  }) : _vm._e()], 1)]), _vm._v(" "), _c("div", {
-    staticClass: "form-group row"
-  }, [_c("label", {
-    staticClass: "col-sm-2 col-form-label text-xs",
-    attrs: {
       "for": "m_select_reportfiletype"
     }
   }, [_vm._v("Type du Fichier")]), _vm._v(" "), _c("div", {
@@ -310,7 +274,7 @@ var render = function render() {
       value: "",
       options: _vm.reportfiletypes,
       searchable: true,
-      multiple: false,
+      multiple: true,
       label: "name",
       "track-by": "id",
       placeholder: "Type du Fichier"
@@ -381,6 +345,47 @@ var render = function render() {
       icon: "close"
     }
   }), _vm._v(" "), _c("span", [_vm._v("Inactif")])], 1)], 1)], 1)]), _vm._v(" "), _c("div", {
+    staticClass: "form-group row"
+  }, [_c("label", {
+    staticClass: "col-sm-2 col-form-label text-xs",
+    attrs: {
+      "for": "m_select_retrieveaction"
+    }
+  }, [_vm._v("Récupération du Fichier ")]), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-10 text-xs"
+  }, [_c("multiselect", {
+    key: "id",
+    staticClass: "text text-xs",
+    attrs: {
+      id: "m_select_retrieveaction",
+      "selected.sync": "reportfileForm.selectedretrieveactions",
+      value: "",
+      multiple: true,
+      options: _vm.retrieveactiontypes,
+      "group-values": "retrieveactions",
+      searchable: true,
+      "group-label": "name",
+      "group-select": false,
+      label: "name",
+      "track-by": "id",
+      placeholder: "Récupération du Fichier"
+    },
+    model: {
+      value: _vm.reportfileForm.selectedretrieveactions,
+      callback: function callback($$v) {
+        _vm.$set(_vm.reportfileForm, "selectedretrieveactions", $$v);
+      },
+      expression: "reportfileForm.selectedretrieveactions"
+    }
+  }), _vm._v(" "), _vm.reportfileForm.errors.has("reportfiletype") ? _c("span", {
+    staticClass: "invalid-feedback d-block text-xs",
+    attrs: {
+      role: "alert"
+    },
+    domProps: {
+      textContent: _vm._s(_vm.reportfileForm.errors.get("reportfiletype"))
+    }
+  }) : _vm._e()], 1)]), _vm._v(" "), _c("div", {
     staticClass: "form-group row"
   }, [_c("label", {
     staticClass: "col-sm-2 col-form-label text-xs",

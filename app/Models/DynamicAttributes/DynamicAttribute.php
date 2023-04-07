@@ -54,7 +54,7 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
     use HasFactory, HasFormatRules, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
-    protected $with = ['dynamicattributetype'];
+    protected array $with = ['dynamicattributetype'];
     protected $casts = [
         'searchable' => 'boolean',
         'sortable' => 'boolean',

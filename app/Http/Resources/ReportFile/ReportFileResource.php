@@ -3,6 +3,8 @@
 namespace App\Http\Resources\ReportFile;
 
 use App\Models\ReportFile\CollectedReportFile;
+use App\Models\RetrieveAction\SelectedRetrieveAction;
+use App\Http\Resources\RetrieveAction\SelectedRetrieveActionResource;
 use function route;
 use App\Models\Status;
 use Illuminate\Support\Carbon;
@@ -44,6 +46,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property Report $report
  * @property mixed $reportfileaccesses
  * @property CollectedReportFile[] $collectedreportfiles
+ * @property SelectedRetrieveAction[] $selectedretrieveactions
  */
 class ReportFileResource extends JsonResource
 {
@@ -69,8 +72,7 @@ class ReportFileResource extends JsonResource
             'use_file_extension' => $this->use_file_extension,
             'has_headers' => $this->has_headers,
 
-            'retrieve_by_wildcard_label' => $this->retrieve_by_wildcard_label,
-            'retrieve_by_name_label' => $this->retrieve_by_name_label,
+            'selectedretrieveactions' => SelectedRetrieveActionResource::collection($this->selectedretrieveactions),
 
             'description' => $this->description,
             'created_at' => $this->created_at,
