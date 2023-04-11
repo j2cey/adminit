@@ -4,6 +4,7 @@ namespace App\Traits\SelectedRetrieveAction;
 
 use App\Models\Status;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ReportFile\ReportFileAccess;
 use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,10 +25,15 @@ trait HasSelectedRetrieveActions
         $this->refresh();
     }
 
-    public function dynamicattributes()
+    public function retrieveactions()
     {
-        return $this->morphMany(DynamicAttribute::class, 'hasdynamicattribute');
+        return $this->morphMany(RetrieveAction::class, 'hasselectedretrieveaction');
     }
+
+    public function reportfileaccessess(){
+        return $this->morphMany(ReportFileAccess::class, 'hasselectedretrieveaction');
+    }
+
     /**
      * Crée et Ajoute un objet SelectedRetrieveAction au modèle qui utilise ce trait et implémente l'interface y rattachée (HasSelectedRetrieveActions)
      * @param Model|RetrieveAction $retrieveaction L'Action sélectionnée

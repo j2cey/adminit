@@ -27,9 +27,8 @@ class CreateRetrieveActionsTable extends Migration
             $table->string('action_class')->comment("chemin complet de la classe de l Action (qui va implémenter l interface IRetrieveAction)");
             $table->string('description', 500)->nullable()->comment("description de l action");
 
-            $table->foreignId('retrieve_action_type_id')->nullable()
-                ->comment('clé de reférence du type d action')
-                ->constrained('retrieve_action_types')->onDelete('set null');
+            $table->unsignedBigInteger('selected_retrieve_action_id');
+            $table->string('selected_retrieve_action_type');
 
             $table->baseFields();
         });

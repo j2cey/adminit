@@ -391,7 +391,7 @@ class HtmlFormattedValue extends BaseModel implements IFormattedValueHtml
             ]);
         }*/
         $this->update([
-            'rawvalue' =>$this->rawvalue . trim( html_entity_decode($value_to_merge) ),
+            'rawvalue' => $this->rawvalue . trim( html_entity_decode($value_to_merge) ),
         ]);
     }
 

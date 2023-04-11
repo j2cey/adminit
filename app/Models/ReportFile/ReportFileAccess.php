@@ -111,9 +111,9 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
         return $this->belongsTo(AccessProtocole::class, 'access_protocole_id');
     }
 
-    public function selectedretrieveactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function selectedretrieveactions()
     {
-        return $this->hasMany(SelectedRetrieveAction::class,'report_file_access_id');
+        return $this->belongsTo(SelectedRetrieveAction::class,'selected_retrieve_action_id');
     }
 
     #endregion

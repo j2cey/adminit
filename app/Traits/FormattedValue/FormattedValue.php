@@ -8,8 +8,6 @@ trait FormattedValue
 {
     use \OwenIt\Auditing\Auditable;
 
-    public string $thevalue;
-
     #region Eloquent Relationships
 
 
