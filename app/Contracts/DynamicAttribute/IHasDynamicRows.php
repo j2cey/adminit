@@ -2,6 +2,8 @@
 
 namespace App\Contracts\DynamicAttribute;
 
+use Illuminate\Database\Eloquent\Model;
+use App\Models\DynamicAttributes\DynamicRow;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -24,4 +26,7 @@ interface IHasDynamicRows
      * @return morphOne
      */
     public function oldestDynamicrow();
+
+    public function addRow(): Model|DynamicRow;
+    public function deleteRows();
 }

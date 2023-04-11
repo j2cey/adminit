@@ -19,7 +19,7 @@ use App\Contracts\DynamicAttribute\IInnerDynamicValue;
  * @property string|null $tags
  * @property integer|null $status_id
  *
- * @property Carbon $thevalue&
+ * @property Carbon $thevalue
  * @property integer $dynamic_row_id
  *
  * @property Carbon $created_at
@@ -30,6 +30,9 @@ class DynamicValueDatetime extends Model implements IInnerDynamicValue
     use InnerDynamicValue, HasFactory;
 
     protected $guarded = [];
+    protected $casts = [
+        'thevalue' => 'datetime:Y-m-d H:i:s',
+    ];
 
     #region Validation Rules
 
@@ -77,7 +80,13 @@ class DynamicValueDatetime extends Model implements IInnerDynamicValue
     }
 
     public function getValue() {
-        return $this->thevalue;
+        $thevalue_arr = $this->thevalue->toArray();
+        return $thevalue_arr['day'] .
+            "-" . $thevalue_arr['month'] .
+            "-" . substr($thevalue_arr['year'], -2) . " " .
+            $thevalue_arr['hour'] .
+            ":" . $thevalue_arr['minute'] .
+            ":" . $thevalue_arr['second'];
     }
 
     #endregion

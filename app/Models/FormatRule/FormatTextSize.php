@@ -68,9 +68,7 @@ class FormatTextSize extends BaseModel implements IInnerFormatRule
 
     public static function createNew(): FormatTextSize {
 
-        $innerformatrule = FormatTextSize::create();
-
-        return $innerformatrule;
+        return FormatTextSize::create();
     }
 
     public function updateOne(string|IInnerFormatRule $innerformatrule = null) {
@@ -86,8 +84,9 @@ class FormatTextSize extends BaseModel implements IInnerFormatRule
         }
     }
 
-    public function getFormatValue() {
-        return $this->format_value;
+    public function getRuleValue(): string
+    {
+        return $this->format_value . "px";
     }
 
     public static function getList() : array {

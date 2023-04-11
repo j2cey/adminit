@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\FormattedValue\FormatTypeController;
-use App\Http\Controllers\FormattedValue\FormattedValueController;
 use App\Http\Controllers\FormattedValue\FormattedValueSmsController;
 use App\Http\Controllers\FormattedValue\FormattedValueHtmlController;
 
@@ -22,10 +21,5 @@ Route::get('formattedvaluehtmls.fetch',[FormattedValueHtmlController::class,'fet
 Route::resource('formattedvaluesms',FormattedValueSmsController::class)->middleware('auth');
 Route::get('formattedvaluesms.fetch',[FormattedValueSmsController::class,'fetch'])
     ->name('formattedvaluesms.fetch')
-    ->middleware('auth');
-
-Route::resource('formattedvalues',FormattedValueController::class)->middleware('auth');
-Route::get('formattedvalues.fetch',[FormattedValueController::class,'fetch'])
-    ->name('formattedvalues.fetch')
     ->middleware('auth');
 

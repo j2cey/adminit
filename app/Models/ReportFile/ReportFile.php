@@ -61,7 +61,7 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
 
     //protected $appends = ['revenue'];
 
-    protected $with = ['report','reportfiletype','selectedretrieveactions'];
+    protected $with = ['report','reportfiletype'];//,'selectedretrieveactions'];
 
     public static function defaultRules() {
         return [
@@ -109,11 +109,11 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
     public function reportfileaccesses() {
         return $this->hasMany(ReportFileAccess::class,'report_file_id');
     }
-
+    /*
     public function selectedretrieveactions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(SelectedRetrieveAction::class,'report_file_id');
-    }
+    }*/
     public function collectedreportfiles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(CollectedReportFile::class,'report_file_id');
@@ -200,7 +200,7 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
         $reportfile->save();
 
         // set default actions
-        $reportfile->setDefaultSelectedRetrieveActions();
+        //$reportfile->setDefaultSelectedRetrieveActions();
 
         return $reportfile;
     }

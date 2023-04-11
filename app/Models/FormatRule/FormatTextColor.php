@@ -96,7 +96,8 @@ class FormatTextColor extends BaseModel implements IInnerFormatRule
         }
     }
 
-    public function getFormatValue() {
+    public function getRuleValue(): string
+    {
         return $this->format_value;
     }
 

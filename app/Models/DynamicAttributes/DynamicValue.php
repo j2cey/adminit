@@ -4,9 +4,13 @@ namespace App\Models\DynamicAttributes;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\FormattedValue\HasFormattedValues;
+use OwenIt\Auditing\Contracts\Auditable;
+use App\Models\FormatRule\FormatRuleType;
+use App\Traits\FormatRule\HasFormatRules;
+use App\Contracts\FormatRule\IHasFormatRules;
+use App\Traits\FormattedValue\HasFormattedValue;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use App\Contracts\FormattedValue\IHasFormattedValues;
+use App\Contracts\FormattedValue\IHasFormattedValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Contracts\DynamicAttribute\IInnerDynamicValue;
 
@@ -30,9 +34,9 @@ use App\Contracts\DynamicAttribute\IInnerDynamicValue;
  * @property DynamicAttribute $dynamicattribute
  * @method static DynamicValue create(array $array)
  */
-class DynamicValue extends Model implements IHasFormattedValues
+class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasFormatRules
 {
-    use HasFactory, HasFormattedValues;
+    use HasFactory, HasFormattedValue, HasFormatRules, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $with = ['innerdynamicvalue'];

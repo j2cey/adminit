@@ -3,6 +3,9 @@
 
 namespace App\Traits\DynamicAttribute;
 
+use App\Enums\HtmlTagKey;
+use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\DynamicAttributes\DynamicRow;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -39,5 +42,44 @@ trait HasDynamicRows
     public function oldestDynamicrow()
     {
         return $this->morphOne(DynamicRow::class, 'hasdynamicrow')->oldest('id');
+    }
+
+    /**
+     * @return Model|DynamicRow
+     */
+    public function addRow(): Model|DynamicRow
+    {
+        //$dynamicrow = DynamicRow::createNew($this->dynamicrows()->count() + 1);
+        $line_num = $this->dynamicrows()->count() + 1;
+
+        $dynamicrow = $this->dynamicrows()->create([
+            'line_num' => $line_num,
+            'firstinserted_at' => Carbon::now(),
+            'columns_values' => "[]",
+        ]);
+
+        $dynamicrow->setFormattedValue(HtmlTagKey::TABLE_ROW);
+        $dynamicrow->setDefaultFormatSize();
+
+        return $dynamicrow;
+    }
+
+    public function deleteRows()
+    {
+        $this->dynamicrows()->each(function ($row) {
+            $row->delete(); // <-- direct deletion
+        });
+    }
+
+    protected function initializeHasDynamicRows()
+    {
+        $this->with = array_unique(array_merge($this->with, ['dynamicrows']));
+    }
+
+    public static function bootHasDynamicRows()
+    {
+        static::deleting(function ($model) {
+            $model->deleteRows();
+        });
     }
 }

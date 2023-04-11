@@ -14,7 +14,7 @@ class NotifyReport extends Mailable
 
     public $subject;
     public CollectedReportFile $collectedreportfile;
-    public $htmlvalue;
+    public ?string $htmlvalue;
 
     /**
      * Create a new message instance.
@@ -25,7 +25,7 @@ class NotifyReport extends Mailable
     {
         $this->subject = "Alert Rapport";
         $this->collectedreportfile = $collectedreportfile;
-        $this->htmlvalue = $collectedreportfile->formattedvaluehtml->getFormattedValue();
+        $this->htmlvalue = $collectedreportfile->htmlformattedvalue->getFormattedValue();
     }
 
     /**

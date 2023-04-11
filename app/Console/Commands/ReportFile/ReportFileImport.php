@@ -43,6 +43,7 @@ class ReportFileImport extends Command
         \Log::info("Importation Fichiers Rapport en cours de traitement...");
 
         $file_to_import = CollectedReportFile::first();
+
         if ( ! is_null($file_to_import) ) {
             $treatmentstepresult = ReportTreatmentStepResult::createNew("Chargement du Fichier Rapport dans la BD");
             //$file_to_import->deleteImportedData($treatmentstepresult);

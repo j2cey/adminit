@@ -96,7 +96,8 @@ class FormatTextWeight extends BaseModel implements IInnerFormatRule
         }
     }
 
-    public function getFormatValue() {
+    public function getRuleValue(): array
+    {
         $final_format = [];
 
         if ($this->format_bold) $final_format[] = 'bold';

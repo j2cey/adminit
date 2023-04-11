@@ -3,15 +3,15 @@
 namespace App\Models\DynamicAttributes;
 
 use App\Models\BaseModel;
-use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
-use App\Traits\FormattedValue\HasFormattedValues;
-use App\Contracts\DynamicAttribute\IHasDynamicRows;
-use App\Contracts\FormattedValue\IHasFormattedValues;
+use App\Models\FormatRule\FormatRuleType;
+use App\Traits\FormatRule\HasFormatRules;
+use App\Contracts\FormatRule\IHasFormatRules;
+use App\Traits\FormattedValue\HasFormattedValue;
+use App\Contracts\FormattedValue\IHasFormattedValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
 
 /**
  * Class DynamicRow
@@ -39,10 +39,11 @@ use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
  * @property Carbon $updated_at
  *
  * @property DynamicValue[] $dynamicvalues
+ * @method static DynamicRow create(array $array)
  */
-class DynamicRow extends BaseModel implements Auditable, IHasFormattedValues
+class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHasFormatRules
 {
-    use HasFactory, HasFormattedValues, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasFormattedValue, HasFormatRules, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $with = ['dynamicvalues'];
@@ -93,19 +94,19 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValues
     #region Custom Functions
 
     /**
-     * @param IHasDynamicRows $related_object
+     * @param $line_num
      * @return Model|DynamicRow
      */
-    public static function createNew(IHasDynamicRows $related_object) {
-        $line_num = $related_object->dynamicrows()->count() + 1;
-        $dynamicrow = $related_object->dynamicrows()->create([
+    public static function createNew($line_num): Model|DynamicRow
+    {
+        //$related_object->dynamicrows()->save($dynamicrow);
+        //$dynamicrow->setFormattedValue(HtmlTagKey::TABLE_ROW);
+
+        return DynamicRow::create([
             'line_num' => $line_num,
             'firstinserted_at' => Carbon::now(),
             'columns_values' => "[]",
         ]);
-        $dynamicrow->setFormattedValues(HtmlTagKey::TABLE_ROW);
-
-        return $dynamicrow;
     }
 
     /**
@@ -135,20 +136,19 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValues
     }
 
     public function mergeColumnsFormattedValues() {
+        // reset rawvalue from formatted values
+        $this->resetRawValues();
+
         // get all dynamic values attached to this row
         $dynamicvalues = $this->dynamicvalues;
 
         foreach ($dynamicvalues as $dynamicvalue) {
             // apply formating (without rule) for each value
-            $dynamicvalue->applyFormat($dynamicvalue->innerdynamicvalue->getValue());
-            foreach ($this->formattedvalues as $formattedvalue) {
-                foreach ($dynamicvalue->formattedvalues as $dynamicvalue_formatted) {
-                    // merge each row (this) formatted value with all dynamic values formatted values
-                    $formattedvalue->mergeRawValue($dynamicvalue_formatted, $dynamicvalue_formatted->innerformattedvalue->getFormattedValue());
-                }
-            }
+            $dynamicvalue->applyFormatFromFormatted($dynamicvalue->innerdynamicvalue->getValue(), $dynamicvalue->formatrules);
+            // merge each row (this) formatted value with all dynamic values formatted values
+            $this->mergeRawValueFromFormatted($dynamicvalue);
         }
-        $this->applyFormat();
+        $this->applyFormatFromRaw(null, $this->formatrules);
     }
 
     #endregion

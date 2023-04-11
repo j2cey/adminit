@@ -9,7 +9,7 @@ use App\Models\RetrieveAction\SelectedRetrieveAction;
 
 interface IHasSelectedRetrieveActions extends Auditable
 {
-    public function selectedretrieveactions(): HasMany;
+    //public function selectedretrieveactions(): HasMany;
     public function setDefaultActionsFromSettings();
     public function addSelectedAction(RetrieveAction $retrieveaction, string $label = null, string $valuetype = null, $actionvalue = null, string $description = null): SelectedRetrieveAction;
     public function removeSelectedAction(SelectedRetrieveAction $selectedretrieveaction, bool $delete = false): ?bool;

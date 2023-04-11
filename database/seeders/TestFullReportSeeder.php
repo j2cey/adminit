@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\HtmlTagKey;
 use App\Models\Reports\Report;
 use Illuminate\Database\Seeder;
 use App\Models\Reports\ReportType;
@@ -9,7 +10,6 @@ use App\Models\Access\AccessAccount;
 use App\Models\Access\AccessProtocole;
 use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
-use App\Models\FormattedValue\FormatType;
 use App\Models\FormatRule\FormatRuleType;
 use App\Models\ReportFile\CollectedReportFile;
 use App\Models\DynamicAttributes\DynamicAttributeType;
@@ -84,7 +84,10 @@ class TestFullReportSeeder extends Seeder
             1801
         );
 
-        $the_report_file_collected->setFormattedValues();
+        //$the_report_file_collected->fresh();
+        //dd($the_report_file_collected);
+
+        //$the_report_file_collected->setFormattedValue(HtmlTagKey::TABLE_ROW);
         //$the_report_file_collected->formattedvalues->setValue();
     }
 }

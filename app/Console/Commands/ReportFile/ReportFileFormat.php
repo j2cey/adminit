@@ -3,9 +3,8 @@
 namespace App\Console\Commands\ReportFile;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ReportFile\NotifyReport;
 use App\Models\ReportFile\CollectedReportFile;
+use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 class ReportFileFormat extends Command
 {
@@ -41,9 +40,9 @@ class ReportFileFormat extends Command
     public function handle()
     {
         $collectedreportfile = CollectedReportFile::first();
-        //$collectedreportfile->formattedvaluehtml;
-        Mail::to("J.NGOMNZE@moov-africa.ga")
-            ->send(new NotifyReport( $collectedreportfile ));
+        $treatmentstepresult = ReportTreatmentStepResult::createNew("Formattage des Données du Fichier Charhées dans la BD");
+        $collectedreportfile->formatImportedValues($treatmentstepresult);
+
         return 0;
     }
 }
