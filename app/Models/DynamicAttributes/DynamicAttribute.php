@@ -54,7 +54,8 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
     use HasFactory, HasFormatRules, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
-    protected array $with = ['dynamicattributetype'];
+
+    protected $with = ['dynamicattributetype'];
     protected $casts = [
         'searchable' => 'boolean',
         'sortable' => 'boolean',
@@ -146,6 +147,10 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
      * @param string $name
      * @param Status|null $status
      * @param string|null $description
+     * @param int|null $offset
+     * @param int|null $max_length
+     * @param bool|null $searchable
+     * @param bool|null $sortable
      * @return DynamicAttribute
      */
     public static function createNew(IHasDynamicAttributes $model, Model|DynamicAttributeType $dynamicattributetype, string $name, Status $status = null, string $description = null, int $offset = null, int $max_length = null, bool $searchable = null, bool $sortable = null): DynamicAttribute {
@@ -202,9 +207,8 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
         $dynamicvalue = DynamicValue::createNew($thevalue,$this,$new_dynamicrow);
 
         // init formatted value
-        $dynamicvalue->setFormattedValues();
-        $dynamicvalue->formattedvaluehtml->setMainTag(HtmlTagKey::TABLE_COL);
-
+        $dynamicvalue->setFormattedValue(HtmlTagKey::TABLE_COL);//, $thevalue);
+        $dynamicvalue->setDefaultFormatSize();
 
         return $dynamicvalue;
     }

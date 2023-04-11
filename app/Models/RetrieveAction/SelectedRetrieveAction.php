@@ -79,12 +79,15 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
 
     #region Eloquent Relationships
 
+    /*
     public function reportfile() {
         return $this->belongsTo(ReportFile::class, 'report_file_id');
     }
     public function reportfileaccess() {
         return $this->belongsTo(ReportFileAccess::class, 'report_file_access_id');
     }
+    */
+
     public function retrieveaction() {
         return $this->belongsTo(RetrieveAction::class, 'retrieve_action_id');
     }

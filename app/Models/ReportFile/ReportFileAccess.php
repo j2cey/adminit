@@ -166,7 +166,7 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
         $reportfileaccess->save();
 
         // set default actions
-        $reportfileaccess->setDefaultSelectedRetrieveActions();
+        //$reportfileaccess->setDefaultSelectedRetrieveActions();
 
         return $reportfileaccess;
     }

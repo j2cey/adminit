@@ -196,6 +196,10 @@ class FormatRule extends BaseModel implements Auditable
         return $this;
     }
 
+    public function getRuleValue() {
+        return $this->innerformatrule->getRuleValue();
+    }
+
     #endregion
 
     public static function boot(){

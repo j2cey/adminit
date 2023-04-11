@@ -26,8 +26,8 @@ class CreateDynamicRowsTable extends Migration
             $table->timestamp('firstinserted_at')->comment('first value inserted date');
             $table->timestamp('lastinserted_at')->nullable()->comment('last value inserted date');
 
-            $table->string('hasdynamicrow_type')->comment('referenced value row');
-            $table->bigInteger('hasdynamicrow_id')->comment('referenced value row id');
+            $table->string('hasdynamicrow_type')->nullable()->comment('referenced value row');
+            $table->bigInteger('hasdynamicrow_id')->nullable()->comment('referenced value row id');
 
             $table->json('columns_values')->comment('all columns values for this line');
 

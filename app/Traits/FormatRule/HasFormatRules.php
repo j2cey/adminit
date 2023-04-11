@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 /**
  * @property FormatRule[] $whenallowedformatrules
  * @property FormatRule[] $whenbrokenformatrules
+ * @property FormatRule[] $formatrules
  */
 trait HasFormatRules
 {
@@ -120,6 +121,13 @@ trait HasFormatRules
         }
 
         return $nb_created;
+    }
+
+    public function setDefaultFormatSize() {
+        $this->addFormatRule(FormatRuleType::textSize()->first(),"default text size")->innerformatrule->update([
+            'format_value' => 8,
+            'comment' => "default text size from system",
+        ]);
     }
 
     #endregion

@@ -3,17 +3,13 @@
 namespace App\Traits\FormatRule;
 
 use App\Models\FormatRule\FormatRule;
-use App\Contracts\FormatRule\IInnerFormatRule;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 trait InnerFormatRule
 {
     use \OwenIt\Auditing\Auditable;
 
-    public $format_value;
-
     #region Eloquent Relationships
-
 
     /**
      * @return morphOne

@@ -5,6 +5,9 @@ namespace App\Contracts\FormatRule;
 use App\Models\FormatRule\FormatRule;
 use OwenIt\Auditing\Contracts\Auditable;
 
+/**
+ * @property mixed $format_value
+ */
 interface IInnerFormatRule extends Auditable
 {
     public static function createNew();
@@ -14,5 +17,5 @@ interface IInnerFormatRule extends Auditable
     public function attachUpperFormatRule(FormatRule $upperformatrule);
     public function updateOne(string|IInnerFormatRule $innerformatrule);
 
-    public function getFormatValue();
+    public function getRuleValue(): mixed;
 }

@@ -7,12 +7,16 @@ use App\Models\BaseModel;
 use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
 use App\Imports\ReportFilesImport;
+use App\Models\FormatRule\FormatRule;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\FormatRule\HasFormatRules;
+use App\Models\FormatRule\FormatRuleType;
+use App\Contracts\FormatRule\IHasFormatRules;
 use App\Traits\DynamicAttribute\HasDynamicRows;
 use App\Models\ReportTreatments\OperationResult;
-use App\Traits\FormattedValue\HasFormattedValues;
+use App\Traits\FormattedValue\HasFormattedValue;
 use App\Contracts\DynamicAttribute\IHasDynamicRows;
-use App\Contracts\FormattedValue\IHasFormattedValues;
+use App\Contracts\FormattedValue\IHasFormattedValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
@@ -53,12 +57,14 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property ReportFile $reportfile
  * @property string $fileLocalRelativePath
  * @property string $fileLocalAbsolutePath
+ *
  * @method static CollectedReportFile first()
  * @method static toImport()
+ * @method static CollectedReportFile create(array $array)
  */
-class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasFormattedValues
+class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasFormattedValue, IHasFormatRules
 {
-    use HasFactory, HasDynamicRows, HasFormattedValues, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasDynamicRows, HasFormattedValue, HasFormatRules, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -161,7 +167,9 @@ class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasForm
 
         $collectedreportfile->save();
 
-        $collectedreportfile->setFormattedValues(HtmlTagKey::TABLE);
+        $collectedreportfile->setFormattedValue(HtmlTagKey::TABLE);
+
+        $collectedreportfile->setDefaultFormatSize();
 
         return $collectedreportfile;
     }
@@ -193,6 +201,8 @@ class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasForm
         return $this;
     }
 
+    #region Data Importation
+
     public function importToDb(ReportTreatmentStepResult $reporttreatmentstepresult, bool $reset_imported = false): OperationResult
     {
         $operation_result = $reporttreatmentstepresult->addOperationResult("Importion des Données du fichier");
@@ -212,7 +222,6 @@ class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasForm
             $import->import($this->fileLocalAbsolutePath);
 
             $this->mergeLinesValues();
-            $this->mergeLinesFormattedValues();
 
             $this->endImport();
             return $operation_result->endWithSuccess();
@@ -226,15 +235,8 @@ class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasForm
     {
         $operation_result = $reporttreatmentstepresult->addOperationResult("Suppression Données importées");
         try {
-            $this->dynamicrows()->each(function ($dynamicrow) {
-                $dynamicrow->delete(); // <-- direct deletion
-            });
+            $this->deleteRows();
             $this->lines_values = "[]";
-            /*
-            $this->formattedvalues()->each(function ($formattedvalue) {
-                $formattedvalue->delete(); // <-- direct deletion
-            });
-            */
 
             return $operation_result->endWithSuccess();
         } catch (\Exception $e) {
@@ -242,48 +244,6 @@ class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasForm
         }
     }
 
-    public function mergeLinesValues() {
-        $this->lines_values = "";
-        $merged_values = [];
-        $dynamicrows = $this->dynamicrows;
-
-        foreach ($dynamicrows as $dynamicrow) {
-            $merged_values[] = $dynamicrow->mergeColumnsValues();
-        }
-        $this->lines_values = json_encode($merged_values);
-        $this->save();
-
-        return $merged_values;
-    }
-
-    public function mergeLinesFormattedValues() {
-        // get all dynamic row attached to this object
-        $dynamicrows = $this->dynamicrows;
-
-        foreach ($dynamicrows as $dynamicrow) {
-            // get merged formatted values for each row
-            $dynamicrow->mergeColumnsFormattedValues();
-            foreach ($this->formattedvalues as $formattedvalue) {
-                foreach ($dynamicrow->formattedvalues as $dynamicrow_formatted) {
-                    // merge object (this) formatted values with all rows formatted values
-                    $formattedvalue->mergeRawValue($dynamicrow_formatted, $dynamicrow_formatted->innerformattedvalue->getFormattedValue());
-                }
-            }
-        }
-        $this->applyFormat();
-    }
-
-    /**
-     * @return CollectedReportFile[]
-     */
-    public static function getFilesToImport()
-    {
-        return self::toImport()->get();
-    }
-
-    #endregion
-
-    #region Private Functions
     /**
      * Prépare l'objet pour démarrer une importation
      * @param bool $reset_imported
@@ -312,11 +272,94 @@ class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasForm
      * @return void
      */
     private function endImport() {
-        $this->import_processing = 0;
+        /*$this->import_processing = 0;
         $this->imported = ($this->nb_rows_import_processed > 0 && ( $this->nb_rows_import_success >= $this->nb_rows_import_processed ));
 
-        $this->save();
+        $this->save();*/
+        $this->update([
+            'import_processing' => 0,
+            'imported' => ($this->nb_rows_import_processed > 0 && ( $this->nb_rows_import_success >= $this->nb_rows_import_processed )),
+        ]);
     }
+
+    /**
+     * Merge and return all rows imported data
+     * @return array
+     */
+    public function mergeLinesValues() {
+        $this->lines_values = "";
+        $merged_values = [];
+        $dynamicrows = $this->dynamicrows;
+
+        foreach ($dynamicrows as $dynamicrow) {
+            $merged_values[] = $dynamicrow->mergeColumnsValues();
+        }
+        $this->lines_values = json_encode($merged_values);
+        $this->save();
+
+        return $merged_values;
+    }
+
+    #endregion
+
+    #region Data formatting
+
+    /**
+     * Launch data formatting
+     * @param ReportTreatmentStepResult $reporttreatmentstepresult
+     * @param bool $reset_formatted
+     * @return OperationResult
+     */
+    public function formatImportedValues(ReportTreatmentStepResult $reporttreatmentstepresult, bool $reset_formatted = false): OperationResult
+    {
+        $operation_result = $reporttreatmentstepresult->addOperationResult("Merge Lines Formatted Values");
+
+        try {
+
+            $this->mergeLinesFormattedValues();
+
+            return $operation_result->endWithSuccess();
+        } catch (\Exception $e) {
+            $this->endImport();
+            return $operation_result->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
+        }
+    }
+
+    /**
+     * Merge all Rows formatted values into the formatted values of this object
+     * @return void
+     */
+    public function mergeLinesFormattedValues() {
+        // reset rawvalue from formatted values
+        $this->resetRawValues();
+        $this->insertHeadersRow($this->getHeaders());
+
+        // get all dynamic row attached to this object
+        $dynamicrows = $this->dynamicrows;
+
+        foreach ($dynamicrows as $dynamicrow) {
+            // get merged formatted values for each row
+            $dynamicrow->mergeColumnsFormattedValues();
+            // merge object (this) formatted values with all rows formatted values
+            $this->mergeRawValueFromFormatted($dynamicrow);
+        }
+        $this->applyFormatFromRaw(null, $this->formatrules);
+    }
+
+    public function getHeaders(): array {
+        $headers = [];
+        foreach ($this->reportfile->report->dynamicattributes as $dynamicAttribute) {
+            $headers[] = $dynamicAttribute->name;
+        }
+        return $headers;
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Private Functions
+
     #endregion
 
 
