@@ -109,11 +109,7 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
     public function reportfileaccesses() {
         return $this->hasMany(ReportFileAccess::class,'report_file_id');
     }
-    /*
-    public function selectedretrieveactions(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(SelectedRetrieveAction::class,'report_file_id');
-    }*/
+
     public function collectedreportfiles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(CollectedReportFile::class,'report_file_id');

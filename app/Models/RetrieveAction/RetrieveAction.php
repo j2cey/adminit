@@ -10,6 +10,7 @@ use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Contracts\RetrieveAction\IRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
 
 /**
  * Class RetrieveAction

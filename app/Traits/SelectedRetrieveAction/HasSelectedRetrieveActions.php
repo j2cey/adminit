@@ -11,8 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 
 /**
- * @property mixed selectedretrieveactions
- * @method HasMany selectedretrieveactions()
+ * @property SelectedRetrieveAction[] selectedretrieveactions
  * @method refresh()
  */
 trait HasSelectedRetrieveActions
@@ -24,6 +23,11 @@ trait HasSelectedRetrieveActions
         }
         $this->refresh();
     }
+
+    public function selectedretrieveactions(){
+        return $this->morphMany(SelectedRetrieveAction::class, 'hasselectedretrieveaction');
+    }
+
 
     public function retrieveactions()
     {
@@ -80,5 +84,10 @@ trait HasSelectedRetrieveActions
             $this->removeSelectedAction($selectedaction);
         }
         return true;
+    }
+
+    protected function initializeHasSelectedRetrieveActions()
+    {
+        $this->with = array_unique(array_merge($this->with, ['selectedretrieveactions']));
     }
 }

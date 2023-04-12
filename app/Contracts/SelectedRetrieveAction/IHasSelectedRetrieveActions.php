@@ -15,4 +15,7 @@ interface IHasSelectedRetrieveActions extends Auditable
     public function removeSelectedAction(SelectedRetrieveAction $selectedretrieveaction, bool $delete = false): ?bool;
     public function removeAllSelectedActions(bool $delete = false): ?bool;
     public function dissociateSelectedActions(SelectedRetrieveAction $selectedretrieveaction): ?bool;
+
+
+
 }

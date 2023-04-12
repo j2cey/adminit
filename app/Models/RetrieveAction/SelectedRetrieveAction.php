@@ -88,18 +88,23 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
     }
     */
 
+    /*
     public function retrieveaction() {
         return $this->belongsTo(RetrieveAction::class, 'retrieve_action_id');
     }
+    */
+
     public function retrieveactionvalues()
     {
         return $this->hasMany(RetrieveActionValue::class, 'selected_retrieve_action_id');
     }
 
-    public function reportfileaccess()
+    /*
+     public function reportfileaccess()
     {
         return $this->hasMany(ReportFileAccess::class, 'selected_retrieve_action_id');
     }
+    */
 
     public function hasselectedretrieveaction()
     {

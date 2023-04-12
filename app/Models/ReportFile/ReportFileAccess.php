@@ -111,10 +111,12 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
         return $this->belongsTo(AccessProtocole::class, 'access_protocole_id');
     }
 
+    /*
     public function selectedretrieveactions()
     {
         return $this->belongsTo(SelectedRetrieveAction::class,'selected_retrieve_action_id');
     }
+    */
 
     #endregion
 

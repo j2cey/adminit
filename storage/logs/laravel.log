@@ -379,3 +379,72 @@
 [2023-04-11 08:41:47] local.INFO: Traitement termine.  
 [2023-04-11 09:43:07] local.INFO: Importation Fichiers Rapport en cours de traitement...  
 [2023-04-11 09:43:43] local.INFO: Traitement termine.  
+[2023-04-12 08:33:29] local.INFO: Importation Fichiers Rapport en cours de traitement...  
+[2023-04-12 08:34:19] local.INFO: Traitement termine.  
+[2023-04-12 08:58:33] local.ERROR: Command "make:migrate" is not defined.
+
+Did you mean one of these?
+    make:cast
+    make:channel
+    make:command
+    make:component
+    make:controller
+    make:event
+    make:exception
+    make:export
+    make:factory
+    make:import
+    make:job
+    make:listener
+    make:mail
+    make:middleware
+    make:migration
+    make:model
+    make:notification
+    make:observer
+    make:policy
+    make:provider
+    make:request
+    make:resource
+    make:rule
+    make:seeder
+    make:test {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"make:migrate\" is not defined.
+
+Did you mean one of these?
+    make:cast
+    make:channel
+    make:command
+    make:component
+    make:controller
+    make:event
+    make:exception
+    make:export
+    make:factory
+    make:import
+    make:job
+    make:listener
+    make:mail
+    make:middleware
+    make:migration
+    make:model
+    make:notification
+    make:observer
+    make:policy
+    make:provider
+    make:request
+    make:resource
+    make:rule
+    make:seeder
+    make:test at /var/www/adminit/vendor/symfony/console/Application.php:720)
+[stacktrace]
+#0 /var/www/adminit/vendor/symfony/console/Application.php(259): Symfony\\Component\\Console\\Application->find()
+#1 /var/www/adminit/vendor/symfony/console/Application.php(171): Symfony\\Component\\Console\\Application->doRun()
+#2 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Console/Application.php(94): Symfony\\Component\\Console\\Application->run()
+#3 /var/www/adminit/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#4 /var/www/adminit/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#5 {main}
+"} 
+[2023-04-12 10:03:08] testing.ERROR: Class App\Models\RetrieveAction\RetrieveAction contains 5 abstract methods and must therefore be declared abstract or implement the remaining methods (App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions::setDefaultActionsFromSettings, App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions::addSelectedAction, App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions::removeSelectedAction, ...) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Class App\\Models\\RetrieveAction\\RetrieveAction contains 5 abstract methods and must therefore be declared abstract or implement the remaining methods (App\\Contracts\\SelectedRetrieveAction\\IHasSelectedRetrieveActions::setDefaultActionsFromSettings, App\\Contracts\\SelectedRetrieveAction\\IHasSelectedRetrieveActions::addSelectedAction, App\\Contracts\\SelectedRetrieveAction\\IHasSelectedRetrieveActions::removeSelectedAction, ...) at /var/www/adminit/app/Models/RetrieveAction/RetrieveAction.php:45)
+[stacktrace]
+#0 {main}
+"} 
