@@ -45,13 +45,12 @@ class AnalysisRuleController extends Controller
      */
     public function store(StoreAnalysisRuleRequest $request)
     {
-        $analysisrule = AnalysisRule::createNew(
-            $request->dynamicattribute,
+        $analysisrule = $request->model->addAnalysisRule(
             $request->analysisruletype,
             $request->title,
+            [],
+            $request->rule_result_for_notification,
             $request->status,
-            $request->alert_when_allowed,
-            $request->alert_when_broken,
             $request->description
         );
         return new AnalysisRuleResource($analysisrule);
@@ -91,10 +90,11 @@ class AnalysisRuleController extends Controller
         $analysisrule->updateOne(
             $request->analysisruletype,
             $request->title,
+            $request->rule_result_for_notification,
+            $request->inneranalysisrule_attributes,
             $request->status,
-            $request->alert_when_allowed,
-            $request->alert_when_broken,
-            $request->description
+            $request->description,
+            $request->num_ord
         );
 
         return new AnalysisRuleResource($analysisrule);

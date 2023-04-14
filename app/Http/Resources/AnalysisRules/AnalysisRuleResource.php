@@ -4,13 +4,15 @@ namespace App\Http\Resources\AnalysisRules;
 
 use JsonSerializable;
 use Illuminate\Http\Request;
+use App\Enums\RuleResultEnum;
 use Illuminate\Support\Carbon;
+use App\Models\FormatRule\FormatRule;
 use App\Http\Resources\StatusResource;
 use App\Models\AnalysisRule\AnalysisRule;
 use Illuminate\Contracts\Support\Arrayable;
-use App\Contracts\AnalysisRules\IInnerRule;
 use App\Models\AnalysisRule\AnalysisRuleType;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Contracts\AnalysisRules\IInnerAnalysisRule;
 use App\Http\Resources\FormatRule\FormatRuleResource;
 
 /**
@@ -27,11 +29,10 @@ use App\Http\Resources\FormatRule\FormatRuleResource;
  * @property string $title
  * @property string $description
  *
- * @property string $innerrule_type
- * @property integer $innerrule_id
+ * @property string $inneranalysisrule_type
+ * @property integer $inneranalysisrule_id
  *
- * @property boolean $alert_when_allowed
- * @property boolean $alert_when_broken
+ * @property RuleResultEnum $rule_result_for_notification
  *
  * @property integer|null $analysis_rule_type_id
  * @property integer|null $dynamic_attribute_id
@@ -39,11 +40,9 @@ use App\Http\Resources\FormatRule\FormatRuleResource;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @property IInnerRule $innerrule
+ * @property IInnerAnalysisRule $inneranalysisrule
  * @property AnalysisRuleType $analysisruletype
- *
- * @property mixed $whenallowedformatrules
- * @property mixed $whenbrokenformatrules
+ * @property FormatRule[] $formatrules
  */
 class AnalysisRuleResource extends JsonResource
 {
@@ -51,7 +50,7 @@ class AnalysisRuleResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param  Request  $request
-     * @return array|Arrayable|JsonSerializable
+     * @return array
      */
     public function toArray($request)
     {
@@ -63,20 +62,17 @@ class AnalysisRuleResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
 
-            'alert_when_allowed' => $this->alert_when_allowed,
-            'alert_when_broken' => $this->alert_when_broken,
+            'rule_result_for_notification' => $this->rule_result_for_notification->toArray(),
 
-            'innerrule_type' => $this->innerrule_type,
-            'innerrule_id' => $this->innerrule_id,
+            'inneranalysisrule_type' => $this->inneranalysisrule_type,
+            'inneranalysisrule_id' => $this->inneranalysisrule_id,
             'analysisruletype' => AnalysisRuleTypeResource::make($this->analysisruletype),
-            'innerrule' => $this->innerrule,
+            'inneranalysisrule' => $this->inneranalysisrule,
 
             'dynamic_attribute_id' => $this->dynamic_attribute_id,
             'model_type' => AnalysisRule::class,
 
-            //'formatrules' => AnalysisHighlightResource::collection($this->formatrules),
-            'whenallowedformatrules' => FormatRuleResource::collection($this->whenallowedformatrules),
-            'whenbrokenformatrules' => FormatRuleResource::collection($this->whenbrokenformatrules),
+            'formatrules' => FormatRuleResource::collection($this->formatrules),
 
             'created_at' => $this->created_at,
 

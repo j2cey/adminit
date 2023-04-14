@@ -51,7 +51,7 @@ class ModelUpdateStatusRequest extends FormRequest
             'status' => $this->setRelevantStatus(
                 json_encode( ['code' => $this->input('code')] ),'code', true
             ),
-            'model' => $this->input('model_type')::find($this->input('model_id'))->first(),
+            'model' => $this->input('model_type')::where('id', $this->input('model_id'))->first(),
         ]);
     }
 }

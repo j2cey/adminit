@@ -132,4 +132,7 @@ abstract class Permissions
     public static function FormattedValue() : PermissionAction {
         return new PermissionAction("formattedvalue");
     }
+    public static function FileHeader() : PermissionAction {
+        return new PermissionAction("fileheader");
+    }
 }

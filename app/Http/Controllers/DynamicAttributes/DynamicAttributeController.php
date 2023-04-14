@@ -46,12 +46,14 @@ class DynamicAttributeController extends Controller
         $dynamicattribute = $request->model->addDynamicAttribute(
             $request->name,
             $request->dynamicattributetype,
+            $request->title,
             $request->status,
             $request->description,
             $request->offset,
             $request->max_length,
             $request->searchable,
-            $request->sortable
+            $request->sortable,
+            $request->can_be_notified
         );
 
         return new DynamicAttributeResource($dynamicattribute);
@@ -65,6 +67,7 @@ class DynamicAttributeController extends Controller
      */
     public function show(DynamicAttribute $dynamicattribute)
     {
+        //dd(new DynamicAttributeResource($dynamicattribute));
         return view('dynamicattributes.show')
             ->with('dynamicattribute', new DynamicAttributeResource($dynamicattribute) )
             ->with('model', $dynamicattribute->hasdynamicattribute);//str_replace(["\\"],["\\\\"],$dynamicattribute->hasdynamicattribute->getClass()));
@@ -93,12 +96,14 @@ class DynamicAttributeController extends Controller
         $dynamicattribute->updateThis(
             $request->dynamicattributetype,
             $request->name,
+            $request->title,
             $request->status,
             $request->description,
             $request->offset,
             $request->max_length,
             $request->searchable,
-            $request->sortable
+            $request->sortable,
+            $request->can_be_notified
         );
 
         return new DynamicAttributeResource($dynamicattribute);

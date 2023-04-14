@@ -21,16 +21,16 @@
                             </div>
                             <div class="form-group row">
                                 <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success col-sm-4">
-                                    <input type="checkbox" class="custom-control-input" id="alert_when_allowed" name="alert_when_allowed" autocomplete="alert_when_allowed" v-model="analysisruleForm.alert_when_allowed">
-                                    <label class="custom-control-label" for="alert_when_allowed"><span class="text text-xs">Alert when Allowed</span></label>
-                                    <span class=" invalid-feedback d-block text-xs" role="alert" v-if="analysisruleForm.errors.has('alert_when_allowed')" v-text="analysisruleForm.errors.get('alert_when_allowed')"></span>
+                                    <input type="checkbox" class="custom-control-input" id="notify_when_allowed" name="notify_when_allowed" autocomplete="notify_when_allowed" v-model="analysisruleForm.notify_when_allowed">
+                                    <label class="custom-control-label" for="notify_when_allowed"><span class="text text-xs">Alert when Allowed</span></label>
+                                    <span class=" invalid-feedback d-block text-xs" role="alert" v-if="analysisruleForm.errors.has('notify_when_allowed')" v-text="analysisruleForm.errors.get('notify_when_allowed')"></span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success col-sm-4">
-                                    <input type="checkbox" class="custom-control-input" id="alert_when_broken" name="alert_when_broken" autocomplete="alert_when_broken" v-model="analysisruleForm.alert_when_broken">
-                                    <label class="custom-control-label" for="alert_when_broken"><span class="text text-xs">Alert when Broken</span></label>
-                                    <span class=" invalid-feedback d-block text-xs" role="alert" v-if="analysisruleForm.errors.has('alert_when_broken')" v-text="analysisruleForm.errors.get('alert_when_broken')"></span>
+                                    <input type="checkbox" class="custom-control-input" id="notify_when_broken" name="notify_when_broken" autocomplete="notify_when_broken" v-model="analysisruleForm.notify_when_broken">
+                                    <label class="custom-control-label" for="notify_when_broken"><span class="text text-xs">Alert when Broken</span></label>
+                                    <span class=" invalid-feedback d-block text-xs" role="alert" v-if="analysisruleForm.errors.has('notify_when_broken')" v-text="analysisruleForm.errors.get('notify_when_broken')"></span>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -86,8 +86,8 @@
     class Analysisrule {
         constructor(analysisrule) {
             this.title = analysisrule.title || ''
-            this.alert_when_allowed = analysisrule.alert_when_allowed || ''
-            this.alert_when_broken = analysisrule.alert_when_broken || ''
+            this.notify_when_allowed = analysisrule.notify_when_allowed || ''
+            this.notify_when_broken = analysisrule.notify_when_broken || ''
             this.analysisruletype = analysisrule.analysisruletype || ''
             this.description = analysisrule.description || ''
             this.dynamicattribute = analysisrule.dynamicattribute || {}

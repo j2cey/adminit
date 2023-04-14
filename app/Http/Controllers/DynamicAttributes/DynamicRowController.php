@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\DynamicAttributes;
 
 use App\Http\Controllers\Controller;
-use App\Models\DynamicAttributes\DynamicRow;
+use App\Models\DynamicValue\DynamicRow;
 use App\Http\Requests\DynamicRow\StoreDynamicRowRequest;
 use App\Http\Requests\DynamicRow\UpdateDynamicRowRequest;
 

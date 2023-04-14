@@ -56,7 +56,8 @@ class DynamicAttributeTest extends TestCase
             $this->create_new_report(),
             Report::class,
             DynamicAttributeType::string()->first(),
-            "New Dynamic Attribute",
+            "New Dynamic Attribute Name",
+            "New Dynamic Attribute Title",
             null,
             "New Dynamic Attribute desc"
         );
@@ -103,6 +104,7 @@ class DynamicAttributeTest extends TestCase
             Report::class,
             DynamicAttributeType::string()->first(),
             "New Dynamic Attribute",
+            "New Dynamic Attribute Title",
             null,
             "New Dynamic Attribute desc"
         );
@@ -111,6 +113,7 @@ class DynamicAttributeTest extends TestCase
             Report::class,
             DynamicAttributeType::string()->first(),
             "New Dynamic Attribute",
+            "New Dynamic Attribute Title",
             null,
             "New Dynamic Attribute desc"
         );
@@ -134,11 +137,13 @@ class DynamicAttributeTest extends TestCase
             $this->create_new_report(),
             Report::class,
             DynamicAttributeType::string()->first(),
-            "New Dynamic Attribute",
+            "New Dynamic Attribute Name",
+            "New Dynamic Attribute Title",
             Status::active()->first(),
             "New Dynamic Attribute desc",
             0,
             1,
+            true,
             true,
             true
         );
@@ -151,18 +156,21 @@ class DynamicAttributeTest extends TestCase
         $response = $this->update_existing_dynamicattribute(
             $dynamicattribute,
             $dynamicattributetype_another,
-            "New Dynamic Attribute upd",
+            "New Dynamic Attribute Name upd",
+            "New Dynamic Attribute Title upd",
             $status_inactive,
             "New Dynamic Attribute desc upd",
             2,
             3,
+            false,
             false,
             false
         );
 
         $dynamicattribute->refresh();
 
-        $this->assertEquals("New Dynamic Attribute upd", $dynamicattribute->name);
+        $this->assertEquals("New Dynamic Attribute Name upd", $dynamicattribute->name);
+        $this->assertEquals("New Dynamic Attribute Title upd", $dynamicattribute->title);
         $this->assertEquals($dynamicattributetype_another->id, $dynamicattribute->dynamicattributetype->id);
         $this->assertEquals($status_inactive->id, $dynamicattribute->status->id);
         $this->assertEquals($dynamicattributetype_another->id, $dynamicattribute->dynamicattributetype->id);
@@ -171,6 +179,7 @@ class DynamicAttributeTest extends TestCase
         $this->assertEquals(3, $dynamicattribute->max_length);
         $this->assertEquals(false, $dynamicattribute->searchable);
         $this->assertEquals(false, $dynamicattribute->sortable);
+        $this->assertEquals(false, $dynamicattribute->can_be_notified);
     }
 
     /**
@@ -188,7 +197,8 @@ class DynamicAttributeTest extends TestCase
             $this->create_new_report(),
             Report::class,
             DynamicAttributeType::string()->first(),
-            "New Dynamic Attribute",
+            "New Dynamic Attribute Name",
+            "New Dynamic Attribute Title",
             Status::active()->first(),
             "New Dynamic Attribute desc"
         );
@@ -204,24 +214,25 @@ class DynamicAttributeTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_dynamicattribute(IHasDynamicAttributes $model, $model_type, $dynamicattributetype, $name, $status = null, $description = null, $offset = null, $max_length = null, $searchable = null, $sortable = null): TestResponse
+    private function add_new_dynamicattribute(IHasDynamicAttributes $model, $model_type, $dynamicattributetype, $name, $title = null, $status = null, $description = null, $offset = null, $max_length = null, $searchable = null, $sortable = null, $can_be_notified = null): TestResponse
     {
         return $this->post('dynamicattributes/',
             array_merge([
                 'model_id' => $model->id,
                 'model_type' => $model_type
-            ], $this->new_data($dynamicattributetype, $name, $status, $description, $offset, $max_length, $searchable, $sortable)));
+            ], $this->new_data($dynamicattributetype, $name, $title, $status, $description, $offset, $max_length, $searchable, $sortable, $can_be_notified)));
     }
 
-    private function update_existing_dynamicattribute($existing_dynamicattribute, $dynamicattributetype, $name, $status = null, $description = null, $offset = null, $max_length = null, $searchable = null, $sortable = null): TestResponse
+    private function update_existing_dynamicattribute($existing_dynamicattribute, $dynamicattributetype, $name, $title = null, $status = null, $description = null, $offset = null, $max_length = null, $searchable = null, $sortable = null, $can_be_notified = null): TestResponse
     {
-        return $this->put('dynamicattributes/' . $existing_dynamicattribute->uuid, $this->new_data($dynamicattributetype, $name, $status, $description, $offset, $max_length, $searchable, $sortable));
+        return $this->put('dynamicattributes/' . $existing_dynamicattribute->uuid, $this->new_data($dynamicattributetype, $name, $title, $status, $description, $offset, $max_length, $searchable, $sortable, $can_be_notified));
     }
 
-    private function new_data($dynamicattributetype, $name, $status = null, $description = null, $offset = null, $max_length = null, $searchable = null, $sortable = null): array
+    private function new_data($dynamicattributetype, $name, $title = null, $status = null, $description = null, $offset = null, $max_length = null, $searchable = null, $sortable = null, $can_be_notified = null): array
     {
         return [
             'name' => $name,
+            'title' => $title,
             'description' => $description,
 
             'dynamicattributetype' => $dynamicattributetype,
@@ -229,7 +240,8 @@ class DynamicAttributeTest extends TestCase
             'offset' => $offset,
             'max_length' => $max_length,
             'searchable' => $searchable,
-            'sortable' => $sortable
+            'sortable' => $sortable,
+            'can_be_notified' => $can_be_notified
         ];
     }
 

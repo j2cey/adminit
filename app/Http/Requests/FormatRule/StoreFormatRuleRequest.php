@@ -34,7 +34,7 @@ class StoreFormatRuleRequest extends FormatRuleRequest
      */
     public function rules()
     {
-        return FormatRule::createRules();
+        return FormatRule::createRules($this->model_type);
     }
 
     /**
@@ -46,7 +46,7 @@ class StoreFormatRuleRequest extends FormatRuleRequest
     {
         $this->merge([
             'status' => $this->setRelevantStatus($this->input('status'), "íd", false),
-            'model' => $this->input('model_type')::find($this->input('model_id'))->first(),
+            'model' => $this->input('model_type')::where('id', $this->input('model_id'))->first(),
             'formatruletype_key' => $this->getRelevantModelId($this->input('formatruletype'), false),
             'formatruletype' => $this->getRelevantModel(FormatRuleType::class, $this->input('formatruletype'), 'id'),
         ]);

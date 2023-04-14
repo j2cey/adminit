@@ -3,6 +3,7 @@
 namespace App\Models\AnalysisRuleThreshold;
 
 use App\Models\BaseModel;
+use App\Enums\RuleResultEnum;
 use Illuminate\Support\Carbon;
 use App\Traits\Threshold\InnerThreshold;
 use App\Contracts\AnalysisRules\IInnerThreshold;
@@ -26,6 +27,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ThresholdMin extends BaseModel implements IInnerThreshold
 {
     use HasFactory, InnerThreshold;
+
+    protected $guarded = [];
 
     #region Validation Rules
 
@@ -59,8 +62,34 @@ class ThresholdMin extends BaseModel implements IInnerThreshold
 
     #region Custom Functions
 
-    public static function createNew(): ThresholdMin
+    public static function createNew(array $attributes = []): ThresholdMin
     {
-        return ThresholdMin::create();
+        if ( empty($attributes) ) {
+            return ThresholdMin::create();
+        } else {
+            $data = [];
+            if (array_key_exists("threshold", $attributes)) {
+                $data['threshold'] = $attributes['threshold'];
+            }
+            return ThresholdMin::create($data);
+        }
+    }
+
+    public function updateOne(array $attributes = []) : ThresholdMin
+    {
+        if ( ! empty($attributes) ) {
+
+            $this->threshold = array_key_exists("threshold", $attributes) ? $attributes['threshold'] : $this->threshold;
+            $this->comment = array_key_exists("comment", $attributes) ? $attributes['comment'] : $this->comment;
+
+            $this->save();
+        }
+
+        return $this;
+    }
+
+    public function applyRule($input): RuleResultEnum
+    {
+        return ($input > $this->threshold) ? RuleResultEnum::ALLOWED : RuleResultEnum::BROKEN;
     }
 }

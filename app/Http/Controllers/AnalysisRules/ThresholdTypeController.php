@@ -11,7 +11,7 @@ use App\Http\Requests\ThresholdType\UpdateThresholdTypeRequest;
 class ThresholdTypeController extends Controller
 {
     public function fetchall() {
-        return ThresholdTypeResource::collection(ThresholdType::all());
+        return ThresholdType::all();
     }
 
     public function fetch()

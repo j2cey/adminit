@@ -5,6 +5,7 @@ namespace App\Models\FormatRule;
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Contracts\FormatRule\IInnerFormatRule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -105,6 +106,27 @@ class FormatRuleType extends BaseModel implements Auditable
         $formatruletype->save();
 
         return $formatruletype;
+    }
+
+    /**
+     * @return FormatRuleType|Model|Builder|object
+     */
+    public static function getTextColor() {
+        return FormatRuleType::textColor()->first();
+    }
+
+    /**
+     * @return FormatRuleType|Model|Builder|object
+     */
+    public static function getTextSize() {
+        return FormatRuleType::textSize()->first();
+    }
+
+    /**
+     * @return FormatRuleType|Model|Builder|object
+     */
+    public static function getTextWeight() {
+        return FormatRuleType::textWeight()->first();
     }
 
     #endregion

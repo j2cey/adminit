@@ -97,8 +97,9 @@ abstract class TestCase extends BaseTestCase
      */
     protected function create_new_dynamicattribute($name = null): DynamicAttribute
     {
+        $name = $name ?? "New Dynamic Attribute";
         return $this->create_new_report("new report")
-            ->addDynamicAttribute($name ?? "New Dynamic Attribute", DynamicAttributeType::string()->first());
+            ->addDynamicAttribute($name,DynamicAttributeType::string()->first(),$name);
     }
 
     /**

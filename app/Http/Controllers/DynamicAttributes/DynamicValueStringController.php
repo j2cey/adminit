@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\DynamicAttributes;
 
 use App\Http\Controllers\Controller;
+use App\Models\DynamicValue\DynamicValueString;
 use App\Http\Requests\DynamicValueString\StoreDynamicValueStringRequest;
 use App\Http\Requests\DynamicValueString\UpdateDynamicValueStringRequest;
-use App\Models\DynamicAttributes\DynamicValueString;
 
 class DynamicValueStringController extends Controller
 {

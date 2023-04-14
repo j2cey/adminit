@@ -26,13 +26,35 @@
             </header>
             <!-- /.card-header -->
             <div class="card-body">
-                <dt class="text text-xs">Name</dt>
-                <dd class="text text-xs">{{ report.reporttype.name }}</dd>
-                <dt class="text text-xs">Description</dt>
-                <dd class="text text-xs">{{ report.description }}</dd>
-                <dt class="text text-xs">Created at</dt>
-                <dd class="text text-xs">{{ report.created_at | formatDate}}</dd>
-                <dd class="col-sm-8 offset-sm-4 text-xs"></dd>
+
+                <b-tabs size="is-small" type="is-boxed">
+                    <b-tab-item>
+                        <template #header>
+                            <b-icon icon="info-circle" pack="fa"></b-icon>
+                            <span> Infos </span>
+                        </template>
+
+                        <dl>
+                            <dt class="text text-xs">Type</dt>
+                            <dd class="text text-xs">{{ report.reporttype.name }}</dd>
+                            <dt class="text text-xs">Description</dt>
+                            <dd class="text text-xs">{{ report.description }}</dd>
+                            <dt class="text text-xs">Création</dt>
+                            <dd class="text text-xs">{{ report.created_at | formatDate}}</dd>
+                            <dd class="col-sm-8 offset-sm-4 text-xs"></dd>
+                        </dl>
+                    </b-tab-item>
+
+                    <b-tab-item>
+                        <template #header>
+                            <b-icon icon="list-ol" pack="fa"></b-icon>
+                            <span class="help-inline pr-1 text-sm"> Header </span>
+                        </template>
+
+                        <FileHeader :fileheader_prop="report.fileheader"></FileHeader>
+
+                    </b-tab-item>
+                </b-tabs>
             </div>
             <!-- /.card-body -->        </div>
 
@@ -144,6 +166,7 @@
             AddUpdateReport,
             ReportAttributes,
             ReportFiles,
+            FileHeader: () => import('../fileheaders/item'),
         },
         mounted() {
             ReportBus.$on('report_updated', (updreport) => {

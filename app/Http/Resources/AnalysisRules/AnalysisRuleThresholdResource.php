@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\AnalysisRuleThreshold\ThresholdType;
 
 /**
  * Class AnalysisRuleThresholdResource
@@ -29,6 +30,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property Carbon $updated_at
  *
  * @property Status $status
+ * @property ThresholdType $thresholdtype
  */
 class AnalysisRuleThresholdResource extends JsonResource
 {

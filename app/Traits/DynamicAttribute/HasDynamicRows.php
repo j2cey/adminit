@@ -6,7 +6,7 @@ namespace App\Traits\DynamicAttribute;
 use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\DynamicAttributes\DynamicRow;
+use App\Models\DynamicValue\DynamicRow;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 

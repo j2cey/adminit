@@ -18,8 +18,8 @@ use Illuminate\Foundation\Http\FormRequest;
  *
  * @property integer|null $format_rule_type_id
  *
- * @property string $formatruleowner_type
- * @property int $formatruleowner_id
+ * @property string $hasformatrule_type
+ * @property int $hasformatrule_id
  *
  * @property string $rule_result
  *

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\DynamicAttributes;
 
 use App\Http\Controllers\Controller;
-use App\Models\DynamicAttributes\DynamicValueBoolean;
+use App\Models\DynamicValue\DynamicValueBoolean;
 use App\Http\Requests\DynamicValueBoolean\StoreDynamicValueBooleanRequest;
 use App\Http\Requests\DynamicValueBoolean\UpdateDynamicValueBooleanRequest;
 

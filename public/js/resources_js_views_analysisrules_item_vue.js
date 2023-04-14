@@ -9,178 +9,138 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _analysisruleBus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./analysisruleBus */ "./resources/js/views/analysisrules/analysisruleBus.js");
-/* harmony import */ var _analysishighlights_analysishighlightBus__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../analysishighlights/analysishighlightBus */ "./resources/js/views/analysishighlights/analysishighlightBus.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-
+var AnalysisRule = /*#__PURE__*/_createClass(function AnalysisRule(analysisrule) {
+  _classCallCheck(this, AnalysisRule);
+  this.title = analysisrule.title || '';
+  this.rule_result_for_notification = analysisrule.rule_result_for_notification || '';
+  this.description = analysisrule.description || '';
+  this.analysisruletype = analysisrule.analysisruletype || '';
+  this.inneranalysisrule = analysisrule.inneranalysisrule || '';
+});
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "rule-item",
+  name: "analysisrule-item",
   props: {
-    analysisrule_prop: {},
-    index_prop: {}
+    analysisrule_prop: {}
   },
   components: {
+    FormatRuleList: function FormatRuleList() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_formatrules_list_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../formatrules/list */ "./resources/js/views/formatrules/list.vue"));
+    },
     analysisrulethreshold: function analysisrulethreshold() {
-      return __webpack_require__.e(/*! import() */ "resources_js_views_analysisrules_innerrules_analysisrulethreshold_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./innerrules/analysisrulethreshold */ "./resources/js/views/analysisrules/innerrules/analysisrulethreshold.vue"));
-    },
-    StatusShow: function StatusShow() {
-      return __webpack_require__.e(/*! import() */ "resources_js_views_statuses_show_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../statuses/show */ "./resources/js/views/statuses/show.vue"));
-    },
-    AddUpdateHighlight: function AddUpdateHighlight() {
-      return __webpack_require__.e(/*! import() */ "resources_js_views_analysishighlights_addupdate_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../analysishighlights/addupdate */ "./resources/js/views/analysishighlights/addupdate.vue"));
-    },
-    AnalysisHighlights: function AnalysisHighlights() {
-      return __webpack_require__.e(/*! import() */ "resources_js_views_analysishighlights_list_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../analysishighlights/list */ "./resources/js/views/analysishighlights/list.vue"));
+      return __webpack_require__.e(/*! import() */ "resources_js_views_analysisrules_inneranalysisrules_analysisrulethreshold_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./inneranalysisrules/analysisrulethreshold */ "./resources/js/views/analysisrules/inneranalysisrules/analysisrulethreshold.vue"));
     }
   },
   mounted: function mounted() {
     var _this = this;
-    _analysisruleBus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('analysisrule_updated', function (analysisrule) {
-      if (_this.analysisrule.id === analysisrule.id) {
-        _this.updateRule(analysisrule);
-      }
+    this.$watch("$refs.analysisrule.inneranalysisrule", function (new_value, old_value) {
+      _this.inneranalysisrule = new_value;
     });
-    this.$on('analysisrule_updated', function (upd_data) {
-      if (_this.analysisrule.id === upd_data.rule.id) {
-        _this.updateRule(upd_data.rule);
-      }
-    });
-    this.$on('highlight_created', function (highlight) {
-      //HighlightBus.$emit('highlight_created', highlight)
-      console.log('highlight_created received on rule: ', _this.analysisrule, highlight);
-      if (_this.analysisrule.id === highlight.analysis_rule_id) {
-        _this.reloadHighlights(highlight);
-      }
-    });
-    _analysishighlights_analysishighlightBus__WEBPACK_IMPORTED_MODULE_1__["default"].$on('edit_highlight', function (highlight) {
-      _this.$emit('edit_highlight', {
-        highlight: highlight
-      });
-    });
-    this.$on('highlight_updated', function (highlight) {
-      console.log('highlight_updated received on rule: ', _this.analysisrule, highlight);
-      if (_this.analysisrule.id === highlight.analysis_rule_id) {
-        _this.reloadHighlights(highlight);
-      }
-    });
-    this.$on('highlight_deleted', function (highlight) {
-      console.log('highlight_deleted received on rule: ', _this.analysisrule, highlight);
-      if (_this.analysisrule.id === highlight.analysis_rule_id) {
-        _this.reloadHighlights(highlight);
-      }
+  },
+  created: function created() {
+    var _this2 = this;
+    // eslint-disable-next-line no-undef
+    axios.get('/ruleresultenums.fetch').then(function (_ref) {
+      var data = _ref.data;
+      return _this2.ruleresultenums = data;
     });
   },
   data: function data() {
     return {
       analysisrule: this.analysisrule_prop,
+      inneranalysisrule: this.analysisrule_prop.inneranalysisrule,
+      // eslint-disable-next-line no-undef
+      analysisRuleForm: new Form(new AnalysisRule(this.analysisrule_prop)),
+      ruleresultenums: [],
       innerruleview: this.analysisrule_prop.analysisruletype.view_name,
-      index: this.index_prop,
-      collapse_icon: 'fas fa-chevron-down',
-      highlightsgroup_collapse_icon: 'fas fa-chevron-down',
-      commom_key: 0,
-      highlighs_allowed_key: this.analysisrule_prop + '_allowed_' + 0,
-      highlighs_brokrn_key: this.analysisrule_prop + '_brokrn_' + 0,
-      isOpen: true
+      editing: false,
+      loading: false
     };
   },
   methods: {
-    forceRerenderHighlightsLists: function forceRerenderHighlightsLists() {
-      this.commom_key += 1;
-      this.highlighs_allowed_key = this.analysisrule.id + '_allowed_' + this.commom_key;
-      this.highlighs_brokrn_key += this.analysisrule.id + '_brokrn_' + this.commom_key0;
+    getNewanalysisRuleForm: function getNewanalysisRuleForm() {
+      // eslint-disable-next-line no-undef
+      return new Form(new AnalysisRule({
+        'rule_result_for_notification': this.getRuleResult(this.analysisrule_prop.rule_result_for_notification)
+      }));
     },
-    createHighlight: function createHighlight() {
-      var analysisrule = this.analysisrule;
-      this.$emit('create_new_highlight', {
-        analysisrule: analysisrule
-      });
+    editAnalysisRule: function editAnalysisRule(analysisrule) {
+      this.editing = true;
+      _analysisruleBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('analysisrule_edit', analysisrule);
     },
-    editRule: function editRule(analysisrule) {
-      _analysisruleBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('edit_analysisrule', {
-        analysisrule: analysisrule
-      });
+    cancelEditAnalysisRule: function cancelEditAnalysisRule(analysisrule) {
+      this.editing = false;
+      this.loading = false;
+      this.setAnalysisRuleAndForm(this.analysisrule);
+      _analysisruleBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('analysisrule_edit_cancel', analysisrule);
     },
-    updateRule: function updateRule(analysisrule) {
+    setAnalysisRuleAndForm: function setAnalysisRuleAndForm(analysisrule) {
+      var canceledit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       this.analysisrule = analysisrule;
+      // eslint-disable-next-line no-undef
+      this.analysisRuleForm = new Form(new AnalysisRule(analysisrule));
+      if (canceledit) {
+        this.cancelEditAnalysisRule(analysisrule);
+      }
     },
-    deleteRule: function deleteRule(analysisrule, index) {
-      var _this2 = this;
+    updateAnalysisRule: function updateAnalysisRule(analysisrule) {
+      var _this3 = this;
+      this.loading = true;
+      _analysisruleBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('analysisrule_updating', analysisrule);
+      this.analysisRuleForm.inneranalysisrule = this.inneranalysisrule;
+      this.analysisRuleForm.put("/analysisrules/".concat(this.analysisrule.uuid), undefined).then(function (newanalysisrule) {
+        _this3.loading = false;
+        _this3.$swal({
+          html: '<small>Règle modifiée avec succès !</small>',
+          icon: 'success',
+          timer: 3000
+        }).then(function () {
+          _this3.loading = false;
+          _this3.setAnalysisRuleAndForm(newanalysisrule, true);
+          _analysisruleBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('analysisrule_updated', newanalysisrule);
+        });
+
+        // eslint-disable-next-line no-unused-vars
+      })["catch"](function (error) {
+        _this3.loading = false;
+        _this3.cancelEditAnalysisRule(analysisrule);
+      });
+    },
+    deleteAnalysisRule: function deleteAnalysisRule(analysisrule) {
+      var _this4 = this;
       this.$swal({
-        title: '<small>Are you sure ?</small>',
-        text: "You won't be able to revert this!",
+        title: 'Suppresion de la Règle',
+        text: "Validez la Suppression!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Oui'
       }).then(function (result) {
         if (result.value) {
-          axios["delete"]("/analysisrules/".concat(analysisrule.uuid)).then(function (resp) {
-            _this2.$swal({
-              html: '<small>Analysis Rule successfully deleted !</small>',
-              icon: 'success',
-              timer: 3000
-            }).then(function () {
-              _this2.$parent.$emit('analysisrule_deleted', {
-                analysisrule: analysisrule,
-                index: index
-              });
-            });
+          _this4.loading = true;
+
+          // eslint-disable-next-line no-undef
+          axios["delete"]("/analysisrules/".concat(analysisrule.uuid))
+          // eslint-disable-next-line no-unused-vars
+          .then(function (resp) {
+            _this4.loading = false;
+            _this4.$emit('analysisrule_deleted', analysisrule);
           })["catch"](function (error) {
+            _this4.loading = false;
             window.handleErrors(error);
           });
         }
       });
-    },
-    reloadHighlights: function reloadHighlights(highlight) {
-      var _this3 = this;
-      // analysisrules.fetchone
-      axios.get("/analysisrules.fetchone/".concat(this.analysisrule.id)).then(function (result) {
-        _this3.analysisrule = result.data;
-        console.log('analysisrule reloaded on rule: ', result, highlight);
-        _this3.$emit('analysisrule_reloaded', {
-          'when_rule_result_is': "allowed",
-          'highlights': result.data.whenallowedhighlights,
-          'analysisrule': result.data
-        });
-        _this3.$emit('analysisrule_reloaded', {
-          'when_rule_result_is': "broken",
-          'highlights': result.data.whenbrokenhighlights,
-          'analysisrule': result.data
-        });
-        _this3.forceRerenderHighlightsLists();
-      })["catch"](function (error) {
-        window.handleErrors(error);
-      });
-    },
-    collapseClicked: function collapseClicked() {
-      if (this.collapse_icon === 'fas fa-chevron-down') {
-        this.collapse_icon = 'fas fa-chevron-up';
-      } else {
-        this.collapse_icon = 'fas fa-chevron-down';
-      }
-    },
-    collapseHighlightsGroupClicked: function collapseHighlightsGroupClicked() {
-      if (this.highlightsgroup_collapse_icon === 'fas fa-chevron-down') {
-        this.highlightsgroup_collapse_icon = 'fas fa-chevron-up';
-      } else {
-        this.highlightsgroup_collapse_icon = 'fas fa-chevron-down';
-      }
     }
   },
-  computed: {
-    currentCollapseIcon: function currentCollapseIcon() {
-      return this.collapse_icon;
-    },
-    currentHighlightsGroupCollapseIcon: function currentHighlightsGroupCollapseIcon() {
-      return this.highlightsgroup_collapse_icon;
-    },
-    whenbrokenhighlights: function whenbrokenhighlights() {
-      return this.analysisrule.whenbrokenhighlights;
-    },
-    whenallowedhighlights: function whenallowedhighlights() {
-      return this.analysisrule.whenallowedhighlights;
-    }
-  }
+  computed: {}
 });
 
 /***/ }),
@@ -199,359 +159,191 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "card"
-  }, [_c("header", [_c("div", {
-    staticClass: "card-header-title row"
-  }, [_c("div", {
-    staticClass: "col-md-6 col-sm-9 col-12"
-  }, [_c("span", {
-    staticClass: "text-indigo text-xs",
-    attrs: {
-      "data-toggle": "collapse",
-      "data-parent": "#rulelist",
-      href: "#collapse-rules-" + _vm.index
-    },
-    on: {
-      click: function click($event) {
-        return _vm.collapseClicked();
-      }
-    }
-  }, [_vm._v("\n                    " + _vm._s(_vm.analysisrule.title) + "\n                ")])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6 col-sm-3 col-12 text-right"
-  }, [_c("span", {
-    staticClass: "text text-xs"
-  }, [_c("a", {
-    staticClass: "btn btn-tool text-warning",
-    attrs: {
-      type: "button",
-      "data-toggle": "tooltip"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.editRule(_vm.analysisrule);
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fa fa-pencil-square-o"
-  })]), _vm._v(" "), _c("a", {
-    staticClass: "btn btn-tool",
-    attrs: {
-      type: "button",
-      "data-toggle": "collapse",
-      "data-parent": "#rulelist",
-      href: "#collapse-rules-" + _vm.index
-    },
-    on: {
-      click: function click($event) {
-        return _vm.collapseClicked();
-      }
-    }
-  }, [_c("i", {
-    "class": _vm.currentCollapseIcon
-  })]), _vm._v(" "), _c("a", {
-    staticClass: "btn btn-tool text-danger",
-    attrs: {
-      type: "button"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.deleteRule(_vm.analysisrule, _vm.index);
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fa fa-trash"
-  })])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "card-content panel-collapse collapse in",
-    attrs: {
-      id: "collapse-rules-" + _vm.index
-    }
-  }, [_c("form", {
-    attrs: {
-      role: "form"
-    }
-  }, [_c("div", {
-    staticClass: "form-group row"
-  }, [_c("label", {
-    staticClass: "col-sm-2 col-form-label text-xs",
-    attrs: {
-      "for": "rule_type"
-    }
-  }, [_vm._v("Rule Type")]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-10"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.analysisrule.analysisruletype.name,
-      expression: "analysisrule.analysisruletype.name"
-    }],
-    staticClass: "form-control form-control-sm border-0",
-    staticStyle: {
-      "background-color": "white"
-    },
-    attrs: {
-      readonly: "",
-      type: "text",
-      id: "rule_type",
-      name: "type",
-      placeholder: "Type"
-    },
-    domProps: {
-      value: _vm.analysisrule.analysisruletype.name
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.analysisrule.analysisruletype, "name", $event.target.value);
-      }
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group row"
-  }, [_c("div", {
-    staticClass: "custom-control custom-switch custom-switch-off-danger custom-switch-on-success col-sm-6"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.analysisrule.alert_when_allowed,
-      expression: "analysisrule.alert_when_allowed"
-    }],
-    staticClass: "custom-control-input",
-    attrs: {
-      disabled: "",
-      type: "checkbox",
-      id: "alert_when_allowed" + _vm.analysisrule.id,
-      name: "alert_when_allowed",
-      placeholder: "Alert when allowed"
-    },
-    domProps: {
-      checked: Array.isArray(_vm.analysisrule.alert_when_allowed) ? _vm._i(_vm.analysisrule.alert_when_allowed, null) > -1 : _vm.analysisrule.alert_when_allowed
-    },
-    on: {
-      change: function change($event) {
-        var $$a = _vm.analysisrule.alert_when_allowed,
-          $$el = $event.target,
-          $$c = $$el.checked ? true : false;
-        if (Array.isArray($$a)) {
-          var $$v = null,
-            $$i = _vm._i($$a, $$v);
-          if ($$el.checked) {
-            $$i < 0 && _vm.$set(_vm.analysisrule, "alert_when_allowed", $$a.concat([$$v]));
-          } else {
-            $$i > -1 && _vm.$set(_vm.analysisrule, "alert_when_allowed", $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
-          }
-        } else {
-          _vm.$set(_vm.analysisrule, "alert_when_allowed", $$c);
-        }
-      }
-    }
-  }), _vm._v(" "), _c("label", {
-    staticClass: "custom-control-label",
-    attrs: {
-      "for": "alert_when_allowed" + _vm.analysisrule.id
-    }
-  }, [_vm._m(0)])]), _vm._v(" "), _c("div", {
-    staticClass: "custom-control custom-switch custom-switch-off-danger custom-switch-on-success col-sm-6"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.analysisrule.alert_when_broken,
-      expression: "analysisrule.alert_when_broken"
-    }],
-    staticClass: "custom-control-input",
-    attrs: {
-      disabled: "",
-      type: "checkbox",
-      id: "alert_when_broken" + _vm.analysisrule.id,
-      name: "alert_when_broken",
-      placeholder: "Alert when allowed"
-    },
-    domProps: {
-      checked: Array.isArray(_vm.analysisrule.alert_when_broken) ? _vm._i(_vm.analysisrule.alert_when_broken, null) > -1 : _vm.analysisrule.alert_when_broken
-    },
-    on: {
-      change: function change($event) {
-        var $$a = _vm.analysisrule.alert_when_broken,
-          $$el = $event.target,
-          $$c = $$el.checked ? true : false;
-        if (Array.isArray($$a)) {
-          var $$v = null,
-            $$i = _vm._i($$a, $$v);
-          if ($$el.checked) {
-            $$i < 0 && _vm.$set(_vm.analysisrule, "alert_when_broken", $$a.concat([$$v]));
-          } else {
-            $$i > -1 && _vm.$set(_vm.analysisrule, "alert_when_broken", $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
-          }
-        } else {
-          _vm.$set(_vm.analysisrule, "alert_when_broken", $$c);
-        }
-      }
-    }
-  }), _vm._v(" "), _c("label", {
-    staticClass: "custom-control-label",
-    attrs: {
-      "for": "alert_when_broken" + _vm.analysisrule.id
-    }
-  }, [_vm._m(1)])])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group row"
-  }, [_c("label", {
-    staticClass: "col-sm-2 col-form-label text-xs",
-    attrs: {
-      "for": "description"
-    }
-  }, [_vm._v("Description")]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-10"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.analysisrule.description,
-      expression: "analysisrule.description"
-    }],
-    staticClass: "form-control form-control-sm border-0",
-    staticStyle: {
-      "background-color": "white"
-    },
-    attrs: {
-      readonly: "",
-      type: "text",
-      id: "description",
-      name: "description",
-      placeholder: "Type"
-    },
-    domProps: {
-      value: _vm.analysisrule.description
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.analysisrule, "description", $event.target.value);
-      }
-    }
-  })])])]), _vm._v(" "), _c("status-show", {
-    attrs: {
-      model_type_prop: _vm.analysisrule.model_type,
-      model_id_prop: _vm.analysisrule.id,
-      status_prop: _vm.analysisrule.status
-    }
-  }), _vm._v(" "), _c(_vm.innerruleview, {
-    ref: _vm.analysisrule.innerrule.id,
-    tag: "component",
-    attrs: {
-      model_type_prop: _vm.analysisrule.innerrule_type,
-      innerrule_prop: _vm.analysisrule.innerrule
-    }
-  }), _vm._v(" "), _c("div", {
-    staticClass: "card",
-    attrs: {
-      id: "highlightsgroup_" + _vm.analysisrule.id
-    }
-  }, [_c("header", [_c("div", {
-    staticClass: "card-header-title row"
-  }, [_c("div", {
-    staticClass: "col-md-6 col-sm-8 col-12"
-  }, [_c("span", {
-    staticClass: "text-olive text-xs",
-    attrs: {
-      "data-toggle": "collapse",
-      "data-parent": "#highlightsgroup_" + _vm.analysisrule.id,
-      href: "#collapse-highlightsgroup-" + _vm.analysisrule.id
-    },
-    on: {
-      click: function click($event) {
-        return _vm.collapseHighlightsGroupClicked();
-      }
-    }
-  }, [_vm._v("\n                            Highlights\n                        ")]), _vm._v(" "), _c("b-button", {
+  return _c("section", [_c("b-tabs", [_c("b-tab-item", {
+    scopedSlots: _vm._u([{
+      key: "header",
+      fn: function fn() {
+        return [_c("span", {
+          staticClass: "help-inline pr-1 text-xs"
+        }, [_vm._v(" " + _vm._s(_vm.analysisrule.title) + " ")])];
+      },
+      proxy: true
+    }])
+  }, [_vm._v(" "), _c("b-field", {
     attrs: {
       size: "is-small",
-      type: "is-ghost"
+      horizontal: ""
     },
-    on: {
-      click: function click($event) {
-        return _vm.createHighlight();
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-plus"
-  })])], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6 col-sm-4 col-12 text-right"
-  }, [_c("span", {
-    staticClass: "text text-sm"
-  }, [_c("a", {
-    staticClass: "btn btn-tool",
+    scopedSlots: _vm._u([{
+      key: "label",
+      fn: function fn() {
+        return [_c("span", {
+          staticClass: "text text-xs text-orange"
+        }, [_vm._v(_vm._s(_vm.analysisrule.analysisruletype.name))])];
+      },
+      proxy: true
+    }])
+  }, [_vm._v(" "), _c("b-field", {
     attrs: {
-      type: "button",
-      "data-toggle": "collapse",
-      "data-parent": "#highlightsgroup_" + _vm.analysisrule.id,
-      href: "#collapse-highlightsgroup-" + _vm.analysisrule.id
+      size: "is-small"
+    }
+  }, [_c("b-field", {
+    attrs: {
+      size: "is-small",
+      type: _vm.analysisRuleForm.errors.has("title") ? "is-danger" : "is-default"
+    }
+  }, [_c("b-input", {
+    attrs: {
+      size: "is-small",
+      name: "name",
+      placeholder: "Titre",
+      loading: _vm.loading,
+      readonly: !_vm.editing
     },
-    on: {
-      click: function click($event) {
-        return _vm.collapseHighlightsGroupClicked();
-      }
+    model: {
+      value: _vm.analysisRuleForm.title,
+      callback: function callback($$v) {
+        _vm.$set(_vm.analysisRuleForm, "title", $$v);
+      },
+      expression: "analysisRuleForm.title"
     }
-  }, [_c("i", {
-    "class": _vm.currentHighlightsGroupCollapseIcon
-  })])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "card-content panel-collapse collapse in",
+  })], 1), _vm._v(" "), _c("b-field", {
     attrs: {
-      id: "collapse-highlightsgroup-" + _vm.analysisrule.id
+      size: "is-small",
+      type: _vm.analysisRuleForm.errors.has("rule_result_for_notification") ? "is-danger" : "is-default"
     }
-  }, [_vm.whenbrokenhighlights.length ? _c("analysis-highlights", {
-    key: _vm.highlighs_brokrn_key,
+  }, [_c("b-select", {
+    attrs: {
+      size: "is-small",
+      placeholder: "Résultat pour Notification",
+      name: "rule_result_for_notification",
+      disabled: !_vm.editing
+    },
+    model: {
+      value: _vm.analysisRuleForm.rule_result_for_notification,
+      callback: function callback($$v) {
+        _vm.$set(_vm.analysisRuleForm, "rule_result_for_notification", $$v);
+      },
+      expression: "analysisRuleForm.rule_result_for_notification"
+    }
+  }, _vm._l(_vm.ruleresultenums, function (option) {
+    return _c("option", {
+      key: option.value,
+      domProps: {
+        value: option
+      }
+    }, [_vm._v("\n                                " + _vm._s(option.name) + "\n                            ")]);
+  }), 0)], 1), _vm._v(" "), _c("b-field", {
+    attrs: {
+      size: "is-small",
+      type: _vm.analysisRuleForm.errors.has("description") ? "is-danger" : "is-default"
+    }
+  }, [_c("b-input", {
+    attrs: {
+      size: "is-small",
+      name: "description",
+      loading: _vm.loading,
+      placeholder: "Description",
+      readonly: !_vm.editing
+    },
+    model: {
+      value: _vm.analysisRuleForm.description,
+      callback: function callback($$v) {
+        _vm.$set(_vm.analysisRuleForm, "description", $$v);
+      },
+      expression: "analysisRuleForm.description"
+    }
+  })], 1), _vm._v(" "), _c(_vm.analysisrule.analysisruletype.view_name, {
+    ref: _vm.analysisrule.inneranalysisrule.id,
+    tag: "component",
     attrs: {
       analysisrule_prop: _vm.analysisrule,
-      highlights_prop: _vm.whenbrokenhighlights,
-      when_rule_result_is_prop: "broken",
-      list_title_prop: "When Broken",
-      list_color_prop: "danger"
+      model_type_prop: _vm.analysisrule.inneranalysisrule_type,
+      inneranalysisrule_prop: _vm.analysisrule.inneranalysisrule
     }
-  }) : _vm._e(), _vm._v(" "), _vm.whenallowedhighlights.length ? _c("analysis-highlights", {
-    key: _vm.highlighs_allowed_key,
+  }), _vm._v(" "), _c("b-field", {
+    staticClass: "text-xs",
     attrs: {
-      analysisrule_prop: _vm.analysisrule,
-      highlights_prop: _vm.whenallowedhighlights,
-      when_rule_result_is_prop: "allowed",
-      list_title_prop: "When Allowed",
-      list_color_prop: "success"
+      size: "is-small",
+      horizontal: ""
     }
-  }) : _vm._e()], 1)])], 1), _vm._v(" "), _c("add-update-highlight")], 1);
+  }, [!_vm.editing ? _c("a", {
+    staticClass: "tw-inline-block tw-mr-3 text-warning",
+    on: {
+      click: function click($event) {
+        return _vm.editAnalysisRule(_vm.analysisrule);
+      }
+    }
+  }, [_c("b-icon", {
+    attrs: {
+      pack: "fas",
+      icon: "pencil-square-o",
+      size: "is-small"
+    }
+  })], 1) : _vm._e(), _vm._v(" "), _vm.editing ? _c("a", {
+    staticClass: "tw-inline-block tw-mr-3 text-success",
+    on: {
+      click: function click($event) {
+        return _vm.updateAnalysisRule(_vm.analysisrule);
+      }
+    }
+  }, [_c("b-icon", {
+    attrs: {
+      pack: "fas",
+      icon: "check",
+      size: "is-small"
+    }
+  })], 1) : _vm._e(), _vm._v(" "), _vm.editing ? _c("a", {
+    staticClass: "tw-inline-block tw-mr-3 text-info",
+    on: {
+      click: function click($event) {
+        return _vm.cancelEditAnalysisRule(_vm.analysisrule);
+      }
+    }
+  }, [_c("b-icon", {
+    attrs: {
+      pack: "fas",
+      icon: "ban",
+      size: "is-small"
+    }
+  })], 1) : _vm._e(), _vm._v(" "), _c("a", {
+    staticClass: "tw-inline-block tw-mr-3 text-danger",
+    on: {
+      click: function click($event) {
+        return _vm.deleteAnalysisRule(_vm.analysisrule);
+      }
+    }
+  }, [_c("b-icon", {
+    attrs: {
+      pack: "fas",
+      icon: "trash",
+      size: "is-small"
+    }
+  })], 1)])], 1)], 1)], 1), _vm._v(" "), _c("b-tab-item", {
+    scopedSlots: _vm._u([{
+      key: "header",
+      fn: function fn() {
+        return [_c("span", {
+          staticClass: "help-inline pr-1 text-xs"
+        }, [_vm._v(" Formattage ")]), _vm._v(" "), _c("b-tag", {
+          attrs: {
+            rounded: "",
+            type: "is-info is-light text-xs"
+          }
+        }, [_vm._v(_vm._s(_vm.analysisrule.formatrules.length))])];
+      },
+      proxy: true
+    }])
+  }, [_vm._v(" "), _c("FormatRuleList", {
+    attrs: {
+      model_prop: _vm.analysisrule,
+      list_title_prop: "Formattage à appliquer pour cette règle"
+    }
+  })], 1)], 1)], 1);
 };
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("span", {
-    staticClass: "text text-xs"
-  }, [_vm._v("Alert when Allowed "), _c("i", {
-    staticClass: "far fa-bell"
-  })]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("span", {
-    staticClass: "text text-xs"
-  }, [_vm._v("Alert when Broken "), _c("i", {
-    staticClass: "far fa-bell"
-  })]);
-}];
+var staticRenderFns = [];
 render._withStripped = true;
 
-
-/***/ }),
-
-/***/ "./resources/js/views/analysishighlights/analysishighlightBus.js":
-/*!***********************************************************************!*\
-  !*** ./resources/js/views/analysishighlights/analysishighlightBus.js ***!
-  \***********************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-
-/* harmony default export */ __webpack_exports__["default"] = (new vue__WEBPACK_IMPORTED_MODULE_0__["default"]());
 
 /***/ }),
 

@@ -25,7 +25,10 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     AddUpdateReport: _addupdate__WEBPACK_IMPORTED_MODULE_1__["default"],
     ReportAttributes: _reportattributes_list__WEBPACK_IMPORTED_MODULE_0__["default"],
-    ReportFiles: _reportfiles_list__WEBPACK_IMPORTED_MODULE_2__["default"]
+    ReportFiles: _reportfiles_list__WEBPACK_IMPORTED_MODULE_2__["default"],
+    FileHeader: function FileHeader() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_fileheaders_item_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../fileheaders/item */ "./resources/js/views/fileheaders/item.vue"));
+    }
   },
   mounted: function mounted() {
     var _this = this;
@@ -175,9 +178,27 @@ var render = function render() {
     staticClass: "fas fa-trash"
   })])])])])]), _vm._v(" "), _c("div", {
     staticClass: "card-body"
-  }, [_c("dt", {
+  }, [_c("b-tabs", {
+    attrs: {
+      size: "is-small",
+      type: "is-boxed"
+    }
+  }, [_c("b-tab-item", {
+    scopedSlots: _vm._u([{
+      key: "header",
+      fn: function fn() {
+        return [_c("b-icon", {
+          attrs: {
+            icon: "info-circle",
+            pack: "fa"
+          }
+        }), _vm._v(" "), _c("span", [_vm._v(" Infos ")])];
+      },
+      proxy: true
+    }])
+  }, [_vm._v(" "), _c("dl", [_c("dt", {
     staticClass: "text text-xs"
-  }, [_vm._v("Name")]), _vm._v(" "), _c("dd", {
+  }, [_vm._v("Type")]), _vm._v(" "), _c("dd", {
     staticClass: "text text-xs"
   }, [_vm._v(_vm._s(_vm.report.reporttype.name))]), _vm._v(" "), _c("dt", {
     staticClass: "text text-xs"
@@ -185,11 +206,30 @@ var render = function render() {
     staticClass: "text text-xs"
   }, [_vm._v(_vm._s(_vm.report.description))]), _vm._v(" "), _c("dt", {
     staticClass: "text text-xs"
-  }, [_vm._v("Created at")]), _vm._v(" "), _c("dd", {
+  }, [_vm._v("Création")]), _vm._v(" "), _c("dd", {
     staticClass: "text text-xs"
   }, [_vm._v(_vm._s(_vm._f("formatDate")(_vm.report.created_at)))]), _vm._v(" "), _c("dd", {
     staticClass: "col-sm-8 offset-sm-4 text-xs"
-  })])]), _vm._v(" "), _c("div", {
+  })])]), _vm._v(" "), _c("b-tab-item", {
+    scopedSlots: _vm._u([{
+      key: "header",
+      fn: function fn() {
+        return [_c("b-icon", {
+          attrs: {
+            icon: "list-ol",
+            pack: "fa"
+          }
+        }), _vm._v(" "), _c("span", {
+          staticClass: "help-inline pr-1 text-sm"
+        }, [_vm._v(" Header ")])];
+      },
+      proxy: true
+    }])
+  }, [_vm._v(" "), _c("FileHeader", {
+    attrs: {
+      fileheader_prop: _vm.report.fileheader
+    }
+  })], 1)], 1)], 1)]), _vm._v(" "), _c("div", {
     attrs: {
       id: "reportwrapper_" + _vm.report.uuid
     }

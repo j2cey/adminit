@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DynamicAttributes\DynamicAttributeController;
 use App\Http\Controllers\DynamicAttributes\DynamicAttributeTypeController;
 

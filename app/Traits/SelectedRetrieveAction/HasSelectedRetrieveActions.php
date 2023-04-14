@@ -28,6 +28,7 @@ trait HasSelectedRetrieveActions
     {
         return $this->morphMany(DynamicAttribute::class, 'hasdynamicattribute');
     }
+
     /**
      * Crée et Ajoute un objet SelectedRetrieveAction au modèle qui utilise ce trait et implémente l'interface y rattachée (HasSelectedRetrieveActions)
      * @param Model|RetrieveAction $retrieveaction L'Action sélectionnée

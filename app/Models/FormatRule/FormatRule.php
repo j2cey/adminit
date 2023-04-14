@@ -3,7 +3,6 @@
 namespace App\Models\FormatRule;
 
 use App\Models\Status;
-use mysql_xdevapi\Table;
 use App\Models\BaseModel;
 use App\Enums\RuleResultEnum;
 use Illuminate\Support\Carbon;
@@ -66,17 +65,17 @@ class FormatRule extends BaseModel implements Auditable
         ];
     }
 
-    public static function createRules()
+    public static function createRules($hasformatrule_type)
     {
         return array_merge(self::defaultRules(), [
-            'formatruletype_key' => ['unique:' . (new FormatRule())->getTable() . ',' . self::FORMATRULETYPE_FOREIGN_KEY . ',NULL,id'],
+            //'formatruletype_key' => ['unique:' . (new FormatRule())->getTable() . ',' . self::FORMATRULETYPE_FOREIGN_KEY . ',NULL,id,hasformatrule_type,' . $hasformatrule_type . ',hasformatrule_id,NULL'],
         ]);
     }
 
     public static function updateRules($model)
     {
         return array_merge(self::defaultRules(), [
-            'formatruletype_key' => ['unique:' . (new FormatRule())->getTable() . ',' . self::FORMATRULETYPE_FOREIGN_KEY . ','.$model->id.',id'],
+            //'formatruletype_key' => ['unique:' . (new FormatRule())->getTable() . ',' . self::FORMATRULETYPE_FOREIGN_KEY . ','.$model->id.',id,hasformatrule_type,' . $model->hasformatrule_type . ',hasformatrule_id,' . $model->hasformatrule_id],
         ]);
     }
 
@@ -149,6 +148,7 @@ class FormatRule extends BaseModel implements Auditable
      * Create a new Highlight and attach the relevant inner Highlight from it
      * @param Model|FormatRuleType $formatruletype
      * @param string $title
+     * @param IInnerFormatRule|string|null $innerformatrule
      * @param string|null $rule_result
      * @param Status|null $status
      * @param string|null $description

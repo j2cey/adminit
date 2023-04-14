@@ -7,26 +7,19 @@ use App\Traits\Request\RequestTraits;
 use App\Models\AnalysisRule\AnalysisRule;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\AnalysisRule\AnalysisRuleType;
-use App\Models\DynamicAttributes\DynamicAttribute;
 
 /**
  * Class AnalysisRuleRequest
  * @package App\Http\Requests\AnalysisRule
  *
  * @property string $title
+ * @property string $rule_result_for_notification
  * @property string $description
- *
- * @property integer $innerrule_id
- *
- * @property boolean $alert_when_allowed
- * @property boolean $alert_when_broken
+ * @property integer $num_ord
  *
  * @property integer|null $analysis_rule_type_id
- * @property integer|null $dynamic_attribute_id
  *
  * @property AnalysisRuleType $analysisruletype
- * @property DynamicAttribute $dynamicattribute
- *
  * @property Status $status
  */
 class AnalysisRuleRequest extends FormRequest

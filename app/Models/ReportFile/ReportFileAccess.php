@@ -60,7 +60,7 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
 
     protected $guarded = [];
 
-    protected $with = ['selectedretrieveactions'];
+    protected $with = [];
 
     public static function defaultRules() {
         return [
@@ -111,10 +111,10 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
         return $this->belongsTo(AccessProtocole::class, 'access_protocole_id');
     }
 
-    public function selectedretrieveactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    /*public function selectedretrieveactions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(SelectedRetrieveAction::class,'report_file_access_id');
-    }
+    }*/
 
     #endregion
 

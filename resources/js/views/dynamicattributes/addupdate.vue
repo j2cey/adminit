@@ -20,46 +20,58 @@
                                 </div>
                             </div>
                             <div class="form-group row">
+                                <label for="dynamicattribute_title" class="col-sm-2 col-form-label text-xs">Title</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control text-xs" id="dynamicattribute_title" name="title" autocomplete="title" autofocus placeholder="Title" v-model="dynamicattributeForm.title">
+                                    <span class="invalid-feedback d-block text-xs" role="alert" v-if="dynamicattributeForm.errors.has('title')" v-text="dynamicattributeForm.errors.get('title')"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label for="m_select_dynamicattributetype" class="col-sm-2 col-form-label text-xs">Attribute Type</label>
                                 <div class="col-sm-10 text-xs">
                                     <multiselect class="text text-xs"
                                                  id="m_select_dynamicattributetype"
-                                                 v-model="dynamicattributeForm.attributetype"
-                                                 selected.sync="dynamicattributeForm.attributetype"
+                                                 v-model="dynamicattributeForm.dynamicattributetype"
+                                                 selected.sync="dynamicattributeForm.dynamicattributetype"
                                                  value=""
-                                                 :options="attributetypes"
+                                                 :options="dynamicattributetypes"
                                                  :searchable="true"
-                                                 :multiple="true"
+                                                 :multiple="false"
                                                  label="name"
                                                  track-by="id"
                                                  key="id"
                                                  placeholder="Attribute Type"
                                     >
                                     </multiselect>
-
-                                    <div class="form-group row">
-                                        <label for="reportfile_retrieval_type" class="col-sm-4 col-form-label text-xs">Récupération du Fichier:</label>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="reportfile_retrieval_type" class="col-sm-2 col-form-label text-xs">
-                                        </label>
-                                        <div class="col-sm-10">
-                                            <b-field id="reportfile_retrieval_type" label="" label-position="on-border" custom-class="is-small">
-                                                <b-radio-button size="is-small" v-model="dynamicattributeForm.searchable"
-                                                                native-value="searchable"
-                                                                type="is-success is-light is-outlined" @input="searchableChange($event)">
-                                                    <span>searchable</span>
-                                                </b-radio-button>
-                                                <b-radio-button size="is-small" v-model="dynamicattributeForm.sortable"
-                                                                native-value="sortable"
-                                                                type="is-warning is-light is-outlined" @input="searchableChange($event)">
-                                                    <span>sortable</span>
-                                                </b-radio-button>
-                                            </b-field>
-                                        </div>
-                                    </div>
-
                                     <span class="invalid-feedback d-block text-xs" role="alert" v-if="dynamicattributeForm.errors.has('dynamicattributetype')" v-text="dynamicattributeForm.errors.get('dynamicattributetype')"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-xs">
+                                </label>
+                                <div class="col-sm-10">
+                                    <b-field label="" label-position="on-border" custom-class="is-small">
+                                        <b-checkbox id="searchable" name="searchable" size="is-small" v-model="dynamicattributeForm.searchable"
+                                                    type="is-warning" @input="searchableChange($event)">
+                                            Searchable
+                                        </b-checkbox>
+                                        <b-checkbox id="sortable" name="sortable" size="is-small" v-model="dynamicattributeForm.sortable"
+                                                    type="is-warning" @input="searchableChange($event)">
+                                            Sortable
+                                        </b-checkbox>
+                                    </b-field>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-xs">
+                                </label>
+                                <div class="col-sm-10">
+                                    <b-field label="" label-position="on-border" custom-class="is-small">
+                                        <b-checkbox id="can_be_notified" name="can_be_notified" size="is-small" v-model="dynamicattributeForm.can_be_notified"
+                                                    type="is-warning" @input="searchableChange($event)">
+                                            Can be Notified
+                                        </b-checkbox>
+                                    </b-field>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -95,12 +107,14 @@
     class Dynamicattribute {
         constructor(dynamicattribute) {
             this.name = dynamicattribute.name || ''
-            this.attributetype = dynamicattribute.attributetype || ''
-            this.searchable = dynamicattribute.searchable || ''
-            this.sortable = dynamicattribute.sortable || ''
+            this.title = dynamicattribute.title || ''
+            this.dynamicattributetype = dynamicattribute.dynamicattributetype || {}
+            this.searchable = dynamicattribute.searchable || false
+            this.sortable = dynamicattribute.sortable || false
             this.description = dynamicattribute.description || ''
             this.model_type = dynamicattribute.model_type || ''
             this.model_id = dynamicattribute.model_id || ''
+            this.can_be_notified = dynamicattribute.can_be_notified || false
         }
     }
     export default {
@@ -135,7 +149,7 @@
         },
         created() {
             axios.get('/dynamicattributetypes.fetchall')
-                .then(({data}) => this.attributetypes = data);
+                .then(({data}) => this.dynamicattributetypes = data);
         },
         data() {
             return {
@@ -145,7 +159,7 @@
                 dynamicattributeId: null,
                 editing: false,
                 loading: false,
-                attributetypes: []
+                dynamicattributetypes: []
             }
         },
         methods: {
@@ -178,8 +192,8 @@
             },
 
             searchableChange(event) {
-                this.dynamicattributeForm.attributetype = event;
-                this.updateDynamicattribute();
+                //this.dynamicattributeForm.dynamicattributetype = event;
+                //this.updateDynamicattribute();
             },
 
             updateDynamicattribute() {

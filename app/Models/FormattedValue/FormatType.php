@@ -7,7 +7,7 @@ use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
-use App\Contracts\FormattedValue\IInnerFormattedValue;
+use App\Contracts\FormattedValue\IFormattedValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property string $name
  * @property string $code
- * @property string|IInnerFormattedValue $formattype_class
+ * @property string|IFormattedValue $formattype_class
  * @property string|null $description
  *
  * @property Carbon $created_at

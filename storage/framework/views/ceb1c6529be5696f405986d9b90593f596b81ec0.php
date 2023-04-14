@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('app_content'); ?>
 <dynamicattribute-item :model_prop="<?php echo e($model->toJson()); ?>" :dynamicattribute_prop="<?php echo e($dynamicattribute->toJson()); ?>"></dynamicattribute-item>
 <?php $__env->stopSection(); ?>

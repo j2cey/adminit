@@ -22,8 +22,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Analysisrule = /*#__PURE__*/_createClass(function Analysisrule(analysisrule) {
   _classCallCheck(this, Analysisrule);
   this.title = analysisrule.title || '';
-  this.alert_when_allowed = analysisrule.alert_when_allowed || '';
-  this.alert_when_broken = analysisrule.alert_when_broken || '';
+  this.notify_when_allowed = analysisrule.notify_when_allowed || '';
+  this.notify_when_broken = analysisrule.notify_when_broken || '';
   this.analysisruletype = analysisrule.analysisruletype || '';
   this.description = analysisrule.description || '';
   this.dynamicattribute = analysisrule.dynamicattribute || {};
@@ -226,44 +226,44 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.analysisruleForm.alert_when_allowed,
-      expression: "analysisruleForm.alert_when_allowed"
+      value: _vm.analysisruleForm.notify_when_allowed,
+      expression: "analysisruleForm.notify_when_allowed"
     }],
     staticClass: "custom-control-input",
     attrs: {
       type: "checkbox",
-      id: "alert_when_allowed",
-      name: "alert_when_allowed",
-      autocomplete: "alert_when_allowed"
+      id: "notify_when_allowed",
+      name: "notify_when_allowed",
+      autocomplete: "notify_when_allowed"
     },
     domProps: {
-      checked: Array.isArray(_vm.analysisruleForm.alert_when_allowed) ? _vm._i(_vm.analysisruleForm.alert_when_allowed, null) > -1 : _vm.analysisruleForm.alert_when_allowed
+      checked: Array.isArray(_vm.analysisruleForm.notify_when_allowed) ? _vm._i(_vm.analysisruleForm.notify_when_allowed, null) > -1 : _vm.analysisruleForm.notify_when_allowed
     },
     on: {
       change: function change($event) {
-        var $$a = _vm.analysisruleForm.alert_when_allowed,
+        var $$a = _vm.analysisruleForm.notify_when_allowed,
           $$el = $event.target,
           $$c = $$el.checked ? true : false;
         if (Array.isArray($$a)) {
           var $$v = null,
             $$i = _vm._i($$a, $$v);
           if ($$el.checked) {
-            $$i < 0 && _vm.$set(_vm.analysisruleForm, "alert_when_allowed", $$a.concat([$$v]));
+            $$i < 0 && _vm.$set(_vm.analysisruleForm, "notify_when_allowed", $$a.concat([$$v]));
           } else {
-            $$i > -1 && _vm.$set(_vm.analysisruleForm, "alert_when_allowed", $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            $$i > -1 && _vm.$set(_vm.analysisruleForm, "notify_when_allowed", $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
           }
         } else {
-          _vm.$set(_vm.analysisruleForm, "alert_when_allowed", $$c);
+          _vm.$set(_vm.analysisruleForm, "notify_when_allowed", $$c);
         }
       }
     }
-  }), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm.analysisruleForm.errors.has("alert_when_allowed") ? _c("span", {
+  }), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm.analysisruleForm.errors.has("notify_when_allowed") ? _c("span", {
     staticClass: "invalid-feedback d-block text-xs",
     attrs: {
       role: "alert"
     },
     domProps: {
-      textContent: _vm._s(_vm.analysisruleForm.errors.get("alert_when_allowed"))
+      textContent: _vm._s(_vm.analysisruleForm.errors.get("notify_when_allowed"))
     }
   }) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "form-group row"
@@ -273,44 +273,44 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.analysisruleForm.alert_when_broken,
-      expression: "analysisruleForm.alert_when_broken"
+      value: _vm.analysisruleForm.notify_when_broken,
+      expression: "analysisruleForm.notify_when_broken"
     }],
     staticClass: "custom-control-input",
     attrs: {
       type: "checkbox",
-      id: "alert_when_broken",
-      name: "alert_when_broken",
-      autocomplete: "alert_when_broken"
+      id: "notify_when_broken",
+      name: "notify_when_broken",
+      autocomplete: "notify_when_broken"
     },
     domProps: {
-      checked: Array.isArray(_vm.analysisruleForm.alert_when_broken) ? _vm._i(_vm.analysisruleForm.alert_when_broken, null) > -1 : _vm.analysisruleForm.alert_when_broken
+      checked: Array.isArray(_vm.analysisruleForm.notify_when_broken) ? _vm._i(_vm.analysisruleForm.notify_when_broken, null) > -1 : _vm.analysisruleForm.notify_when_broken
     },
     on: {
       change: function change($event) {
-        var $$a = _vm.analysisruleForm.alert_when_broken,
+        var $$a = _vm.analysisruleForm.notify_when_broken,
           $$el = $event.target,
           $$c = $$el.checked ? true : false;
         if (Array.isArray($$a)) {
           var $$v = null,
             $$i = _vm._i($$a, $$v);
           if ($$el.checked) {
-            $$i < 0 && _vm.$set(_vm.analysisruleForm, "alert_when_broken", $$a.concat([$$v]));
+            $$i < 0 && _vm.$set(_vm.analysisruleForm, "notify_when_broken", $$a.concat([$$v]));
           } else {
-            $$i > -1 && _vm.$set(_vm.analysisruleForm, "alert_when_broken", $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            $$i > -1 && _vm.$set(_vm.analysisruleForm, "notify_when_broken", $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
           }
         } else {
-          _vm.$set(_vm.analysisruleForm, "alert_when_broken", $$c);
+          _vm.$set(_vm.analysisruleForm, "notify_when_broken", $$c);
         }
       }
     }
-  }), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm.analysisruleForm.errors.has("alert_when_broken") ? _c("span", {
+  }), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm.analysisruleForm.errors.has("notify_when_broken") ? _c("span", {
     staticClass: "invalid-feedback d-block text-xs",
     attrs: {
       role: "alert"
     },
     domProps: {
-      textContent: _vm._s(_vm.analysisruleForm.errors.get("alert_when_broken"))
+      textContent: _vm._s(_vm.analysisruleForm.errors.get("notify_when_broken"))
     }
   }) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "form-group row"
@@ -454,7 +454,7 @@ var staticRenderFns = [function () {
   return _c("label", {
     staticClass: "custom-control-label",
     attrs: {
-      "for": "alert_when_allowed"
+      "for": "notify_when_allowed"
     }
   }, [_c("span", {
     staticClass: "text text-xs"
@@ -465,7 +465,7 @@ var staticRenderFns = [function () {
   return _c("label", {
     staticClass: "custom-control-label",
     attrs: {
-      "for": "alert_when_broken"
+      "for": "notify_when_broken"
     }
   }, [_c("span", {
     staticClass: "text text-xs"

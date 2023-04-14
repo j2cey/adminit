@@ -4,7 +4,7 @@ namespace App\Http\Controllers\DynamicAttributes;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\DynamicAttributes\DynamicValue;
+use App\Models\DynamicValue\DynamicValue;
 
 class DynamicValueController extends Controller
 {

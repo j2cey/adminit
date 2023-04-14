@@ -69,7 +69,7 @@ var render = function render() {
       type: "number",
       min: _vm.formattextsize.min_value,
       max: _vm.formattextsize.max_value,
-      placeholder: "0,00",
+      placeholder: "size",
       loading: _vm.loading,
       readonly: !_vm.editing
     },

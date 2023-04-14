@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\DynamicAttributes;
 
 use App\Http\Controllers\Controller;
-use App\Models\DynamicAttributes\DynamicValueDatetime;
+use App\Models\DynamicValue\DynamicValueDatetime;
 use App\Http\Requests\DynamicValueDatetime\StoreDynamicValueDatetimeRequest;
 use App\Http\Requests\DynamicValueDatetime\UpdateDynamicValueDatetimeRequest;
 

@@ -8,9 +8,11 @@ use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
 use App\Models\Reports\ReportType;
 use App\Models\ReportFile\ReportFile;
+use App\Models\FileHeader\FileHeader;
 use App\Http\Resources\StatusResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\ReportFile\ReportFileResource;
+use App\Http\Resources\FileHeader\FileHeaderResource;
 use App\Http\Resources\DynamicAttributes\DynamicAttributeResource;
 
 /**
@@ -37,6 +39,7 @@ use App\Http\Resources\DynamicAttributes\DynamicAttributeResource;
  * @property ReportType $reporttype
  * @property mixed $dynamicattributes
  * @property mixed $reportfiles
+ * @property FileHeader $fileheader
  */
 class ReportResource extends JsonResource
 {
@@ -60,6 +63,7 @@ class ReportResource extends JsonResource
             'reporttype' => ReportTypeResource::make($this->reporttype),
             'dynamicattributes' => DynamicAttributeResource::collection($this->dynamicattributes),
             'reportfiles' => ReportFileResource::collection($this->reportfiles),
+            'fileheader' => FileHeaderResource::make($this->fileheader),
 
             'model_type' => Report::class,
 

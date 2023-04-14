@@ -44,7 +44,7 @@
                 <span class="help-inline pr-1 text-sm"> Résultat Importation </span>
                 <b-tag rounded type="is-info is-light">{{ collectedreportfile.nb_rows_import_success }}</b-tag>
             </template>
-                <ImportedLines :importedlines_prop="collectedreportfile.lines_values" :columns_prop="report.attributes_list"></ImportedLines>
+                <ImportedLines :importedlines_prop="collectedreportfile.lines_values" :columns_prop="collectedreportfile.reportfile.report.attributes_list" :fieldkey_prop="collectedreportfile.reportfile.report.dynamicattributes[0].name"></ImportedLines>
         </b-tab-item>
     </b-tabs>
 </template>

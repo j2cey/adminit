@@ -27,6 +27,7 @@ use App\Http\Resources\AnalysisRules\AnalysisRuleResource;
  * @property integer|null $status_id
  *
  * @property string $name
+ * @property string $title
  * @property integer|null $num_ord
  * @property string|null $description
  *
@@ -34,6 +35,7 @@ use App\Http\Resources\AnalysisRules\AnalysisRuleResource;
  * @property integer $max_length
  * @property bool $searchable
  * @property bool $sortable
+ * @property bool $can_be_notified
  *
  * @property string $hasdynamicattribute_type
  * @property integer $hasdynamicattribute_id
@@ -62,6 +64,7 @@ class DynamicAttributeResource extends JsonResource
             'status' => StatusResource::make($this->status),
 
             'name' => $this->name,
+            'title' => $this->title,
             'num_ord' => $this->num_ord,
             'description' => $this->description,
 
@@ -69,6 +72,7 @@ class DynamicAttributeResource extends JsonResource
             'max_length' => $this->max_length,
             'searchable' => $this->searchable,
             'sortable' => $this->sortable,
+            'can_be_notified' => $this->can_be_notified,
 
             'hasdynamicattribute_type' => $this->hasdynamicattribute_type,
             'hasdynamicattribute_id' => $this->hasdynamicattribute_id,

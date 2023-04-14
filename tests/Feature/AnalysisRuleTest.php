@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Status;
 use App\Models\Setting;
+use App\Enums\RuleResultEnum;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
@@ -94,8 +95,7 @@ class AnalysisRuleTest extends TestCase
             AnalysisRuleType::threshold()->first(),
             "new analysis rule",
             Status::active()->first(),
-            true,
-            true,
+            RuleResultEnum::ALLOWED->value,
             "new analysis rule desc"
         );
 
@@ -109,16 +109,14 @@ class AnalysisRuleTest extends TestCase
             $analysisruletype_another,
             "new analysis rule upd",
             $status_inactive,
-            false,
-            false,
+            RuleResultEnum::BROKEN->value,
             "new analysis rule desc upd"
         );
 
         $analysisrule->refresh();
 
         $this->assertEquals("new analysis rule upd", $analysisrule->title);
-        $this->assertEquals(false, $analysisrule->alert_when_allowed);
-        $this->assertEquals(false, $analysisrule->alert_when_broken);
+        $this->assertEquals(RuleResultEnum::BROKEN, $analysisrule->rule_result_for_notification);
         $this->assertEquals($status_inactive->id, $analysisrule->status->id);
         $this->assertEquals($analysisruletype_another->id, $analysisrule->analysisruletype->id);
         $this->assertEquals("new analysis rule desc upd", $analysisrule->description);
@@ -151,25 +149,24 @@ class AnalysisRuleTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_analysisrule($analysisruletype, $title, $status = null, $alert_when_allowed = false, $alert_when_broken = true, $description = null): TestResponse
+    private function add_new_analysisrule($analysisruletype, $title, $status = null, $rule_result_for_notification = null, $description = null): TestResponse
     {
         return $this->post('analysisrules', array_merge(
             [ 'dynamicattribute' => $this->create_new_dynamicattribute("new dynamicattribute") ],
-            $this->new_data($analysisruletype, $title, $status, $alert_when_allowed, $alert_when_broken, $description) )
+            $this->new_data($analysisruletype, $title, $status, $rule_result_for_notification, $description) )
         );
     }
 
-    private function update_existing_analysisrule($existing_analysisrule, $analysisruletype, $title, $status = null, $alert_when_allowed = false, $alert_when_broken = true, $description = null): TestResponse
+    private function update_existing_analysisrule($existing_analysisrule, $analysisruletype, $title, $status = null, $rule_result_for_notification = null, $description = null): TestResponse
     {
-        return $this->put('analysisrules/' . $existing_analysisrule->uuid, $this->new_data($analysisruletype, $title, $status, $alert_when_allowed, $alert_when_broken, $description));
+        return $this->put('analysisrules/' . $existing_analysisrule->uuid, $this->new_data($analysisruletype, $title, $status, $rule_result_for_notification, $description));
     }
 
-    private function new_data($analysisruletype, $title, $status = null, $alert_when_allowed = false, $alert_when_broken = true, $description = null): array
+    private function new_data($analysisruletype, $title, $status = null, $rule_result_for_notification = null, $description = null): array
     {
         return [
             'title' => $title,
-            'alert_when_allowed' => $alert_when_allowed,
-            'alert_when_broken' => $alert_when_broken,
+            'rule_result_for_notification' => $rule_result_for_notification,
             'description' => $description,
 
             'analysisruletype' => $analysisruletype,

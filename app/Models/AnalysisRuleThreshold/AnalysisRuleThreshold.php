@@ -3,11 +3,12 @@
 namespace App\Models\AnalysisRuleThreshold;
 
 use App\Models\BaseModel;
+use App\Enums\RuleResultEnum;
 use Illuminate\Support\Carbon;
-use App\Traits\AnalysisRules\IsInnerRule;
-use App\Contracts\AnalysisRules\IInnerRule;
+use App\Traits\AnalysisRules\InnerAnalysisRule;
 use App\Contracts\AnalysisRules\IInnerThreshold;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Contracts\AnalysisRules\IInnerAnalysisRule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -35,9 +36,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property IInnerThreshold $innerthreshold
  * @property ThresholdType $thresholdtype
  */
-class AnalysisRuleThreshold extends BaseModel implements IInnerRule
+class AnalysisRuleThreshold extends BaseModel implements IInnerAnalysisRule
 {
-    use IsInnerRule, HasFactory;
+    use InnerAnalysisRule, HasFactory;
 
     protected $guarded = [];
     protected $with = ['thresholdtype','status'];
@@ -83,6 +84,7 @@ class AnalysisRuleThreshold extends BaseModel implements IInnerRule
      */
     public function innerthreshold()
     {
+        //$this->update();
         return $this->morphTo();
     }
 
@@ -90,23 +92,31 @@ class AnalysisRuleThreshold extends BaseModel implements IInnerRule
 
     #region Custom Functions
 
-    public static function createInnerThreshold(ThresholdType $thresholdtype) : IInnerThreshold {
-        return $thresholdtype->inner_threshold_class::createNew();
+    public static function createInnerThreshold(ThresholdType $thresholdtype, array $attributes = []) : IInnerThreshold {
+        return $thresholdtype->inner_threshold_class::createNew($attributes);
     }
 
-    private function syncInnerThreshold(ThresholdType $thresholdtype, IInnerThreshold $innerthreshold) : IInnerThreshold {
+    private function syncInnerThreshold(ThresholdType $thresholdtype, IInnerThreshold $innerthreshold = null, array $attributes = []) : IInnerThreshold {
 
-        if ( $this->thresholdtype->id !== $thresholdtype->id ) {
-            // remove the old innerthreshold
-            $this->removeInnerThreshold();
+        if ( is_null($innerthreshold) ) {
+            // WARNING ! Make sure the association (via 'save' here) really happens
+            $innerthreshold = $this->createInnerThreshold($thresholdtype, $attributes);
+            $this->analysisrulethreshold()->save($innerthreshold);
+        } else {
+            if ($this->thresholdtype->id !== $thresholdtype->id) {
+                // remove the old innerthreshold
+                $this->removeInnerThreshold();
 
-            // and we have to create a new one from new type
-            $innerthreshold = $this->createInnerThreshold($thresholdtype);
+                // and we have to create a new one from new type
+                $innerthreshold = $this->createInnerThreshold($thresholdtype, $attributes);
 
-            $innerthreshold->attachUpperThreshold($this);
-            $this->thresholdtype()->associate($thresholdtype);
+                $innerthreshold->attachUpperThreshold($this);
+                $this->thresholdtype()->associate($thresholdtype);
 
-            $this->save();
+                $this->save();
+            } else {
+                $this->innerthreshold->updateOne($attributes);
+            }
         }
 
         return $innerthreshold;
@@ -124,21 +134,39 @@ class AnalysisRuleThreshold extends BaseModel implements IInnerRule
 
         $innerrule = $innerthreshold->analysisrulethreshold()->create();
 
+        $innerrule->thresholdtype()->associate($default_treshold_type);
         $innerrule->save();
 
         return $innerrule;
     }
 
-    public function updateOne(ThresholdType $thresholdtype, $threshold, $comment) : AnalysisRuleThreshold
+    public function updateOne(array $attributes = []) : AnalysisRuleThreshold
     {
-        $this->syncInnerThreshold($thresholdtype, $this->innerthreshold);
+        if ( ! empty($attributes) ) {
 
-        $this->threshold = $threshold;
-        $this->comment = $comment;
+            $this->threshold = array_key_exists("threshold", $attributes) ? $attributes['threshold'] : $this->threshold;
+            $this->comment = array_key_exists("comment", $attributes) ? $attributes['comment'] : $this->comment;
 
-        $this->save();
+            $thresholdtype = $this->getTresholdTypeFromAttributes($attributes);
+            if ($thresholdtype) {
+                $this->syncInnerThreshold($thresholdtype, $this->innerthreshold, $attributes);
+            }
+
+            $this->save();
+        }
 
         return $this;
+    }
+
+    private function getTresholdTypeFromAttributes(array $attributes): ?ThresholdType
+    {
+        if ( array_key_exists("thresholdtype", $attributes) ) {
+            $thresholdtype_arr = is_string($attributes['thresholdtype']) ? json_decode($attributes['thresholdtype'], true) : $attributes['thresholdtype'];
+
+            return ThresholdType::find( $thresholdtype_arr['id'] );
+        } else {
+            return null;
+        }
     }
 
     #endregion
@@ -146,15 +174,22 @@ class AnalysisRuleThreshold extends BaseModel implements IInnerRule
     public function ruleFollowed($input): bool
     {
         //return $this->thresholdtype->code == "min" ? ($input >= $this->threshold) : ($input <= $this->threshold);
-        if ($this->thresholdtype->code == "min") {
+        /*if ($this->thresholdtype->code == "min") {
             return ($input >= $this->threshold);
         } else {
             return ($input <= $this->threshold);
-        }
+        }*/
+        return $this->innerthreshold->applyRule($input) == RuleResultEnum::ALLOWED;
     }
 
     public function ruleBroken($input): bool
     {
-        return $this->thresholdtype->code == "min" ? ($input <= $this->threshold) : ($input >= $this->threshold);
+        //return $this->thresholdtype->code == "min" ? ($input <= $this->threshold) : ($input >= $this->threshold);
+        return $this->innerthreshold->applyRule($input) == RuleResultEnum::BROKEN;
+    }
+
+    public function applyRule($input): RuleResultEnum
+    {
+        return $this->innerthreshold->applyRule($input);
     }
 }

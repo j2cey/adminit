@@ -4,14 +4,18 @@ namespace App\Models\AnalysisRule;
 
 use App\Models\Status;
 use App\Models\BaseModel;
+use App\Enums\RuleResultEnum;
 use Illuminate\Support\Carbon;
+use App\Models\FormatRule\FormatRule;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Traits\FormatRule\HasFormatRules;
-use App\Contracts\AnalysisRules\IInnerRule;
+use App\Models\DynamicValue\DynamicValue;
+use Illuminate\Database\Eloquent\Collection;
 use App\Contracts\FormatRule\IHasFormatRules;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Contracts\AnalysisRules\IInnerAnalysisRule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -26,13 +30,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer|null $status_id
  *
  * @property string $title
+ * @property string $rule_result_for_notification
+ * @property integer $num_ord
  * @property string $description
  *
- * @property string $innerrule_type
- * @property integer $innerrule_id
+ * @property string $inneranalysisrule_type
+ * @property integer $inneranalysisrule_id
  *
- * @property boolean $alert_when_allowed
- * @property boolean $alert_when_broken
  *
  * @property integer|null $analysis_rule_type_id
  * @property integer|null $dynamic_attribute_id
@@ -41,17 +45,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $updated_at
  *
  * @property DynamicAttribute $dynamicattributes
- * @property IInnerRule $innerrule
+ * @property IInnerAnalysisRule $inneranalysisrule
  * @property AnalysisRuleType $analysisruletype
  *
  * @method static AnalysisRule first()
  */
-class AnalysisRule extends BaseModel implements IHasFormatRules
+class AnalysisRule extends BaseModel implements Auditable, IHasFormatRules
 {
     use HasFactory, HasFormatRules, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
-    protected $with = ["innerrule"];
+    protected $with = ["inneranalysisrule"];
+    protected $casts = [
+        'rule_result_for_notification' => RuleResultEnum::class,
+    ];
 
     #region Validation Rules
 
@@ -59,6 +66,7 @@ class AnalysisRule extends BaseModel implements IHasFormatRules
     {
         return [
             'title' => ['required'],
+            'rule_result_for_notification' => ['required'],
             'analysisruletype' => ['required'],
         ];
     }
@@ -81,6 +89,7 @@ class AnalysisRule extends BaseModel implements IHasFormatRules
     {
         return [
             'title.required' => "Prière de renseigner le Titre",
+            'rule_result_for_notification.required' => "Sélectionner le Résultat attendu pour Notification",
             'analysisruletype.required' => "Prière de renseigner le Type de Règle d'analyse",
         ];
     }
@@ -93,15 +102,15 @@ class AnalysisRule extends BaseModel implements IHasFormatRules
         return $this->belongsTo(AnalysisRuleType::class,"analysis_rule_type_id");
     }
 
-    public function dynamicattribute() {
+    /*public function dynamicattribute() {
         return $this->belongsTo(DynamicAttribute::class,"dynamic_attribute_id");
-    }
+    }*/
 
     /**
      * @return MorphTo
      * Get the parent inner rule model.
      */
-    public function innerrule()
+    public function inneranalysisrule()
     {
         return $this->morphTo();
     }
@@ -112,27 +121,30 @@ class AnalysisRule extends BaseModel implements IHasFormatRules
 
     /**
      * Crée (et stocke dans la base de données) une nouvelle Règle d'Analyse (AnalysisRule)
-     * @param Model|DynamicAttribute $dynamicattribute L'Attribut
      * @param Model|AnalysisRuleType $analysisruletype Le Type de Règle d'Analyse
      * @param string $title Le Titre
+     * @param string|null $rule_result_for_notification Résulat d'analyse attendu pour notification
+     * @param array $inneranalysisrule_attributes
      * @param Status|null $status Le Statut
-     * @param bool $alert_when_allowed Détermine si l'alerte doit être déclenchée si cette règle est respectée
-     * @param bool $alert_when_broken Détermine si l'alerte doit être déclenchée si cette règle est brisée
      * @param string|null $description La Description
+     * @param int|null $num_ord
      * @return AnalysisRule
      */
-    public static function createNew(Model|DynamicAttribute $dynamicattribute, Model|AnalysisRuleType $analysisruletype, string $title, Status $status = null, bool $alert_when_allowed = false, bool $alert_when_broken = true, string $description = null): AnalysisRule
+    public static function createNew(Model|AnalysisRuleType $analysisruletype, string $title, string $rule_result_for_notification = null, array $inneranalysisrule_attributes = [], Status $status = null, string $description = null, int $num_ord = null): AnalysisRule
     {
-        $innerrule = self::createInnerRule($analysisruletype);
+        $inneranalysisrule = self::createInnerRule($analysisruletype);
+        $inneranalysisrule->updateOne($inneranalysisrule_attributes);
 
-        $analysisrule = $innerrule->analysisrule()->create([
+        $data = [
             'title' => $title,
-            'alert_when_allowed' => $alert_when_allowed,
-            'alert_when_broken' => $alert_when_broken,
             'description' => $description,
-        ]);
+        ];
+        if ( ! is_null($rule_result_for_notification) ) $data['rule_result_for_notification'] = $rule_result_for_notification;
+        if ( ! is_null($num_ord) ) $data['num_ord'] = $num_ord;
 
-        $analysisrule->dynamicattribute()->associate($dynamicattribute);
+        $analysisrule = $inneranalysisrule->analysisrule()->create($data);
+
+        //$analysisrule->dynamicattribute()->associate($dynamicattribute);
         $analysisrule->analysisruletype()->associate($analysisruletype);
 
         $analysisrule->status()->associate( $status ?? Status::default()->first() );
@@ -146,19 +158,21 @@ class AnalysisRule extends BaseModel implements IHasFormatRules
      * Modifie (et stocke dans la base de données) cette Règle d'Analyse (AnalysisRule)
      * @param Model|AnalysisRuleType $analysisruletype Le Type de Règle d'Analyse
      * @param string $title Le Titre
+     * @param string|null $rule_result_for_notification Résulat d'analyse attendu pour notification
+     * @param array $inneranalysisrule_attributes
      * @param Status|null $status Le Statut
-     * @param bool $alert_when_allowed Détermine si l'alerte doit être déclenchée si cette règle est respectée
-     * @param bool $alert_when_broken Détermine si l'alerte doit être déclenchée si cette règle est brisée
      * @param string|null $description La Description
+     * @param int|null $num_ord
      * @return $this
      */
-    public function updateOne(Model|AnalysisRuleType $analysisruletype, string $title, Status $status = null, bool $alert_when_allowed = false, bool $alert_when_broken = true, string $description = null): AnalysisRule {
+    public function updateOne(Model|AnalysisRuleType $analysisruletype, string $title, string $rule_result_for_notification = null, array $inneranalysisrule_attributes = [], Status $status = null, string $description = null, int $num_ord = null): AnalysisRule {
 
-        $this->syncInnerRule($analysisruletype, $this->innerrule);
+        $this->syncInnerRule($analysisruletype, $this->inneranalysisrule);
+        $this->inneranalysisrule->updateOne($inneranalysisrule_attributes);
 
         $this->title = $title;
-        $this->alert_when_allowed = $alert_when_allowed;
-        $this->alert_when_broken = $alert_when_broken;
+        $this->rule_result_for_notification = $rule_result_for_notification ?? $this->rule_result_for_notification;
+        $this->num_ord = $num_ord ?? $this->num_ord;
         $this->description = $description;
 
         $this->status()->associate( $status ?? Status::default()->first() );
@@ -168,26 +182,26 @@ class AnalysisRule extends BaseModel implements IHasFormatRules
         return $this;
     }
 
-    public static function createInnerRule(AnalysisRuleType $ruletype) : IInnerRule {
+    public static function createInnerRule(AnalysisRuleType $ruletype) : IInnerAnalysisRule {
         return $ruletype->model_type::createNew();
     }
 
-    private function syncInnerRule(AnalysisRuleType $ruletype, IInnerRule $innerrule) : IInnerRule {
+    private function syncInnerRule(AnalysisRuleType $ruletype, IInnerAnalysisRule $inneranalysisrule) : IInnerAnalysisRule {
 
         if ( $this->analysisruletype->id !== $ruletype->id ) {
-            // remove the old innerrule
+            // remove the old inneranalysisrule
             $this->removeInnerRule();
 
             // and we have to create a new one from new type
-            $innerrule = $this->createInnerRule($ruletype);
+            $inneranalysisrule = $this->createInnerRule($ruletype);
 
-            $innerrule->attachUpperRule($this);
+            $inneranalysisrule->attachUpperRule($this);
             $this->analysisruletype()->associate($ruletype);
 
             $this->save();
         }
 
-        return $innerrule;
+        return $inneranalysisrule;
     }
 
     public function removeFormatRules() {
@@ -198,7 +212,32 @@ class AnalysisRule extends BaseModel implements IHasFormatRules
 
     public function removeInnerRule()
     {
-        $this->innerrule->delete();
+        $this->inneranalysisrule->delete();
+    }
+
+    public function applyRule(DynamicValue $dynamicValue): RuleResultEnum
+    {
+        return $this->inneranalysisrule->applyRule($dynamicValue->getValue());
+    }
+
+    /**
+     * @param DynamicValue $dynamicvalue
+     * @return array|Collection|FormatRule[]
+     */
+    public function getFormatRulesForNotification(DynamicValue $dynamicvalue) {
+        $formatrules = new \Illuminate\Database\Eloquent\Collection;
+        $ruleresult = $this->applyRule($dynamicvalue);
+
+        if ( $ruleresult == $this->rule_result_for_notification ) {
+            if ( ! empty($this->formatrules) ) {
+                foreach ($this->formatrules as $formatrule) {
+                    if ( $formatrule->rule_result == $ruleresult ||  $formatrule->rule_result == RuleResultEnum::ALLWAYS ) {
+                        $formatrules = $formatrules->add($formatrule);
+                    }
+                }
+            }
+        }
+        return $formatrules;
     }
 
     // Analysis Rule broken

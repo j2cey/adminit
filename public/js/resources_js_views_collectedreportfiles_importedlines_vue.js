@@ -12,7 +12,8 @@ __webpack_require__.r(__webpack_exports__);
   name: "collectedreportfile-importedlines",
   props: {
     importedlines_prop: {},
-    columns_prop: {}
+    columns_prop: {},
+    fieldkey_prop: {}
   },
   components: {},
   mounted: function mounted() {},
@@ -32,7 +33,8 @@ __webpack_require__.r(__webpack_exports__);
       showDetailIcon: true,
       useTransition: false,
       stickyHeaders: false,
-      columns: JSON.parse(this.columns_prop)
+      columns: JSON.parse(this.columns_prop),
+      fieldkey: this.fieldkey_prop
     };
   },
   methods: {},
@@ -104,7 +106,7 @@ var render = function render() {
       "per-page": _vm.perPage,
       "opened-detailed": _vm.defaultOpenedDetails,
       detailed: "",
-      "detail-key": "id",
+      "detail-key": _vm.fieldkey,
       "detail-transition": _vm.transitionName,
       "show-detail-icon": _vm.showDetailIcon,
       "current-page": _vm.currentPage,
@@ -178,7 +180,7 @@ var render = function render() {
       } : null, {
         key: "default",
         fn: function fn(props) {
-          return [column.field === "id" ? _c("span", {
+          return [column.field === "name" ? _c("span", {
             staticClass: "text-xs"
           }, [_vm._v("\n                        " + _vm._s(props.row[column.field]) + "\n                    ")]) : column.date ? _c("span", {
             staticClass: "tag is-success"

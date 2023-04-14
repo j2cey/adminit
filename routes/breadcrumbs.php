@@ -5,6 +5,8 @@ use App\Models\Reports\Report;
 use Tabuna\Breadcrumbs\Breadcrumbs;
 use App\Models\ReportFile\ReportFile;
 use App\Models\ReportFile\CollectedReportFile;
+use App\Models\DynamicAttributes\DynamicAttribute;
+use App\Models\DynamicAttributes\DynamicAttributeType;
 
 Breadcrumbs::for('home', function ($trail) {
     $trail->push('Home', route('home'));
@@ -33,6 +35,12 @@ Breadcrumbs::for('reports.dynamicattributes', function (Trail $trail, $uuid) {
     $trail->parent('reports.show', $report)
         ->push("Liste des Champs", route('reports.dynamicattributes', $report->uuid));
 });
+// CollectedReportFiles.show
+Breadcrumbs::for('dynamicattributes.show', function (Trail $trail, DynamicAttribute $dynamicattribute) {
+    $trail->parent('reports.dynamicattributes', $dynamicattribute->hasdynamicattribute->uuid)
+        ->push($dynamicattribute->id, route('dynamicattributes.show', $dynamicattribute->uuid));
+});
+
 // Reports.reportfiles
 Breadcrumbs::for('reports.reportfiles', function (Trail $trail, $uuid) {
     $report = Report::where('uuid',$uuid)->first();

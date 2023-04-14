@@ -23,6 +23,7 @@ class CreateDynamicAttributesTable extends Migration
             $table->id();
 
             $table->string('name')->comment('name of the attribute');
+            $table->string('title')->nullable()->comment('title of the attribute (display purpose)');
             $table->string('description')->nullable()->comment('description of the attribute');
 
             $table->foreignId('dynamic_attribute_type_id')->nullable()
@@ -38,6 +39,8 @@ class CreateDynamicAttributesTable extends Migration
 
             $table->boolean('searchable')->default(0)->comment('determine whether the attribute(field) is searchable');
             $table->boolean('sortable')->default(0)->comment('determine whether the attribute(field) is sortable');
+
+            $table->boolean('can_be_notified')->default(1)->comment('determine whether the attribute(field) can be notified');
 
             $table->baseFields();
         });

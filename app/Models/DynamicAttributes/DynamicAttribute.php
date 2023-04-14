@@ -6,12 +6,19 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
+use App\Models\FormatRule\FormatRule;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\DynamicValue\DynamicRow;
+use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\AnalysisRule\AnalysisRule;
 use App\Traits\FormatRule\HasFormatRules;
+use App\Models\DynamicValue\DynamicValue;
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\AnalysisRule\AnalysisRuleType;
 use App\Contracts\FormatRule\IHasFormatRules;
+use App\Traits\AnalysisRules\HasAnalysisRules;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Contracts\AnalysisRules\IHasAnalysisRules;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,6 +36,7 @@ use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
  * @property integer|null $status_id
  *
  * @property string $name
+ * @property string $title
  * @property integer $num_ord
  * @property string|null $description
  *
@@ -36,6 +44,7 @@ use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
  * @property integer $max_length
  * @property bool $searchable
  * @property bool $sortable
+ * @property bool $can_be_notified
  *
  * @property string $hasdynamicattribute_type
  * @property integer $hasdynamicattribute_id
@@ -44,14 +53,15 @@ use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
  * @property DynamicAttributeType $dynamicattributetype
  * @property IHasDynamicAttributes $hasdynamicattribute
  *
  * @method static DynamicAttribute first()
  */
-class DynamicAttribute extends BaseModel implements IHasFormatRules
+class DynamicAttribute extends BaseModel implements Auditable, IHasAnalysisRules, IHasFormatRules
 {
-    use HasFactory, HasFormatRules, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasAnalysisRules, HasFormatRules, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -59,6 +69,7 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
     protected $casts = [
         'searchable' => 'boolean',
         'sortable' => 'boolean',
+        'can_be_notified' => 'boolean',
     ];
 
     #region Validation Rules
@@ -100,10 +111,10 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
         return $this->belongsTo(DynamicAttributeType::class,"dynamic_attribute_type_id");
     }
 
-    public function analysisrules()
+    /*public function analysisrules()
     {
         return $this->hasMany(AnalysisRule::class, 'dynamic_attribute_id');
-    }
+    }*/
 
     /**
      * The Model which has this Attribute
@@ -145,46 +156,54 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
      * @param IHasDynamicAttributes $model
      * @param Model|DynamicAttributeType $dynamicattributetype
      * @param string $name
+     * @param string|null $title
      * @param Status|null $status
      * @param string|null $description
      * @param int|null $offset
      * @param int|null $max_length
      * @param bool|null $searchable
      * @param bool|null $sortable
+     * @param bool|null $can_be_notified
      * @return DynamicAttribute
      */
-    public static function createNew(IHasDynamicAttributes $model, Model|DynamicAttributeType $dynamicattributetype, string $name, Status $status = null, string $description = null, int $offset = null, int $max_length = null, bool $searchable = null, bool $sortable = null): DynamicAttribute {
-        return $model->addDynamicAttribute($name, $dynamicattributetype, $status, $description, $offset, $max_length, $searchable, $sortable);
+    public static function createNew(IHasDynamicAttributes $model, Model|DynamicAttributeType $dynamicattributetype, string $name, string $title = null, Status $status = null, string $description = null, int $offset = null, int $max_length = null, bool $searchable = null, bool $sortable = null, bool $can_be_notified = null): DynamicAttribute {
+        return $model->addDynamicAttribute($name, $dynamicattributetype, $title, $status, $description, $offset, $max_length, $searchable, $sortable, $can_be_notified);
     }
 
     /**
      * @param Model|DynamicAttributeType $dynamicattributetype
      * @param string $name
+     * @param string|null $title
      * @param Status|null $status
      * @param string|null $description
      * @param int|null $offset
      * @param int|null $max_length
      * @param bool|null $searchable
      * @param bool|null $sortable
+     * @param bool|null $can_be_notified
      * @return $this
      */
     public function updateThis(
         Model|DynamicAttributeType $dynamicattributetype,
         string $name,
+        string $title = null,
         Status $status = null,
         string $description = null,
         int $offset = null,
         int $max_length = null,
         bool $searchable = null,
-        bool $sortable = null
+        bool $sortable = null,
+        bool $can_be_notified = null
     ): DynamicAttribute
     {
         $this->name = $name;
+        $this->title = $title ?? $name;
         $this->description = $description;
-        $this->offset = $offset;
-        $this->max_length = $max_length;
+        $this->offset = $offset ?? $this->offset;
+        $this->max_length = $max_length ?? $this->max_length;
         $this->searchable = $searchable;
         $this->sortable = $sortable;
+        $this->can_be_notified = $can_be_notified;
 
         $this->dynamicattributetype()->associate($dynamicattributetype);
         if ( ! is_null($status) ) {
@@ -196,10 +215,10 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
         return $this;
     }
 
-    public function addAnalysisRule(Model|AnalysisRuleType $analysisruletype, string $title, bool $alert_when_allowed, bool $alert_when_broken, string $description = null): AnalysisRule
+    /*public function addAnalysisRule(Model|AnalysisRuleType $analysisruletype, string $title, string $rule_result_for_notification, string $description = null): AnalysisRule
     {
-        return AnalysisRule::createNew($this,$analysisruletype,$title,null,$alert_when_allowed,$alert_when_broken,$description);
-    }
+        return AnalysisRule::createNew($this,$analysisruletype,$title,null,$rule_result_for_notification,$description);
+    }*/
 
 
 
@@ -211,6 +230,27 @@ class DynamicAttribute extends BaseModel implements IHasFormatRules
         $dynamicvalue->setDefaultFormatSize();
 
         return $dynamicvalue;
+    }
+
+    /**
+     * @param DynamicValue $dynamicValue
+     * @return array|Collection|FormatRule[]
+     */
+    public function getFormatRulesForNotification(DynamicValue $dynamicValue)
+    {
+        $formatrules = new \Illuminate\Database\Eloquent\Collection;
+        $formatrules = $formatrules->merge($this->formatrules);
+        /*if ( $this->id === 2 ) {
+            dump("1st: ", $formatrules);
+        }*/
+        foreach ($this->analysisrules as $analysisrule) {
+            $curr_formatrules = $analysisrule->getFormatRulesForNotification($dynamicValue);
+            $formatrules = $formatrules->merge($curr_formatrules);
+            /*if ( $this->id === 2 ) {
+                dd("2nd: ", $formatrules);
+            }*/
+        }
+        return $formatrules;
     }
 
     #endregion

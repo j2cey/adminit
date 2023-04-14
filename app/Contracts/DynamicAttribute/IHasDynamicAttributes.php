@@ -33,6 +33,6 @@ interface IHasDynamicAttributes extends Auditable
      */
     public function latestDynamicattribute();
 
-    public function addDynamicAttribute($name,Model|DynamicAttributeType $dynamicattributetype, Status $status = null, string $description = null, int $offset = null, int $max_length = null, bool $searchable = null, bool $sortable = null): DynamicAttribute;
+    public function addDynamicAttribute($name,Model|DynamicAttributeType $dynamicattributetype,$title = null, Status $status = null, string $description = null, int $offset = null, int $max_length = null, bool $searchable = null, bool $sortable = null, bool $can_be_notified = null): DynamicAttribute;
     public function addDynamicAttributeMany(array $attributes);
 }

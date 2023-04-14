@@ -12,6 +12,9 @@
 [x] - Ajouter l'entrée retrieve_by_wildcard_label dans les Settings\
 [x] - Ajouter l'entrée retrieve_by_name_label dans les Settings
 
+## Report
+[] - FormatRule pour les Headers
+
 ## Tests à effectuer (rajouter 'test_' devant les fonctions)
 [] - AuthenticationTest
 [] - EmailVerificationTest
@@ -50,3 +53,6 @@
 
 ## selectedretrieveactions
 [] -> implémenter le polymorphic relationships
+
+## DynamicAttribute
+[] -> add and manage fieldkey attribute
