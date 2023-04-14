@@ -125,7 +125,7 @@ trait HasFormatRules
 
     public function setDefaultFormatSize() {
         $this->addFormatRule(FormatRuleType::textSize()->first(),"default text size")->innerformatrule->update([
-            'format_value' => 8,
+            'format_value' => 10,
             'comment' => "default text size from system",
         ]);
     }

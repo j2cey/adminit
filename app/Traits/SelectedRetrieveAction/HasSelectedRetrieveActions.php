@@ -4,14 +4,14 @@ namespace App\Traits\SelectedRetrieveAction;
 
 use App\Models\Status;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ReportFile\ReportFileAccess;
 use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 
 /**
- * @property mixed selectedretrieveactions
- * @method HasMany selectedretrieveactions()
+ * @property SelectedRetrieveAction[] selectedretrieveactions
  * @method refresh()
  */
 trait HasSelectedRetrieveActions
@@ -24,9 +24,18 @@ trait HasSelectedRetrieveActions
         $this->refresh();
     }
 
-    public function dynamicattributes()
+    public function selectedretrieveactions(){
+        return $this->morphMany(SelectedRetrieveAction::class, 'hasselectedretrieveaction');
+    }
+
+
+    public function retrieveactions()
     {
-        return $this->morphMany(DynamicAttribute::class, 'hasdynamicattribute');
+        return $this->morphMany(RetrieveAction::class, 'hasselectedretrieveaction');
+    }
+
+    public function reportfileaccessess(){
+        return $this->morphMany(ReportFileAccess::class, 'hasselectedretrieveaction');
     }
 
     /**
@@ -75,5 +84,10 @@ trait HasSelectedRetrieveActions
             $this->removeSelectedAction($selectedaction);
         }
         return true;
+    }
+
+    protected function initializeHasSelectedRetrieveActions()
+    {
+        $this->with = array_unique(array_merge($this->with, ['selectedretrieveactions']));
     }
 }

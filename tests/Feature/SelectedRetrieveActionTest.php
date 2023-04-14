@@ -15,9 +15,10 @@ use Illuminate\Support\Facades\Config;
 use App\Models\ReportFile\ReportFileType;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\RetrieveAction\RetrieveAction;
-use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Models\RetrieveAction\SelectedRetrieveAction;
+use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
 class SelectedRetrieveActionTest extends TestCase
 {
@@ -54,6 +55,7 @@ class SelectedRetrieveActionTest extends TestCase
         $user = $this->authenticated_user_admin();
 
         $response = $this->add_new_selectedretrieveaction(
+            $this->create_new_reportfile(),
             RetrieveAction::retrieveByName()->first(),
             null,
             null,
@@ -79,7 +81,7 @@ class SelectedRetrieveActionTest extends TestCase
         $user = $this->authenticated_user_admin();
 
         $response = $this->add_new_selectedretrieveaction(
-            null,
+            $this->create_new_reportfile(),
             null,
             null,
             null
@@ -96,12 +98,14 @@ class SelectedRetrieveActionTest extends TestCase
         $user = $this->authenticated_user_admin();
 
         $response = $this->add_new_selectedretrieveaction(
+            $this->create_new_reportfile(),
             RetrieveAction::retrieveByName()->first(),
             "new_selected_retrieve_action_code",
             null,
             null
         );
         $response = $this->add_new_selectedretrieveaction(
+            $this->create_new_reportfile(),
             RetrieveAction::retrieveByName()->first(),
             "new_selected_retrieve_action_code",
             null,
@@ -124,6 +128,7 @@ class SelectedRetrieveActionTest extends TestCase
         $user = $this->authenticated_user_admin();
 
         $response = $this->add_new_selectedretrieveaction(
+            $this->create_new_reportfile(),
             RetrieveAction::retrieveByName()->first(),
             "new_selected_retrieve_action_code",
             Status::active()->first(),
@@ -162,7 +167,7 @@ class SelectedRetrieveActionTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_selectedretrieveaction(
+        $response = $this->add_new_selectedretrieveaction($this->create_new_reportfile(),
             RetrieveAction::retrieveByName()->first(),
             null,
             null,
@@ -267,9 +272,12 @@ class SelectedRetrieveActionTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_selectedretrieveaction($retrieveaction, $code = null, $status = null, $description = null): TestResponse
+    private function add_new_selectedretrieveaction(IHasSelectedRetrieveActions $model, $retrieveaction, $code = null, $status = null, $description = null): TestResponse
     {
-        return $this->post('selectedretrieveactions', $this->new_data($retrieveaction, $code, $status, $description));
+        return $this->post('selectedretrieveactions',
+            array_merge([
+                'model_id' => $model->id,
+            ],$this->new_data($retrieveaction, $code, $status, $description)));
     }
 
     private function update_existing_selectedretrieveaction($existing_selectedretrieveaction, $retrieveaction, $code = null, $status = null, $description = null): TestResponse
