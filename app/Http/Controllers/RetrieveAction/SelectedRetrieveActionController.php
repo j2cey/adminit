@@ -54,7 +54,7 @@ class SelectedRetrieveActionController extends Controller
      */
     public function store(StoreSelectedRetrieveActionRequest $request)
     {
-        $selectedretrieveaction = SelectedRetrieveAction::createNew(
+        $selectedretrieveaction = $request->model->addSelectedAction(
             $request->retrieveaction,
             $request->code,
             $request->status,

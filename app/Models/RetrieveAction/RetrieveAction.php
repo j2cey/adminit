@@ -10,6 +10,7 @@ use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Contracts\RetrieveAction\IRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
 
 /**
  * Class RetrieveAction
@@ -105,7 +106,7 @@ class RetrieveAction extends BaseModel implements Auditable
     #region Eloquent Relationships
 
     public function retrieveactiontype() {
-        return $this->belongsTo(RetrieveActionType::class, 'retrieve_action_type_id');
+        return $this->belongsTo(SelectedRetrieveAction::class, 'selected_retrieve_action_id');
     }
 
     #endregion

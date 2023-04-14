@@ -42,6 +42,9 @@ class CreateReportFilesTable extends Migration
                 ->comment('clé reférence du report')
                 ->constrained('reports')->onDelete('set null');
 
+            $table->bigInteger('hasselectedretrieveaction_id')->nullable()->comment('referenced elected retrieve action owner s model id (object id)');
+            $table->string('hasselectedretrieveaction_type')->nullable()->comment('referenced selected retrieve action owner s model (class name)');
+
             $table->baseFields();
         });
         $this->setTableComment($this->table_name,$this->table_comment);

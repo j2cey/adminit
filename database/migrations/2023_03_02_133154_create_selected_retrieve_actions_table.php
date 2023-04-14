@@ -11,7 +11,7 @@ class CreateSelectedRetrieveActionsTable extends Migration
     use BaseMigrationTrait;
 
     public $table_name = "selected_retrieve_actions";
-    public $table_comment = "liste actions (en rapport a la récupération) selectionnées pour un fichier et/ou un accès.";
+    public $table_comment = "liste actions (en rapport à la récupération) selectionnées pour un fichier et/ou un accès.";
 
     /**
      * Run the migrations.
@@ -30,8 +30,9 @@ class CreateSelectedRetrieveActionsTable extends Migration
                 ->comment('clé de reférence de l action')
                 ->constrained('retrieve_actions')->onDelete('set null');
 
-            $table->string('hasselectedretrieveaction_type')->nullable()->comment('referenced type model (class name)');
-            $table->bigInteger('hasselectedretrieveaction_id')->nullable()->comment('referenced  model id (object id)');
+            $table->foreignId('selected_retrieve_action_id')->nullable()
+                ->comment('clé reférence du selected_retrieve_action')
+                ->constrained('selected_retrieve_actions')->onDelete('set null');
 
             $table->baseFields();
         });

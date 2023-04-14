@@ -4,16 +4,15 @@ namespace App\Http\Requests\SelectedRetrieveAction;
 
 use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Http\FormRequest;
 use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
-use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
+use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
 /**
  * Class StoreSelectedRetrieveActionRequest
  * @package App\Http\Requests\SelectedRetrieveAction
  *
- * @property HasSelectedRetrieveActions $model
+ * @property IHasSelectedRetrieveActions $model
  * @property string $code
  * @property string|null $description
  *
@@ -50,6 +49,7 @@ class StoreSelectedRetrieveActionRequest extends SelectedRetrieveActionRequest
     {
         $this->merge([
             'status' => $this->setRelevantStatus($this->input('status'),'code', false),
+            'model' => $this->input('model_type')::find($this->input('model_id'))->first(),
             'retrieveaction' => $this->setRelevantRetrieveAction(RetrieveAction::class, $this->input('retrieveaction'),'code', false),
         ]);
     }
