@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormattedValue\FormatTypeController;
 use App\Http\Controllers\FormattedValue\FormattedValueSmsController;
 use App\Http\Controllers\FormattedValue\FormattedValueHtmlController;

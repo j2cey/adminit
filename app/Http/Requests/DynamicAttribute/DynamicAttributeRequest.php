@@ -12,6 +12,7 @@ use App\Models\DynamicAttributes\DynamicAttributeType;
  * @package App\Http\Requests\DynamicAttribute
  *
  * @property string $name
+ * @property string $title
  * @property integer $num_ord
  * @property string|null $description
  *
@@ -19,6 +20,7 @@ use App\Models\DynamicAttributes\DynamicAttributeType;
  * @property integer $max_length
  * @property bool $searchable
  * @property bool $sortable
+ * @property bool $can_be_notified
  *
  * @property Status $status
  * @property DynamicAttributeType $dynamicattributetype

@@ -3,8 +3,8 @@
 namespace App\Traits\DynamicAttribute;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\DynamicAttributes\DynamicRow;
-use App\Models\DynamicAttributes\DynamicValue;
+use App\Models\DynamicValue\DynamicRow;
+use App\Models\DynamicValue\DynamicValue;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Contracts\DynamicAttribute\IInnerDynamicValue;

@@ -3,7 +3,7 @@
         <b-input size="is-small" type="number"
                  :min="formattextsize.min_value"
                  :max="formattextsize.max_value"
-                 placeholder="0,00"
+                 placeholder="size"
                  v-model="formattextsize.format_value"
 
                  :loading="loading"

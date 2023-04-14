@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\DynamicAttributes\DynamicRow;
+use App\Models\DynamicValue\DynamicRow;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DynamicRowPolicy

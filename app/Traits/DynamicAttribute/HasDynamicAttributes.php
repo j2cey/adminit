@@ -61,30 +61,39 @@ trait HasDynamicAttributes
 
     #region Custom Functions
 
+    private function createDynamicAttribute(array $data): DynamicAttribute {
+        return $this->dynamicattributes()->create($data);   // create and attach a new DynamicAttribute to the current model object
+    }
+
     /**
      * @param $name
      * @param Model|DynamicAttributeType $dynamicattributetype
+     * @param null $title
      * @param Status|null $status
      * @param string|null $description
      * @param int|null $offset
      * @param int|null $max_length
      * @param bool|null $searchable
      * @param bool|null $sortable
+     * @param bool|null $can_be_notified
      * @return DynamicAttribute
      */
     public function addDynamicAttribute(
         $name,Model|DynamicAttributeType $dynamicattributetype,
+        $title = null,
         Status $status = null,
         string $description = null,
         int $offset = null,
         int $max_length = null,
         bool $searchable = null,
-        bool $sortable = null
+        bool $sortable = null,
+        bool $can_be_notified = null
     ): DynamicAttribute
     {
-        $num_ord = $this->dynamicattributes()->count() + 1;                     // set the attribute number order
+        $num_ord = $this->dynamicattributes()->count() + 1;                                 // set the attribute number order
         $data = [
             'name' => $name,
+            'title' => $title ?? $name,
             'num_ord' => $num_ord,
             'description' => $description,
         ];
@@ -92,15 +101,18 @@ trait HasDynamicAttributes
         if ( ! is_null($max_length) ) $data['max_length'] = $max_length;
         if ( ! is_null($searchable) ) $data['searchable'] = $searchable;
         if ( ! is_null($sortable) ) $data['sortable'] = $sortable;
+        if ( ! is_null($can_be_notified) ) $data['can_be_notified'] = $can_be_notified;
 
-        $dynamicattribute = $this->dynamicattributes()->create($data)           // create and attach a new DynamicAttribute to the current model object
-        ->dynamicattributetype()->associate($dynamicattributetype);             // associate the created DynamicAttribute with the given DynamicAttributeType
+        $dynamicattribute = $this->createDynamicAttribute($data);
+
+            $dynamicattribute->dynamicattributetype()->associate($dynamicattributetype);        // associate the created DynamicAttribute with the given DynamicAttributeType
 
         if ( ! is_null($status) ) {
-            $dynamicattribute->status()->associate($status);                    // set status
+            $dynamicattribute->status()->associate($status);                                    // set status
         }
 
-        $dynamicattribute->save();                                              // save the association from the DynamicAttribute
+        $dynamicattribute->setDefaultFormatSize();                                              // set default FormatRule format size
+        $dynamicattribute->save();                                                              // save the association from the DynamicAttribute
 
         $this->setAddAttributeToList($dynamicattribute);
 
@@ -109,7 +121,7 @@ trait HasDynamicAttributes
 
     /**
      * Add Many DynamicAttribute at once
-     * @param array $attributes Attributes array: [['name' => "string", 'type' => DynamicAttributeType, 'status' => Status, 'description' => "string", 'offset' => int, 'max_length' => int, 'searchable' => bool, 'sortable' => bool]]
+     * @param array $attributes Attributes array: [['name' => "string", 'title' => "string", 'type' => DynamicAttributeType, 'status' => Status, 'description' => "string", 'offset' => int, 'max_length' => int, 'searchable' => bool, 'sortable' => bool]]
      * @return int
      */
     public function addDynamicAttributeMany(array $attributes) {
@@ -119,6 +131,7 @@ trait HasDynamicAttributes
             $this->addDynamicAttribute(
                 $attribute['name'],
                 $attribute['type'],
+                $attribute['title'],
                 $attribute['status'] ?? null,
                 $attribute['description'] ?? null,
                 $attribute['offset'] ?? null,

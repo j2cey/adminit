@@ -44,9 +44,13 @@ class StoreDynamicAttributeRequest extends DynamicAttributeRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'model' => $this->input('model_type')::find($this->input('model_id'))->first(),
+            'model' => $this->input('model_type')::where('id', $this->input('model_id'))->first(),
             'dynamicattributetype' => $this->setRelevantDynamicAttributeType($this->input('dynamicattributetype')),
             'status' => $this->setRelevantStatus($this->input('status'), "íd", false),
+
+            'searchable' => $this->getCheckValue('searchable'),
+            'sortable' => $this->getCheckValue('sortable'),
+            'can_be_notified' => $this->getCheckValue('can_be_notified'),
         ]);
     }
 }

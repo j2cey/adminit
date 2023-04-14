@@ -2,6 +2,7 @@
 
 namespace App\Contracts\AnalysisRules;
 
+use App\Enums\RuleResultEnum;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\AnalysisRuleThreshold\AnalysisRuleThreshold;
 
@@ -10,8 +11,11 @@ use App\Models\AnalysisRuleThreshold\AnalysisRuleThreshold;
  */
 interface IInnerThreshold extends Auditable
 {
-    public static function createNew();
+    public static function createNew(array $attributes = []);
+    public function updateOne(array $attributes = []);
 
     public function analysisrulethreshold();
     public function attachUpperThreshold(AnalysisRuleThreshold $upperthreshold);
+
+    public function applyRule($input): RuleResultEnum;
 }

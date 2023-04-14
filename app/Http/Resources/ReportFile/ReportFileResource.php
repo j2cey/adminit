@@ -72,7 +72,7 @@ class ReportFileResource extends JsonResource
             'use_file_extension' => $this->use_file_extension,
             'has_headers' => $this->has_headers,
 
-            'selectedretrieveactions' => SelectedRetrieveActionResource::collection($this->selectedretrieveactions),
+            //'selectedretrieveactions' => SelectedRetrieveActionResource::collection($this->selectedretrieveactions),
 
             'description' => $this->description,
             'created_at' => $this->created_at,

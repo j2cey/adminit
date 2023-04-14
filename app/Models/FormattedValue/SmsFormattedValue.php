@@ -73,35 +73,35 @@ class SmsFormattedValue extends BaseModel implements IFormattedValue
 
     /**
      * @param mixed|null $value
-     * @param Collection|FormatRule[]|null $formatrules
+     * @param Collection|array|FormatRule[]|null $formatrules
      * @param bool $reset
      * @return void
      */
-    public function applyFormatFromRaw(mixed $value = null, Collection $formatrules = null, bool $reset = false) {
+    public function applyFormatFromRaw(mixed $value = null, Collection|array $formatrules = null, bool $reset = false) {
 
     }
 
     /**
      * @param mixed|null $value
-     * @param Collection|FormatRule[]|null $formatrules
+     * @param Collection|array|FormatRule[]|null $formatrules
      * @param bool $reset
      * @return void
      */
-    public function applyFormatFromFormatted(mixed $value = null, Collection $formatrules = null, bool $reset = false) {
+    public function applyFormatFromFormatted(mixed $value = null, Collection|array $formatrules = null, bool $reset = false) {
 
     }
 
     /**
      * @param mixed|null $value
-     * @param Collection|FormatRule[]|null $formatrules
+     * @param Collection|array|FormatRule[]|null $formatrules
      * @param bool $reset
      * @return void
      */
-    public function applyFormat(mixed $value = null, Collection $formatrules = null, bool $reset = false) {
+    public function applyFormat(mixed $value = null, Collection|array $formatrules = null, bool $reset = false) {
 
     }
 
-    public function insertHeadersRow(array $headers) {
+    public function insertHeadersRow(array $headers, Collection|array $formatrules = null) {
 
     }
 

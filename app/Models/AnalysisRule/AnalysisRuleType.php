@@ -6,7 +6,7 @@ use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Query\Builder;
 use OwenIt\Auditing\Contracts\Auditable;
-use App\Contracts\AnalysisRules\IInnerRule;
+use App\Contracts\AnalysisRules\IInnerAnalysisRule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property string $name
  * @property string $code
- * @property string|IInnerRule $model_type
+ * @property string|IInnerAnalysisRule $model_type
  * @property string $view_name
  * @property string $description
  *

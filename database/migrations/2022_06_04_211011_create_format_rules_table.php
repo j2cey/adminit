@@ -23,7 +23,7 @@ class CreateFormatRulesTable extends Migration
             $table->id();
 
             $table->string('title')->comment('title of the format rule');
-            $table->string('num_ord')->nullable()->comment('format rule s num order');
+            $table->integer('num_ord')->nullable()->comment('format rule s num order');
             $table->string('rule_result')->comment('format rule result for which this format rule is applied: [allowed, broken]');
             $table->string('description')->nullable()->comment('format rule description');
 

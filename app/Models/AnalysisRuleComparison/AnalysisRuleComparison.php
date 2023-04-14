@@ -3,10 +3,11 @@
 namespace App\Models\AnalysisRuleComparison;
 
 use App\Models\BaseModel;
+use App\Enums\RuleResultEnum;
 use Illuminate\Support\Carbon;
-use App\Traits\AnalysisRules\IsInnerRule;
-use App\Contracts\AnalysisRules\IInnerRule;
+use App\Traits\AnalysisRules\InnerAnalysisRule;
 use App\Contracts\AnalysisRules\IInnerComparison;
+use App\Contracts\AnalysisRules\IInnerAnalysisRule;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,9 +37,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property IInnerComparison $innercomparison
  * @property ComparisonType $comparisontype
  */
-class AnalysisRuleComparison extends BaseModel implements IInnerRule
+class AnalysisRuleComparison extends BaseModel implements IInnerAnalysisRule
 {
-    use IsInnerRule, HasFactory;
+    use InnerAnalysisRule, HasFactory;
 
     protected $guarded = [];
     protected $with = ['comparisontype','status'];
@@ -132,14 +133,20 @@ class AnalysisRuleComparison extends BaseModel implements IInnerRule
         return $innerrule;
     }
 
-    public function updateOne(ComparisonType $comparisontype, $with_equality, $comment) : AnalysisRuleComparison
+    public function updateOne(array $attributes = []) : AnalysisRuleComparison
     {
-        $this->syncInnerComparison($comparisontype, $this->innercomparison);
+        if ( ! empty($attributes) ) {
+            $comparisontype = $attributes['comparisontype'];
+            $with_equality = $attributes['with_equality'];
+            $comment = $attributes['comment'];
 
-        $this->with_equality = $with_equality;
-        $this->comment = $comment;
+            $this->syncInnerComparison($comparisontype, $this->innercomparison);
 
-        $this->save();
+            $this->with_equality = $with_equality;
+            $this->comment = $comment;
+
+            $this->save();
+        }
 
         return $this;
     }
@@ -153,5 +160,10 @@ class AnalysisRuleComparison extends BaseModel implements IInnerRule
     public function ruleBroken($input): bool
     {
         return true;
+    }
+
+    public function applyRule($input): RuleResultEnum
+    {
+        return RuleResultEnum::ALLWAYS;
     }
 }

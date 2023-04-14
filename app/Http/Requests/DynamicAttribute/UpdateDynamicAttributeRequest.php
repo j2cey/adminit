@@ -45,6 +45,10 @@ class UpdateDynamicAttributeRequest extends DynamicAttributeRequest
         $this->merge([
             'dynamicattributetype' => $this->setRelevantDynamicAttributeType($this->input('dynamicattributetype'), true),
             'status' => $this->getrelevantModelByCode(Status::class, $this->status, true),
+
+            'searchable' => $this->getCheckValue('searchable'),
+            'sortable' => $this->getCheckValue('sortable'),
+            'can_be_notified' => $this->getCheckValue('can_be_notified'),
         ]);
     }
 }

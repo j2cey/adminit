@@ -27,7 +27,10 @@ var FormatRule = /*#__PURE__*/_createClass(function FormatRule(formatrule) {
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "formatrule-list",
   props: {
-    model_prop: {}
+    model_prop: {},
+    list_title_prop: {
+      "default": "Règles de Formattage"
+    }
   },
   components: {
     FormatRuleItem: function FormatRuleItem() {
@@ -43,11 +46,13 @@ var FormatRule = /*#__PURE__*/_createClass(function FormatRule(formatrule) {
   },
   data: function data() {
     return {
+      list_title: this.list_title_prop,
       model: this.model_prop,
       formatruletypes: [],
       filteredFormatRuleTypes: [],
       formatRuleForm: this.getNewformatRuleForm(),
       formatrules: this.model_prop.formatrules,
+      creating: false,
       loading: false,
       allowNew: false,
       openOnFocus: true
@@ -85,6 +90,9 @@ var FormatRule = /*#__PURE__*/_createClass(function FormatRule(formatrule) {
     },
     resetFom: function resetFom() {
       this.formatRuleForm = this.getNewformatRuleForm();
+    },
+    toggleCreating: function toggleCreating(creating) {
+      this.creating = !creating;
     },
     createFormatRule: function createFormatRule() {
       var _this2 = this;
@@ -137,10 +145,32 @@ var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c("section", [_c("b-field", {
-    attrs: {
-      label: "Ajouter une Règle de Formattage"
-    }
-  }, [_c("b-field", {
+    scopedSlots: _vm._u([{
+      key: "label",
+      fn: function fn() {
+        return [_c("span", {
+          staticClass: "has-text-black text-xs"
+        }, [_vm._v(_vm._s(_vm.list_title) + "\n                "), _c("b-button", {
+          attrs: {
+            type: "is-info is-light",
+            size: "is-small"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.toggleCreating(_vm.creating);
+            }
+          }
+        }, [_c("b-icon", {
+          attrs: {
+            pack: "fa",
+            icon: "plus",
+            size: "is-small"
+          }
+        })], 1)], 1)];
+      },
+      proxy: true
+    }])
+  }), _vm._v(" "), _vm.creating ? _c("b-field", [_c("b-field", {
     attrs: {
       type: _vm.formatruletype_has_error ? "is-danger" : "is-default"
     }
@@ -238,7 +268,7 @@ var render = function render() {
         return _vm.createFormatRule();
       }
     }
-  })], 1)], 1), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
+  })], 1)], 1) : _vm._e(), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "box"
   }, _vm._l(_vm.formatrules, function (formatrule) {
     return _c("FormatRuleItem", {

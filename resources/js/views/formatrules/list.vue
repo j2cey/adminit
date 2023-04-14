@@ -1,6 +1,15 @@
 <template>
     <section>
-        <b-field label="Ajouter une Règle de Formattage">
+        <b-field>
+            <template #label>
+                <span class="has-text-black text-xs">{{ list_title }}
+                    <b-button type="is-info is-light" size="is-small" @click="toggleCreating(creating)">
+                        <b-icon pack="fa" icon="plus" size="is-small"></b-icon>
+                    </b-button>
+                </span>
+            </template>
+        </b-field>
+        <b-field v-if="creating">
             <b-field :type="formatruletype_has_error ? 'is-danger' : 'is-default'">
                 <b-tooltip :active="formatruletype_has_error" :label="formatruletype_error_msg"
                            position="is-bottom"
@@ -62,6 +71,9 @@
         name: "formatrule-list",
         props: {
             model_prop: {},
+            list_title_prop: {
+                default: "Règles de Formattage"
+            }
         },
         components: {
             FormatRuleItem: () => import('./item'),
@@ -72,12 +84,14 @@
         },
         data() {
             return {
+                list_title: this.list_title_prop,
                 model: this.model_prop,
                 formatruletypes: [],
                 filteredFormatRuleTypes: [],
                 formatRuleForm: this.getNewformatRuleForm(),
                 formatrules: this.model_prop.formatrules,
 
+                creating: false,
                 loading: false,
 
                 allowNew: false,
@@ -117,6 +131,9 @@
             },
             resetFom() {
                 this.formatRuleForm = this.getNewformatRuleForm()
+            },
+            toggleCreating(creating) {
+                this.creating = !creating
             },
             createFormatRule() {
                 this.loading = true

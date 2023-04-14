@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\DynamicAttributes;
 
 use App\Http\Controllers\Controller;
-use App\Models\DynamicAttributes\DynamicValueInteger;
+use App\Models\DynamicValue\DynamicValueInteger;
 use App\Http\Requests\DynamicValueInteger\StoreDynamicValueIntegerRequest;
 use App\Http\Requests\DynamicValueInteger\UpdateDynamicValueIntegerRequest;
 

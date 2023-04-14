@@ -17,7 +17,7 @@
             :per-page="perPage"
             :opened-detailed="defaultOpenedDetails"
             detailed
-            detail-key="id"
+            :detail-key="fieldkey"
             :detail-transition="transitionName"
             :show-detail-icon="showDetailIcon"
             :current-page.sync="currentPage"
@@ -51,7 +51,7 @@
                     </template>
 
                     <template v-slot="props">
-                        <span v-if="column.field === 'id'" class="text-xs">
+                        <span v-if="column.field === 'name'" class="text-xs">
                             {{ props.row[column.field] }}
                         </span>
                         <span v-else-if="column.date" class="tag is-success">
@@ -102,6 +102,7 @@ export default {
     props: {
         importedlines_prop: {},
         columns_prop: {},
+        fieldkey_prop: {},
     },
     components: {
 
@@ -124,7 +125,8 @@ export default {
             showDetailIcon: true,
             useTransition: false,
             stickyHeaders: false,
-            columns: JSON.parse( this.columns_prop )
+            columns: JSON.parse( this.columns_prop ),
+            fieldkey: this.fieldkey_prop
         };
     },
     methods: {

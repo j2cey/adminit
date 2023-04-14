@@ -12,7 +12,7 @@ use App\Models\FormatRule\FormatRuleType;
  * @property FormatRule latestFormatrule
  * @property FormatRule oldestFormatrule
  */
-interface IHasFormatRules extends Auditable
+interface IHasFormatRules
 {
     public function formatrules();
     public function formatrulesOrdered();

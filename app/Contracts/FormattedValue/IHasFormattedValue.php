@@ -31,5 +31,5 @@ interface IHasFormattedValue
 
     public function mergeRawValueFromFormatted(IHasFormattedValue $hasformattedvalue);
 
-    public function insertHeadersRow(array $headers);
+    public function insertHeadersRow(array $headers, Collection $formatrules = null);
 }

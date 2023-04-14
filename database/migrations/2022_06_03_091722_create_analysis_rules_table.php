@@ -23,21 +23,19 @@ class CreateAnalysisRulesTable extends Migration
             $table->id();
 
             $table->string('title')->comment('title of the analysis rule');
+            $table->string('rule_result_for_notification')->default("allways")->comment('résulat d analyse attendu pour notification');
+            $table->integer('num_ord')->nullable()->comment('format rule s num order');
             $table->string('description')->nullable()->comment('analysis rule description');
 
             $table->foreignId('analysis_rule_type_id')->nullable()
                 ->comment('analysis rules type reference')
                 ->constrained()->onDelete('set null');
 
-            $table->foreignId('dynamic_attribute_id')->nullable()
-                ->comment('dynamic attribute reference')
-                ->constrained()->onDelete('set null');
+            $table->string('hasanalysisrule_type')->nullable()->comment('referenced analysis rule owner s model (class name)');
+            $table->bigInteger('hasanalysisrule_id')->nullable()->comment('referenced analysis rule owner s model id (object id)');
 
-            $table->string('innerrule_type')->comment('referenced inner rule model (class name)');
-            $table->bigInteger('innerrule_id')->comment('referenced inner rule model id (object id)');
-
-            $table->boolean('alert_when_allowed')->default(false)->comment('determine if an alert have to be sent when this rule is allowed');
-            $table->boolean('alert_when_broken')->default(false)->comment('determine if an alert have to be sent when this rule is broken');
+            $table->string('inneranalysisrule_type')->comment('referenced inner analysis rule model (class name)');
+            $table->bigInteger('inneranalysisrule_id')->comment('referenced inner analysis rule model id (object id)');
 
             $table->baseFields();
         });
@@ -53,7 +51,6 @@ class CreateAnalysisRulesTable extends Migration
         Schema::table($this->table_name, function (Blueprint $table) {
             $table->dropBaseForeigns();
             $table->dropForeign(['analysis_rule_type_id']);
-            $table->dropForeign(['dynamic_attribute_id']);
         });
         Schema::dropIfExists($this->table_name);
     }

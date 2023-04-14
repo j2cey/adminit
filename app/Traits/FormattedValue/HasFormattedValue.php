@@ -48,11 +48,11 @@ trait HasFormattedValue
 
     /**
      * @param mixed|null $value
-     * @param Collection|FormatRule[]|null $formatrules
+     * @param Collection|array|FormatRule[]|null $formatrules
      * @param bool $reset
      * @return void
      */
-    public function applyFormatFromRaw(mixed $value = null, Collection $formatrules = null, bool $reset = false) {
+    public function applyFormatFromRaw(mixed $value = null, Collection|array $formatrules = null, bool $reset = false) {
         $this->htmlformattedvalue->applyFormat(
             $value ?? $this->htmlformattedvalue->getRawValue(),
             $formatrules,
@@ -63,11 +63,11 @@ trait HasFormattedValue
 
     /**
      * @param mixed|null $value
-     * @param Collection|FormatRule[]|null $formatrules
+     * @param Collection|array|FormatRule[]|null $formatrules
      * @param bool $reset
      * @return void
      */
-    public function applyFormatFromFormatted(mixed $value = null, Collection $formatrules = null, bool $reset = false) {
+    public function applyFormatFromFormatted(mixed $value = null, Collection|array $formatrules = null, bool $reset = false) {
         $this->htmlformattedvalue->applyFormat($value ?? $this->htmlformattedvalue->getFormattedValue(), $formatrules, $reset);
         $this->smsformattedvalue->applyFormat($value ?? $this->smsformattedvalue->getFormattedValue(), $formatrules, $reset);
     }
@@ -81,9 +81,14 @@ trait HasFormattedValue
         $this->smsformattedvalue->mergeRawValue($hasformattedvalue->smsformattedvalue, $hasformattedvalue->htmlformattedvalue->getFormattedValue());
     }
 
-    public function insertHeadersRow(array $headers) {
-        $this->htmlformattedvalue->insertHeadersRow($headers);
-        $this->smsformattedvalue->insertHeadersRow($headers);
+    /**
+     * @param array $headers
+     * @param Collection|FormatRule[]|null $formatrules
+     * @return void
+     */
+    public function insertHeadersRow(array $headers, Collection $formatrules = null) {
+        $this->htmlformattedvalue->insertHeadersRow($headers, $formatrules);
+        $this->smsformattedvalue->insertHeadersRow($headers, $formatrules);
     }
 
     public function resetRawValues() {

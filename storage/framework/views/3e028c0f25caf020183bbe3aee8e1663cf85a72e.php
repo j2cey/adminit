@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('app_content'); ?>
     <reportattribute-index :report_prop="<?php echo e($report->toJson()); ?>" :reportattributes_prop="<?php echo e($dynamicattributes->toJson()); ?>"></reportattribute-index>
 <?php $__env->stopSection(); ?>

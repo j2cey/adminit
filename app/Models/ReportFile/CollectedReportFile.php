@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use App\Imports\ReportFilesImport;
 use App\Models\FormatRule\FormatRule;
 use Illuminate\Support\Facades\Storage;
+use OwenIt\Auditing\Contracts\Auditable;
 use App\Traits\FormatRule\HasFormatRules;
 use App\Models\FormatRule\FormatRuleType;
 use App\Contracts\FormatRule\IHasFormatRules;
@@ -62,7 +63,7 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @method static toImport()
  * @method static CollectedReportFile create(array $array)
  */
-class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasFormattedValue, IHasFormatRules
+class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRows, IHasFormattedValue, IHasFormatRules
 {
     use HasFactory, HasDynamicRows, HasFormattedValue, HasFormatRules, \OwenIt\Auditing\Auditable;
 
@@ -332,7 +333,7 @@ class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasForm
     public function mergeLinesFormattedValues() {
         // reset rawvalue from formatted values
         $this->resetRawValues();
-        $this->insertHeadersRow($this->getHeaders());
+        $this->insertHeadersRow($this->getHeaders(), $this->reportfile->report->fileheader->formatrules);
 
         // get all dynamic row attached to this object
         $dynamicrows = $this->dynamicrows;
@@ -349,7 +350,9 @@ class CollectedReportFile extends BaseModel implements IHasDynamicRows, IHasForm
     public function getHeaders(): array {
         $headers = [];
         foreach ($this->reportfile->report->dynamicattributes as $dynamicAttribute) {
-            $headers[] = $dynamicAttribute->name;
+            if ($dynamicAttribute->can_be_notified) {
+                $headers[] = $dynamicAttribute->title;
+            }
         }
         return $headers;
     }

@@ -7,33 +7,85 @@
                     <span> Infos </span>
                 </template>
 
-                <div class="card card-default">
-                    <div class="card-body">
-                        <dl>
-                            <dt class="text text-xs">Name</dt>
-                            <dd class="text text-xs">{{ dynamicattribute.name }}</dd>
-                            <dt class="text text-xs">Type</dt>
-                            <dd class="text text-xs">{{ dynamicattribute.dynamicattributetype.name }}</dd>
-                            <dt class="text text-xs">Num. Order</dt>
-                            <dd class="text text-xs">{{ dynamicattribute.num_ord }}</dd>
-                            <dt class="text text-xs">Offset</dt>
-                            <dd class="text text-xs">{{ dynamicattribute.offset || 0}}</dd>
-                            <dt class="text text-xs">Max Length</dt>
-                            <dd class="text text-xs">{{ dynamicattribute.max_length || 0}}</dd>
-                            <dt class="text text-xs">Creaed at</dt>
-                            <dd class="text text-xs">{{ dynamicattribute.created_at | formatDate}}</dd>
-                        </dl>
+                <section>
+                    <div class="box">
+
+                        <div class="row">
+                            <div class="col">
+                                <b-field size="is-small" horizontal>
+                                    <template #label><span class="has-text-primary text-xs">Name</span></template>
+                                    <b-field>
+                                        <b-input custom-class="transinput" size="is-small" :value="dynamicattribute.name" name="name" placeholder="Name" readonly></b-input>
+                                    </b-field>
+                                </b-field>
+                                <b-field size="is-small" horizontal>
+                                    <template #label><span class="has-text-primary text-xs">Title</span></template>
+                                    <b-field>
+                                        <b-input style="border-style:none;" size="is-small" :value="dynamicattribute.title" name="title" placeholder="Title" readonly></b-input>
+                                    </b-field>
+                                </b-field>
+                                <b-field size="is-small" horizontal>
+                                    <template #label><span class="has-text-primary text-xs">Type</span></template>
+                                    <b-field>
+                                        <b-input size="is-small" :value="dynamicattribute.dynamicattributetype.name" name="dynamicattributetype" placeholder="Type" readonly></b-input>
+                                    </b-field>
+                                </b-field>
+                                <b-field size="is-small" horizontal>
+                                    <template #label><span class="has-text-primary text-xs">Num. Order</span></template>
+                                    <b-field>
+                                        <b-input size="is-small" :value="dynamicattribute.num_ord" name="num_ord" placeholder="Num. Order" readonly></b-input>
+                                    </b-field>
+                                </b-field>
+                                <b-field size="is-small" horizontal>
+                                    <template #label><span class="has-text-primary text-xs">Offset</span></template>
+                                    <b-field>
+                                        <b-input size="is-small" :value="dynamicattribute.offset || 0" name="num_ord" placeholder="Offset" readonly></b-input>
+                                    </b-field>
+                                </b-field>
+                                <b-field size="is-small" horizontal>
+                                    <template #label><span class="has-text-primary text-xs">Max Length</span></template>
+                                    <b-field>
+                                        <b-input size="is-small" :value="dynamicattribute.max_length || 0" name="max_length" placeholder="Max Length" readonly></b-input>
+                                    </b-field>
+                                </b-field>
+                                <b-field size="is-small" horizontal>
+                                    <template #label><span class="has-text-primary text-xs">Created at</span></template>
+                                    <b-field>
+                                        <b-input size="is-small" :value="dynamicattribute.created_at | formatDate" name="created_at" placeholder="Created at" readonly></b-input>
+                                    </b-field>
+                                </b-field>
+                            </div>
+
+                            <div class="col">
+                                <b-field size="is-small" horizontal>
+                                    <b-checkbox size="is-small" :value="dynamicattribute.searchable" type="is-info" disabled>
+                                        Searchable
+                                    </b-checkbox>
+                                </b-field>
+                                <b-field size="is-small" horizontal>
+                                    <b-checkbox size="is-small" :value="dynamicattribute.sortable" type="is-info" disabled>
+                                        Sortable
+                                    </b-checkbox>
+                                </b-field>
+                                <b-field size="is-small" horizontal>
+                                    <b-checkbox size="is-small" :value="dynamicattribute.can_be_notified" type="is-info" disabled>
+                                        Can be notified
+                                    </b-checkbox>
+                                </b-field>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
+                </section>
             </b-tab-item>
             <b-tab-item>
                 <template #header>
                     <b-icon icon="source-pull"></b-icon>
-                    <span class="help-inline pr-1 text-sm"> Analysis </span>
-                    <b-button size="is-small" type="is-ghost" @click="createAnalysisRule(dynamicattribute)"><i class="fas fa-plus"></i></b-button>
+                    <span class="help-inline pr-1 text-sm"> Règles d'Analyse </span>
+                    <b-tag rounded type="is-info is-light">{{ dynamicattribute.analysisrules.length }}</b-tag>
                 </template>
 
-                <AnalysisRuleList :attributeid_prop="dynamicattribute.id" :analysisrules_prop="dynamicattribute.analysisrules"></AnalysisRuleList>
+                <AnalysisRuleList :model_prop="dynamicattribute"></AnalysisRuleList>
 
             </b-tab-item>
 
@@ -71,6 +123,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+    .transinput {
+        border: none;
+        background-color: none;
+        outline: 0;
+    }
 </style>

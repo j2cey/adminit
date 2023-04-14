@@ -11,6 +11,7 @@ use App\Models\AnalysisRule\AnalysisRule;
  * @package App\Http\Requests\AnalysisRule
  *
  * @property AnalysisRule $analysisrule
+ * @property array $inneranalysisrule_attributes
  */
 class UpdateAnalysisRuleRequest extends AnalysisRuleRequest
 {
@@ -43,9 +44,9 @@ class UpdateAnalysisRuleRequest extends AnalysisRuleRequest
     {
         $this->merge([
             'status' => $this->setRelevantStatus($this->input('status'),'code', true),
-            'alert_when_allowed' => $this->setCheckOrOptionValue($this->input('alert_when_allowed')),
-            'alert_when_broken' => $this->setCheckOrOptionValue($this->input('alert_when_broken')),
             'analysisruletype' => $this->setAnalysisRuleType($this->input('analysisruletype'), 'id', true),
+            'rule_result_for_notification' => (is_null($this->input('rule_result_for_notification'))) ? null : $this->decodeJsonField($this->input('rule_result_for_notification'))['value'],
+            'inneranalysisrule_attributes' => $this->decodeJsonField($this->input('inneranalysisrule')),
         ]);
     }
 }

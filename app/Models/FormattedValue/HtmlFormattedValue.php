@@ -125,100 +125,13 @@ class HtmlFormattedValue extends BaseModel implements IFormattedValueHtml
         ]);
     }
 
-    /*public static function create(array $attributes = [])
-    {
-        // Your custom code goes here
-        $attributes['applied_tag_attributes'] = "[]";
-        $attributes['applied_weight_tags'] = "[]";
-        $attributes['rawvalue'] = "";
-        $attributes['htmlvalue'] = "";
-
-        return parent::create($attributes);
-    }*/
-
-    public function setHeader($value = null) {
-        $open_main_tag = htmlentities('<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">');
-        $default_header = $open_main_tag . htmlentities('<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="x-apple-disable-message-reformatting"><title></title><!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]--><style>table, td, div, h1, p {font-family: Arial, sans-serif;}</style></head>');
-
-        $this->formattedvalue->header = "";
-        $this->formattedvalue->save();
-    }
-    public function setBody($value = null) {
-        $defauly_body = htmlentities('<body style="margin:0;padding:0;">');
-        $defauly_body .= htmlentities('<table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;">');
-        $defauly_body .= htmlentities('<tr><td align="center" style="padding:0;"><table role="presentation" style="width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;"><tr><td align="center" style="padding:40px 0 30px 0;background:#ffffff;"><img src="{{ $message->embed( public_path() . \'/images/logo.png\' ) }}" alt="" width="100" style="height:auto;display:block;" /><h6 style="font-size:20px;margin:0 0 10px 0;font-family:Arial,sans-serif; color:#C55604">Admin-IT</h6><p style="margin:0 0 10px 0;font-size:10px;line-height:10px;font-family:Arial,sans-serif; font-style: italic">Let\'s give us Time to Admin in Time.</p></td></tr>');
-        $defauly_body .= htmlentities('<tr><td style="padding:36px 30px 42px 30px;"><table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;"><tr><td style="padding:0 0 36px 0;color:#153643;"><h6 style="font-size:15px;margin:0 0 10px 0;font-family:Arial,sans-serif;">Alert Rapport: </h6></td></tr><tr><td style="padding:0;"><table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;"><tr>');
-        $defauly_body .= htmlentities('<td style="width:260px;padding:0;vertical-align:top;color:#153643;">');
-        $defauly_body .= htmlentities('<p style="margin:0 0 12px 0;font-size:10px;line-height:20px;font-family:Arial,sans-serif;">');
-        $defauly_body .= htmlentities('<dl>');
-        $defauly_body .= htmlentities('<dt><small> <strong>Label 1:</strong> </small></dt>');
-        $defauly_body .= htmlentities('<dd> <small>value 1</small></dd>');
-        $defauly_body .= htmlentities('<dt><small> <strong>Label 2:</strong> </small></dt>');
-        $defauly_body .= htmlentities('<dd><small>value 2</small></dd>');
-        $defauly_body .= htmlentities('<dt><small> <strong>Label 3:</strong> </small></dt>');
-        $defauly_body .= htmlentities('<dd><small>value 3</small></dd>');
-        $defauly_body .= htmlentities('<dt><small> <strong>Label 4:</strong> </small></dt>');
-        $defauly_body .= htmlentities('<dd><small>value 4</small></dd>');
-        $defauly_body .= htmlentities('<dt><small> <strong>Label 5:</strong> </small></dt>');
-        $defauly_body .= htmlentities('<dd><small>value 5</small></dd>');
-        $defauly_body .= htmlentities('</dl>');
-        $defauly_body .= htmlentities('</p>');
-        $defauly_body .= htmlentities('</td>');
-        $defauly_body .= htmlentities('</tr></table></td></tr></table></td></tr>');
-
-        $defauly_body .= htmlentities('<tr><td style="padding:5px;background:#FF5733;">');
-        $defauly_body .= htmlentities('<table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;">');
-        $defauly_body .= htmlentities('<tr>');
-        $defauly_body .= htmlentities('<td style="padding:0;width:50%;" align="left"><p style="margin:0;font-size:8px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">&reg; {{ config(\'app.name\') }} {{ now()->year }} GT/DSI</p></td>');
-        $defauly_body .= htmlentities('<td style="padding:0;width:50%;" align="right">');
-        $defauly_body .= htmlentities('<table role="presentation" style="border-collapse:collapse;border:0;border-spacing:0;">');
-        $defauly_body .= htmlentities('<tr><td style="padding:0 0 0 5px;width:38px;"><a href="#" style="color:#ffffff;"><img src="{{ $message->embed( public_path() . \'/images/facebook.png\' ) }}" alt="Twitter" width="38" style="height:auto;display:block;border:0;" /></a></td><td style="padding:0 0 0 5px;width:38px;">');
-        $defauly_body .= htmlentities('<a href="#" style="color:#ffffff;"><img src="{{ $message->embed( public_path() . \'/images/twiter.png\' ) }}" alt="Facebook" width="38" style="height:auto;display:block;border:0;" /></a></td></tr></table></td></tr></table></td></tr>');
-
-        $defauly_body .= htmlentities('</table></td></tr></table></body>');
-
-        //$this->formattedvalue->body = $defauly_body;
-        //$this->formattedvalue->save();
-
-
-        $inner_body = htmlentities('<table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;">');
-        $inner_body .= htmlentities('<tr>');
-        $inner_body .= htmlentities('<td style="width:260px;padding:0;vertical-align:top;color:#153643;">');
-        $inner_body .= htmlentities('<p style="margin:0 0 12px 0;font-size:10px;line-height:20px;font-family:Arial,sans-serif;">');
-        $inner_body .= htmlentities('<dl>');
-        $inner_body .= htmlentities('<dt><small> <strong>Label 1:</strong> </small></dt>');
-        $inner_body .= htmlentities('<dd> <small>value 1</small></dd>');
-        $inner_body .= htmlentities('<dt><small> <strong>Label 2:</strong> </small></dt>');
-        $inner_body .= htmlentities('<dd><small>value 2</small></dd>');
-        $inner_body .= htmlentities('<dt><small> <strong>Label 3:</strong> </small></dt>');
-        $inner_body .= htmlentities('<dd><small>value 3</small></dd>');
-        $inner_body .= htmlentities('<dt><small> <strong>Label 4:</strong> </small></dt>');
-        $inner_body .= htmlentities('<dd><small>value 4</small></dd>');
-        $inner_body .= htmlentities('<dt><small> <strong>Label 5:</strong> </small></dt>');
-        $inner_body .= htmlentities('<dd><small>value 5</small></dd>');
-        $inner_body .= htmlentities('</dl>');
-        $inner_body .= htmlentities('</p>');
-        $inner_body .= htmlentities('</td>');
-        $inner_body .= htmlentities('</tr>');
-        $inner_body .= htmlentities('</table>');
-
-        $this->formattedvalue->body = $inner_body;
-        $this->formattedvalue->save();
-    }
-    public function setFooter($value = null) {
-        $closing_main_tag = htmlentities('</html>');
-
-        $this->formattedvalue->footer = "";
-        $this->formattedvalue->save();
-    }
-
     /**
      * @param mixed|null $value
-     * @param Collection|FormatRule[]|null $formatrules
+     * @param Collection|array|FormatRule[]|null $formatrules
      * @param bool $reset
      * @return void
      */
-    public function applyFormatFromRaw(mixed $value = null, Collection $formatrules = null, bool $reset = false) {
+    public function applyFormatFromRaw(mixed $value = null, Collection|array $formatrules = null, bool $reset = false) {
         if ( is_null($value) ) {
             $value = $this->rawvalue;
         }
@@ -227,11 +140,11 @@ class HtmlFormattedValue extends BaseModel implements IFormattedValueHtml
 
     /**
      * @param mixed|null $value
-     * @param Collection|FormatRule[]|null $formatrules
+     * @param Collection|array|FormatRule[]|null $formatrules
      * @param bool $reset
      * @return void
      */
-    public function applyFormatFromFormatted(mixed $value = null, Collection $formatrules = null, bool $reset = false) {
+    public function applyFormatFromFormatted(mixed $value = null, Collection|array $formatrules = null, bool $reset = false) {
         if ( is_null($value) ) {
             $value = html_entity_decode($this->htmlvalue);
         }
@@ -240,17 +153,23 @@ class HtmlFormattedValue extends BaseModel implements IFormattedValueHtml
 
     /**
      * @param mixed|null $value
-     * @param Collection|FormatRule[]|null $formatrules
+     * @param Collection|array|FormatRule[]|null $formatrules
      * @param bool $reset
      * @return void
      */
-    public function applyFormat(mixed $value = null, Collection $formatrules = null, bool $reset = false) {
+    public function applyFormat(mixed $value = null, Collection|array $formatrules = null, bool $reset = false) {
+
+        if ($reset) {
+            //$this->resetRawValue();
+            $this->resetHtmlValue();
+        }
 
         if ( $this->maintag === HtmlTagKey::TABLE ) {
             $this->addTableTagDefaultAttributes();
         }
 
-        $this->applyFormatRules($formatrules);
+        $this->applied_tag_attributes = $this->applyFormatRulesToAttributes($this->applied_tag_attributes, $formatrules);
+        $this->applied_weight_tags = $this->applyFormatRulesToInnerTags($this->applied_weight_tags, $formatrules);
 
         if ( ! is_null($value)) {
             $this->rawvalue = $value;
@@ -259,109 +178,77 @@ class HtmlFormattedValue extends BaseModel implements IFormattedValueHtml
         $this->htmlvalue = htmlentities( $this->rawvalue );
 
         // set inner tags to html value
-        $this->setHtmlValueInnerTags();
+        $this->htmlvalue = $this->setHtmlValueInnerTags($this->applied_weight_tags, $this->htmlvalue);
 
         // set html value main tag
-        $this->htmlvalue = htmlentities(self::MAIN_TAG_LIST[$this->maintag->value]['opening'] . $this->getAttributesValues() . '>' . html_entity_decode($this->htmlvalue) . self::MAIN_TAG_LIST[$this->maintag->value]['closing'] );
+        $this->htmlvalue = htmlentities(self::MAIN_TAG_LIST[$this->maintag->value]['opening'] . $this->getAttributesValues($this->applied_tag_attributes) . '>' . html_entity_decode($this->htmlvalue) . self::MAIN_TAG_LIST[$this->maintag->value]['closing'] );
 
         $this->save();
     }
 
-    public function insertHeadersRow(array $headers) {
+    public function insertHeadersRow(array $headers, Collection|array $formatrules = null) {
         $headers_col = "";
         foreach ($headers as $header) {
-            $headers_col .= self::MAIN_TAG_LIST['table_header']['opening']  . '>' . $header . self::MAIN_TAG_LIST['table_header']['closing'];
+            $applied_tag_attributes = "[]";
+            $applied_weight_tags = "[]";
+
+            $applied_tag_attributes = $this->applyFormatRulesToAttributes($applied_tag_attributes, $formatrules);
+            $applied_weight_tags = $this->applyFormatRulesToInnerTags($applied_weight_tags, $formatrules);
+
+            $header = $this->setHtmlValueInnerTags($applied_weight_tags, $header);
+
+            $headers_col .= self::MAIN_TAG_LIST['table_header']['opening'] . $this->getAttributesValues($applied_tag_attributes) . '>' . $header . self::MAIN_TAG_LIST['table_header']['closing'];
         }
         $headers_col = self::MAIN_TAG_LIST['table_row']['opening']  . '>' . $headers_col . self::MAIN_TAG_LIST['table_row']['closing'];
 
         $this->mergeRawValue($this, $headers_col);
     }
 
-    /**
-     * @param Collection|FormatRule[]|null $formatrules
-     * @return void
-     */
-    private function applyFormatRules(Collection $formatrules = null) {
-
-        if ( ! is_null($formatrules) ) {
-            foreach ($formatrules as $formatrule) {
-                if (!is_null($formatrule)) {
-                    // set/update applied formats values
-                    $formattype_text_color = FormatRuleType::textColor()->first();
-                    $formattype_text_size = FormatRuleType::textSize()->first();
-                    $formattype_text_weight = FormatRuleType::textWeight()->first();
-
-                    if ($formatrule->formatruletype->id === $formattype_text_color->id) {
-                        $this->setTagAttributes('style', $formatrule->getRuleValue(),'color');
-                    } elseif ($formatrule->formatruletype->id === $formattype_text_size->id) {
-                        $this->setTagAttributes('style', $formatrule->getRuleValue(), 'size');
-                    } elseif ($formatrule->formatruletype->id === $formattype_text_weight->id) {
-                        foreach ($formatrule->innerformatrule->getRuleValue() as $tag_key) {
-                            $this->setWeightTag($tag_key);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private function addTableTagDefaultAttributes() {
         // role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;"
-        $this->setTagAttributes('role', "presentation");
-        $this->setTagAttributes('style', "100%", "width");
-        $this->setTagAttributes('style', "collapse", "border-collapse");
-        $this->setTagAttributes('style', 0, "border");
-        $this->setTagAttributes('style', 0, "border-spacing");
+        $this->applied_tag_attributes = $this->setTagAttributes($this->applied_tag_attributes,'role', "presentation");
+        $this->applied_tag_attributes = $this->setTagAttributes($this->applied_tag_attributes,'style', "100%", "width");
+        $this->applied_tag_attributes = $this->setTagAttributes($this->applied_tag_attributes,'style', "collapse", "border-collapse");
+        $this->applied_tag_attributes = $this->setTagAttributes($this->applied_tag_attributes,'style', 0, "border");
+        $this->applied_tag_attributes = $this->setTagAttributes($this->applied_tag_attributes,'style', 0, "border-spacing");
     }
 
-    private function setTagAttributes($main_key, $style_value, $style_key = null) {
+    #region TAG Attributes
+
+    /**
+     * Set Tag Attributes to given array
+     * @param string $applied_attributes applied attributes array
+     * @param string $main_key attribute main key: 'style', 'role', ...
+     * @param mixed $style_value attribute value to apply
+     * @param string|null $style_key attribute key if main key not directly applied
+     * @return false|string
+     */
+    private function setTagAttributes(string $applied_attributes, string $main_key, mixed $style_value, string $style_key = null)
+    {
         // [ 'main_key' => [ 'style_key' => "style_value", ... ], ... ]
-        $applied_attributes = json_decode($this->applied_tag_attributes, true);
+        $applied_attributes = json_decode($applied_attributes, true);
+        //$applied_attributes = json_decode($this->applied_tag_attributes, true);
         if ( is_null($style_key) ) {
             $applied_attributes[$main_key] = $style_value;
         } else {
             $applied_attributes[$main_key][$style_key] = $style_value;
         }
 
-        $this->applied_tag_attributes = json_encode($applied_attributes);
-    }
-    private function setWeightTag($tag_key) {
-        $applied_tags = json_decode($this->applied_weight_tags);
-        if ( ! in_array($tag_key, $applied_tags) ) {
-            $applied_tags[] = $tag_key;
-            $this->applied_weight_tags = json_encode($applied_tags);
-        }
+        //$this->applied_tag_attributes = json_encode($applied_attributes);
+        return json_encode($applied_attributes);
     }
 
-    private function setHtmlValueInnerTags() {
-        $applied_tags = json_decode($this->applied_weight_tags);
-        if ( ! empty($applied_tags) ) {
-            foreach ($applied_tags as $applied_tag) {
-                $this->htmlvalue = htmlentities(self::WEIGHT_TAG_LIST[$applied_tag]['opening'] . '>' . html_entity_decode($this->htmlvalue) . self::WEIGHT_TAG_LIST[$applied_tag]['closing']);
-            }
-        }
-    }
-
-    private function getAttributesValues() {
-        $applied_styles = json_decode($this->applied_tag_attributes, true);
+    /**
+     * Encode and apply attributes
+     * @param string $applied_styles
+     * @return string
+     */
+    private function getAttributesValues(string $applied_styles): string
+    {
+        //$applied_styles = json_decode($this->applied_tag_attributes, true);
+        $applied_styles = json_decode($applied_styles, true);
         $output_values = '';
 
-        /*
-             const TAG_ATTRIBUTES = [
-            'style' => [
-                'key' => 'style=',
-                'attributes' => [
-                    'size' => "font-size:",
-                    'color' => "color:",
-                    ]
-                ],
-            'role' => [
-                'key' => 'role='
-                ]
-             ];
-         */
-
-        // [ 'main_key' => [ 'style_key' => "style_value", ... ], ... ]
         foreach ($applied_styles as $main_key => $attribute_values_to_applied) {
             $output_values .= ' ';
             $output_values .= self::TAG_ATTRIBUTES[$main_key]['key'];
@@ -372,10 +259,6 @@ class HtmlFormattedValue extends BaseModel implements IFormattedValueHtml
             } else {
                 $output_values .= $attribute_values_to_applied;
             }
-            /*if ( empty($attributes_values) ) {
-                $attributes_values = ' style="';
-            }
-            $attributes_values .=  self::TAG_ATTRIBUTES[$main_key] . $style_value;*/
         }
         if ( ! empty($output_values) ) {
             $output_values .=  '"';
@@ -383,6 +266,102 @@ class HtmlFormattedValue extends BaseModel implements IFormattedValueHtml
 
         return $output_values;
     }
+
+    #endregion
+
+    #region Inner TAGS
+
+    /**
+     * @param string $tag_key
+     * @param string $applied_tags
+     * @return false|string
+     */
+    private function setWeightTag(string $tag_key, string $applied_tags): bool|string
+    {
+        //$applied_tags = json_decode($this->applied_weight_tags);
+        $applied_tags = json_decode($applied_tags);
+        if ( ! in_array($tag_key, $applied_tags) ) {
+            $applied_tags[] = $tag_key;
+            //$this->applied_weight_tags = json_encode($applied_tags);
+        }
+        return json_encode($applied_tags);
+    }
+
+    /**
+     * Apply (and wrap) inner TAGS to a given html value
+     * @param string $applied_tags
+     * @param string $htmlvalue
+     * @return string
+     */
+    private function setHtmlValueInnerTags(string $applied_tags, string $htmlvalue) {
+        //$applied_tags = json_decode($this->applied_weight_tags);
+        $applied_tags = json_decode($applied_tags);
+        if ( ! empty($applied_tags) ) {
+            foreach ($applied_tags as $applied_tag) {
+                //$this->htmlvalue = htmlentities(self::WEIGHT_TAG_LIST[$applied_tag]['opening'] . '>' . html_entity_decode($this->htmlvalue) . self::WEIGHT_TAG_LIST[$applied_tag]['closing']);
+                $htmlvalue = htmlentities(self::WEIGHT_TAG_LIST[$applied_tag]['opening'] . '>' . html_entity_decode($htmlvalue) . self::WEIGHT_TAG_LIST[$applied_tag]['closing']);
+            }
+        }
+        return $htmlvalue;
+    }
+
+    #endregion
+
+    #region Format Rules Application
+
+    /**
+     * @param string $applied_tag_attributes
+     * @param Collection|array|FormatRule[]|null $formatrules
+     * @return false|string
+     */
+    private function applyFormatRulesToAttributes(string $applied_tag_attributes, Collection|array $formatrules = null) {
+
+        if ( ! is_null($formatrules) ) {
+            foreach ($formatrules as $formatrule) {
+                if (!is_null($formatrule)) {
+                    // set/update applied formats values
+                    $formattype_text_color = FormatRuleType::getTextColor();
+                    $formattype_text_size = FormatRuleType::getTextSize();
+
+                    if ($formatrule->formatruletype->id === $formattype_text_color->id) {
+                        //$this->applied_tag_attributes = $this->setTagAttributes($this->applied_tag_attributes,'style', $formatrule->getRuleValue(),'color');
+                        $applied_tag_attributes = $this->setTagAttributes($applied_tag_attributes,'style', $formatrule->getRuleValue(),'color');
+                    } elseif ($formatrule->formatruletype->id === $formattype_text_size->id) {
+                        //$this->applied_tag_attributes = $this->setTagAttributes($this->applied_tag_attributes,'style', $formatrule->getRuleValue(), 'size');
+                        $applied_tag_attributes = $this->setTagAttributes($applied_tag_attributes,'style', $formatrule->getRuleValue(), 'size');
+                    }
+                }
+            }
+        }
+        return $applied_tag_attributes;
+    }
+
+    /**
+     * @param string $applied_weight_tags
+     * @param Collection|array|FormatRule[]|null $formatrules
+     * @return bool|string
+     */
+    private function applyFormatRulesToInnerTags(string $applied_weight_tags, Collection|array $formatrules = null) {
+
+        if ( ! is_null($formatrules) ) {
+            foreach ($formatrules as $formatrule) {
+                if (!is_null($formatrule)) {
+                    // set/update applied formats values
+                    $formattype_text_weight = FormatRuleType::getTextWeight();
+
+                    if ($formatrule->formatruletype->id === $formattype_text_weight->id) {
+                        foreach ($formatrule->innerformatrule->getRuleValue() as $tag_key) {
+                            //$this->applied_weight_tags = $this->setWeightTag($tag_key, $this->applied_weight_tags);
+                            $applied_weight_tags = $this->setWeightTag($tag_key, $applied_weight_tags);
+                        }
+                    }
+                }
+            }
+        }
+        return $applied_weight_tags;
+    }
+
+    #endregion
 
     public function mergeRawValue(IFormattedValue $innerformattedvalue, $value_to_merge) {
         /*if ($innerformattedvalue instanceof HtmlFormattedValue) {
@@ -410,6 +389,14 @@ class HtmlFormattedValue extends BaseModel implements IFormattedValueHtml
     public function resetRawValue() {
         $this->update([
             'rawvalue' => ""
+        ]);
+    }
+
+    public function resetHtmlValue() {
+        $this->update([
+            'htmlvalue' => "",
+            'applied_tag_attributes' => "[]",
+            'applied_weight_tags' => "[]",
         ]);
     }
 

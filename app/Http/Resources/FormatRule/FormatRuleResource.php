@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 use App\Models\FormatRule\FormatRule;
 use App\Http\Resources\StatusResource;
 use App\Models\FormatRule\FormatRuleType;
+use App\Contracts\FormatRule\IInnerFormatRule;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -24,8 +25,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $title
  * @property string $description
  *
- * @property string $formatruleowner_type
- * @property int $formatruleowner_id
+ * @property string $hasformatrule_type
+ * @property int $hasformatrule_id
  *
  * @property string $rule_result
  *
@@ -61,8 +62,8 @@ class FormatRuleResource extends JsonResource
 
             'innerformatrule' => $this->innerformatrule,
 
-            'formatruleowner_type' => $this->formatruleowner_type,
-            'formatruleowner_id' => $this->formatruleowner_id,
+            'hasformatrule_type' => $this->hasformatrule_type,
+            'hasformatrule_id' => $this->hasformatrule_id,
 
             'rule_result' => $this->rule_result,
 

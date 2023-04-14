@@ -11,7 +11,9 @@ use App\Enums\TreatmentStateEnum;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Traits\FileHeader\HasFileHeader;
 use App\Models\ReportFile\ReportFileType;
+use App\Contracts\FileHeader\IHasFileHeader;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -42,9 +44,9 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  *
  * @method static create(string[] $array)
  */
-class Report extends BaseModel implements IHasDynamicAttributes
+class Report extends BaseModel implements IHasDynamicAttributes, IHasFileHeader
 {
-    use HasDynamicAttributes, HasFactory, \OwenIt\Auditing\Auditable;
+    use HasDynamicAttributes, HasFileHeader, HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $with = ['reporttype'];
@@ -112,6 +114,7 @@ class Report extends BaseModel implements IHasDynamicAttributes
         ]);
 
         $report->reporttype()->associate($reporttype);
+        $report->setFileheader()->setDefaultFormatSize();
 
         $report->save();
 
