@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Config;
 use App\Models\ReportFile\ReportFileType;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\RetrieveAction\RetrieveAction;
-use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Models\RetrieveAction\SelectedRetrieveAction;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
 class SelectedRetrieveActionTest extends TestCase
@@ -81,7 +81,7 @@ class SelectedRetrieveActionTest extends TestCase
         $user = $this->authenticated_user_admin();
 
         $response = $this->add_new_selectedretrieveaction(
-            null,
+            $this->create_new_reportfile(),
             null,
             null,
             null
@@ -277,7 +277,7 @@ class SelectedRetrieveActionTest extends TestCase
         return $this->post('selectedretrieveactions',
             array_merge([
                 'model_id' => $model->id,
-            ],$this->new_data($retrieveaction, $code, $status, $description));
+            ],$this->new_data($retrieveaction, $code, $status, $description)));
     }
 
     private function update_existing_selectedretrieveaction($existing_selectedretrieveaction, $retrieveaction, $code = null, $status = null, $description = null): TestResponse

@@ -61,7 +61,7 @@ class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
 
     //protected $appends = ['revenue'];
 
-    protected $with = ['report','reportfiletype'];//,'selectedretrieveactions'];
+    protected array $with = ['report','reportfiletype'];//,'selectedretrieveactions'];
 
     public static function defaultRules() {
         return [

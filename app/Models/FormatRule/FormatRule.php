@@ -3,7 +3,6 @@
 namespace App\Models\FormatRule;
 
 use App\Models\Status;
-use mysql_xdevapi\Table;
 use App\Models\BaseModel;
 use App\Enums\RuleResultEnum;
 use Illuminate\Support\Carbon;
