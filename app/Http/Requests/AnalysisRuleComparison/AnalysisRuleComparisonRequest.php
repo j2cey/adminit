@@ -12,7 +12,7 @@ use App\Models\AnalysisRuleComparison\AnalysisRuleComparison;
  * Class AnalysisRuleComparisonRequest
  * @package App\Http\Requests\AnalysisRuleComparison
  *
- * @property boolean $with_equality
+ * @property boolean $strict_comparison
  * @property string $comment
  *
  * @property Status $status

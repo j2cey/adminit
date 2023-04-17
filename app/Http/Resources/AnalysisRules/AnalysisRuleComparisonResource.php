@@ -22,7 +22,7 @@ use App\Models\AnalysisRuleComparison\ComparisonType;
  * @property string|null $tags
  * @property integer|null $status_id
  *
- * @property boolean $with_equality
+ * @property boolean $strict_comparison
  * @property string $comparison_type_id
  * @property string $comment
  *
@@ -48,7 +48,7 @@ class AnalysisRuleComparisonResource extends JsonResource
             'status' => StatusResource::make($this->status),
             'comparisontype' => ComparisonTypeResource::make($this->comparisontype),
 
-            'with_equality' => $this->with_equality,
+            'strict_comparison' => $this->strict_comparison,
             'comparison_type_id' => $this->comparison_type_id,
             'comment' => $this->comment,
 

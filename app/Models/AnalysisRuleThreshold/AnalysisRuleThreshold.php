@@ -5,6 +5,7 @@ namespace App\Models\AnalysisRuleThreshold;
 use App\Models\BaseModel;
 use App\Enums\RuleResultEnum;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use App\Traits\AnalysisRules\InnerAnalysisRule;
 use App\Contracts\AnalysisRules\IInnerThreshold;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -92,16 +93,16 @@ class AnalysisRuleThreshold extends BaseModel implements IInnerAnalysisRule
 
     #region Custom Functions
 
-    public static function createInnerThreshold(ThresholdType $thresholdtype, array $attributes = []) : IInnerThreshold {
+    public static function createInnerThreshold(ThresholdType $thresholdtype, array $attributes = []) : Model|IInnerThreshold {
         return $thresholdtype->inner_threshold_class::createNew($attributes);
     }
 
-    private function syncInnerThreshold(ThresholdType $thresholdtype, IInnerThreshold $innerthreshold = null, array $attributes = []) : IInnerThreshold {
+    private function syncInnerThreshold(ThresholdType $thresholdtype, Model|IInnerThreshold $innerthreshold = null, array $attributes = []) : IInnerThreshold {
 
         if ( is_null($innerthreshold) ) {
             // WARNING ! Make sure the association (via 'save' here) really happens
             $innerthreshold = $this->createInnerThreshold($thresholdtype, $attributes);
-            $this->analysisrulethreshold()->save($innerthreshold);
+            $this->innerthreshold()->associate($innerthreshold);
         } else {
             if ($this->thresholdtype->id !== $thresholdtype->id) {
                 // remove the old innerthreshold

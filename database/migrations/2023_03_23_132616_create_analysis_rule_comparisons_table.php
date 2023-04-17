@@ -22,13 +22,15 @@ class CreateAnalysisRuleComparisonsTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
-            $table->boolean('with_equality')->default(false)->comment('determine whether the comparison have to be done with equality');
+            $table->string('inner_operand')->default(true)->comment('the inner operand value');
+            $table->boolean('use_strict_comparison')->default(true)->comment('determine whether the comparison is strict');
+            $table->boolean('use_type_comparison')->default(false)->comment('determine whether the comparison have to be made with same type');
+            $table->string('comment')->nullable()->comment('analysis comparison rule comment');
 
             $table->foreignId('comparison_type_id')->nullable()
                 ->comment('comparison types reference')
                 ->constrained()->onDelete('set null');
 
-            $table->string('comment')->nullable()->comment('analysis comparison rule comment');
 
             $table->string('innercomparison_type')->comment('referenced inner comparison model (class name)');
             $table->bigInteger('innercomparison_id')->comment('referenced inner comparison model id (object id)');

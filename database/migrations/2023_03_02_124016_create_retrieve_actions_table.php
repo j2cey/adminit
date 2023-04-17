@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -27,8 +28,9 @@ class CreateRetrieveActionsTable extends Migration
             $table->string('action_class')->comment("chemin complet de la classe de l Action (qui va implémenter l interface IRetrieveAction)");
             $table->string('description', 500)->nullable()->comment("description de l action");
 
-            $table->bigInteger('selected_retrieve_action_id');
-            $table->string('selected_retrieve_action_type');
+            $table->foreignId('retrieve_action_type_id')->nullable()
+                ->comment('clé reférence du RetrieveActionType')
+                ->constrained('retrieve_action_types')->onDelete('set null');
 
             $table->baseFields();
         });

@@ -11,7 +11,7 @@ use App\Http\Requests\ComparisonType\UpdateComparisonTypeRequest;
 class ComparisonTypeController extends Controller
 {
     public function fetchall() {
-        return ComparisonTypeResource::collection(ComparisonType::all());
+        return ComparisonType::all();
     }
 
     /**

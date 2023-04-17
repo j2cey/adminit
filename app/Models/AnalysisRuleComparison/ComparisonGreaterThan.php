@@ -3,6 +3,7 @@
 namespace App\Models\AnalysisRuleComparison;
 
 use App\Models\BaseModel;
+use App\Enums\RuleResultEnum;
 use Illuminate\Support\Carbon;
 use App\Traits\Comparison\InnerComparison;
 use App\Contracts\AnalysisRules\IInnerComparison;
@@ -57,8 +58,21 @@ class ComparisonGreaterThan extends BaseModel implements IInnerComparison
 
     #region Custom Functions
 
-    public static function createNew(): ComparisonGreaterThan
+    public static function createNew(array $attributes = []): ComparisonGreaterThan
     {
         return ComparisonGreaterThan::create();
+    }
+
+    public function updateOne(array $attributes = []) {
+
+    }
+
+    public function applyRule($left_operand, $right_operand, $use_strict_comparison = true, $use_type_comparison = false): RuleResultEnum
+    {
+        if ( $use_strict_comparison ) {
+            return ( $left_operand > $right_operand ) ? RuleResultEnum::ALLOWED : RuleResultEnum::BROKEN;
+        } else {
+            return ( $left_operand >= $right_operand ) ? RuleResultEnum::ALLOWED : RuleResultEnum::BROKEN;
+        }
     }
 }

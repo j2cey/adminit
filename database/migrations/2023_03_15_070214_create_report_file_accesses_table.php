@@ -45,9 +45,6 @@ class CreateReportFileAccessesTable extends Migration
                 ->comment('clé de reférence du protocole')
                 ->constrained('access_protocoles')->onDelete('set null');
 
-            $table->unsignedBigInteger('selected_retrieve_action_id');
-            $table->string('selected_retrieve_action_type');
-
             $table->baseFields();
         });
 

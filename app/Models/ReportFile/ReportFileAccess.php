@@ -60,7 +60,7 @@ class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
 
     protected $guarded = [];
 
-    protected array $with = ['selectedretrieveactions'];
+    protected $with = ['selectedretrieveactions'];
 
     public static function defaultRules() {
         return [
