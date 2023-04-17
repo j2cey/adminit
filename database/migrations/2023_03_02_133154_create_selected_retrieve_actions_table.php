@@ -30,9 +30,8 @@ class CreateSelectedRetrieveActionsTable extends Migration
                 ->comment('clé de reférence de l action')
                 ->constrained('retrieve_actions')->onDelete('set null');
 
-            $table->foreignId('selected_retrieve_action_id')->nullable()
-                ->comment('clé reférence du selected_retrieve_action')
-                ->constrained('selected_retrieve_actions')->onDelete('set null');
+            $table->string('hasselectedretrieveaction_type')->nullable()->comment('referenced selected retrieve action owner s model (class name)');
+            $table->bigInteger('hasselectedretrieveaction_id')->nullable()->comment('referenced selected retrieve action owner s model id (object id)');
 
             $table->baseFields();
         });

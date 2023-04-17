@@ -9,12 +9,15 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _analysisruleBus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./analysisruleBus */ "./resources/js/views/analysisrules/analysisruleBus.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_1__);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 var AnalysisRule = /*#__PURE__*/_createClass(function AnalysisRule(analysisrule) {
   _classCallCheck(this, AnalysisRule);
@@ -35,11 +38,16 @@ var AnalysisRule = /*#__PURE__*/_createClass(function AnalysisRule(analysisrule)
     },
     analysisrulethreshold: function analysisrulethreshold() {
       return __webpack_require__.e(/*! import() */ "resources_js_views_analysisrules_inneranalysisrules_analysisrulethreshold_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./inneranalysisrules/analysisrulethreshold */ "./resources/js/views/analysisrules/inneranalysisrules/analysisrulethreshold.vue"));
+    },
+    analysisrulecomparison: function analysisrulecomparison() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_analysisrules_inneranalysisrules_analysisrulecomparison_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./inneranalysisrules/analysisrulecomparison */ "./resources/js/views/analysisrules/inneranalysisrules/analysisrulecomparison.vue"));
     }
   },
   mounted: function mounted() {
     var _this = this;
-    this.$watch("$refs.analysisrule.inneranalysisrule", function (new_value, old_value) {
+    this.$watch("$refs.analysisrule.inneranalysisrule",
+    // eslint-disable-next-line no-unused-vars
+    function (new_value, old_value) {
       _this.inneranalysisrule = new_value;
     });
   },
@@ -96,10 +104,21 @@ var AnalysisRule = /*#__PURE__*/_createClass(function AnalysisRule(analysisrule)
       this.analysisRuleForm.inneranalysisrule = this.inneranalysisrule;
       this.analysisRuleForm.put("/analysisrules/".concat(this.analysisrule.uuid), undefined).then(function (newanalysisrule) {
         _this3.loading = false;
+
+        /**/
+
         _this3.$swal({
           html: '<small>Règle modifiée avec succès !</small>',
           icon: 'success',
-          timer: 3000
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          onOpen: function onOpen(toast) {
+            toast.addEventListener('mouseenter', sweetalert2__WEBPACK_IMPORTED_MODULE_1__.stopTimer);
+            toast.addEventListener('mouseleave', sweetalert2__WEBPACK_IMPORTED_MODULE_1__.resumeTimer);
+          }
         }).then(function () {
           _this3.loading = false;
           _this3.setAnalysisRuleAndForm(newanalysisrule, true);

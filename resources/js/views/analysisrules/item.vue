@@ -81,6 +81,7 @@
 
 <script>
     import AnalysisRuleBus from "./analysisruleBus";
+    import {resumeTimer, stopTimer} from "sweetalert2";
 
     class AnalysisRule {
         constructor(analysisrule) {
@@ -101,10 +102,12 @@
         components: {
             FormatRuleList: () => import('../formatrules/list'),
             analysisrulethreshold: () => import('./inneranalysisrules/analysisrulethreshold'),
+            analysisrulecomparison: () => import('./inneranalysisrules/analysisrulecomparison'),
         },
         mounted() {
             this.$watch(
                 "$refs.analysisrule.inneranalysisrule",
+                // eslint-disable-next-line no-unused-vars
                 (new_value, old_value) => {
                     this.inneranalysisrule = new_value
                 }
@@ -167,10 +170,21 @@
                     .put(`/analysisrules/${this.analysisrule.uuid}`,undefined)
                     .then(newanalysisrule => {
                         this.loading = false
+
+                        /**/
+
                         this.$swal({
                             html: '<small>Règle modifiée avec succès !</small>',
                             icon: 'success',
-                            timer: 3000
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', stopTimer)
+                                toast.addEventListener('mouseleave', resumeTimer)
+                            }
                         }).then(() => {
                             this.loading = false
                             this.setAnalysisRuleAndForm(newanalysisrule, true)

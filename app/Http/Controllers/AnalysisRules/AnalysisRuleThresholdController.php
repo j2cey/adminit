@@ -14,7 +14,6 @@ class AnalysisRuleThresholdController extends Controller
         return AnalysisRuleThresholdResource::collection(AnalysisRuleThreshold::all());
     }
 
-
     public function fetch()
     {
 

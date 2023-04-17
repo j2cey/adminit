@@ -124,8 +124,8 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
         $merged_values = [];
         $dynamicvalues = $this->dynamicvalues;
 
-        foreach ($dynamicvalues as $dynamicValue) {
-            $new_arr = [ $dynamicValue->dynamicattribute->name => $dynamicValue->innerdynamicvalue->getValue() ];
+        foreach ($dynamicvalues as $dynamicvalue) {
+            $new_arr = [ $dynamicvalue->dynamicattribute->name => $dynamicvalue->innerdynamicvalue->getValue() ];
             $merged_values = array_merge($new_arr, $merged_values);
         }
         $this->columns_values = array_merge( $merged_values, $this->columns_values );
