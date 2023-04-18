@@ -6,7 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Traits\Migrations\BaseMigrationTrait;
 
-class CollectedReportFile extends Migration
+class CreateCollectedReportFile extends Migration
 {
     use BaseMigrationTrait;
 
@@ -40,6 +40,16 @@ class CollectedReportFile extends Migration
             $table->integer('import_processing')->default(0)->comment("determine if the file import is processing");
 
             $table->json('lines_values')->nullable()->comment('all lines values for this file');
+
+            $table->integer('nb_rows_format_success')->default(0)->comment("total number of rows successfully formatted");
+            $table->integer('nb_rows_format_failed')->default(0)->comment("total number of rows format failed");
+            $table->integer('nb_rows_format_processing')->default(0)->comment("total number of rows format processing");
+            $table->integer('nb_rows_format_processed')->default(0)->comment("total number of rows format processed");
+            $table->integer('row_last_format_processed')->default(0)->comment("last line format processed");
+            $table->integer('nb_format_try')->default(0)->comment("number of format processing attempts");
+
+            $table->boolean('formatted')->default(false)->comment("determine if the file has already been formatted into DB");
+            $table->integer('format_processing')->default(0)->comment("determine if the file format is processing");
 
             $table->foreignId('report_file_id')->nullable()
                 ->comment('clé reférence du report_file')

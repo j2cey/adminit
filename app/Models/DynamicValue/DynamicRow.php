@@ -9,8 +9,11 @@ use OwenIt\Auditing\Contracts\Auditable;
 use App\Traits\FormatRule\HasFormatRules;
 use App\Contracts\FormatRule\IHasFormatRules;
 use App\Traits\FormattedValue\HasFormattedValue;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Contracts\DynamicAttribute\IHasDynamicRows;
 use App\Contracts\FormattedValue\IHasFormattedValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
 
 /**
  * Class DynamicRow
@@ -38,6 +41,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $updated_at
  *
  * @property DynamicValue[] $dynamicvalues
+ * @property IHasDynamicRows|IHasMatchedAnalysisRules $hasdynamicrow
  * @method static DynamicRow create(array $array)
  */
 class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHasFormatRules
@@ -144,7 +148,7 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
         foreach ($dynamicvalues as $dynamicvalue) {
             // apply formating (without rule) for each value
             $dynamicvalue->resetRawValues();
-            $dynamicvalue->applyFormatFromRaw($dynamicvalue->getValue(), $dynamicvalue->getFormatRulesForNotification(), true);
+            $dynamicvalue->applyFormatFromRaw($dynamicvalue->getValue(), $dynamicvalue->getFormatRulesForNotification($this->hasdynamicrow), true);
             if ($dynamicvalue->dynamicattribute->can_be_notified) {
                 // merge each row (this) formatted value with all dynamic values formatted values
                 $this->mergeRawValueFromFormatted($dynamicvalue);
