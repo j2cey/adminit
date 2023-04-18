@@ -422,7 +422,6 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
 
     #endregion
 
-
     /*protected static function boot(){
         parent::boot();
 
