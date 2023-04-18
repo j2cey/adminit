@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use App\Contracts\FormattedValue\IHasFormattedValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Contracts\DynamicAttribute\IInnerDynamicValue;
+use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
 
 /**
  * Class DynamicValue
@@ -115,8 +116,8 @@ class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasF
         return $this->innerdynamicvalue->getValue();
     }
 
-    public function getFormatRulesForNotification() {
-        return $this->dynamicattribute->getFormatRulesForNotification($this);
+    public function getFormatRulesForNotification(IHasMatchedAnalysisRules $ihasmatchedanalysisrules) {
+        return $this->dynamicattribute->getFormatRulesForNotification($this, $ihasmatchedanalysisrules);
     }
 
     #endregion

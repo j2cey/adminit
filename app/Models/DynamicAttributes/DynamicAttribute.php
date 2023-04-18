@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
+use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
 
 /**
  * Class DynamicAttribute
@@ -236,7 +237,7 @@ class DynamicAttribute extends BaseModel implements Auditable, IHasAnalysisRules
      * @param DynamicValue $dynamicValue
      * @return array|Collection|FormatRule[]
      */
-    public function getFormatRulesForNotification(DynamicValue $dynamicValue)
+    public function getFormatRulesForNotification(DynamicValue $dynamicValue, IHasMatchedAnalysisRules $ihasmatchedanalysisrules)
     {
         $formatrules = new \Illuminate\Database\Eloquent\Collection;
         $formatrules = $formatrules->merge($this->formatrules);
@@ -244,11 +245,8 @@ class DynamicAttribute extends BaseModel implements Auditable, IHasAnalysisRules
             dump("1st: ", $formatrules);
         }*/
         foreach ($this->analysisrules as $analysisrule) {
-            $curr_formatrules = $analysisrule->getFormatRulesForNotification($dynamicValue);
+            $curr_formatrules = $analysisrule->getFormatRulesForNotification($dynamicValue, $ihasmatchedanalysisrules);
             $formatrules = $formatrules->merge($curr_formatrules);
-            /*if ( $this->id === 2 ) {
-                dd("2nd: ", $formatrules);
-            }*/
         }
         return $formatrules;
     }

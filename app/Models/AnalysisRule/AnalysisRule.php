@@ -17,6 +17,7 @@ use App\Models\DynamicAttributes\DynamicAttribute;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use App\Contracts\AnalysisRules\IInnerAnalysisRule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
 
 /**
  * Class AnalysisRule
@@ -224,7 +225,7 @@ class AnalysisRule extends BaseModel implements Auditable, IHasFormatRules
      * @param DynamicValue $dynamicvalue
      * @return array|Collection|FormatRule[]
      */
-    public function getFormatRulesForNotification(DynamicValue $dynamicvalue) {
+    public function getFormatRulesForNotification(DynamicValue $dynamicvalue, IHasMatchedAnalysisRules $ihasmatchedanalysisrules) {
         $formatrules = new \Illuminate\Database\Eloquent\Collection;
         $ruleresult = $this->applyRule($dynamicvalue);
 
@@ -236,6 +237,7 @@ class AnalysisRule extends BaseModel implements Auditable, IHasFormatRules
                     }
                 }
             }
+            $ihasmatchedanalysisrules->addMatchedAnalysisRule($this);
         }
         return $formatrules;
     }

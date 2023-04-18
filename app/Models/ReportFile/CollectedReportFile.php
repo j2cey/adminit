@@ -18,7 +18,9 @@ use App\Models\ReportTreatments\OperationResult;
 use App\Traits\FormattedValue\HasFormattedValue;
 use App\Contracts\DynamicAttribute\IHasDynamicRows;
 use App\Contracts\FormattedValue\IHasFormattedValue;
+use App\Traits\AnalysisRules\HasMatchedAnalysisRules;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 /**
@@ -50,10 +52,19 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property int $nb_rows_import_processed
  * @property int $row_last_import_processed
  * @property int $nb_import_try
- *
  * @property int $imported
  * @property int $import_processing
+ *
  * @property string $lines_values
+ *
+ * @property int $nb_rows_format_success
+ * @property int $nb_rows_format_failed
+ * @property int $nb_rows_format_processing
+ * @property int $nb_rows_format_processed
+ * @property int $row_last_format_processed
+ * @property int $nb_format_try
+ * @property int $formatted
+ * @property int $format_processing
  *
  * @property ReportFile $reportfile
  * @property string $fileLocalRelativePath
@@ -63,9 +74,9 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @method static toImport()
  * @method static CollectedReportFile create(array $array)
  */
-class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRows, IHasFormattedValue, IHasFormatRules
+class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRows, IHasFormattedValue, IHasFormatRules, IHasMatchedAnalysisRules
 {
-    use HasFactory, HasDynamicRows, HasFormattedValue, HasFormatRules, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasDynamicRows, HasFormattedValue, HasFormatRules, HasMatchedAnalysisRules, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -268,6 +279,14 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
         $this->save();
     }
 
+    public function setRowImportSuccess($row) {
+        $this->row_last_import_processed = $row;
+        $this->nb_rows_import_processed += 1;
+        $this->nb_rows_import_success += 1;
+
+        $this->save();
+    }
+
     /**
      * Marque la fin d'une importation
      * @return void
@@ -317,7 +336,9 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
 
         try {
 
+            $this->startFormat($reset_formatted);
             $this->mergeLinesFormattedValues();
+            $this->endFormat();
 
             return $operation_result->endWithSuccess();
         } catch (\Exception $e) {
@@ -338,11 +359,12 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
         // get all dynamic row attached to this object
         $dynamicrows = $this->dynamicrows;
 
-        foreach ($dynamicrows as $dynamicrow) {
+        foreach ($dynamicrows as $row_index => $dynamicrow) {
             // get merged formatted values for each row
             $dynamicrow->mergeColumnsFormattedValues();
             // merge object (this) formatted values with all rows formatted values
             $this->mergeRawValueFromFormatted($dynamicrow);
+            $this->setRowFormatSuccess($row_index);
         }
         $this->applyFormatFromRaw(null, $this->formatrules);
     }
@@ -355,6 +377,41 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
             }
         }
         return $headers;
+    }
+
+    private function startFormat(bool $reset_formatted = false) {
+        $this->format_processing = 1;
+        $this->nb_format_try += 1;
+
+        if ($reset_formatted) {
+            $this->nb_rows_format_success = 0;
+            $this->nb_rows_format_failed = 0;
+            $this->nb_rows_format_processing = 0;
+            $this->nb_rows_format_processed = 0;
+            $this->row_last_format_processed = 0;
+            $this->formatted = false;
+        }
+
+        $this->save();
+    }
+
+    /**
+     * Marque la fin d'une importation
+     * @return void
+     */
+    private function endFormat() {
+        $this->update([
+            'format_processing' => 0,
+            'formatted' => ($this->nb_rows_format_processed > 0 && ( $this->nb_rows_format_success >= $this->nb_rows_format_processed )),
+        ]);
+    }
+
+    public function setRowFormatSuccess($row) {
+        $this->row_last_format_processed = $row;
+        $this->nb_rows_format_processed += 1;
+        $this->nb_rows_format_success += 1;
+
+        $this->save();
     }
 
     #endregion
