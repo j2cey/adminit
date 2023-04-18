@@ -53,7 +53,7 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  *
  * @method static ReportFile first()
  */
-class ReportFile extends BaseModel implements IHasSelectedRetrieveActions
+class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveActions
 {
     use HasFactory, HasSelectedRetrieveActions, \OwenIt\Auditing\Auditable;
 

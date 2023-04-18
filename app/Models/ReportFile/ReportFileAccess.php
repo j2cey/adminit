@@ -12,6 +12,7 @@ use App\Models\Access\AccessAccount;
 use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Storage;
 use App\Models\OsAndServer\ReportServer;
+use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\RetrieveAction\RetrieveAction;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\Models\RetrieveAction\RetrieveActionType;
@@ -54,7 +55,7 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  *
  * @method static ReportFileAccess|null first()
  */
-class ReportFileAccess extends BaseModel implements IHasSelectedRetrieveActions
+class ReportFileAccess extends BaseModel implements Auditable, IHasSelectedRetrieveActions
 {
     use HasFactory, HasSelectedRetrieveActions, HasCode, \OwenIt\Auditing\Auditable;
 

@@ -2,6 +2,7 @@
 
 namespace App\Traits\AnalysisRules;
 
+use Illuminate\Support\Carbon;
 use App\Models\AnalysisRule\AnalysisRule;
 
 trait HasMatchedAnalysisRules
@@ -15,7 +16,7 @@ trait HasMatchedAnalysisRules
     }
 
     public function addMatchedAnalysisRule(AnalysisRule $analysisrule) {
-        return $this->ruleAlreadyMatched($analysisrule) ? false : $this->matchedanalysisrules()->save($analysisrule);
+        return $this->ruleAlreadyMatched($analysisrule) ? false : $this->matchedanalysisrules()->save($analysisrule, ['created_at' => Carbon::now()]);
     }
 
     public function ruleAlreadyMatched(AnalysisRule $analysisrule) {

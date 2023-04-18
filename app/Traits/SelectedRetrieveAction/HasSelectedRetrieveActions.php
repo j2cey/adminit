@@ -4,14 +4,11 @@ namespace App\Traits\SelectedRetrieveAction;
 
 use App\Models\Status;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ReportFile\ReportFileAccess;
 use App\Models\RetrieveAction\RetrieveAction;
-use App\Models\DynamicAttributes\DynamicAttribute;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 
 /**
- * @property SelectedRetrieveAction[] selectedretrieveactions
+ * @property SelectedRetrieveAction[] $selectedretrieveactions
  * @method refresh()
  */
 trait HasSelectedRetrieveActions
@@ -28,16 +25,6 @@ trait HasSelectedRetrieveActions
         return $this->morphMany(SelectedRetrieveAction::class, 'hasselectedretrieveaction');
     }
 
-
-    public function retrieveactions()
-    {
-        return $this->morphMany(RetrieveAction::class, 'hasselectedretrieveaction');
-    }
-
-    public function reportfileaccessess(){
-        return $this->morphMany(ReportFileAccess::class, 'hasselectedretrieveaction');
-    }
-
     /**
      * Crée et Ajoute un objet SelectedRetrieveAction au modèle qui utilise ce trait et implémente l'interface y rattachée (HasSelectedRetrieveActions)
      * @param Model|RetrieveAction $retrieveaction L'Action sélectionnée
@@ -47,9 +34,15 @@ trait HasSelectedRetrieveActions
      * @param string|null $description La description de l'action sélectionnée
      * @return SelectedRetrieveAction
      */
-    public function addSelectedAction(Model|RetrieveAction $retrieveaction, string $label = null, string $valuetype = null, mixed $actionvalue = null, string $description = null): SelectedRetrieveAction
+    public function addSelectedAction(
+        Model|RetrieveAction $retrieveaction,
+        string $label = null,
+        string $valuetype = null,
+        mixed $actionvalue = null,
+        Status $status = null,
+        string $description = null): SelectedRetrieveAction
     {
-        $selectedretrieveaction = SelectedRetrieveAction::createNew($retrieveaction,null, Status::active()->first(),$description);
+        $selectedretrieveaction = SelectedRetrieveAction::createNew($retrieveaction,null, $status,$description);
 
         if ( !is_null($label) && !is_null($valuetype) ) {
             $selectedretrieveaction->addActionValue($label, $valuetype, $actionvalue);
@@ -72,10 +65,17 @@ trait HasSelectedRetrieveActions
      */
     public function removeSelectedAction(Model|SelectedRetrieveAction $selectedaction, bool $delete = false): ?bool
     {
-        $this->dissociateSelectedActions($selectedaction);
-        $this->refresh();
+        $remove_result = false;
 
-        return $delete ? $selectedaction->delete() : true;
+        $selectedretrieveactions = $this->selectedretrieveactions;
+
+        foreach ($selectedretrieveactions as $selectedretrieveaction){
+            if ( $selectedretrieveaction->id == $selectedaction ) {
+                $remove_result = $selectedaction->delete();
+            }
+        }
+
+        return $remove_result;
     }
 
     public function removeAllSelectedActions(bool $delete = false): ?bool
@@ -84,6 +84,10 @@ trait HasSelectedRetrieveActions
             $this->removeSelectedAction($selectedaction);
         }
         return true;
+
+        /*$this->dynamicrows()->each(function ($row) {
+            $row->delete(); // <-- direct deletion
+        });*/
     }
 
     protected function initializeHasSelectedRetrieveActions()
