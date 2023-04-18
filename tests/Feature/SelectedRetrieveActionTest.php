@@ -56,10 +56,8 @@ class SelectedRetrieveActionTest extends TestCase
 
         $response = $this->add_new_selectedretrieveaction(
             $this->create_new_reportfile(),
-            RetrieveAction::retrieveByName()->first(),
-            null,
-            null,
-            null
+            ReportFile::class,
+            RetrieveAction::retrieveByName()->first()
         );
 
         // on test si l'assertion s'est bien passée
@@ -82,38 +80,11 @@ class SelectedRetrieveActionTest extends TestCase
 
         $response = $this->add_new_selectedretrieveaction(
             $this->create_new_reportfile(),
-            null,
-            null,
-            null
-        );
+            ReportFile::class,
+            null);
 
         // on doit avoir une erreur de validation des champs ci-dessous
         $response->assertSessionHasErrors(['retrieveaction']);
-    }
-
-    public function test_aSelectedRetrieveAction_unique_fields_must_be_validated_before_creation()
-    {
-        //$this->withoutExceptionHandling();
-
-        $user = $this->authenticated_user_admin();
-
-        $response = $this->add_new_selectedretrieveaction(
-            $this->create_new_reportfile(),
-            RetrieveAction::retrieveByName()->first(),
-            "new_selected_retrieve_action_code",
-            null,
-            null
-        );
-        $response = $this->add_new_selectedretrieveaction(
-            $this->create_new_reportfile(),
-            RetrieveAction::retrieveByName()->first(),
-            "new_selected_retrieve_action_code",
-            null,
-            null
-        );
-
-        // on doit avoir une erreur de validation des champs ci-dessous
-        $response->assertSessionHasErrors(['code']);
     }
 
     /**
@@ -129,8 +100,11 @@ class SelectedRetrieveActionTest extends TestCase
 
         $response = $this->add_new_selectedretrieveaction(
             $this->create_new_reportfile(),
+            ReportFile::class,
             RetrieveAction::retrieveByName()->first(),
-            "new_selected_retrieve_action_code",
+            "new_selected_retrieve_action",
+            ValueTypeEnum::BOOLEAN->value,
+            null,
             Status::active()->first(),
             "new selected retrieve action desc"
         );
@@ -143,7 +117,9 @@ class SelectedRetrieveActionTest extends TestCase
         $this->update_existing_selectedretrieveaction(
             $selectedretrieveaction,
             $retrieveaction_another,
-            "new_selected_retrieve_action_code_upd",
+            "new_selected_retrieve_action_upd",
+            ValueTypeEnum::INT->value,
+            null,
             $status_inactive,
             "new selected retrieve action desc upd"
         );
@@ -152,7 +128,6 @@ class SelectedRetrieveActionTest extends TestCase
 
         $this->assertEquals($status_inactive->id, $selectedretrieveaction->status->id);
         $this->assertEquals($retrieveaction_another->id, $selectedretrieveaction->retrieveaction->id);
-        $this->assertEquals("new_selected_retrieve_action_code_upd", $selectedretrieveaction->code);
         $this->assertEquals("new selected retrieve action desc upd", $selectedretrieveaction->description);
     }
 
@@ -167,11 +142,10 @@ class SelectedRetrieveActionTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_selectedretrieveaction($this->create_new_reportfile(),
-            RetrieveAction::retrieveByName()->first(),
-            null,
-            null,
-            null
+        $response = $this->add_new_selectedretrieveaction(
+            $this->create_new_reportfile(),
+            ReportFile::class,
+            RetrieveAction::retrieveByName()->first()
         );
 
         $selectedretrieveaction = SelectedRetrieveAction::first();
@@ -181,118 +155,32 @@ class SelectedRetrieveActionTest extends TestCase
         $this->assertCount(0, SelectedRetrieveAction::all());
     }
 
-    public function test_aSelectedRetrieveAction_can_be_added_to_model()
-    {
-        //$this->withoutExceptionHandling();
-
-        $user = $this->authenticated_user_admin();
-
-        $report_file = $this->create_new_reportfile("new reportfile");
-        $report_file->removeAllSelectedActions(true);
-
-        $response = $this->put('selectedretrieveactions.addtomodel/',
-            [
-                'model_type' => ReportFile::class,
-                'model' => $report_file,
-                'retrieveaction' => RetrieveAction::retrieveByName()->first(),
-                'label' => null,
-                'valuetype' => null,
-                'actionvalue' => null,
-                'description' => null,
-            ]
-        );
-
-        $report_file->refresh();
-
-        // on test si l'assertion s'est bien passée
-        $response->assertStatus(201);
-
-        // on test qu'il y a bien 1 objet dans la base de données
-        $this->assertCount(1, $report_file->selectedretrieveactions);
-    }
-
-    public function test_aSelectedRetrieveAction_can_be_added_to_model_with_RetrieveActionValue()
-    {
-        //$this->withoutExceptionHandling();
-
-        $user = $this->authenticated_user_admin();
-
-        $report_file = $this->create_new_reportfile("new reportfile");
-        $report_file->removeAllSelectedActions(true);
-
-        $response = $this->put('selectedretrieveactions.addtomodel/',
-            [
-                'model_type' => ReportFile::class,
-                'model' => $report_file,
-                'retrieveaction' => RetrieveAction::renameFile()->first(),
-                'label' => "new file name",
-                'valuetype' => ValueTypeEnum::STRING->value,
-                'actionvalue' => "file_downloaded",
-                'description' => null,
-            ]
-        );
-
-        $report_file->refresh();
-
-        // on test si l'assertion s'est bien passée
-        $response->assertStatus(201);
-
-        $this->assertCount(1, $report_file->selectedretrieveactions);
-        $this->assertCount(1, $report_file->selectedretrieveactions[0]->retrieveactionvalues);
-    }
-
-    public function test_aSelectedRetrieveAction_can_be_removed_from_model()
-    {
-        //$this->withoutExceptionHandling();
-
-        $user = $this->authenticated_user_admin();
-
-        $report_file = $this->create_new_reportfile("new reportfile");
-        $report_file->removeAllSelectedActions(true);
-
-        $selectedretrieveaction = $report_file->addSelectedAction(RetrieveAction::retrieveByName()->first());
-
-        $response = $this->put('selectedretrieveactions.removefrommodel/',
-            [
-                'model_type' => ReportFile::class,
-                'model' => $report_file,
-                'selectedretrieveaction' => $selectedretrieveaction,
-            ]
-        );
-
-        $report_file->refresh();
-
-        // on test si l'assertion s'est bien passée
-        $response->assertStatus(200);
-
-        // on test qu'il y a bien 1 objet dans la base de données
-        $this->assertCount(0, $report_file->selectedretrieveactions);
-    }
-
 
     #region Private Functions
 
-    private function add_new_selectedretrieveaction(IHasSelectedRetrieveActions $model, $retrieveaction, $code = null, $status = null, $description = null): TestResponse
+    private function add_new_selectedretrieveaction(IHasSelectedRetrieveActions $model, $model_type, $retrieveaction, $label = null, $valuetype = null, $actionvalue = null, $status = null, $description = null): TestResponse
     {
         return $this->post('selectedretrieveactions',
             array_merge([
                 'model_id' => $model->id,
-            ],$this->new_data($retrieveaction, $code, $status, $description)));
+                'model_type' => $model_type
+            ],$this->new_data($retrieveaction, $label, $valuetype, $actionvalue, $status, $description)));
     }
 
-    private function update_existing_selectedretrieveaction($existing_selectedretrieveaction, $retrieveaction, $code = null, $status = null, $description = null): TestResponse
+    private function update_existing_selectedretrieveaction($existing_selectedretrieveaction, $retrieveaction, $label = null, $valuetype = null, $actionvalue = null, $status = null, $description = null): TestResponse
     {
-        return $this->put('selectedretrieveactions/' . $existing_selectedretrieveaction->uuid, $this->new_data($retrieveaction, $code, $status, $description));
+        return $this->put('selectedretrieveactions/' . $existing_selectedretrieveaction->uuid, $this->new_data($retrieveaction, $label, $valuetype, $actionvalue, $status, $description));
     }
 
-    private function new_data($retrieveaction, $code = null, $status = null, $description = null): array
+    private function new_data($retrieveaction, $label = null, $valuetype = null, $actionvalue = null, $status = null, $description = null): array
     {
         return [
-            'code' => $code,
-            'description' => $description,
-
             'retrieveaction' => $retrieveaction,
+            'label'=> $label,
+            'valuetype' => $valuetype,
+            'actionvalue' => $actionvalue,
             'status' => $status,
+            'description' => $description,
         ];
     }
 
