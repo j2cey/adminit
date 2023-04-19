@@ -108,7 +108,7 @@ class RetrieveActionTest extends TestCase
      */
     public function test_aRetrieveAction_can_be_updated_from_the_database()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 
@@ -153,7 +153,7 @@ class RetrieveActionTest extends TestCase
      */
     public function test_aRetrieveAction_can_be_deleted()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $user = $this->authenticated_user_admin();
 

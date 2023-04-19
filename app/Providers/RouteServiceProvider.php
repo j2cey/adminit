@@ -57,6 +57,8 @@ class RouteServiceProvider extends ServiceProvider
                     require base_path('routes/fileheader.php');
                     /* RuleResultEnum routes */
                     require base_path('routes/ruleresultenum.php');
+                    /* RetrieveAction routes */
+                    require base_path('routes/retrieveaction.php');
                 });
         });
     }

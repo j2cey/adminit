@@ -46,7 +46,6 @@ class ReportFileImport extends Command
 
         if ( ! is_null($file_to_import) ) {
             $treatmentstepresult = ReportTreatmentStepResult::createNew("Chargement du Fichier Rapport dans la BD");
-            //$file_to_import->deleteImportedData($treatmentstepresult);
             $file_to_import->importToDb($treatmentstepresult,true);
         }
 

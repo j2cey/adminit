@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\RetrieveAction;
 
 use Illuminate\Http\Response;
+use App\Models\Reports\Report;
+use App\Models\Reports\ReportType;
 use App\Http\Controllers\Controller;
+use App\Models\ReportFile\ReportFileType;
+use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Resources\RetrieveAction\SelectedRetrieveActionResource;
@@ -14,6 +18,15 @@ use App\Http\Requests\SelectedRetrieveAction\FromModelRemoveSelectedRetrieveActi
 
 class SelectedRetrieveActionController extends Controller
 {
+    public function test() {
+        $reporttype = ReportType::defaultReport()->first();
+        $report = Report::createNew("New Report",$reporttype,"new report desc");
+        $reportfile = $report->addReportFile(ReportFileType::txt()->first(),$file_name ?? "new report file");
+        $selectedaction = $reportfile->addSelectedAction(RetrieveAction::retrieveByName()->first());
+
+        $selectedaction->updateOne(RetrieveAction::renameFile()->first());
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -112,7 +125,7 @@ class SelectedRetrieveActionController extends Controller
         return response('Delete Successfull', 200);
     }
 
-    public function addtomodel(FromModelAddSelectedRetrieveActionRequest $request) {
+    /*public function addtomodel(FromModelAddSelectedRetrieveActionRequest $request) {
         $selectedretrieveaction = $request->model->addSelectedAction($request->retrieveaction,$request->label,$request->valuetype,$request->actionvalue,$request->description);
 
         return new SelectedRetrieveActionResource($selectedretrieveaction);
@@ -122,5 +135,5 @@ class SelectedRetrieveActionController extends Controller
         $request->model->removeSelectedAction($request->selectedretrieveaction);
 
         return response('Delete Successfull', 200);
-    }
+    }*/
 }

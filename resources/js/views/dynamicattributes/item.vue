@@ -88,7 +88,6 @@
                 <AnalysisRuleList :model_prop="dynamicattribute"></AnalysisRuleList>
 
             </b-tab-item>
-
             <b-tab-item>
                 <template #header>
                     <b-icon icon="bars" pack="fa"></b-icon>

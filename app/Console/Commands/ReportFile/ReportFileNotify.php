@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReportFile\NotifyReport;
 use App\Models\ReportFile\CollectedReportFile;
+use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 class ReportFileNotify extends Command
 {
@@ -40,9 +41,13 @@ class ReportFileNotify extends Command
      */
     public function handle()
     {
+        \Log::info("Notification Fichiers Rapport en cours de traitement...");
+
         $collectedreportfile = CollectedReportFile::first();
-        Mail::to("J.NGOMNZE@moov-africa.ga")
-            ->send(new NotifyReport( $collectedreportfile ));
+        $treatmentstepresult = ReportTreatmentStepResult::createNew("Notification du Fichier Rapport");
+        $collectedreportfile->notify(report_treatment_step_result: $treatmentstepresult, format_if_any: false);
+
+        \Log::info("Traitement termine.");
 
         return 0;
     }

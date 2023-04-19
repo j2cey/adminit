@@ -31,6 +31,10 @@ trait HasMatchedAnalysisRules
         return false;
     }
 
+    public function resetMatchedAnalysisRules() {
+        return $this->matchedanalysisrules()->detach();
+    }
+
     protected function initializeHasMatchedAnalysisRules()
     {
         $this->with = array_unique(array_merge($this->with, ['matchedanalysisrules']));

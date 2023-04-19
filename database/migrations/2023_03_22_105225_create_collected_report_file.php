@@ -48,8 +48,14 @@ class CreateCollectedReportFile extends Migration
             $table->integer('row_last_format_processed')->default(0)->comment("last line format processed");
             $table->integer('nb_format_try')->default(0)->comment("number of format processing attempts");
 
-            $table->boolean('formatted')->default(false)->comment("determine if the file has already been formatted into DB");
+            $table->boolean('formatted')->default(false)->comment("determine if the file has already been formatted");
             $table->integer('format_processing')->default(0)->comment("determine if the file format is processing");
+
+            $table->integer('notification_processing')->default(0)->comment("determine if the file notification is processing");
+            $table->integer('nb_notification_try')->default(0)->comment("number of notification processing attempts");
+            $table->boolean('notified')->default(false)->comment("determine if the file has already been notified");
+            $table->timestamp('last_notification_success')->nullable()->comment("last notification success date");
+            $table->timestamp('last_notification_failed')->nullable()->comment("last notification failed date");
 
             $table->foreignId('report_file_id')->nullable()
                 ->comment('clé reférence du report_file')
