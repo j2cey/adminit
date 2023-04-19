@@ -75,15 +75,6 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
 
     #region Eloquent Relationships
 
-    /*
-    public function reportfile() {
-        return $this->belongsTo(ReportFile::class, 'report_file_id');
-    }
-    public function reportfileaccess() {
-        return $this->belongsTo(ReportFileAccess::class, 'report_file_access_id');
-    }
-    */
-
     public function retrieveaction() {
         return $this->belongsTo(RetrieveAction::class, 'retrieve_action_id');
     }
@@ -92,13 +83,6 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
     {
         return $this->hasMany(RetrieveActionValue::class, 'selected_retrieve_action_id');
     }
-
-    /*
-     public function reportfileaccess()
-    {
-        return $this->hasMany(ReportFileAccess::class, 'selected_retrieve_action_id');
-    }
-    */
 
     public function hasselectedretrieveaction()
     {
@@ -137,21 +121,29 @@ class SelectedRetrieveAction extends BaseModel implements Auditable
 
     /**
      * Modifie (et stocke dans la base de données) cette action de récupération (RetrieveAction)
-     * @param RetrieveAction $retrieveaction L'action
+     * @param Model|RetrieveAction $retrieveaction L'action
      * @param string|null $code Code de selection
      * @param Model|Status|null $status Statut
      * @param string|null $description Description de la sélection
      * @return $this
      */
-    public function updateOne(RetrieveAction $retrieveaction, string $code = null, Model|Status $status = null, string $description = null): SelectedRetrieveAction
+    public function updateOne(Model|RetrieveAction $retrieveaction, string $code = null, Model|Status $status = null, string $description = null): SelectedRetrieveAction
     {
-        $this->code = $code;
+        $this->code = $code ?? $this->code;
         $this->description = $description;
 
-        $this->status()->associate( is_null($status) ? Status::default()->first() : $status );
-        $this->retrieveaction()->associate( $retrieveaction );
+        if ( is_null($status) ) {
+            $this->status()->associate( Status::default()->first() );
+        } else {
+            $this->status()->associate( $status );
+        }
+        $this->retrieveaction()->associate( $retrieveaction )->save();
+
+        //$this->setRelations([]);
 
         $this->save();
+
+        $this->fresh(['status','retrieveaction']);
 
         return $this;
     }

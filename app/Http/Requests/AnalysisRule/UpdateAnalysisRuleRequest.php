@@ -46,7 +46,7 @@ class UpdateAnalysisRuleRequest extends AnalysisRuleRequest
             'status' => $this->setRelevantStatus($this->input('status'),'code', true),
             'analysisruletype' => $this->setAnalysisRuleType($this->input('analysisruletype'), 'id', true),
             'rule_result_for_notification' => (is_null($this->input('rule_result_for_notification'))) ? null : $this->decodeJsonField($this->input('rule_result_for_notification'))['value'],
-            'inneranalysisrule_attributes' => $this->decodeJsonField($this->input('inneranalysisrule')),
+            'inneranalysisrule_attributes' => $this->decodeJsonField( $this->input('inneranalysisrule') ?? $this->input('inneranalysisrule_attributes') ),
         ]);
     }
 }

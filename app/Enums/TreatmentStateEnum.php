@@ -15,7 +15,7 @@ enum TreatmentStateEnum: string
     #[Description('En Execution')]
     case RUNNING = 'running';
 
-    #[Description('Succe')]
+    #[Description('Succes')]
     case SUCCESS = 'success';
 
     #[Description('Echec')]

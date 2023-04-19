@@ -11,4 +11,5 @@ interface IHasMatchedAnalysisRules
 {
     public function matchedanalysisrules();
     public function addMatchedAnalysisRule(AnalysisRule $analysisrule);
+    public function resetMatchedAnalysisRules();
 }

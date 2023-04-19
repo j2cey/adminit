@@ -7,11 +7,11 @@ use App\Models\BaseModel;
 use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
 use App\Imports\ReportFilesImport;
-use App\Models\FormatRule\FormatRule;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReportFile\NotifyReport;
 use Illuminate\Support\Facades\Storage;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Traits\FormatRule\HasFormatRules;
-use App\Models\FormatRule\FormatRuleType;
 use App\Contracts\FormatRule\IHasFormatRules;
 use App\Traits\DynamicAttribute\HasDynamicRows;
 use App\Models\ReportTreatments\OperationResult;
@@ -66,6 +66,12 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property int $formatted
  * @property int $format_processing
  *
+ * @property int $notification_processing
+ * @property int $nb_notification_try
+ * @property boolean $notified
+ * @property Carbon $last_notification_success
+ * @property Carbon $last_notification_failed
+ *
  * @property ReportFile $reportfile
  * @property string $fileLocalRelativePath
  * @property string $fileLocalAbsolutePath
@@ -82,8 +88,9 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
 
     protected $with = ['reportfile'];
     protected $casts = [
-        'imported' => 'boolean'
-        //'lines_values' => 'array'
+        'imported' => 'boolean',
+        'formatted' => 'boolean',
+        'notified' => 'boolean',
     ];
 
     public static function defaultRules() {
@@ -336,13 +343,17 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
 
         try {
 
-            $this->startFormat($reset_formatted);
-            $this->mergeLinesFormattedValues();
-            $this->endFormat();
+            if ( $this->imported ) {
+                $this->startFormat($reset_formatted);
+                $this->mergeLinesFormattedValues();
+                $this->endFormat();
 
-            return $operation_result->endWithSuccess();
+                return $operation_result->endWithSuccess();
+            } else {
+                return $operation_result->endWithSuccess("File not imported");
+            }
         } catch (\Exception $e) {
-            $this->endImport();
+            $this->endFormat();
             return $operation_result->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
         }
     }
@@ -412,6 +423,67 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
         $this->nb_rows_format_success += 1;
 
         $this->save();
+    }
+
+    #endregion
+
+
+    #region Notification
+
+    public function notify(ReportTreatmentStepResult $report_treatment_step_result, bool $format_if_any = false): OperationResult
+    {
+        $operation_result = $report_treatment_step_result->addOperationResult("Notify Report");
+
+        try {
+
+            if ( $this->formatted ) {
+                if ( count( $this->matchedanalysisrules ) > 0 ) {
+
+                    $this->startNotification();
+
+                    Mail::to("J.NGOMNZE@moov-africa.ga")
+                        ->send(new NotifyReport($this));
+
+                    $this->resetMatchedAnalysisRules();
+
+                    $this->endNotification(true);
+                }
+
+                return $operation_result->endWithSuccess();
+            } else {
+                return $operation_result->endWithSuccess("File not formatted");
+            }
+        } catch (\Exception $e) {
+            $this->endNotification(false);
+            return $operation_result->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
+        }
+    }
+
+    private function startNotification(bool $reset_notified = false) {
+        $this->notification_processing = 1;
+        $this->nb_notification_try += 1;
+
+        if ($reset_notified) {
+            $this->notified = false;
+        }
+
+        $this->save();
+    }
+
+    private function endNotification(bool $success = true) {
+        $data = [
+            'notification_processing' => 0,
+            'notified' => $success,
+        ];
+        if ($success) {
+            $data['last_notification_success'] = Carbon::now();
+        } else {
+            $data['last_notification_failed'] = Carbon::now();
+        }
+
+        $this->update(
+            $data
+        );
     }
 
     #endregion

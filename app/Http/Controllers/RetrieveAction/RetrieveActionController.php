@@ -52,7 +52,14 @@ class RetrieveActionController extends Controller
      */
     public function store(StoreRetrieveActionRequest $request)
     {
-        $retrieveaction = RetrieveAction::createNew($request->retrieveactiontype, $request->name, $request->action_class, $request->code, $request->status, $request->description);
+        $retrieveaction = RetrieveAction::createNew(
+            $request->retrieveactiontype,
+            $request->name,
+            $request->action_class,
+            $request->code,
+            $request->status,
+            $request->description
+        );
 
         return new RetrieveActionResource($retrieveaction);
     }

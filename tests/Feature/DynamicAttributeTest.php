@@ -21,7 +21,6 @@ class DynamicAttributeTest extends TestCase
 {
     use RefreshDatabase;
     use DatabaseMigrations;
-    use HasFormatRulesTest;
 
     public function setUp(): void
     {

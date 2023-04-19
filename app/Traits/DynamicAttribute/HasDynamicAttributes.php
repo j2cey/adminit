@@ -104,15 +104,14 @@ trait HasDynamicAttributes
         if ( ! is_null($can_be_notified) ) $data['can_be_notified'] = $can_be_notified;
 
         $dynamicattribute = $this->createDynamicAttribute($data);
-
-            $dynamicattribute->dynamicattributetype()->associate($dynamicattributetype);        // associate the created DynamicAttribute with the given DynamicAttributeType
+        $dynamicattribute->dynamicattributetype()->associate($dynamicattributetype);        // associate the created DynamicAttribute with the given DynamicAttributeType
 
         if ( ! is_null($status) ) {
-            $dynamicattribute->status()->associate($status);                                    // set status
+            $dynamicattribute->status()->associate($status);                                // set status
         }
 
-        $dynamicattribute->setDefaultFormatSize();                                              // set default FormatRule format size
-        $dynamicattribute->save();                                                              // save the association from the DynamicAttribute
+        $dynamicattribute->setDefaultFormatSize();                                          // set default FormatRule format size
+        $dynamicattribute->save();                                                          // save the association from the DynamicAttribute
 
         $this->setAddAttributeToList($dynamicattribute);
 

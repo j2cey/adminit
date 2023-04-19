@@ -35,15 +35,11 @@ use App\Http\Controllers\AnalysisRules\ThresholdMaxController;
 use App\Http\Controllers\AnalysisRules\ThresholdTypeController;
 use App\Http\Controllers\Reportsetting\ReportsettingController;
 use App\Http\Controllers\ReportFile\ReportFileAccessController;
-use App\Http\Controllers\RetrieveAction\RetrieveActionController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
 use App\Http\Controllers\ReportFile\CollectedReportFileController;
 use App\Http\Controllers\ReportTreatments\OperationResultController;
-use App\Http\Controllers\RetrieveAction\RetrieveActionTypeController;
-use App\Http\Controllers\RetrieveAction\RetrieveActionValueController;
 use App\Http\Controllers\AnalysisRules\AnalysisRuleThresholdController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonTypeController;
-use App\Http\Controllers\RetrieveAction\SelectedRetrieveActionController;
 use App\Http\Controllers\ReportTreatments\ReportTreatmentResultController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonEqualController;
 use App\Http\Controllers\AnalysisRuleComparison\ComparisonNotEqualController;
@@ -295,32 +291,6 @@ Route::get('reportfileaccesses.test', function () {
 Route::resource('accessaccounts',AccessAccountController::class)->middleware('auth');
 Route::get('accessaccounts.fetch',[AccessAccountController::class,'fetch'])
     ->name('accessaccounts.fetch')
-    ->middleware('auth');
-
-Route::resource('retrieveactiontypes',RetrieveActionTypeController::class)->middleware('auth');
-Route::get('retrieveactiontypes.fetch',[RetrieveActionTypeController::class,'fetch'])
-    ->name('retrieveactiontypes.fetch')
-    ->middleware('auth');
-
-Route::resource('retrieveactions',RetrieveActionController::class)->middleware('auth');
-Route::get('retrieveactions.fetch',[RetrieveActionController::class,'fetch'])
-    ->name('retrieveactions.fetch')
-    ->middleware('auth');
-
-Route::resource('selectedretrieveactions',SelectedRetrieveActionController::class)->middleware('auth');
-Route::get('selectedretrieveactions.fetch',[SelectedRetrieveActionController::class,'fetch'])
-    ->name('selectedretrieveactions.fetch')
-    ->middleware('auth');
-Route::put('selectedretrieveactions.addtomodel',[SelectedRetrieveActionController::class,'addtomodel'])
-    ->name('selectedretrieveactions.addtomodel')
-    ->middleware('auth');
-Route::put('selectedretrieveactions.removefrommodel',[SelectedRetrieveActionController::class,'removefrommodel'])
-    ->name('selectedretrieveactions.removefrommodel')
-    ->middleware('auth');
-
-Route::resource('retrieveactionvalues',RetrieveActionValueController::class)->middleware('auth');
-Route::get('retrieveactionvalues.fetch',[RetrieveActionValueController::class,'fetch'])
-    ->name('retrieveactionvalues.fetch')
     ->middleware('auth');
 
 Route::resource('thresholdmins',ThresholdMinController::class)->middleware('auth');

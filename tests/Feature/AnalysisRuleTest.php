@@ -14,13 +14,14 @@ use Tests\Feature\Traits\HasFormatRulesTest;
 use App\Models\AnalysisRule\AnalysisRuleType;
 use App\Contracts\FormatRule\IHasFormatRules;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Contracts\AnalysisRules\IHasAnalysisRules;
+use App\Models\DynamicAttributes\DynamicAttribute;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class AnalysisRuleTest extends TestCase
 {
     use RefreshDatabase;
     use DatabaseMigrations;
-    use HasFormatRulesTest;
 
     public function setUp(): void
     {
@@ -52,6 +53,8 @@ class AnalysisRuleTest extends TestCase
         $user = $this->authenticated_user_admin();
 
         $response = $this->add_new_analysisrule(
+            $this->create_new_dynamicattribute(),
+            DynamicAttribute::class,
             AnalysisRuleType::threshold()->first(),
             "new analysis rule"
         );
@@ -74,7 +77,12 @@ class AnalysisRuleTest extends TestCase
 
         $user = $this->authenticated_user_admin();
 
-        $response = $this->add_new_analysisrule(null, null, null, null);
+        $response = $this->add_new_analysisrule(
+            $this->create_new_dynamicattribute(),
+            DynamicAttribute::class,
+            null,
+            null
+        );
 
         // on doit avoir une erreur de validation des champs ci-dessous
         $response->assertSessionHasErrors(['analysisruletype','title']);
@@ -92,10 +100,13 @@ class AnalysisRuleTest extends TestCase
         $user = $this->authenticated_user_admin();
 
         $response = $this->add_new_analysisrule(
+            $this->create_new_dynamicattribute(),
+            DynamicAttribute::class,
             AnalysisRuleType::threshold()->first(),
             "new analysis rule",
             Status::active()->first(),
-            RuleResultEnum::ALLOWED->value,
+            RuleResultEnum::ALLOWED->toArray(),
+            [],
             "new analysis rule desc"
         );
 
@@ -109,7 +120,8 @@ class AnalysisRuleTest extends TestCase
             $analysisruletype_another,
             "new analysis rule upd",
             $status_inactive,
-            RuleResultEnum::BROKEN->value,
+            RuleResultEnum::BROKEN->toArray(),
+            [],
             "new analysis rule desc upd"
         );
 
@@ -134,6 +146,8 @@ class AnalysisRuleTest extends TestCase
         $user = $this->authenticated_user_admin();
 
         $response = $this->add_new_analysisrule(
+            $this->create_new_dynamicattribute(),
+            DynamicAttribute::class,
             AnalysisRuleType::threshold()->first(),
             "new analysis rule"
         );
@@ -149,27 +163,31 @@ class AnalysisRuleTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_analysisrule($analysisruletype, $title, $status = null, $rule_result_for_notification = null, $description = null): TestResponse
+    private function add_new_analysisrule(IHasAnalysisRules $model, $model_type, $analysisruletype, $title, $status = null, $rule_result_for_notification = null, $inneranalysisrule_attributes = [], $description = null): TestResponse
     {
         return $this->post('analysisrules', array_merge(
-            [ 'dynamicattribute' => $this->create_new_dynamicattribute("new dynamicattribute") ],
-            $this->new_data($analysisruletype, $title, $status, $rule_result_for_notification, $description) )
+            [
+                'model_type' => $model_type,
+                'model_id' => $model->id
+            ],
+            $this->new_data($analysisruletype, $title, $status, $rule_result_for_notification, $inneranalysisrule_attributes, $description) )
         );
     }
 
-    private function update_existing_analysisrule($existing_analysisrule, $analysisruletype, $title, $status = null, $rule_result_for_notification = null, $description = null): TestResponse
+    private function update_existing_analysisrule($existing_analysisrule, $analysisruletype, $title, $status = null, $rule_result_for_notification = null, $inneranalysisrule_attributes = [], $description = null): TestResponse
     {
-        return $this->put('analysisrules/' . $existing_analysisrule->uuid, $this->new_data($analysisruletype, $title, $status, $rule_result_for_notification, $description));
+        return $this->put('analysisrules/' . $existing_analysisrule->uuid, $this->new_data($analysisruletype, $title, $status, $rule_result_for_notification, $inneranalysisrule_attributes, $description));
     }
 
-    private function new_data($analysisruletype, $title, $status = null, $rule_result_for_notification = null, $description = null): array
+    private function new_data($analysisruletype, $title, $status = null, $rule_result_for_notification = null, $inneranalysisrule_attributes = [], $description = null): array
     {
         return [
+            'analysisruletype' => $analysisruletype,
             'title' => $title,
-            'rule_result_for_notification' => $rule_result_for_notification,
+            'rule_result_for_notification' => $rule_result_for_notification ?? RuleResultEnum::ALLWAYS->toArray(),
+            'inneranalysisrule_attributes' => $inneranalysisrule_attributes,
             'description' => $description,
 
-            'analysisruletype' => $analysisruletype,
             'status' => $status,
         ];
     }

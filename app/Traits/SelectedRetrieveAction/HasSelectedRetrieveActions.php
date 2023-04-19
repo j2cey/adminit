@@ -28,24 +28,26 @@ trait HasSelectedRetrieveActions
     /**
      * Crée et Ajoute un objet SelectedRetrieveAction au modèle qui utilise ce trait et implémente l'interface y rattachée (HasSelectedRetrieveActions)
      * @param Model|RetrieveAction $retrieveaction L'Action sélectionnée
-     * @param string|null $label Le libellé de la valeur rattachée (le cas échéant)
-     * @param string|null $valuetype Le type de la valeur rattachée (le cas échéant)
-     * @param mixed|null $actionvalue La valeur rattachée (le cas échéant)
+     * @param Status|null $status Statut de la selection
      * @param string|null $description La description de l'action sélectionnée
+     * @param string|null $actionvalue_label Libelle de la valeur rattachée (le cas échéant)
+     * @param string|null $actionvalue_valuetype Type de la valeur rattachée (le cas échéant)
+     * @param mixed|null $actionvalue La valeur rattachée (le cas échéant)
      * @return SelectedRetrieveAction
      */
     public function addSelectedAction(
         Model|RetrieveAction $retrieveaction,
-        string $label = null,
-        string $valuetype = null,
-        mixed $actionvalue = null,
         Status $status = null,
-        string $description = null): SelectedRetrieveAction
+        string $description = null,
+        string $actionvalue_label = null,
+        string $actionvalue_valuetype = null,
+        mixed $actionvalue = null
+    ): SelectedRetrieveAction
     {
         $selectedretrieveaction = SelectedRetrieveAction::createNew($retrieveaction,null, $status,$description);
 
-        if ( !is_null($label) && !is_null($valuetype) ) {
-            $selectedretrieveaction->addActionValue($label, $valuetype, $actionvalue);
+        if ( !is_null($actionvalue_label) && !is_null($actionvalue_valuetype) ) {
+            $selectedretrieveaction->addActionValue($actionvalue_label, $actionvalue_valuetype, $actionvalue);
         }
 
         $this->selectedretrieveactions()->save(
