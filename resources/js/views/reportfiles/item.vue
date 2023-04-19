@@ -28,7 +28,6 @@
             </template>
 
             <ReportFileAccessList list_title_prop="Accès au fichier" :reportfile_prop="reportfile" :reportfileaccesses_list_prop="reportfile.reportfileaccesses" ></ReportFileAccessList>
-
         </b-tab-item>
 
         <b-tab-item>
@@ -41,7 +40,24 @@
             <CollectedReportFileList :collectedreportfiles_prop="reportfile.collectedreportfiles"></CollectedReportFileList>
 
         </b-tab-item>
+
+            <b-tab-item>
+                <template #header>
+                    <b-icon size="small" icon="file"></b-icon>
+                    <span class="help-inline pr-1 text-sm"> Actions avant/après récupération </span>
+
+                </template>
+                Bonjour. Pour l'instant, il n'y a rien.
+                <SelectedRetrieveActionList :selectedretrieveactions_prop="reportfile.selectedretrieveactions"></SelectedRetrieveActionList>
+
+            </b-tab-item>
+
+
+
     </b-tabs>
+
+
+
 </template>
 
 <script>
@@ -53,6 +69,7 @@ export default {
     components: {
         ReportFileAccessList: () => import('../reportfileaccesses/list'),
         CollectedReportFileList: () => import('../collectedreportfiles/index'),
+        SelectedRetrieveActionList: () => import('../selectedretrieveactions/list'),
     },
     data() {
         return {
