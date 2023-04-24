@@ -6,7 +6,9 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
+use App\Enums\TreatmentStepCode;
 use App\Imports\ReportFilesImport;
+use App\Enums\CriticalityLevelEnum;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReportFile\NotifyReport;
 use Illuminate\Support\Facades\Storage;
@@ -20,8 +22,11 @@ use App\Contracts\DynamicAttribute\IHasDynamicRows;
 use App\Contracts\FormattedValue\IHasFormattedValue;
 use App\Traits\AnalysisRules\HasMatchedAnalysisRules;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
+use App\Traits\ReportTreatmentStepResult\HasReportTreatmentStepResults;
+use App\Contracts\ReportTreatmentStepResult\IHasReportTreatmentStepResults;
 
 /**
  * Class CollectedReportFile
@@ -80,9 +85,9 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @method static toImport()
  * @method static CollectedReportFile create(array $array)
  */
-class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRows, IHasFormattedValue, IHasFormatRules, IHasMatchedAnalysisRules
+class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRows, IHasFormattedValue, IHasFormatRules, IHasMatchedAnalysisRules, IHasReportTreatmentStepResults
 {
-    use HasFactory, HasDynamicRows, HasFormattedValue, HasFormatRules, HasMatchedAnalysisRules, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasDynamicRows, HasFormattedValue, HasFormatRules, HasMatchedAnalysisRules, HasReportTreatmentStepResults, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -222,9 +227,10 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
 
     #region Data Importation
 
-    public function importToDb(ReportTreatmentStepResult $reporttreatmentstepresult, bool $reset_imported = false): OperationResult
+    public function importToDb(ReportTreatmentResult $reporttreatmentresult, bool $reset_imported = false)
     {
-        $operation_result = $reporttreatmentstepresult->addOperationResult("Importion des Données du fichier");
+        $reporttreatmentstepresult = $this->addReportTreatmentStepResult($reporttreatmentresult, TreatmentStepCode::IMPORTFILE,"Importion des Données du fichier " . $this->reportfile->name, CriticalityLevelEnum::HIGH, true); //$reporttreatmentresult->addStep("Récupération du fichier");
+        $reporttreatmentstepresult->startTreatment();
 
         $this->startImport($reset_imported);
 
@@ -232,7 +238,7 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
             $delete_operation_result = $this->deleteImportedData($reporttreatmentstepresult);
             if ($delete_operation_result->isFailed) {
                 $this->endImport();
-                return $operation_result->endWithFailure("Erreur Suppression Données importées");
+                $reporttreatmentstepresult->endTreatmentWithFailure("Erreur Suppression Données importées");
             }
         }
 
@@ -243,16 +249,16 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
             $this->mergeLinesValues();
 
             $this->endImport();
-            return $operation_result->endWithSuccess();
+            $reporttreatmentstepresult->endTreatmentWithSuccess();
         } catch (\Exception $e) {
             $this->endImport();
-            return $operation_result->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
+            $reporttreatmentstepresult->endTreatmentWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
         }
     }
 
     public function deleteImportedData(ReportTreatmentStepResult $reporttreatmentstepresult): OperationResult
     {
-        $operation_result = $reporttreatmentstepresult->addOperationResult("Suppression Données importées");
+        $operation_result = $reporttreatmentstepresult->addOperationResult("Suppression Données importées", CriticalityLevelEnum::HIGH);
         try {
             $this->deleteRows();
             $this->lines_values = "[]";
@@ -331,53 +337,58 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
 
     #region Data formatting
 
-    /**
-     * Launch data formatting
-     * @param ReportTreatmentStepResult $reporttreatmentstepresult
-     * @param bool $reset_formatted
-     * @return OperationResult
-     */
-    public function formatImportedValues(ReportTreatmentStepResult $reporttreatmentstepresult, bool $reset_formatted = false): OperationResult
+    public function formatImportedValues(ReportTreatmentResult $reporttreatmentresult, bool $reset_formatted = false)
     {
-        $operation_result = $reporttreatmentstepresult->addOperationResult("Merge Lines Formatted Values");
+        $reporttreatmentstepresult = $this->addReportTreatmentStepResult($reporttreatmentresult, TreatmentStepCode::FORMATDATA,"Formattage des Valeurd Importees du fichier " . $this->local_file_name, CriticalityLevelEnum::HIGH, true); //$reporttreatmentresult->addStep("Récupération du fichier");
+        $reporttreatmentstepresult->startTreatment();
 
         try {
-
             if ( $this->imported ) {
                 $this->startFormat($reset_formatted);
-                $this->mergeLinesFormattedValues();
+                $operation_result = $this->mergeLinesFormattedValues($reporttreatmentstepresult);
                 $this->endFormat();
-
-                return $operation_result->endWithSuccess();
+                if ($operation_result->isFailed) {
+                    $reporttreatmentstepresult->endTreatmentWithFailure();
+                } else {
+                    $reporttreatmentstepresult->endTreatmentWithSuccess();
+                }
             } else {
-                return $operation_result->endWithSuccess("File not imported");
+                $reporttreatmentstepresult->endTreatmentWithFailure("File not formatted");
             }
         } catch (\Exception $e) {
             $this->endFormat();
-            return $operation_result->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
+            $reporttreatmentstepresult->endTreatmentWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
         }
     }
 
     /**
      * Merge all Rows formatted values into the formatted values of this object
-     * @return void
+     * @param ReportTreatmentStepResult $reporttreatmentstepresult
+     * @return OperationResult
      */
-    public function mergeLinesFormattedValues() {
-        // reset rawvalue from formatted values
-        $this->resetRawValues();
-        $this->insertHeadersRow($this->getHeaders(), $this->reportfile->report->fileheader->formatrules);
+    public function mergeLinesFormattedValues(ReportTreatmentStepResult $reporttreatmentstepresult): OperationResult
+    {
+        $operation_result = $reporttreatmentstepresult->addOperationResult("Formattage et Merge des Lignes du fichier", CriticalityLevelEnum::HIGH);
+        try {
+            // reset rawvalue from formatted values
+            $this->resetRawValues();
+            $this->insertHeadersRow($this->getHeaders(), $this->reportfile->report->fileheader->formatrules);
 
-        // get all dynamic row attached to this object
-        $dynamicrows = $this->dynamicrows;
+            // get all dynamic row attached to this object
+            $dynamicrows = $this->dynamicrows;
 
-        foreach ($dynamicrows as $row_index => $dynamicrow) {
-            // get merged formatted values for each row
-            $dynamicrow->mergeColumnsFormattedValues();
-            // merge object (this) formatted values with all rows formatted values
-            $this->mergeRawValueFromFormatted($dynamicrow);
-            $this->setRowFormatSuccess($row_index);
+            foreach ($dynamicrows as $row_index => $dynamicrow) {
+                // get merged formatted values for each row
+                $dynamicrow->mergeColumnsFormattedValues();
+                // merge object (this) formatted values with all rows formatted values
+                $this->mergeRawValueFromFormatted($dynamicrow);
+                $this->setRowFormatSuccess($row_index);
+            }
+            $this->applyFormatFromRaw(null, $this->formatrules);
+            return $operation_result->endWithFailure();
+        } catch (\Exception $e) {
+            return $operation_result->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
         }
-        $this->applyFormatFromRaw(null, $this->formatrules);
     }
 
     public function getHeaders(): array {
@@ -430,9 +441,10 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
 
     #region Notification
 
-    public function notify(ReportTreatmentStepResult $report_treatment_step_result, bool $format_if_any = false): OperationResult
+    public function notify(ReportTreatmentResult $reporttreatmentresult, bool $format_if_any = false)
     {
-        $operation_result = $report_treatment_step_result->addOperationResult("Notify Report");
+        $reporttreatmentstepresult = $this->addReportTreatmentStepResult($reporttreatmentresult, TreatmentStepCode::NOTIFYREPORT,"Notification du fichier " . $this->local_file_name, CriticalityLevelEnum::HIGH, true); //$reporttreatmentresult->addStep("Récupération du fichier");
+        $reporttreatmentstepresult->startTreatment();
 
         try {
 
@@ -449,13 +461,13 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
                     $this->endNotification(true);
                 }
 
-                return $operation_result->endWithSuccess();
+                $reporttreatmentstepresult->endTreatmentWithSuccess();
             } else {
-                return $operation_result->endWithSuccess("File not formatted");
+                $reporttreatmentstepresult->endTreatmentWithFailure("File not formatted");
             }
         } catch (\Exception $e) {
             $this->endNotification(false);
-            return $operation_result->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
+            $reporttreatmentstepresult->endTreatmentWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
         }
     }
 

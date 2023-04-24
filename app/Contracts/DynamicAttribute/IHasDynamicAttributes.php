@@ -4,7 +4,6 @@ namespace App\Contracts\DynamicAttribute;
 
 use App\Models\Status;
 use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -14,7 +13,7 @@ use App\Models\DynamicAttributes\DynamicAttributeType;
  * @property DynamicAttribute latestDynamicattribute
  * @property DynamicAttribute oldestDynamicattribute
  */
-interface IHasDynamicAttributes extends Auditable
+interface IHasDynamicAttributes
 {
     public function getModelTypeAttribute(): string;
 

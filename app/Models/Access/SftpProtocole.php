@@ -2,22 +2,32 @@
 
 namespace App\Models\Access;
 
+use App\Enums\CriticalityLevelEnum;
 use App\Models\OsAndServer\ReportServer;
 use Illuminate\Filesystem\FilesystemManager;
 use App\Contracts\AccessProtocole\IProtocole;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 class SftpProtocole implements IProtocole
 {
-    public static function getDisk(AccessAccount $account, ReportServer $server, int $port): Filesystem
+    public static function getDisk(ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum, AccessAccount $account, ReportServer $server, int $port): ?Filesystem
     {
-        $fsMgr = new FilesystemManager(app());
+        $operation_result = $reporttreatmentstepresult->addOperationResult("Get SFTP Proocole Disk", $criticalitylevelenum);
+        try {
+            $fsMgr = new FilesystemManager(app());
 
-        return $fsMgr->createSftpDriver([
-            'host' => $server->ip_address, // required
-            'username' => $account->login, // required
-            'password' => $account->pwd, // required
-            'port' => $port,
-        ]);
+            $disk =  $fsMgr->createSftpDriver([
+                'host' => $server->ip_address, // required
+                'username' => $account->login, // required
+                'password' => $account->pwd, // required
+                'port' => $port,
+            ]);
+            $operation_result->endWithSuccess();
+            return $disk;
+        } catch (\Exception $e) {
+            $operation_result->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
+            return null;
+        }
     }
 }

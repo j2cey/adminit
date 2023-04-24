@@ -8,6 +8,8 @@ use App\Models\BaseModel;
 use App\Enums\ValueTypeEnum;
 use Illuminate\Support\Carbon;
 use App\Enums\TreatmentStateEnum;
+use App\Enums\TreatmentResultEnum;
+use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -34,6 +36,7 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  *
  * @property string $title
  * @property integer|null $report_type_id
+ * @property string $state
  *
  * @property string|null $description
  * @property string|null $attributes_list
@@ -44,13 +47,17 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  *
  * @method static create(string[] $array)
  */
-class Report extends BaseModel implements IHasDynamicAttributes, IHasFileHeader
+class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHasFileHeader
 {
     use HasDynamicAttributes, HasFileHeader, HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $with = ['reporttype'];
     //protected $appends = [];
+
+    protected $casts = [
+        'state' => TreatmentStateEnum::class,
+    ];
 
     #region Validation Rules
 
@@ -91,9 +98,28 @@ class Report extends BaseModel implements IHasDynamicAttributes, IHasFileHeader
     public function reporttreatmentresults() {
         return $this->belongsTo(ReportTreatmentResult::class, "report_id");
     }
+
     public function reporttreatmentresultswaiting() {
         return $this->reporttreatmentresults()
             ->where('state', TreatmentStateEnum::WAITING->value);
+    }
+
+    #endregion
+
+    #region SCOPES based Custom Functions
+
+    /**
+     * @return ReportFile|null
+     */
+    public function getActiveReportFile() {
+        return $this->reportfiles()->active()->first();
+    }
+
+    /**
+     * @return ReportTreatmentResult|null
+     */
+    public function getCurrentTreatment() {
+        return $this->reporttreatmentresults()->active()->waiting()->first();
     }
 
     #endregion
@@ -165,6 +191,10 @@ class Report extends BaseModel implements IHasDynamicAttributes, IHasFileHeader
         );
     }
 
+    public function addReportTreatmentResult(string $name = null, Model|ReportTreatmentStepResult $currentstep = null, Carbon $start_at = null, Carbon $end_at = null, TreatmentStateEnum $state = null, TreatmentResultEnum $result = null, string $description = null): ReportTreatmentResult {
+        return ReportTreatmentResult::createNew($this, $name, $currentstep, $start_at, $end_at, $state, $result, $description);
+    }
+
     /**
      * Rajoute un attribut à la liste JSON
      * @param DynamicAttribute $dynamicattribute
@@ -204,33 +234,100 @@ class Report extends BaseModel implements IHasDynamicAttributes, IHasFileHeader
 
     public function exec() {
 
-        // On recherche récupère les traitements en cours (le cas échéant)
-        $waitingtreatments = $this->reporttreatmentresultswaiting;
-        //$nb_critical_waiting = 0;
+        // On recherche récupère les traitements en cours
+        $waitingreporttreatmentresults = $this->reporttreatmentresultswaiting;
 
-        foreach ($waitingtreatments as $waitingtreatment) {
-            // si l'étape en cours est success, on passe suivant
+        $nb_waiting_executed = 0;
 
-            // si l'étape en cours est waiting ou failed non critique
-            // l'exécute
-            // sinon on s'arrête
+        foreach ($waitingreporttreatmentresults as $waitingreporttreatmentresult) {
+            // si l'étape en cours est success, on passe a la suivante (ou a la fin)
+            if ( $waitingreporttreatmentresult->currentstep->isSuccess ) {
+                $nb_waiting_executed++;
+                $this->execStep($waitingreporttreatmentresult, true);
+            } else {
+                // si l'étape en cours est failed et non critique
+                if (
+                    $waitingreporttreatmentresult->currentstep->result == TreatmentResultEnum::FAILED &&
+                    $waitingreporttreatmentresult->currentstep->criticality_level != CriticalityLevelEnum::HIGH
+                ) {
+                    // on passe a l'etape suivante (ou a la fin)
+                    $nb_waiting_executed++;
+                    $this->execStep($waitingreporttreatmentresult, true);
+                } else {
+                    // sinon, on essaie a nouveau d'executer cette etape
+                    $this->execStep($waitingreporttreatmentresult);
+                }
+            }
+
         }
 
-        $reporttreatmentresult = ReportTreatmentResult::createNew($this,"Traitement Rapport " . $this->title);
-        $first_step = $reporttreatmentresult->addStep("Récupération du fichier");
+        if ($nb_waiting_executed == 0) {
+            // s'il n'y a pas de traitement en attente a executer pour ce rapport,
+            // on lance le telechargement d'un nouveau fichier
+            $this->execDownloadReportFile();
+        }
     }
 
-    private function execStep(ReportTreatmentStepResult $step, int $step_no) {
-        if ($step_no === 1) {
+    private function execStep(ReportTreatmentResult $reporttreatmentresult, $nextStep = false) {
+        if ($nextStep) {
+            $reporttreatmentresult->goToNextStep();
+        }
+        if ($reporttreatmentresult->currentstep_num === 1) {
             // Récupération Fichier
-        } elseif ($step_no === 2) {
-            // Import
-        } elseif ($step_no === 3) {
-            // Formmat
-        } elseif ($step_no === 4) {
-            // Alert
+            $this->execDownloadReportFile();
+        } elseif ($reporttreatmentresult->currentstep_num === 2) {
+            // Iimportation dans la BD
+            $this->execImportFileToDB($reporttreatmentresult);
+        } elseif ($reporttreatmentresult->currentstep_num === 3) {
+            // Formattage des donnees importees
+            $this->execFormatImportedFile($reporttreatmentresult);
+        } elseif ($reporttreatmentresult->currentstep_num === 4) {
+            // Notification du Rapport
+            $this->execNotifyFormattedFile($reporttreatmentresult);
         } else {
-            return null;
+            // Fin de Traitement
+            $reporttreatmentresult->setEnd();
+        }
+    }
+
+    private function execDownloadReportFile() {
+        $reportfile = $this->getActiveReportFile();
+
+        if ( ! is_null($reportfile) ) {
+            $reporttreatmentresult = $this->addReportTreatmentResult("Traitement Rapport " . $this->title);
+            $reporttreatmentresult->setRunning();
+            $reportfile->collectFile($reporttreatmentresult);
+            $reporttreatmentresult->setWaiting();
+        }
+    }
+
+    private function execImportFileToDB(ReportTreatmentResult $reporttreatmentresult) {
+        $reportfile = $this->getActiveReportFile();
+
+        if ( ! is_null($reportfile) ) {
+            $reporttreatmentresult->setRunning();
+            $reportfile->importLastCollectedFile($reporttreatmentresult);
+            $reporttreatmentresult->setWaiting();
+        }
+    }
+
+    private function execFormatImportedFile(ReportTreatmentResult $reporttreatmentresult) {
+        $reportfile = $this->getActiveReportFile();
+
+        if ( ! is_null($reportfile) ) {
+            $reporttreatmentresult->setRunning();
+            $reportfile->formatLastCollectedFile($reporttreatmentresult);
+            $reporttreatmentresult->setWaiting();
+        }
+    }
+
+    private function execNotifyFormattedFile(ReportTreatmentResult $reporttreatmentresult) {
+        $reportfile = $this->getActiveReportFile();
+
+        if ( ! is_null($reportfile) ) {
+            $reporttreatmentresult->setRunning();
+            $reportfile->notifyLastCollectedFile($reporttreatmentresult);
+            $reporttreatmentresult->setWaiting();
         }
     }
 

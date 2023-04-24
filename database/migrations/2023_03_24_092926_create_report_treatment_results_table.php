@@ -25,7 +25,8 @@ class CreateReportTreatmentResultsTable extends Migration
             $table->string('name')->nullable()->comment('treatment name');
             $table->timestamp('start_at')->nullable()->comment('treatment start date');
             $table->timestamp('end_at')->nullable()->comment('treatment end date');
-            $table->string('state')->nullable()->comment('treatment state: [waiting, running, success, failed]');
+            $table->string('result')->nullable()->comment('treatment result: [none, success, failed]');
+            $table->string('state')->nullable()->comment('treatment state: [waiting, queued, running, completed]');
 
             $table->string('description', 500)->nullable()->comment('treatment description');
 

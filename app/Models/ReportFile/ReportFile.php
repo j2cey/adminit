@@ -11,9 +11,9 @@ use App\Models\Access\AccessProtocole;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\OsAndServer\ReportServer;
-use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
@@ -50,6 +50,7 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property string $fileRemotePath
  * @property mixed $selectedretrieveactions
  * @property CollectedReportFile[] $collectedreportfiles
+ * @property CollectedReportFile $latestCollectedReportFile
  *
  * @method static ReportFile first()
  */
@@ -113,6 +114,22 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
     public function collectedreportfiles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(CollectedReportFile::class,'report_file_id');
+    }
+
+    public function latestCollectedReportFile()
+    {
+        return $this->hasOne(CollectedReportFile::class)->latestOfMany();
+    }
+
+    #endregion
+
+    #region SCOPES based Custom Functions
+
+    /**
+     * @return ReportFileAccess|null
+     */
+    public function getActiveReportFileAccess() {
+        return $this->reportfileaccesses()->active()->first();
     }
 
     #endregion
@@ -259,6 +276,26 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
         $selectedretrieveaction->reportfile()->dissociate()->save();
 
         return true;
+    }
+
+    public function collectFile(ReportTreatmentResult $reporttreatmentresult, $dispatch = false) {
+        $reportfileaccess = $this->getActiveReportFileAccess();
+        $reportfileaccess->executeTreatment($reporttreatmentresult);
+    }
+
+    public function importLastCollectedFile(ReportTreatmentResult $reporttreatmentresult) {
+        $latestcollectedreportfile = $this->latestCollectedReportFile;
+        $latestcollectedreportfile->importToDb($reporttreatmentresult);
+    }
+
+    public function formatLastCollectedFile(ReportTreatmentResult $reporttreatmentresult) {
+        $latestcollectedreportfile = $this->latestCollectedReportFile;
+        $latestcollectedreportfile->formatImportedValues($reporttreatmentresult);
+    }
+
+    public function notifyLastCollectedFile(ReportTreatmentResult $reporttreatmentresult) {
+        $latestcollectedreportfile = $this->latestCollectedReportFile;
+        $latestcollectedreportfile->notify($reporttreatmentresult);
     }
 
     protected static function boot(){

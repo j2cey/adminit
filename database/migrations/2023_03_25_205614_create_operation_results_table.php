@@ -27,7 +27,8 @@ class CreateOperationResultsTable extends Migration
             $table->timestamp('start_at')->nullable()->comment('operation start date');
             $table->timestamp('end_at')->nullable()->comment('operation end date');
             $table->integer('operation_duration')->nullable()->comment('operation duration');
-            $table->string('state')->nullable()->comment('operation state: [waiting, running, success, failed]');
+            $table->string('result')->nullable()->comment('operation result: [none, success, failed]');
+            $table->string('state')->nullable()->comment('operation state: [waiting, queued, running, completed]');
             $table->string('criticality_level')->nullable()->comment('operation criticality level: [High, Medium, Low]');
             $table->string('message', 1000)->nullable()->comment('operation message');
 
