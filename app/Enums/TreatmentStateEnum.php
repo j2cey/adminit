@@ -15,9 +15,12 @@ enum TreatmentStateEnum: string
     #[Description('En File Attente')]
     case QUEUED = 'queued';
 
-    #[Description('En Execution')]
+    #[Description('En Exécution')]
     case RUNNING = 'running';
 
-    #[Description('Termine')]
+    #[Description('Terminé')]
     case COMPLETED = 'completed';
+
+    #[Description('Terminé & tout rééssayé')]
+    case ALLTRIED = 'alltried';
 }

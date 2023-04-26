@@ -25,8 +25,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
-use App\Traits\ReportTreatmentStepResult\HasReportTreatmentStepResults;
-use App\Contracts\ReportTreatmentStepResult\IHasReportTreatmentStepResults;
+use App\Traits\ReportTreatmentResult\HasReportTreatmentStepResults;
+use App\Contracts\ReportTreatmentResult\IHasReportTreatmentStepResults;
 
 /**
  * Class CollectedReportFile
@@ -234,22 +234,26 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
 
         $this->startImport($reset_imported);
 
-        if ($reset_imported) {
-            $delete_operation_result = $this->deleteImportedData($reporttreatmentstepresult);
-            if ($delete_operation_result->isFailed) {
-                $this->endImport();
-                $reporttreatmentstepresult->endTreatmentWithFailure("Erreur Suppression Données importées");
-            }
-        }
-
         try {
-            $import = new ReportFilesImport($this, $reporttreatmentstepresult);
-            $import->import($this->fileLocalAbsolutePath);
 
-            $this->mergeLinesValues();
+            if ($reset_imported) {
+                $delete_operation_result = $this->deleteImportedData($reporttreatmentstepresult);
+                if ($delete_operation_result->isFailed) {
+                    $this->endImport();
+                    $reporttreatmentstepresult->endTreatmentWithFailure("Erreur Suppression Données importées");
+                }
+            }
 
-            $this->endImport();
-            $reporttreatmentstepresult->endTreatmentWithSuccess();
+            if ( ! $reporttreatmentstepresult->isFailed ) {
+
+                $import = new ReportFilesImport($this, $reporttreatmentstepresult);
+                $import->import($this->fileLocalAbsolutePath);
+
+                $this->mergeLinesValues();
+
+                $this->endImport();
+                $reporttreatmentstepresult->endTreatmentWithSuccess();
+            }
         } catch (\Exception $e) {
             $this->endImport();
             $reporttreatmentstepresult->endTreatmentWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
@@ -337,7 +341,7 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
 
     #region Data formatting
 
-    public function formatImportedValues(ReportTreatmentResult $reporttreatmentresult, bool $reset_formatted = false)
+    public function formatImportedValues(ReportTreatmentResult $reporttreatmentresult, bool $reset_formatted = true)
     {
         $reporttreatmentstepresult = $this->addReportTreatmentStepResult($reporttreatmentresult, TreatmentStepCode::FORMATDATA,"Formattage des Valeurd Importees du fichier " . $this->local_file_name, CriticalityLevelEnum::HIGH, true); //$reporttreatmentresult->addStep("Récupération du fichier");
         $reporttreatmentstepresult->startTreatment();
@@ -348,7 +352,7 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
                 $operation_result = $this->mergeLinesFormattedValues($reporttreatmentstepresult);
                 $this->endFormat();
                 if ($operation_result->isFailed) {
-                    $reporttreatmentstepresult->endTreatmentWithFailure();
+                    $reporttreatmentstepresult->endTreatmentWithFailure($operation_result->message);
                 } else {
                     $reporttreatmentstepresult->endTreatmentWithSuccess();
                 }
@@ -385,7 +389,7 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
                 $this->setRowFormatSuccess($row_index);
             }
             $this->applyFormatFromRaw(null, $this->formatrules);
-            return $operation_result->endWithFailure();
+            return $operation_result->endWithSuccess();
         } catch (\Exception $e) {
             return $operation_result->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
         }
@@ -447,7 +451,6 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
         $reporttreatmentstepresult->startTreatment();
 
         try {
-
             if ( $this->formatted ) {
                 if ( count( $this->matchedanalysisrules ) > 0 ) {
 

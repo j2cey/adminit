@@ -11,6 +11,7 @@ use App\Models\Access\AccessProtocole;
 use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
 use App\Models\FormatRule\FormatRuleType;
+use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\ReportFile\CollectedReportFile;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 
@@ -25,7 +26,7 @@ class TestFullReportSeeder extends Seeder
     {
         // Le Rapport
         $the_report = Report::createNew(
-            "IME01 OUTPUT DATA PORTAL FILES",
+            "IME01 - OUTPUT DATA PORTAL",
             ReportType::defaultReport()->first(),
             "Rapport des Files pour le OUTPUT DATA PORTAL de IME01"
         );
@@ -49,16 +50,36 @@ class TestFullReportSeeder extends Seeder
             ['name' => "trend_cumul", 'title' => "Cumule", 'type' => $type_int, 'status' => null, 'description' => "Cumule de données dans la tendance actuelle"],
             ['name' => "trend_age", 'title' => "Age Tendance", 'type' => $type_string, 'status' => null, 'description' => "Age de la Tendance hh:mm:ss (différence entre ce date et le début de la Tendance actuelle)"],
             ['name' => "data_treated", 'title' => "Date Traitement", 'type' => $type_int, 'status' => null, 'description' => "Cumule de Données traitées"],
-            ['name' => "trend_hourOfWeek", 'title' => "Tendance H. Sne", 'type' => $type_string, 'status' => null, 'description' => "Tendance sur cette heure du jour dans la semaine"],
-            ['name' => "trend_hourOfWeek_date", 'title' => "Date Tendance H. Sne", 'type' => $type_datetime, 'status' => null, 'description' => "Date de Tendance sur cette heure du jour dans la semaine"],
-            ['name' => "trend_hourOfWeek_times", 'title' => "Rep. Tendance H. Sne", 'type' => $type_int, 'status' => null, 'description' => "Nombre de repétition ce cette Tendance sur cette heure du jour dans la semaine"],
-            ['name' => "trend_hourOfWeek_step", 'title' => "Pas Tendance H. Sne", 'type' => $type_int, 'status' => null, 'description' => "Différence (bond) vis-à-vis de la dernière donnée sur cette heure du jour dans la semaine"],
+            ['name' => "trend_hourOfWeek", 'title' => "Tendance H. Sne", 'type' => $type_string, 'status' => null, 'description' => "Tendance sur cette heure du jour dans la semaine", "can_be_notified" => false],
+            ['name' => "trend_hourOfWeek_date", 'title' => "Date Tendance H. Sne", 'type' => $type_datetime, 'status' => null, 'description' => "Date de Tendance sur cette heure du jour dans la semaine", "can_be_notified" => false],
+            ['name' => "trend_hourOfWeek_times", 'title' => "Rep. Tendance H. Sne", 'type' => $type_int, 'status' => null, 'description' => "Nombre de repétition ce cette Tendance sur cette heure du jour dans la semaine", "can_be_notified" => false],
+            ['name' => "trend_hourOfWeek_step", 'title' => "Pas Tendance H. Sne", 'type' => $type_int, 'status' => null, 'description' => "Différence (bond) vis-à-vis de la dernière donnée sur cette heure du jour dans la semaine", "can_be_notified" => false],
             ['name' => "report_date", 'title' => "Date Rapport", 'type' => $type_datetime, 'status' => null, 'description' => "Date de génération du Rapport"],
         ]);
 
+        $this->addFile($the_report, "files", "reportsmonitor/output_data_portal");
+        $this->addFile($the_report, "kbytes", "reportsmonitor/output_data_portal");
+        $this->addFile($the_report, "records", "reportsmonitor/output_data_portal");
+
+        // insert Collected File
+        /*$the_report_file_collected = CollectedReportFile::createNew(
+            $the_report_file,
+            "//output_data_portal_files.csv",
+            "40dae48d3ef7bf73850d5250afc86043.csv",
+            1801
+        );*/
+
+        //$the_report_file_collected->fresh();
+        //dd($the_report_file_collected);
+
+        //$the_report_file_collected->setFormattedValue(HtmlTagKey::TABLE_ROW);
+        //$the_report_file_collected->formattedvalues->setValue();
+    }
+
+    private function addFile(Report $the_report, $filename, $remotedir_relative_path) {
         $the_report_file = $the_report->addReportFile(
             ReportFileType::csv()->first(),
-            "output_data_portal_files"
+            $filename,null,null,$remotedir_relative_path
         );
         $the_report_file_access = $the_report_file->addReportFileAccess(
             AccessAccount::where('username', "cgi")->first(),
@@ -76,18 +97,8 @@ class TestFullReportSeeder extends Seeder
             $the_report_file_access->accessaccount->description
         );
 
-        // insert Collected File
-        $the_report_file_collected = CollectedReportFile::createNew(
-            $the_report_file,
-            "//output_data_portal_files.csv",
-            "40dae48d3ef7bf73850d5250afc86043.csv",
-            1801
-        );
-
-        //$the_report_file_collected->fresh();
-        //dd($the_report_file_collected);
-
-        //$the_report_file_collected->setFormattedValue(HtmlTagKey::TABLE_ROW);
-        //$the_report_file_collected->formattedvalues->setValue();
+        // retrieve actions
+        $the_report_file_access->addSelectedAction(RetrieveAction::retrieveByName()->first());
+        $the_report_file_access->addSelectedAction(RetrieveAction::deleteFile()->first());
     }
 }

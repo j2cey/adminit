@@ -4,8 +4,14 @@ namespace App\Models\ReportFile;
 
 use App\Models\Status;
 use App\Models\BaseModel;
+use App\Jobs\NotifyReportJob;
 use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
+use App\Jobs\ImportReportFileJob;
+use App\Jobs\FormatReportFileJob;
+use App\Jobs\CollectReportFileJob;
+use App\Enums\TreatmentResultEnum;
+use App\Enums\CriticalityLevelEnum;
 use App\Models\Access\AccessAccount;
 use App\Models\Access\AccessProtocole;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +20,9 @@ use App\Models\OsAndServer\ReportServer;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentResult;
+use App\Traits\ReportTreatmentResult\HasReportTreatmentResults;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
+use App\Contracts\ReportTreatmentResult\IHasReportTreatmentResults;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
 /**
@@ -54,9 +62,9 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  *
  * @method static ReportFile first()
  */
-class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveActions
+class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveActions, IHasReportTreatmentResults
 {
-    use HasFactory, HasSelectedRetrieveActions, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasSelectedRetrieveActions, HasReportTreatmentResults, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -278,24 +286,110 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
         return true;
     }
 
+
+
+
+
+
+    public function exec() {
+
+        // On récupère les traitements en cours
+        $report_treatments_to_be_completed = $this->getReportTreatmentsToBeCompleted();
+
+        if ( is_null($report_treatments_to_be_completed) ) $report_treatments_to_be_completed = [];
+
+        $nb_not_completed_executed = 0;
+
+        foreach ($report_treatments_to_be_completed as $report_treatment_to_be_completed) {
+            if ( is_null($report_treatment_to_be_completed->currentstep) ) {
+                // si il n'y a pas d'etape en cours, on execute le traitement
+                $this->execStep($report_treatment_to_be_completed);
+            } elseif ( $report_treatment_to_be_completed->currentstep->isSuccess ) {
+                // si l'étape en cours est success, on passe a la suivante (ou a la fin)
+                $nb_not_completed_executed++;
+                $this->execStep($report_treatment_to_be_completed, true);
+            } else {
+                // si l'étape en cours est failed et critique
+                if (
+                    $report_treatment_to_be_completed->currentstep->result == TreatmentResultEnum::FAILED &&
+                    $report_treatment_to_be_completed->currentstep->criticality_level == CriticalityLevelEnum::HIGH
+                ) {
+                    // on essaie a nouveau d'executer cette etape
+                    $nb_not_completed_executed++;
+                    $this->execStep($report_treatment_to_be_completed);
+                } else {
+                    // sinon, passe a l'etape suivante (ou a la fin)
+                    $this->execStep($report_treatment_to_be_completed, true);
+                }
+            }
+
+        }
+
+        if ($nb_not_completed_executed == 0) {
+            // s'il n'y a pas de traitement en attente a executer pour ce rapport,
+            // on lance le telechargement d'un nouveau fichier
+            $reporttreatmentresult = $this->addReportTreatmentResult("Traitement du fichier " . $this->name . " Rapport " . $this->report->title);
+            $this->collectFile($reporttreatmentresult, true);
+        }
+    }
+
+    private function execStep(ReportTreatmentResult $reporttreatmentresult, $nextStep = false, $dispatch = true) {
+        if ($nextStep) {
+            $reporttreatmentresult->goToNextStep();
+        }
+        if ($reporttreatmentresult->currentstep_num === 0) {
+            // Récupération Fichier
+            $this->collectFile($reporttreatmentresult, $dispatch);
+        } elseif ($reporttreatmentresult->currentstep_num === 1) {
+            // Importation dans la BD
+            $this->importLastCollectedFile($reporttreatmentresult, $dispatch);
+        } elseif ($reporttreatmentresult->currentstep_num === 2) {
+            // Formattage des donnees importees
+            $this->formatLastCollectedFile($reporttreatmentresult, $dispatch);
+        } elseif ($reporttreatmentresult->currentstep_num === 3) {
+            // Notification du Rapport
+            $this->notifyLastCollectedFile($reporttreatmentresult, $dispatch);
+        } else {
+            // Fin de Traitement
+            $reporttreatmentresult->setEnd();
+        }
+    }
+
+
     public function collectFile(ReportTreatmentResult $reporttreatmentresult, $dispatch = false) {
         $reportfileaccess = $this->getActiveReportFileAccess();
-        $reportfileaccess->executeTreatment($reporttreatmentresult);
+        if ($dispatch) {
+            CollectReportFileJob::dispatch($reporttreatmentresult, $reportfileaccess);
+        } else {
+            $reportfileaccess->executeTreatment($reporttreatmentresult);
+        }
     }
 
-    public function importLastCollectedFile(ReportTreatmentResult $reporttreatmentresult) {
+    public function importLastCollectedFile(ReportTreatmentResult $reporttreatmentresult, $dispatch = false) {
         $latestcollectedreportfile = $this->latestCollectedReportFile;
-        $latestcollectedreportfile->importToDb($reporttreatmentresult);
+        if ($dispatch) {
+            ImportReportFileJob::dispatch($reporttreatmentresult, $latestcollectedreportfile);
+        } else {
+            $latestcollectedreportfile->importToDb($reporttreatmentresult);
+        }
     }
 
-    public function formatLastCollectedFile(ReportTreatmentResult $reporttreatmentresult) {
+    public function formatLastCollectedFile(ReportTreatmentResult $reporttreatmentresult, $dispatch = false) {
         $latestcollectedreportfile = $this->latestCollectedReportFile;
-        $latestcollectedreportfile->formatImportedValues($reporttreatmentresult);
+        if ($dispatch) {
+            FormatReportFileJob::dispatch($reporttreatmentresult, $latestcollectedreportfile);
+        } else {
+            $latestcollectedreportfile->formatImportedValues($reporttreatmentresult);
+        }
     }
 
-    public function notifyLastCollectedFile(ReportTreatmentResult $reporttreatmentresult) {
+    public function notifyLastCollectedFile(ReportTreatmentResult $reporttreatmentresult, $dispatch = false) {
         $latestcollectedreportfile = $this->latestCollectedReportFile;
-        $latestcollectedreportfile->notify($reporttreatmentresult);
+        if ($dispatch) {
+            NotifyReportJob::dispatch($reporttreatmentresult, $latestcollectedreportfile);
+        } else {
+            $latestcollectedreportfile->notify($reporttreatmentresult);
+        }
     }
 
     protected static function boot(){

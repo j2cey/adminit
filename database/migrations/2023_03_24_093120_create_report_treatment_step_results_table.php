@@ -25,6 +25,7 @@ class CreateReportTreatmentStepResultsTable extends Migration
             $table->string('name')->nullable()->comment('treatment step name');
             $table->timestamp('start_at')->nullable()->comment('treatment step start date');
             $table->timestamp('end_at')->nullable()->comment('treatment step end date');
+            $table->timestamp('try_end_at')->nullable()->comment('treatment step try end date');
             $table->string('code')->nullable()->comment('treatment step code: [downloadfile, importfile, formatdata, notifyreport]');
             $table->string('result')->nullable()->comment('treatment step result: [none, success, failed]');
             $table->string('state')->nullable()->comment('treatment step state: [waiting, queued, running, completed]');

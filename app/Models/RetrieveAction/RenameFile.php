@@ -20,7 +20,7 @@ class RenameFile implements IRetrieveAction
      */
     public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum): OperationResult
     {
-        $operationresult = $reporttreatmentstepresult->addOperationResult("Renommage du ReportFile")->setCriticalityLevel($criticalitylevelenum);
+        $operationresult = $reporttreatmentstepresult->addOperationResult("Renommage du ReportFile", CriticalityLevelEnum::HIGH)->setCriticalityLevel($criticalitylevelenum);
 
         // variable du nom en local avec nom , temps , extension
         $local_file_name = md5($file->name . '_' . time()) . '.' . $file->extension;

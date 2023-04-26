@@ -23,8 +23,8 @@ use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
-use App\Traits\ReportTreatmentStepResult\HasReportTreatmentStepResults;
-use App\Contracts\ReportTreatmentStepResult\IHasReportTreatmentStepResults;
+use App\Traits\ReportTreatmentResult\HasReportTreatmentStepResults;
+use App\Contracts\ReportTreatmentResult\IHasReportTreatmentStepResults;
 
 /**
  * Class ReportFileAccess
@@ -250,7 +250,6 @@ class ReportFileAccess extends BaseModel implements Auditable, IHasSelectedRetri
     }
 
     public function executeTreatment(ReportTreatmentResult $reporttreatmentresult) {
-
         $reporttreatmentstepresult = $this->addReportTreatmentStepResult($reporttreatmentresult, TreatmentStepCode::DOWNLOADFILE,"Récupération du fichier", CriticalityLevelEnum::HIGH, true); //$reporttreatmentresult->addStep("Récupération du fichier");
         $reporttreatmentstepresult->startTreatment();
 
@@ -279,6 +278,8 @@ class ReportFileAccess extends BaseModel implements Auditable, IHasSelectedRetri
                         } else {
                             $reporttreatmentstepresult->endTreatmentWithSuccess();
                         }
+                    } else {
+                        $reporttreatmentstepresult->endTreatmentWithFailure( $result->message );
                     }
                 }
             }
@@ -293,7 +294,7 @@ class ReportFileAccess extends BaseModel implements Auditable, IHasSelectedRetri
      * @return Filesystem
      */
     private function getDisk(ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum): Filesystem {
-        return $this->accessprotocole->innerprotocole()::getDisk($reporttreatmentstepresult, $criticalitylevelenum, $this->accessaccount, $this->reportserver,21);// $this->getDisk(21);
+        return $this->accessprotocole->innerprotocole()::getDisk($reporttreatmentstepresult, $criticalitylevelenum, $this->accessaccount, $this->reportserver,$this->port);// $this->getDisk(21);
     }
 
     /**

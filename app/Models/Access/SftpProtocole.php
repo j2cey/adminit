@@ -22,6 +22,7 @@ class SftpProtocole implements IProtocole
                 'username' => $account->login, // required
                 'password' => $account->pwd, // required
                 'port' => $port,
+                'timeout' => 10,
             ]);
             $operation_result->endWithSuccess();
             return $disk;

@@ -4,7 +4,6 @@ namespace App\Models\ReportTreatments;
 
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
-use App\Models\Reports\Report;
 use App\Enums\TreatmentStepCode;
 use App\Enums\TreatmentStateEnum;
 use App\Enums\TreatmentResultEnum;
@@ -28,6 +27,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $end_at
  * @property string $result
  * @property string $state
+ * @property string $message
  *
  * @property string $description
  *
@@ -38,7 +38,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @property Report $report
  * @property ReportTreatmentStepResult $currentstep
  *
  * @method static ReportTreatmentResult create(string[] $array)
@@ -85,13 +84,19 @@ class ReportTreatmentResult extends BaseModel implements Auditable
             ->where('state', TreatmentStateEnum::WAITING->value);
     }
 
+    public function scopeNotCompleted($query) {
+        return $query
+            ->whereNotIn('state', [TreatmentStateEnum::COMPLETED->value]);
+    }
+
+    public function scopeNotRunning($query) {
+        return $query
+            ->whereNotIn('state', [TreatmentStateEnum::RUNNING->value]);
+    }
+
     #endregion
 
     #region Eloquent Relationships
-
-    public function report() {
-        return $this->belongsTo(Report::class, "report_id");
-    }
 
     public function currentstep() {
         return $this->belongsTo(ReportTreatmentStepResult::class, "currentstep_id");
@@ -102,7 +107,7 @@ class ReportTreatmentResult extends BaseModel implements Auditable
     #region Custom Functions
 
     public static function createNew(
-        Model|Report $report, string $name = null, Model|ReportTreatmentStepResult $currentstep = null,
+        string $name = null, Model|ReportTreatmentStepResult $currentstep = null,
         Carbon $start_at = null, Carbon $end_at = null,
         TreatmentStateEnum $state = null, TreatmentResultEnum $result = null,
         string $description = null): ReportTreatmentResult
@@ -116,7 +121,6 @@ class ReportTreatmentResult extends BaseModel implements Auditable
             'description' => $description,
         ]);
 
-        $reporttreatmentresult->report()->associate($report);
         if ( ! is_null($currentstep) ) $reporttreatmentresult->currentstep()->associate($currentstep);
 
         $reporttreatmentresult->save();
@@ -125,7 +129,7 @@ class ReportTreatmentResult extends BaseModel implements Auditable
     }
 
     public function updateThis(
-        Model|Report $report, string $name = null,
+        string $name = null,
         Model|ReportTreatmentStepResult $currentstep = null, int $currentstep_num = null,
         Carbon $start_at = null, Carbon $end_at = null,
         TreatmentStateEnum $state = null, TreatmentResultEnum $result = null, string $description = null): ReportTreatmentResult
@@ -138,7 +142,6 @@ class ReportTreatmentResult extends BaseModel implements Auditable
         $this->currentstep_num = $currentstep_num;
         $this->description = $description;
 
-        $this->report()->associate($report);
         if ( ! is_null($currentstep) ) $this->currentstep()->associate($currentstep);
 
         $this->save();
@@ -167,6 +170,11 @@ class ReportTreatmentResult extends BaseModel implements Auditable
         return $this->save();
     }
 
+    public function setQueued() {
+        $this->state = TreatmentStateEnum::QUEUED;
+        $this->save();
+    }
+
     public function setRunning() {
         $this->state = TreatmentStateEnum::RUNNING;
         $this->save();
@@ -175,6 +183,12 @@ class ReportTreatmentResult extends BaseModel implements Auditable
     public function setWaiting() {
         $this->state = TreatmentStateEnum::WAITING;
         $this->save();
+    }
+
+    public function stepComplted(Model|ReportTreatmentStepResult $step) {
+        $this->result = $step->result;
+        $this->message = $step->message;
+        $this->setWaiting();
     }
 
     public function setEnd() {

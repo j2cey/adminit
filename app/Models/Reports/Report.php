@@ -21,7 +21,8 @@ use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
+use App\Traits\ReportTreatmentResult\HasReportTreatmentResults;
+use App\Contracts\ReportTreatmentResult\IHasReportTreatmentResults;
 
 /**
  * Class Report
@@ -43,7 +44,6 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property ReportTreatmentResult[] $reporttreatmentresultswaiting
  *
  * @method static create(string[] $array)
  */
@@ -95,31 +95,22 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
         return $this->hasMany(ReportFile::class, "report_id");
     }
 
-    public function reporttreatmentresults() {
-        return $this->belongsTo(ReportTreatmentResult::class, "report_id");
-    }
-
-    public function reporttreatmentresultswaiting() {
-        return $this->reporttreatmentresults()
-            ->where('state', TreatmentStateEnum::WAITING->value);
-    }
-
     #endregion
 
     #region SCOPES based Custom Functions
 
     /**
-     * @return ReportFile|null
+     * @return ReportFile[]|null
      */
-    public function getActiveReportFile() {
-        return $this->reportfiles()->active()->first();
+    public function getActiveReportFiles() {
+        return $this->reportfiles()->active()->get();
     }
 
     /**
-     * @return ReportTreatmentResult|null
+     * @return Report|null
      */
-    public function getCurrentTreatment() {
-        return $this->reporttreatmentresults()->active()->waiting()->first();
+    public static function getActiveFirst() {
+        return Report::active()->first();
     }
 
     #endregion
@@ -191,10 +182,6 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
         );
     }
 
-    public function addReportTreatmentResult(string $name = null, Model|ReportTreatmentStepResult $currentstep = null, Carbon $start_at = null, Carbon $end_at = null, TreatmentStateEnum $state = null, TreatmentResultEnum $result = null, string $description = null): ReportTreatmentResult {
-        return ReportTreatmentResult::createNew($this, $name, $currentstep, $start_at, $end_at, $state, $result, $description);
-    }
-
     /**
      * Rajoute un attribut à la liste JSON
      * @param DynamicAttribute $dynamicattribute
@@ -233,101 +220,10 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
     }
 
     public function exec() {
+        $activereportfiles = $this->getActiveReportFiles();
 
-        // On recherche récupère les traitements en cours
-        $waitingreporttreatmentresults = $this->reporttreatmentresultswaiting;
-
-        $nb_waiting_executed = 0;
-
-        foreach ($waitingreporttreatmentresults as $waitingreporttreatmentresult) {
-            // si l'étape en cours est success, on passe a la suivante (ou a la fin)
-            if ( $waitingreporttreatmentresult->currentstep->isSuccess ) {
-                $nb_waiting_executed++;
-                $this->execStep($waitingreporttreatmentresult, true);
-            } else {
-                // si l'étape en cours est failed et non critique
-                if (
-                    $waitingreporttreatmentresult->currentstep->result == TreatmentResultEnum::FAILED &&
-                    $waitingreporttreatmentresult->currentstep->criticality_level != CriticalityLevelEnum::HIGH
-                ) {
-                    // on passe a l'etape suivante (ou a la fin)
-                    $nb_waiting_executed++;
-                    $this->execStep($waitingreporttreatmentresult, true);
-                } else {
-                    // sinon, on essaie a nouveau d'executer cette etape
-                    $this->execStep($waitingreporttreatmentresult);
-                }
-            }
-
-        }
-
-        if ($nb_waiting_executed == 0) {
-            // s'il n'y a pas de traitement en attente a executer pour ce rapport,
-            // on lance le telechargement d'un nouveau fichier
-            $this->execDownloadReportFile();
-        }
-    }
-
-    private function execStep(ReportTreatmentResult $reporttreatmentresult, $nextStep = false) {
-        if ($nextStep) {
-            $reporttreatmentresult->goToNextStep();
-        }
-        if ($reporttreatmentresult->currentstep_num === 1) {
-            // Récupération Fichier
-            $this->execDownloadReportFile();
-        } elseif ($reporttreatmentresult->currentstep_num === 2) {
-            // Iimportation dans la BD
-            $this->execImportFileToDB($reporttreatmentresult);
-        } elseif ($reporttreatmentresult->currentstep_num === 3) {
-            // Formattage des donnees importees
-            $this->execFormatImportedFile($reporttreatmentresult);
-        } elseif ($reporttreatmentresult->currentstep_num === 4) {
-            // Notification du Rapport
-            $this->execNotifyFormattedFile($reporttreatmentresult);
-        } else {
-            // Fin de Traitement
-            $reporttreatmentresult->setEnd();
-        }
-    }
-
-    private function execDownloadReportFile() {
-        $reportfile = $this->getActiveReportFile();
-
-        if ( ! is_null($reportfile) ) {
-            $reporttreatmentresult = $this->addReportTreatmentResult("Traitement Rapport " . $this->title);
-            $reporttreatmentresult->setRunning();
-            $reportfile->collectFile($reporttreatmentresult);
-            $reporttreatmentresult->setWaiting();
-        }
-    }
-
-    private function execImportFileToDB(ReportTreatmentResult $reporttreatmentresult) {
-        $reportfile = $this->getActiveReportFile();
-
-        if ( ! is_null($reportfile) ) {
-            $reporttreatmentresult->setRunning();
-            $reportfile->importLastCollectedFile($reporttreatmentresult);
-            $reporttreatmentresult->setWaiting();
-        }
-    }
-
-    private function execFormatImportedFile(ReportTreatmentResult $reporttreatmentresult) {
-        $reportfile = $this->getActiveReportFile();
-
-        if ( ! is_null($reportfile) ) {
-            $reporttreatmentresult->setRunning();
-            $reportfile->formatLastCollectedFile($reporttreatmentresult);
-            $reporttreatmentresult->setWaiting();
-        }
-    }
-
-    private function execNotifyFormattedFile(ReportTreatmentResult $reporttreatmentresult) {
-        $reportfile = $this->getActiveReportFile();
-
-        if ( ! is_null($reportfile) ) {
-            $reporttreatmentresult->setRunning();
-            $reportfile->notifyLastCollectedFile($reporttreatmentresult);
-            $reporttreatmentresult->setWaiting();
+        foreach ($activereportfiles as $activereportfile) {
+            $activereportfile->exec();
         }
     }
 

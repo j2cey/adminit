@@ -50,6 +50,11 @@ class SettingSeeder extends Seeder
         $group = $this->createNew("selretrieveaction", null, null, "string", ",", "settings SelectedRetrieveAction.");
         // value selretrieveaction.default_actions_scopes
         $this->createNew("default_actions_scopes", $group->id, "retrieveByName,renameFile", "array", ",", "liste des actions par défaut.");
+
+        // groupe ReportTreatment
+        $group = $this->createNew("reporttreatment", null, null, "string", ",", "settings ReportTreatments.");
+        // value reporttreatment.max_retries
+        $this->createNew("max_retries", $group->id, "5", "integer", ",", "nombre max de tentatives de retraitement.");
     }
 
     private function createNew($name, $group_id = null, $value = null, $type = null, $array_sep = ",", $description = null)
