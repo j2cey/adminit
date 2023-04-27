@@ -47,6 +47,8 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group( function ($router) {
                     require base_path('routes/web.php');
+                    /* AnalysisRule routes */
+                    require base_path('routes/analysisrule.php');
                     /* FormatRule routes */
                     require base_path('routes/formatrule.php');
                     /* DynamicAttribute routes */
@@ -56,7 +58,7 @@ class RouteServiceProvider extends ServiceProvider
                     /* FileHeader routes */
                     require base_path('routes/fileheader.php');
                     /* RuleResultEnum routes */
-                    require base_path('routes/ruleresultenum.php');
+                    require base_path('routes/enums.php');
                     /* RetrieveAction routes */
                     require base_path('routes/retrieveaction.php');
                 });

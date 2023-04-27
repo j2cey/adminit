@@ -46,7 +46,8 @@ class ReportFileTest extends TestCase
             $this->create_new_report("new report"),
             ReportFileType::csv()->first(),
             Status::active()->first(),
-            "new report file"
+            "new report file",
+            "new report file label"
         );
 
         // on test si l'assertion s'est bien passée
@@ -71,11 +72,12 @@ class ReportFileTest extends TestCase
             null,
             null,
             Status::active()->first(),
+            "",
             ""
         );
 
         // on doit avoir une erreur de validation des champs ci-dessous
-        $response->assertSessionHasErrors(['report','reportfiletype','name']);
+        $response->assertSessionHasErrors(['report','reportfiletype','name','label']);
     }
 
     /**
@@ -94,7 +96,7 @@ class ReportFileTest extends TestCase
             ReportFileType::csv()->first(),
             Status::active()->first(),
             "new report file",
-            "rerre reerre"
+            "new report file label"
         );
 
         // on doit avoir une erreur de validation des champs ci-dessous
@@ -117,6 +119,7 @@ class ReportFileTest extends TestCase
             ReportFileType::csv()->first(),
             Status::active()->first(),
             "new report file",
+            "new report file label",
             "rerre_reerre",
             "new report desc",
             "remotedir_relative",
@@ -136,6 +139,7 @@ class ReportFileTest extends TestCase
             $another_report,
             $reportfiletype_txt,
             $status_inactive,"new report file edited",
+            "new report file label edited",
             "new_wildcard",
             "new report desc upd",
             "remotedir_relative_upd",
@@ -147,6 +151,7 @@ class ReportFileTest extends TestCase
         $newreportfile->refresh();
 
         $this->assertEquals('new report file edited',$newreportfile->name);
+        $this->assertEquals('new report file label edited',$newreportfile->label);
         $this->assertEquals('new_wildcard', $newreportfile->wildcard);
         $this->assertEquals('new report desc upd', $newreportfile->description);
         $this->assertEquals("remotedir_relative_upd", $newreportfile->remotedir_relative_path);
@@ -173,7 +178,8 @@ class ReportFileTest extends TestCase
             $this->create_new_report("new report"),
             ReportFileType::csv()->first(),
             Status::active()->first(),
-            "new report file"
+            "new report file",
+            "new report file label"
         );
 
         $newreportfile = ReportFile::first();
@@ -187,23 +193,24 @@ class ReportFileTest extends TestCase
 
     #region Private Functions
 
-    private function add_new_reportfile($report, $reportfiletype, $status, $name, $wildcard = null, $description = null, $remotedir_relative_path = null, $remotedir_absolute_path = null, $use_file_extension = true, $has_headers = true)
+    private function add_new_reportfile($report, $reportfiletype, $status, $name, $label, $wildcard = null, $description = null, $remotedir_relative_path = null, $remotedir_absolute_path = null, $use_file_extension = true, $has_headers = true)
     {
-        return $this->post('reportfiles', $this->new_data($report, $reportfiletype, $status, $name, $wildcard, $description, $remotedir_relative_path, $remotedir_absolute_path, $use_file_extension, $has_headers));
+        return $this->post('reportfiles', $this->new_data($report, $reportfiletype, $status, $name, $label, $wildcard, $description, $remotedir_relative_path, $remotedir_absolute_path, $use_file_extension, $has_headers));
     }
 
-    private function update_existing_reportfile($existingreportfile, $report, $reportfiletype, $status, $name, $wildcard = null, $description = null, $remotedir_relative_path = null, $remotedir_absolute_path = null, $use_file_extension = true, $has_headers = true)
+    private function update_existing_reportfile($existingreportfile, $report, $reportfiletype, $status, $name, $label, $wildcard = null, $description = null, $remotedir_relative_path = null, $remotedir_absolute_path = null, $use_file_extension = true, $has_headers = true)
     {
-        $this->put('reportfiles/' . $existingreportfile->uuid, $this->new_data($report, $reportfiletype, $status, $name, $wildcard, $description, $remotedir_relative_path, $remotedir_absolute_path, $use_file_extension, $has_headers));
+        $this->put('reportfiles/' . $existingreportfile->uuid, $this->new_data($report, $reportfiletype, $status, $name, $label, $wildcard, $description, $remotedir_relative_path, $remotedir_absolute_path, $use_file_extension, $has_headers));
     }
 
-    private function new_data($report, $reportfiletype, $status, $name, $wildcard = null, $description = null, $remotedir_relative_path = null, $remotedir_absolute_path = null, $use_file_extension = true, $has_headers = true) {
+    private function new_data($report, $reportfiletype, $status, $name, $label, $wildcard = null, $description = null, $remotedir_relative_path = null, $remotedir_absolute_path = null, $use_file_extension = true, $has_headers = true) {
         return [
             'report' => $report,
             'reportfiletype' => $reportfiletype,
             'status' => $status,
 
             'name' => $name,
+            'label' => $label,
             'wildcard' => $wildcard,
             'remotedir_relative_path' => $remotedir_relative_path,
             'remotedir_absolute_path' => $remotedir_absolute_path,

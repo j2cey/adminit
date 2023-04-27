@@ -30,6 +30,7 @@ class CreateReportsTable extends Migration
                 ->constrained()->onDelete('set null');
 
             $table->json('attributes_list')->nullable()->comment('all report dynamicattributes');
+            $table->string('state')->nullable()->comment('treatment state: [waiting, queued, running, completed]');
 
             $table->baseFields();
         });

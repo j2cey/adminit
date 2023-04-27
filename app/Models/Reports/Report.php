@@ -8,6 +8,8 @@ use App\Models\BaseModel;
 use App\Enums\ValueTypeEnum;
 use Illuminate\Support\Carbon;
 use App\Enums\TreatmentStateEnum;
+use App\Enums\TreatmentResultEnum;
+use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -19,7 +21,8 @@ use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
+use App\Traits\ReportTreatmentResult\HasReportTreatmentResults;
+use App\Contracts\ReportTreatmentResult\IHasReportTreatmentResults;
 
 /**
  * Class Report
@@ -34,23 +37,27 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  *
  * @property string $title
  * @property integer|null $report_type_id
+ * @property string $state
  *
  * @property string|null $description
  * @property string|null $attributes_list
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property ReportTreatmentResult[] $reporttreatmentresultswaiting
  *
  * @method static create(string[] $array)
  */
-class Report extends BaseModel implements IHasDynamicAttributes, IHasFileHeader
+class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHasFileHeader
 {
     use HasDynamicAttributes, HasFileHeader, HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $with = ['reporttype'];
     //protected $appends = [];
+
+    protected $casts = [
+        'state' => TreatmentStateEnum::class,
+    ];
 
     #region Validation Rules
 
@@ -88,12 +95,22 @@ class Report extends BaseModel implements IHasDynamicAttributes, IHasFileHeader
         return $this->hasMany(ReportFile::class, "report_id");
     }
 
-    public function reporttreatmentresults() {
-        return $this->belongsTo(ReportTreatmentResult::class, "report_id");
+    #endregion
+
+    #region SCOPES based Custom Functions
+
+    /**
+     * @return ReportFile[]|null
+     */
+    public function getActiveReportFiles() {
+        return $this->reportfiles()->active()->get();
     }
-    public function reporttreatmentresultswaiting() {
-        return $this->reporttreatmentresults()
-            ->where('state', TreatmentStateEnum::WAITING->value);
+
+    /**
+     * @return Report|null
+     */
+    public static function getActiveFirst() {
+        return Report::active()->first();
     }
 
     #endregion
@@ -143,6 +160,7 @@ class Report extends BaseModel implements IHasDynamicAttributes, IHasFileHeader
     /**
      * @param Model|ReportFileType $reportfiletype
      * @param string $name
+     * @param string $label
      * @param string|null $wildcard
      * @param string|null $description
      * @param string|null $remotedir_relative_path
@@ -150,13 +168,14 @@ class Report extends BaseModel implements IHasDynamicAttributes, IHasFileHeader
      * @param bool $use_file_extension
      * @return ReportFile
      */
-    public function addReportFile(Model|ReportFileType $reportfiletype, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true): ReportFile
+    public function addReportFile(Model|ReportFileType $reportfiletype, string $name, string $label, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true): ReportFile
     {
         return ReportFile::createNew(
             $this,
             $reportfiletype,
             Status::default()->first(),
             $name,
+            $label,
             $wildcard,
             $description,
             $remotedir_relative_path,
@@ -203,34 +222,10 @@ class Report extends BaseModel implements IHasDynamicAttributes, IHasFileHeader
     }
 
     public function exec() {
+        $activereportfiles = $this->getActiveReportFiles();
 
-        // On recherche récupère les traitements en cours (le cas échéant)
-        $waitingtreatments = $this->reporttreatmentresultswaiting;
-        //$nb_critical_waiting = 0;
-
-        foreach ($waitingtreatments as $waitingtreatment) {
-            // si l'étape en cours est success, on passe suivant
-
-            // si l'étape en cours est waiting ou failed non critique
-            // l'exécute
-            // sinon on s'arrête
-        }
-
-        $reporttreatmentresult = ReportTreatmentResult::createNew($this,"Traitement Rapport " . $this->title);
-        $first_step = $reporttreatmentresult->addStep("Récupération du fichier");
-    }
-
-    private function execStep(ReportTreatmentStepResult $step, int $step_no) {
-        if ($step_no === 1) {
-            // Récupération Fichier
-        } elseif ($step_no === 2) {
-            // Import
-        } elseif ($step_no === 3) {
-            // Formmat
-        } elseif ($step_no === 4) {
-            // Alert
-        } else {
-            return null;
+        foreach ($activereportfiles as $activereportfile) {
+            $activereportfile->exec();
         }
     }
 

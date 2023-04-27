@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Carbon;
 use App\Traits\Base\BaseTrait;
+use App\Traits\Base\HasCreator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -24,10 +25,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon $updated_at
  *
  * @property Status $status
+ * @method static active()
  */
 class BaseModel extends Model
 {
-    use BaseTrait;
+    use BaseTrait, HasCreator;
 
     public function getRouteKeyName() { return 'uuid'; }
 
@@ -53,6 +55,11 @@ class BaseModel extends Model
     public function scopeDefault($query, $exclude = []) {
         return $query
             ->where('is_default', true)->whereNotIn('id', $exclude);
+    }
+
+    public function scopeActive($query) {
+        return $query
+            ->where('status_id', Status::active()->first()->id);
     }
 
     #endregion

@@ -136,7 +136,8 @@ trait HasDynamicAttributes
                 $attribute['offset'] ?? null,
                 $attribute['max_length'] ?? null,
                 $attribute['searchable'] ?? null,
-                $attribute['sortable'] ?? null
+                $attribute['sortable'] ?? null,
+                $attribute['can_be_notified'] ?? null
             );
         }
 

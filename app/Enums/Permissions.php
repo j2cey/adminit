@@ -135,4 +135,7 @@ abstract class Permissions
     public static function FileHeader() : PermissionAction {
         return new PermissionAction("fileheader");
     }
+    public static function LastRowConfig() : PermissionAction {
+        return new PermissionAction("lastrowconfig");
+    }
 }

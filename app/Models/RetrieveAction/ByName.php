@@ -21,31 +21,34 @@ class ByName implements IRetrieveAction
 {
     public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum): OperationResult
     {
-        $operationresult = $reporttreatmentstepresult->addOperationResult("Récupération du ReportFile par Nom")->setCriticalityLevel($criticalitylevelenum);
-        // récupère le chemin du répertoire des CollectedReportFile
-        $collectedreportfiles_folder = config('app.collectedreportfiles_folder');
+        $operationresult = $reporttreatmentstepresult->addOperationResult("Récupération du ReportFile par Nom",CriticalityLevelEnum::HIGH)->setCriticalityLevel($criticalitylevelenum);
 
-        // variable du nom en local avec nom , temps , extension
-        $local_file_name = md5($file->name . '_' . time()) . '.' . $file->extension;
+        //if ( ! $disk->exists($file->fileRemotePath) ) {
+        //    return $operationresult->endWithFailure("Erreur Connexion / Disponibilité fichier");
+        //} else {
 
-        try{
-            //stocker dans la base de données
-            $result = Storage::disk('public')->put('/' . $collectedreportfiles_folder . '/'. $local_file_name, $disk->readStream($file->fileRemotePath));
-            if ($result) {
-                //crée un nouveau fichier
-                $collectedreportfile = CollectedReportFile::createNew($file, $file->fileRemotePath, $local_file_name, $disk->size($file->fileRemotePath));
+            // récupère le chemin du répertoire des CollectedReportFile
+            $collectedreportfiles_folder = config('app.collectedreportfiles_folder');
 
-                $operationresult->endWithSuccess("Download success !");
+            // variable du nom en local avec nom , temps , extension
+            $local_file_name = md5($file->name . '_' . time()) . '.' . $file->extension;
+
+            try {
+                //stocker dans la base de données
+                $result = Storage::disk('public')->put('/' . $collectedreportfiles_folder . '/' . $local_file_name, $disk->readStream($file->fileRemotePath));
+                if ($result) {
+                    //crée un nouveau fichier collecté (CollectedReportFile)
+                    CollectedReportFile::createNew($file, $file->fileRemotePath, $local_file_name, $disk->size($file->fileRemotePath));
+
+                    $operationresult->endWithSuccess("Download success !");
+                } else {
+                    $operationresult->endWithFailure("Error download by name !");
+                }
                 return $operationresult;
-            } else {
-                $operationresult->endWithFailure("Error download by name !");
+            } catch (\Exception $e) {
+                $operationresult->endWithFailure($e->getMessage());
                 return $operationresult;
             }
-        }
-
-        catch (\Exception $e){
-            $operationresult->endWithFailure($e->getMessage());
-            return $operationresult;
-        }
+        //}
     }
 }

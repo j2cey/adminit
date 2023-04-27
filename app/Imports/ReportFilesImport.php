@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Enums\CriticalityLevelEnum;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Validators\Failure;
@@ -32,7 +33,7 @@ class ReportFilesImport implements ToModel, WithChunkReading, WithEvents, WithVa
     {
         $this->_collectedreportfile = $collectedreportfile;
         $this->_reporttreatmentstepresult = $reporttreatmentstepresult;
-        $this->_operation_result = $reporttreatmentstepresult->addOperationResult("Exécution du ReportFilesImport");
+        $this->_operation_result = $reporttreatmentstepresult->addOperationResult("Exécution du ReportFilesImport", CriticalityLevelEnum::HIGH);
     }
 
     /**

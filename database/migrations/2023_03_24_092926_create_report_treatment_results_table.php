@@ -25,15 +25,15 @@ class CreateReportTreatmentResultsTable extends Migration
             $table->string('name')->nullable()->comment('treatment name');
             $table->timestamp('start_at')->nullable()->comment('treatment start date');
             $table->timestamp('end_at')->nullable()->comment('treatment end date');
-            $table->string('state')->nullable()->comment('treatment state: [waiting, running, success, failed]');
+            $table->string('result')->nullable()->comment('treatment result: [none, success, failed]');
+            $table->string('state')->nullable()->comment('treatment state: [waiting, queued, running, completed]');
+            $table->string('message', 500)->nullable()->comment('treatment last message');
 
             $table->string('description', 500)->nullable()->comment('treatment description');
-
-            $table->foreignId('report_id')->nullable()
-                ->comment('report reference')
-                ->constrained()->onDelete('set null');
-
             $table->integer('currentstep_num')->default(0)->comment('current step number');
+
+            $table->string('hasreporttreatmentresults_type')->nullable()->comment('referenced ReportTreatmentResult owner s model (class name)');
+            $table->bigInteger('hasreporttreatmentresults_id')->nullable()->comment('referenced ReportTreatmentResult owner s model id (object id)');
 
             $table->baseFields();
         });
@@ -49,8 +49,6 @@ class CreateReportTreatmentResultsTable extends Migration
     {
         Schema::table($this->table_name, function (Blueprint $table) {
             $table->dropBaseForeigns();
-
-            $table->dropForeign(['report_id']);
         });
         Schema::dropIfExists($this->table_name);
     }

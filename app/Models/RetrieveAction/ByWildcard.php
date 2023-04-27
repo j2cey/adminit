@@ -20,7 +20,7 @@ class ByWildcard implements IRetrieveAction
 {
     public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum): OperationResult
     {
-        $operationresult = $reporttreatmentstepresult->addOperationResult("Récupération du ReportFile par Wildcard")->setCriticalityLevel($criticalitylevelenum);
+        $operationresult = $reporttreatmentstepresult->addOperationResult("Récupération du ReportFile par Wildcard", CriticalityLevelEnum::HIGH)->setCriticalityLevel($criticalitylevelenum);
         // récupère le chemin du répertoire des CollectedReportFile
         $collectedreportfiles_folder = config('app.collectedreportfiles_folder');
 

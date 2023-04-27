@@ -40,7 +40,7 @@ class FileHeaderController extends Controller
      */
     public function store(StoreFileHeaderRequest $request)
     {
-        $fileheader = $request->model->createfileheader(
+        $fileheader = $request->model->setFileheader(
             $request->title,
             $request->status,
             $request->description,

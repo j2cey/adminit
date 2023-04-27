@@ -2,21 +2,10 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\StatusController;
-use App\Http\Controllers\SubjectController;
-use App\Http\Controllers\SubTaskController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\PriorityController;
-use App\Http\Controllers\ExecutionController;
-use App\Http\Controllers\GradeUnitController;
-use App\Http\Controllers\SubSubjectController;
-use App\Http\Controllers\DifficultyController;
-use App\Http\Controllers\AppreciationController;
 use App\Http\Controllers\Reports\ReportController;
 use App\Http\Controllers\Reports\ReportTypeController;
 use App\Http\Controllers\Authorization\RoleController;
@@ -28,25 +17,14 @@ use App\Http\Controllers\Access\AccessProtocoleController;
 use App\Http\Controllers\ReportFile\FileMimeTypeController;
 use App\Http\Controllers\OsAndServer\ReportServerController;
 use App\Http\Controllers\ReportFile\ReportFileTypeController;
-use App\Http\Controllers\AnalysisRules\AnalysisRuleController;
 use App\Http\Controllers\OsAndServer\OsArchitectureController;
-use App\Http\Controllers\AnalysisRules\ThresholdMinController;
-use App\Http\Controllers\AnalysisRules\ThresholdMaxController;
 use App\Http\Controllers\AnalysisRules\ThresholdTypeController;
 use App\Http\Controllers\Reportsetting\ReportsettingController;
 use App\Http\Controllers\ReportFile\ReportFileAccessController;
-use App\Http\Controllers\AnalysisRules\AnalysisRuleTypeController;
 use App\Http\Controllers\ReportFile\CollectedReportFileController;
 use App\Http\Controllers\ReportTreatments\OperationResultController;
-use App\Http\Controllers\AnalysisRules\AnalysisRuleThresholdController;
-use App\Http\Controllers\AnalysisRuleComparison\ComparisonTypeController;
 use App\Http\Controllers\ReportTreatments\ReportTreatmentResultController;
-use App\Http\Controllers\AnalysisRuleComparison\ComparisonEqualController;
-use App\Http\Controllers\AnalysisRuleComparison\ComparisonNotEqualController;
-use App\Http\Controllers\AnalysisRuleComparison\ComparisonLessThanController;
 use App\Http\Controllers\ReportTreatments\ReportTreatmentStepResultController;
-use App\Http\Controllers\AnalysisRuleComparison\ComparisonGreaterThanController;
-use App\Http\Controllers\AnalysisRuleComparison\AnalysisRuleComparisonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,45 +107,6 @@ Route::match(['post'],'statuses.modelupdate',[StatusController::class, 'modelupd
     ->name('statuses.modelupdate')
     ->middleware('auth');
 
-#region subjects
-
-Route::resource('subjects',SubjectController::class)->middleware('auth');
-Route::resource('subsubjects',SubSubjectController::class)->middleware('auth');
-Route::get('/subject/fetch', [SubjectController::class, 'fetch'])->name('subject.fetch');
-
-#endregion
-
-Route::resource('categories',CategoryController::class)->middleware('auth');
-Route::resource('tasks',TaskController::class)->middleware('auth');
-Route::resource('subtasks',SubTaskController::class)->middleware('auth');
-
-Route::resource('comments',CommentController::class)->middleware('auth');
-Route::match(['put', 'patch'],'comments/remove/{comment}', [CommentController::class, 'remove'])
-    ->name('comments.remove')
-    ->middleware('auth');
-
-Route::resource('difficulties',DifficultyController::class)->middleware('auth');
-Route::post('difficulties/add', [DifficultyController::class, 'add'])
-    ->name('difficulties.add')
-    ->middleware('auth');
-
-Route::resource('priorities',PriorityController::class)->middleware('auth');
-Route::post('priorities/add', [PriorityController::class, 'add'])
-    ->name('priorities.add')
-    ->middleware('auth');
-
-Route::resource('appreciations',AppreciationController::class)->middleware('auth');
-Route::post('appreciations/add', [AppreciationController::class, 'add'])
-    ->name('appreciations.add')
-    ->middleware('auth');
-
-Route::resource('executions',ExecutionController::class)->middleware('auth');
-Route::post('executions/add', [ExecutionController::class, 'add'])
-    ->name('executions.add')
-    ->middleware('auth');
-
-Route::resource('gradeunits',GradeUnitController::class)->middleware('auth');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -195,39 +134,12 @@ Route::get('reports.dynamicattributes/{uuid}',[ReportController::class,'attribut
     ->name('reports.dynamicattributes')
     ->middleware('auth');
 
-Route::resource('analysisruletypes',AnalysisRuleTypeController::class)->middleware('auth');
-Route::get('analysisruletypes.fetch',[AnalysisRuleTypeController::class,'fetch'])
-    ->name('analysisruletypes.fetch')
-    ->middleware('auth');
-Route::get('analysisruletypes.fetchall',[AnalysisRuleTypeController::class,'fetchall'])
-    ->name('analysisruletypes.fetchall')
-    ->middleware('auth');
-
 Route::resource('thresholdtypes',ThresholdTypeController::class)->middleware('auth');
 Route::get('thresholdtypes.fetch',[ThresholdTypeController::class,'fetch'])
     ->name('thresholdtypes.fetch')
     ->middleware('auth');
 Route::get('thresholdtypes.fetchall',[ThresholdTypeController::class,'fetchall'])
     ->name('thresholdtypes.fetchall')
-    ->middleware('auth');
-
-Route::resource('analysisrules',AnalysisRuleController::class)->middleware('auth');
-Route::get('analysisrules.fetch',[AnalysisRuleController::class,'fetch'])
-    ->name('analysisrules.fetch')
-    ->middleware('auth');
-Route::get('analysisrules.fetchall',[AnalysisRuleController::class,'fetchall'])
-    ->name('analysisrules.fetchall')
-    ->middleware('auth');
-Route::get('analysisrules.fetchone/{id}',[AnalysisRuleController::class,'fetchone'])
-    ->name('analysisrules.fetchone')
-    ->middleware('auth');
-
-Route::resource('analysisrulethresholds',AnalysisRuleThresholdController::class)->middleware('auth');
-Route::get('analysisrulethresholds.fetch',[AnalysisRuleThresholdController::class,'fetch'])
-    ->name('analysisrulethresholds.fetch')
-    ->middleware('auth');
-Route::get('analysisrulethresholds.fetchall',[AnalysisRuleThresholdController::class,'fetchall'])
-    ->name('analysisrulethresholds.fetchall')
     ->middleware('auth');
 
 Route::resource('filemimetypes',FileMimeTypeController::class)->middleware('auth');
@@ -244,8 +156,6 @@ Route::resource('collectedreportfiles',CollectedReportFileController::class)->mi
 Route::get('collectedreportfiles.fetch',[CollectedReportFileController::class,'fetch'])
     ->name('collectedreportfiles.fetch')
     ->middleware('auth');
-
-
 
 Route::resource('reportfiles',ReportFileController::class)->middleware('auth');
 
@@ -292,34 +202,6 @@ Route::resource('accessaccounts',AccessAccountController::class)->middleware('au
 Route::get('accessaccounts.fetch',[AccessAccountController::class,'fetch'])
     ->name('accessaccounts.fetch')
     ->middleware('auth');
-
-Route::resource('thresholdmins',ThresholdMinController::class)->middleware('auth');
-Route::get('thresholdmins.fetch',[ThresholdMinController::class,'fetch'])
-    ->name('thresholdmins.fetch')
-    ->middleware('auth');
-
-Route::resource('thresholdmaxes',ThresholdMaxController::class)->middleware('auth');
-Route::get('thresholdmaxes.fetch',[ThresholdMaxController::class,'fetch'])
-    ->name('thresholdmaxes.fetch')
-    ->middleware('auth');
-
-Route::resource('comparisontypes',ComparisonTypeController::class)->middleware('auth');
-Route::get('comparisontypes.fetchall',[ComparisonTypeController::class,'fetchall'])
-    ->name('comparisontypes.fetchall')
-    ->middleware('auth');
-
-Route::resource('analysisrulecomparisons',AnalysisRuleComparisonController::class)->middleware('auth');
-Route::get('analysisrulecomparisons.fetchall',[AnalysisRuleComparisonController::class,'fetchall'])
-    ->name('analysisrulecomparisons.fetchall')
-    ->middleware('auth');
-
-Route::resource('comparisonlessthans',ComparisonLessThanController::class)->middleware('auth');
-
-Route::resource('comparisongreaterthans',ComparisonGreaterThanController::class)->middleware('auth');
-
-Route::resource('comparisonequals',ComparisonEqualController::class)->middleware('auth');
-
-Route::resource('comparisonnotequals',ComparisonNotEqualController::class)->middleware('auth');
 
 Route::resource('reporttreatmentresults',ReportTreatmentResultController::class)->middleware('auth');
 Route::resource('reporttreatmentstepresults',ReportTreatmentStepResultController::class)->middleware('auth');

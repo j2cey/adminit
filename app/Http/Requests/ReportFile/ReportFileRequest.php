@@ -14,6 +14,7 @@ use Illuminate\Foundation\Http\FormRequest;
  * @package App\Http\Requests\ReportFile
  *
  * @property string $name
+ * @property string $label
  * @property string|null $wildcard
  * @property string|null $remotedir_relative_path
  * @property string|null $remotedir_absolute_path

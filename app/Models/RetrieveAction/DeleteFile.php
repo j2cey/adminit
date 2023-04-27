@@ -2,11 +2,8 @@
 
 namespace App\Models\RetrieveAction;
 
-use App\Models\Reports\Report;
-use Illuminate\Support\Carbon;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\Models\ReportTreatments\OperationResult;
 use App\Contracts\RetrieveAction\IRetrieveAction;
@@ -21,7 +18,7 @@ class DeleteFile implements IRetrieveAction
 {
     public static function execAction(Filesystem $disk, ReportFile $file,ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum): OperationResult
     {
-        $operationresult = $reporttreatmentstepresult->addOperationResult("Suppression du ReportFile")
+        $operationresult = $reporttreatmentstepresult->addOperationResult("Suppression du Fichier Remote", CriticalityLevelEnum::HIGH)
             ->setCriticalityLevel($criticalitylevelenum);
 
         try{
