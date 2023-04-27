@@ -69,7 +69,6 @@ class SelectedRetrieveActionController extends Controller
     {
         $selectedretrieveaction = $request->model->addSelectedAction(
             $request->retrieveaction,
-            $request->code,
             $request->status,
             $request->description);
 

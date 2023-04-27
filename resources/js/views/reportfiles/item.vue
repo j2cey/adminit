@@ -44,11 +44,11 @@
             <b-tab-item>
                 <template #header>
                     <b-icon size="small" icon="file"></b-icon>
-                    <span class="help-inline pr-1 text-sm"> Actions avant/après récupération </span>
-
+                    <span class="help-inline pr-1 text-sm"> Actions de récupération </span>
+                    <b-tag rounded type="is-info is-light">{{ reportfile.selectedretrieveactions.length }}</b-tag>
                 </template>
-                Bonjour. Pour l'instant, il n'y a rien.
-                <SelectedRetrieveActionList :selectedretrieveactions_prop="reportfile.selectedretrieveactions"></SelectedRetrieveActionList>
+                <!-- model_prop est appelé depuis la list sur le modèle intefrace reportfile!-->
+                <SelectedRetrieveActionList :model_prop="reportfile"></SelectedRetrieveActionList>
 
             </b-tab-item>
 

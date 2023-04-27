@@ -8,7 +8,7 @@
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-Object(function webpackMissingModule() { var e = new Error("Cannot find module './analysisruleBus'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var _selectedretrieveactionBus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./selectedretrieveactionBus */ "./resources/js/views/selectedretrieveactions/selectedretrieveactionBus.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -16,19 +16,128 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _ty
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var AnalysisRule = /*#__PURE__*/_createClass(function AnalysisRule(analysisrule) {
-  _classCallCheck(this, AnalysisRule);
-  this.title = analysisrule.title || '';
-  this.rule_result_for_notification = analysisrule.rule_result_for_notification || '';
-  this.description = analysisrule.description || '';
-  this.analysisruletype = analysisrule.analysisruletype || '';
-  this.model_type = analysisrule.model_type || '';
-  this.model_id = analysisrule.model_id || '';
+
+// eslint-disable-next-line no-unused-vars
+var SelectedRetrieveAction = /*#__PURE__*/_createClass(function SelectedRetrieveAction(selectedretrieveaction) {
+  _classCallCheck(this, SelectedRetrieveAction);
+  this.description = selectedretrieveaction.description || '';
+  this.selectedretrieveaction = selectedretrieveaction.selectedretrieveaction || '';
+  this.retrieveaction = selectedretrieveaction.retrieveaction || '';
+  this.model_type = selectedretrieveaction.model_type || '';
+  this.model_id = selectedretrieveaction.model_id || '';
 });
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "list",
   props: {
-    selectedretrieveactions_prop: {}
+    model_prop: {}
+  },
+  components: {
+    SelectedRetrieveActionItem: function SelectedRetrieveActionItem() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_selectedretrieveactions_item_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../selectedretrieveactions/item */ "./resources/js/views/selectedretrieveactions/item.vue"));
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+    _selectedretrieveactionBus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('selectedretrieveaction_created', function (selectedretrieveaction) {
+      console.log('selectedretrieveaction_created received from actionlist', selectedretrieveaction);
+      if (_this.attributeId === selectedretrieveaction.dynamic_attribute_id) {
+        _this.addRuleToList(selectedretrieveaction);
+      }
+    });
+    this.$on('selectedretrieveaction_deleted', function (_ref) {
+      var selectedretrieveaction = _ref.selectedretrieveaction,
+        index = _ref.index;
+      if (_this.attributeId === selectedretrieveaction.dynamic_attribute_id) {
+        _this.selectedretrieveactions.splice(index, 1);
+      }
+    });
+  },
+  created: function created() {
+    var _this2 = this;
+    // eslint-disable-next-line no-undef
+    axios.get('/retrieveactions.fetch').then(function (_ref2) {
+      var data = _ref2.data;
+      return _this2.retrieveactions = data;
+    });
+  },
+  data: function data() {
+    return {
+      attributeId: this.attributeid_prop,
+      selectedretrieveactions: this.model_prop.selectedretrieveactions,
+      selectedRetrieveActionForm: this.getNewselectedRetrieveActionForm(),
+      retrieveactions: [],
+      creating: false,
+      editing: false,
+      loading: false
+    };
+  },
+  methods: {
+    getNewselectedRetrieveActionForm: function getNewselectedRetrieveActionForm() {
+      // eslint-disable-next-line no-undef
+      return new Form(new SelectedRetrieveAction({
+        'model_type': this.model_prop.model_type,
+        'model_id': this.model_prop.id
+      }));
+    },
+    resetFom: function resetFom() {
+      this.selectedRetrieveActionForm = this.getNewselectedRetrieveActionForm();
+    },
+    toggleCreating: function toggleCreating(creating) {
+      this.creating = !creating;
+      if (!this.creating) {
+        this.resetFormValues();
+      }
+    },
+    resetFormValues: function resetFormValues() {
+      this.selectedRetrieveActionForm.selectedretrieveactions = [];
+      this.selectedRetrieveActionForm.description = '';
+      this.clearErrors();
+    },
+    clearErrors: function clearErrors() {
+      this.selectedRetrieveActionForm.errors.clearAll();
+    },
+    createSelectedRetrieveAction: function createSelectedRetrieveAction() {
+      var _this3 = this;
+      this.loading = true;
+      this.selectedRetrieveActionForm.post('/selectedretrieveactions').then(function (newselectedretrieveaction) {
+        _this3.loading = false;
+        _this3.$swal({
+          html: '<small>Action créée avec succès! <br> Prière de compléter les valeurs.</small>',
+          icon: 'success',
+          timer: 3000
+        }).then(function () {
+          _selectedretrieveactionBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('selectedretrieveaction_created', newselectedretrieveaction);
+          _this3.addSelectedRetrieveActionToList(newselectedretrieveaction);
+          _this3.resetFom();
+        });
+
+        // eslint-disable-next-line no-unused-vars
+      })["catch"](function (error) {
+        _this3.loading = false;
+      });
+    },
+    addSelectedRetrieveActionToList: function addSelectedRetrieveActionToList(selectedretrieveaction) {
+      var selectedretrieveactionIndex = this.selectedretrieveactions.findIndex(function (c) {
+        return selectedretrieveaction.id === c.id;
+      });
+      // si cette action n'existe pas déjà, on l'insère dans la liste
+      if (selectedretrieveactionIndex === -1) {
+        this.selectedretrieveactions.push(selectedretrieveaction);
+      }
+    },
+    removeSelectedRetrieveActionToList: function removeSelectedRetrieveActionToList($event) {
+      var selectedretrieveactionIndex = this.selectedretrieveactions.findIndex(function (c) {
+        return $event.id === c.id;
+      });
+      if (selectedretrieveactionIndex > -1) {
+        this.selectedretrieveactions.splice(selectedretrieveactionIndex, 1);
+        this.$swal({
+          html: '<small>Action supprimée avec succès !</small>',
+          icon: 'success',
+          timer: 3000
+        }).then(function () {});
+      }
+    }
   }
 });
 
@@ -54,7 +163,7 @@ var render = function render() {
       fn: function fn() {
         return [_c("span", {
           staticClass: "has-text-black text-xs"
-        }, [_vm._v("Règles d'Analyse\n                "), _c("b-button", {
+        }, [_vm._v("Ajouter\n                "), _c("b-button", {
           attrs: {
             type: "is-info is-light",
             size: "is-small"
@@ -76,12 +185,12 @@ var render = function render() {
     }])
   }), _vm._v(" "), _vm.creating ? _c("b-field", [_c("b-field", {
     attrs: {
-      type: _vm.analysisRuleForm.errors.has("analysisruletype") ? "is-danger" : "is-default"
+      type: _vm.selectedRetrieveActionForm.errors.has("retrieveaction") ? "is-danger" : "is-default"
     }
   }, [_c("b-tooltip", {
     attrs: {
-      active: _vm.analysisRuleForm.errors.has("analysisruletype"),
-      label: _vm.analysisRuleForm.errors.get("analysisruletype"),
+      active: _vm.selectedRetrieveActionForm.errors.has("retrieveaction"),
+      label: _vm.selectedRetrieveActionForm.errors.get("retrieveaction"),
       position: "is-bottom",
       type: "is-danger",
       animated: false
@@ -89,18 +198,18 @@ var render = function render() {
   }, [_c("b-select", {
     attrs: {
       size: "is-small",
-      placeholder: "Type de Règle",
-      name: "analysisruletype",
+      placeholder: "actions",
+      name: "retrieveaction",
       expanded: ""
     },
     model: {
-      value: _vm.analysisRuleForm.analysisruletype,
+      value: _vm.selectedRetrieveActionForm.retrieveaction,
       callback: function callback($$v) {
-        _vm.$set(_vm.analysisRuleForm, "analysisruletype", $$v);
+        _vm.$set(_vm.selectedRetrieveActionForm, "retrieveaction", $$v);
       },
-      expression: "analysisRuleForm.analysisruletype"
+      expression: "selectedRetrieveActionForm.retrieveaction"
     }
-  }, _vm._l(_vm.analysisruletypes, function (option) {
+  }, _vm._l(_vm.retrieveactions, function (option) {
     return _c("option", {
       key: option.id,
       domProps: {
@@ -109,70 +218,13 @@ var render = function render() {
     }, [_vm._v("\n                        " + _vm._s(option.name) + "\n                    ")]);
   }), 0)], 1)], 1), _vm._v(" "), _c("b-field", {
     attrs: {
-      type: _vm.analysisRuleForm.errors.has("title") ? "is-danger" : "is-default"
-    }
-  }, [_c("b-tooltip", {
-    attrs: {
-      active: _vm.analysisRuleForm.errors.has("title"),
-      label: _vm.analysisRuleForm.errors.get("title"),
-      position: "is-bottom",
-      type: "is-danger",
-      animated: false
-    }
-  }, [_c("b-input", {
-    attrs: {
-      size: "is-small",
-      placeholder: "Titre",
-      name: "title"
-    },
-    model: {
-      value: _vm.analysisRuleForm.title,
-      callback: function callback($$v) {
-        _vm.$set(_vm.analysisRuleForm, "title", $$v);
-      },
-      expression: "analysisRuleForm.title"
-    }
-  })], 1)], 1), _vm._v(" "), _c("b-field", {
-    attrs: {
-      type: _vm.analysisRuleForm.errors.has("rule_result_for_notification") ? "is-danger" : "is-default"
-    }
-  }, [_c("b-tooltip", {
-    attrs: {
-      active: _vm.analysisRuleForm.errors.has("rule_result_for_notification"),
-      label: _vm.analysisRuleForm.errors.get("rule_result_for_notification"),
-      position: "is-bottom",
-      type: "is-danger",
-      animated: false
-    }
-  }, [_c("b-select", {
-    attrs: {
-      size: "is-small",
-      placeholder: "Résultat pour Notification",
-      name: "rule_result_for_notification"
-    },
-    model: {
-      value: _vm.analysisRuleForm.rule_result_for_notification,
-      callback: function callback($$v) {
-        _vm.$set(_vm.analysisRuleForm, "rule_result_for_notification", $$v);
-      },
-      expression: "analysisRuleForm.rule_result_for_notification"
-    }
-  }, _vm._l(_vm.ruleresultenums, function (option) {
-    return _c("option", {
-      key: option.value,
-      domProps: {
-        value: option
-      }
-    }, [_vm._v("\n                        " + _vm._s(option.name) + "\n                    ")]);
-  }), 0)], 1)], 1), _vm._v(" "), _c("b-field", {
-    attrs: {
-      type: _vm.analysisRuleForm.errors.has("description") ? "is-danger" : "is-default",
+      type: _vm.selectedRetrieveActionForm.errors.has("description") ? "is-danger" : "is-default",
       expanded: ""
     }
   }, [_c("b-tooltip", {
     attrs: {
-      active: _vm.analysisRuleForm.errors.has("description"),
-      label: _vm.analysisRuleForm.errors.get("description"),
+      active: _vm.selectedRetrieveActionForm.errors.has("description"),
+      label: _vm.selectedRetrieveActionForm.errors.get("description"),
       position: "is-bottom",
       type: "is-danger",
       animated: false
@@ -185,11 +237,11 @@ var render = function render() {
       expanded: ""
     },
     model: {
-      value: _vm.analysisRuleForm.description,
+      value: _vm.selectedRetrieveActionForm.description,
       callback: function callback($$v) {
-        _vm.$set(_vm.analysisRuleForm, "description", $$v);
+        _vm.$set(_vm.selectedRetrieveActionForm, "description", $$v);
       },
-      expression: "analysisRuleForm.description"
+      expression: "selectedRetrieveActionForm.description"
     }
   })], 1)], 1), _vm._v(" "), _c("p", {
     staticClass: "control"
@@ -202,19 +254,19 @@ var render = function render() {
     },
     on: {
       click: function click($event) {
-        return _vm.createAnalysisRule();
+        return _vm.createSelectedRetrieveAction();
       }
     }
   })], 1)], 1) : _vm._e(), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "box"
-  }, _vm._l(_vm.analysisrules, function (analysisrule) {
-    return _c("AnalysisRuleItem", {
-      key: analysisrule.uuid,
+  }, _vm._l(_vm.selectedretrieveactions, function (selectedretrieveaction) {
+    return _c("SelectedRetrieveActionItem", {
+      key: selectedretrieveaction.uuid,
       attrs: {
-        analysisrule_prop: analysisrule
+        model_prop: selectedretrieveaction
       },
       on: {
-        analysisrule_deleted: _vm.removeAnalysisRuleToList
+        selectedretrieveaction_deleted: _vm.removeSelectedRetrieveActionToList
       }
     });
   }), 1)], 1);
@@ -222,6 +274,20 @@ var render = function render() {
 var staticRenderFns = [];
 render._withStripped = true;
 
+
+/***/ }),
+
+/***/ "./resources/js/views/selectedretrieveactions/selectedretrieveactionBus.js":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/views/selectedretrieveactions/selectedretrieveactionBus.js ***!
+  \*********************************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (new vue__WEBPACK_IMPORTED_MODULE_0__["default"]());
+/// Permet de faciliter la communication entre composants enfants.
 
 /***/ }),
 

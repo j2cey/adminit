@@ -3,6 +3,7 @@
 namespace App\Http\Resources\ReportFile;
 
 use App\Models\ReportFile\CollectedReportFile;
+use App\Models\ReportFile\ReportFile;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use App\Http\Resources\RetrieveAction\SelectedRetrieveActionResource;
 use function route;
@@ -61,6 +62,7 @@ class ReportFileResource extends JsonResource
             'reportfiletype' => ReportFileTypeResource::make($this->reportfiletype),
             'reportfileaccesses' => ReportFileAccessResource::collection($this->reportfileaccesses),
             'collectedreportfiles' => CollectedReportFileResource::collection($this->collectedreportfiles),
+            'selectedretrieveactions' => SelectedRetrieveActionResource::collection($this->selectedretrieveactions),
 
             'report' => $this->report,
 
@@ -71,6 +73,7 @@ class ReportFileResource extends JsonResource
             'remotedir_absolute_path' => $this->remotedir_absolute_path,
             'use_file_extension' => $this->use_file_extension,
             'has_headers' => $this->has_headers,
+            'model_type' => ReportFile::class,
 
             //'selectedretrieveactions' => SelectedRetrieveActionResource::collection($this->selectedretrieveactions),
 
