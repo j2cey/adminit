@@ -70,7 +70,11 @@ class SelectedRetrieveActionController extends Controller
         $selectedretrieveaction = $request->model->addSelectedAction(
             $request->retrieveaction,
             $request->status,
-            $request->description);
+            $request->description,
+            $request->actionvalue_label,
+            $request->actionvalue_valuetype,
+            $request->actionvalue
+        );
 
         return new SelectedRetrieveActionResource($selectedretrieveaction);
     }

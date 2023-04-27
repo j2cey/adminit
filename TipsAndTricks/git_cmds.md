@@ -14,3 +14,9 @@ git commit
 
 ### How do I pull a missing file back into my branch?
 git checkout . -f && git submodule update --checkout -f
+
+### Create a new branch
+git checkout -b ＜new-branch＞
+
+### Switching Branches
+git checkout ＜branchname＞

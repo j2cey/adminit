@@ -20,11 +20,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 // eslint-disable-next-line no-unused-vars
 var SelectedRetrieveAction = /*#__PURE__*/_createClass(function SelectedRetrieveAction(selectedretrieveaction) {
   _classCallCheck(this, SelectedRetrieveAction);
+  this.actionvalue_valuetype = selectedretrieveaction.actionvalue_valuetype || '';
+  this.actionvalue_label = selectedretrieveaction.actionvalue_label || '';
   this.description = selectedretrieveaction.description || '';
-  this.selectedretrieveaction = selectedretrieveaction.selectedretrieveaction || '';
   this.retrieveaction = selectedretrieveaction.retrieveaction || '';
-  this.model_type = selectedretrieveaction.model_type || '';
+  this.selectedretrieveaction = selectedretrieveaction.selectedretrieveaction || '';
   this.model_id = selectedretrieveaction.model_id || '';
+  this.model_type = selectedretrieveaction.model_type || '';
 });
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "list",
@@ -59,6 +61,11 @@ var SelectedRetrieveAction = /*#__PURE__*/_createClass(function SelectedRetrieve
       var data = _ref2.data;
       return _this2.retrieveactions = data;
     });
+    // eslint-disable-next-line no-undef
+    axios.get('/valuetypeenums.fetch').then(function (_ref3) {
+      var data = _ref3.data;
+      return _this2.valuetypeenums = data;
+    });
   },
   data: function data() {
     return {
@@ -66,6 +73,7 @@ var SelectedRetrieveAction = /*#__PURE__*/_createClass(function SelectedRetrieve
       selectedretrieveactions: this.model_prop.selectedretrieveactions,
       selectedRetrieveActionForm: this.getNewselectedRetrieveActionForm(),
       retrieveactions: [],
+      valuetypeenums: [],
       creating: false,
       editing: false,
       loading: false
@@ -84,17 +92,6 @@ var SelectedRetrieveAction = /*#__PURE__*/_createClass(function SelectedRetrieve
     },
     toggleCreating: function toggleCreating(creating) {
       this.creating = !creating;
-      if (!this.creating) {
-        this.resetFormValues();
-      }
-    },
-    resetFormValues: function resetFormValues() {
-      this.selectedRetrieveActionForm.selectedretrieveactions = [];
-      this.selectedRetrieveActionForm.description = '';
-      this.clearErrors();
-    },
-    clearErrors: function clearErrors() {
-      this.selectedRetrieveActionForm.errors.clearAll();
     },
     createSelectedRetrieveAction: function createSelectedRetrieveAction() {
       var _this3 = this;
@@ -217,6 +214,65 @@ var render = function render() {
       }
     }, [_vm._v("\n                        " + _vm._s(option.name) + "\n                    ")]);
   }), 0)], 1)], 1), _vm._v(" "), _c("b-field", {
+    attrs: {
+      type: _vm.selectedRetrieveActionForm.errors.has("actionvalue_valuetype") ? "is-danger" : "is-default"
+    }
+  }, [_c("b-tooltip", {
+    attrs: {
+      active: _vm.selectedRetrieveActionForm.errors.has("actionvalue_valuetype"),
+      label: _vm.selectedRetrieveActionForm.errors.get("actionvalue_valuetype"),
+      position: "is-bottom",
+      type: "is-danger",
+      animated: false
+    }
+  }, [_c("b-select", {
+    attrs: {
+      size: "is-small",
+      placeholder: "Type de valeur",
+      name: "actionvalue_valuetype"
+    },
+    model: {
+      value: _vm.selectedRetrieveActionForm.actionvalue_valuetype,
+      callback: function callback($$v) {
+        _vm.$set(_vm.selectedRetrieveActionForm, "actionvalue_valuetype", $$v);
+      },
+      expression: "selectedRetrieveActionForm.actionvalue_valuetype"
+    }
+  }, _vm._l(_vm.valuetypeenums, function (option) {
+    return _c("option", {
+      key: option.value,
+      domProps: {
+        value: option
+      }
+    }, [_vm._v("\n                        " + _vm._s(option.name) + "\n                    ")]);
+  }), 0)], 1)], 1), _vm._v(" "), _c("b-field", {
+    attrs: {
+      type: _vm.selectedRetrieveActionForm.errors.has("actionvalue_label") ? "is-danger" : "is-default",
+      expanded: ""
+    }
+  }, [_c("b-tooltip", {
+    attrs: {
+      active: _vm.selectedRetrieveActionForm.errors.has("actionvalue_label"),
+      label: _vm.selectedRetrieveActionForm.errors.get("actionvalue_label"),
+      position: "is-bottom",
+      type: "is-danger",
+      animated: false
+    }
+  }, [_c("b-input", {
+    attrs: {
+      size: "is-small",
+      placeholder: "Libellé",
+      name: "actionvalue_label",
+      expanded: ""
+    },
+    model: {
+      value: _vm.selectedRetrieveActionForm.actionvalue_label,
+      callback: function callback($$v) {
+        _vm.$set(_vm.selectedRetrieveActionForm, "actionvalue_label", $$v);
+      },
+      expression: "selectedRetrieveActionForm.actionvalue_label"
+    }
+  })], 1)], 1), _vm._v(" "), _c("b-field", {
     attrs: {
       type: _vm.selectedRetrieveActionForm.errors.has("description") ? "is-danger" : "is-default",
       expanded: ""

@@ -39,6 +39,7 @@ var FormatRule = /*#__PURE__*/_createClass(function FormatRule(formatrule) {
   },
   created: function created() {
     var _this = this;
+    // eslint-disable-next-line no-undef
     axios.get('/formatruletypes.fetchall').then(function (_ref) {
       var data = _ref.data;
       return _this.formatruletypes = data;

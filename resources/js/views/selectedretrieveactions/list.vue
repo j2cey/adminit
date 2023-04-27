@@ -25,7 +25,31 @@
                     </b-select>
                 </b-tooltip>
             </b-field>
-            <b-field :type="selectedRetrieveActionForm.errors.has('description') ? 'is-danger' : 'is-default'" expanded>
+            <b-field :type="selectedRetrieveActionForm.errors.has('actionvalue_valuetype') ? 'is-danger' : 'is-default'">
+                <b-tooltip :active="selectedRetrieveActionForm.errors.has('actionvalue_valuetype')" :label="selectedRetrieveActionForm.errors.get('actionvalue_valuetype')"
+                           position="is-bottom"
+                           type="is-danger"
+                           :animated="false">
+                    <b-select size="is-small" placeholder="Type de valeur" name="actionvalue_valuetype" v-model="selectedRetrieveActionForm.actionvalue_valuetype">
+                        <option
+                            v-for="option in valuetypeenums"
+                            :value="option"
+                            :key="option.value">
+                            {{ option.name }}
+                        </option>
+                    </b-select>
+                </b-tooltip>
+            </b-field>
+            <b-field :type="selectedRetrieveActionForm.errors.has('actionvalue_label') ? 'is-danger' : 'is-default'" expanded>
+                <b-tooltip :active="selectedRetrieveActionForm.errors.has('actionvalue_label')" :label="selectedRetrieveActionForm.errors.get('actionvalue_label')"
+                           position="is-bottom"
+                           type="is-danger"
+                           :animated="false">
+                    <b-input size="is-small" placeholder="Libellé" name="actionvalue_label" v-model="selectedRetrieveActionForm.actionvalue_label" expanded></b-input>
+                </b-tooltip>
+            </b-field>
+
+        <b-field :type="selectedRetrieveActionForm.errors.has('description') ? 'is-danger' : 'is-default'" expanded>
                 <b-tooltip :active="selectedRetrieveActionForm.errors.has('description')" :label="selectedRetrieveActionForm.errors.get('description')"
                            position="is-bottom"
                            type="is-danger"
@@ -52,12 +76,14 @@
     // eslint-disable-next-line no-unused-vars
     class SelectedRetrieveAction {
         constructor(selectedretrieveaction) {
+            this.actionvalue_valuetype = selectedretrieveaction.actionvalue_valuetype || ''
+            this.actionvalue_label = selectedretrieveaction.actionvalue_label || ''
             this.description = selectedretrieveaction.description || ''
-            this.selectedretrieveaction = selectedretrieveaction.selectedretrieveaction || ''
             this.retrieveaction = selectedretrieveaction.retrieveaction || ''
+            this.selectedretrieveaction = selectedretrieveaction.selectedretrieveaction || ''
 
-            this.model_type = selectedretrieveaction.model_type || ''
             this.model_id = selectedretrieveaction.model_id || ''
+            this.model_type = selectedretrieveaction.model_type || ''
         }
     }
 
@@ -88,6 +114,9 @@
             // eslint-disable-next-line no-undef
             axios.get('/retrieveactions.fetch')
                 .then(({data}) => this.retrieveactions = data);
+            // eslint-disable-next-line no-undef
+            axios.get('/valuetypeenums.fetch')
+                .then(({data}) => this.valuetypeenums = data);
         },
         data() {
             return {
@@ -95,6 +124,7 @@
                 selectedretrieveactions: this.model_prop.selectedretrieveactions,
                 selectedRetrieveActionForm: this.getNewselectedRetrieveActionForm(),
                 retrieveactions: [],
+                valuetypeenums: [],
 
                 creating: false,
                 editing: false,
@@ -114,18 +144,8 @@
             },
             toggleCreating(creating) {
                 this.creating = !creating
-                if (!this.creating) {
-                    this.resetFormValues();
-                }
             },
-        resetFormValues() {
-            this.selectedRetrieveActionForm.selectedretrieveactions = [];
-            this.selectedRetrieveActionForm.description = '';
-            this.clearErrors();
-        },
-            clearErrors() {
-                this.selectedRetrieveActionForm.errors.clearAll();
-            },
+
             createSelectedRetrieveAction() {
                 this.loading = true
 

@@ -55,6 +55,8 @@ import {resumeTimer, stopTimer} from "sweetalert2";
 
 class selectedRetrieveAction {
     constructor(selectedretrieveaction) {
+        this.actionvalue_valuetype = selectedretrieveaction.actionvalue_valuetype || ''
+        this.actionvalue_label = selectedretrieveaction.actionvalue_label || ''
         this.description = selectedretrieveaction.description || ''
         this.selectedretrieveaction = selectedretrieveaction.selectedretrieveaction || ''
         this.retrieveaction = selectedretrieveaction.retrieveaction || ''
@@ -82,6 +84,7 @@ export default {
             // eslint-disable-next-line no-undef
             selectedRetrieveActionForm: new Form(new selectedRetrieveAction(this.model_prop)),
             retrieveactions: [],
+            valuetypeenums: [],
 
             editing: false,
             loading: false

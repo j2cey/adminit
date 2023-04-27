@@ -15,6 +15,9 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property IHasSelectedRetrieveActions $model
  * @property string $code
  * @property string|null $description
+ * @property mixed $actionvalue_label
+ * @property mixed $actionvalue_valuetype
+ * @property mixed $actionvalue
  *
  *
  */
@@ -50,6 +53,7 @@ class StoreSelectedRetrieveActionRequest extends SelectedRetrieveActionRequest
         $this->merge([
             'status' => $this->setRelevantStatus($this->input('status'),'code', false),
             'model' => $this->input('model_type')::find($this->input('model_id'))->first(),
+            'actionvalue_valuetype' => (is_null($this->input('actionvalue_valuetype'))) ? null : $this->input('actionvalue_valuetype')['value'],
             'retrieveaction' => $this->setRelevantRetrieveAction(RetrieveAction::class, $this->input('retrieveaction'),'code', false),
         ]);
     }

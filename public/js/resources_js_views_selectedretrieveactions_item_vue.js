@@ -21,6 +21,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var selectedRetrieveAction = /*#__PURE__*/_createClass(function selectedRetrieveAction(selectedretrieveaction) {
   _classCallCheck(this, selectedRetrieveAction);
+  this.actionvalue_valuetype = selectedretrieveaction.actionvalue_valuetype || '';
+  this.actionvalue_label = selectedretrieveaction.actionvalue_label || '';
   this.description = selectedretrieveaction.description || '';
   this.selectedretrieveaction = selectedretrieveaction.selectedretrieveaction || '';
   this.retrieveaction = selectedretrieveaction.retrieveaction || '';
@@ -45,6 +47,7 @@ var selectedRetrieveAction = /*#__PURE__*/_createClass(function selectedRetrieve
       // eslint-disable-next-line no-undef
       selectedRetrieveActionForm: new Form(new selectedRetrieveAction(this.model_prop)),
       retrieveactions: [],
+      valuetypeenums: [],
       editing: false,
       loading: false
     };

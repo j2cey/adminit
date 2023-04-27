@@ -79,6 +79,7 @@
             FormatRuleItem: () => import('./item'),
         },
         created() {
+            // eslint-disable-next-line no-undef
             axios.get('/formatruletypes.fetchall')
                 .then(({data}) => this.formatruletypes = data);
         },
