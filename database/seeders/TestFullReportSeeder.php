@@ -13,6 +13,7 @@ use App\Models\ReportFile\ReportFileType;
 use App\Models\FormatRule\FormatRuleType;
 use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\ReportFile\CollectedReportFile;
+use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 
 class TestFullReportSeeder extends Seeder
@@ -57,9 +58,9 @@ class TestFullReportSeeder extends Seeder
             ['name' => "report_date", 'title' => "Date Rapport", 'type' => $type_datetime, 'status' => null, 'description' => "Date de génération du Rapport"],
         ]);
 
-        $this->addFile($the_report, "files", "reportsmonitor/output_data_portal");
-        $this->addFile($the_report, "kbytes", "reportsmonitor/output_data_portal");
-        $this->addFile($the_report, "records", "reportsmonitor/output_data_portal");
+        $this->addFile($the_report, "files", "Fichiers par Portal", "reportsmonitor/output_data_portal", $attribute_label);
+        $this->addFile($the_report, "kbytes", "Data (KB) par Portal", "reportsmonitor/output_data_portal", $attribute_label);
+        $this->addFile($the_report, "records", "Records par Portal", "reportsmonitor/output_data_portal", $attribute_label);
 
         // insert Collected File
         /*$the_report_file_collected = CollectedReportFile::createNew(
@@ -76,11 +77,14 @@ class TestFullReportSeeder extends Seeder
         //$the_report_file_collected->formattedvalues->setValue();
     }
 
-    private function addFile(Report $the_report, $filename, $remotedir_relative_path) {
+    private function addFile(Report $the_report, $filename, $label, $remotedir_relative_path, DynamicAttribute $attribute_label) {
         $the_report_file = $the_report->addReportFile(
             ReportFileType::csv()->first(),
-            $filename,null,null,$remotedir_relative_path
+            $filename, $label,null,null,$remotedir_relative_path
         );
+
+        $the_report_file->setLastRowConfig(false,null,true,$attribute_label,"TOTAL");
+
         $the_report_file_access = $the_report_file->addReportFileAccess(
             AccessAccount::where('username', "cgi")->first(),
             ReportServer::where('name',"ime01")->first(),

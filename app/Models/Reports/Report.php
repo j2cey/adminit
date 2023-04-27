@@ -160,6 +160,7 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
     /**
      * @param Model|ReportFileType $reportfiletype
      * @param string $name
+     * @param string $label
      * @param string|null $wildcard
      * @param string|null $description
      * @param string|null $remotedir_relative_path
@@ -167,13 +168,14 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
      * @param bool $use_file_extension
      * @return ReportFile
      */
-    public function addReportFile(Model|ReportFileType $reportfiletype, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true): ReportFile
+    public function addReportFile(Model|ReportFileType $reportfiletype, string $name, string $label, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true): ReportFile
     {
         return ReportFile::createNew(
             $this,
             $reportfiletype,
             Status::default()->first(),
             $name,
+            $label,
             $wildcard,
             $description,
             $remotedir_relative_path,

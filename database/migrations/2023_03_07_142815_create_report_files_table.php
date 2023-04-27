@@ -24,6 +24,7 @@ class CreateReportFilesTable extends Migration
             $table->id();
 
             $table->string('name')->comment("nom du fichier");
+            $table->string('label')->comment("libellé du fichier");
             $table->string('wildcard')->nullable()->comment("caractère générique du fichier");
 
             $table->string('remotedir_relative_path')->nullable()->comment("chemin relatif du fichier sur le serveur distant");

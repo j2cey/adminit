@@ -9,6 +9,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 use App\Traits\FormatRule\HasFormatRules;
 use App\Contracts\FormatRule\IHasFormatRules;
 use App\Traits\FormattedValue\HasFormattedValue;
+use App\Models\DynamicAttributes\DynamicAttribute;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use App\Contracts\DynamicAttribute\IHasDynamicRows;
 use App\Contracts\FormattedValue\IHasFormattedValue;
@@ -121,6 +122,17 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
         $this->update([
             'lastinserted_at' => $finaldate,
         ]);
+    }
+
+    public function isValueEqual(DynamicAttribute $dynamicattribute, mixed $attribute_value): bool {
+        $result = false;
+        $dynamicvalues = $this->dynamicvalues;
+        foreach ($dynamicvalues as $dynamicvalue) {
+            if ( $dynamicvalue->dynamicattribute->id === $dynamicattribute->id ) {
+                $result = $dynamicvalue->isValueEqual($attribute_value);
+            }
+        }
+        return $result;
     }
 
     public function mergeColumnsValues() {

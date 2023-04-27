@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Carbon;
 use App\Traits\Base\BaseTrait;
+use App\Traits\Base\HasCreator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -28,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class BaseModel extends Model
 {
-    use BaseTrait;
+    use BaseTrait, HasCreator;
 
     public function getRouteKeyName() { return 'uuid'; }
 

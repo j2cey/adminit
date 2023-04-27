@@ -106,10 +106,10 @@ abstract class TestCase extends BaseTestCase
      * @param $file_name
      * @return ReportFile
      */
-    public function create_new_reportfile($file_name = null): ReportFile
+    public function create_new_reportfile($file_name = null, $label = null): ReportFile
     {
         return $this->create_new_report("new report")
-            ->addReportFile(ReportFileType::txt()->first(),$file_name ?? "new report file");
+            ->addReportFile(ReportFileType::txt()->first(),$file_name ?? "new report file",$label ?? "new report file label");
     }
 
     public function create_new_analysisrule($title = null): AnalysisRule {

@@ -94,6 +94,11 @@ class ReportTreatmentResult extends BaseModel implements Auditable
             ->whereNotIn('state', [TreatmentStateEnum::RUNNING->value]);
     }
 
+    public function scopeNotQueued($query) {
+        return $query
+            ->whereNotIn('state', [TreatmentStateEnum::QUEUED->value]);
+    }
+
     #endregion
 
     #region Eloquent Relationships

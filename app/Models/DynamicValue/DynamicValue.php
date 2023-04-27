@@ -120,6 +120,10 @@ class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasF
         return $this->dynamicattribute->getFormatRulesForNotification($this, $ihasmatchedanalysisrules);
     }
 
+    public function isValueEqual(mixed $attribute_value): bool {
+        return $this->getValue() === $attribute_value;
+    }
+
     #endregion
 
     public static function boot()

@@ -381,12 +381,35 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
             // get all dynamic row attached to this object
             $dynamicrows = $this->dynamicrows;
 
+            $last_row = null;
+
             foreach ($dynamicrows as $row_index => $dynamicrow) {
                 // get merged formatted values for each row
                 $dynamicrow->mergeColumnsFormattedValues();
-                // merge object (this) formatted values with all rows formatted values
-                $this->mergeRawValueFromFormatted($dynamicrow);
+                $can_merge_this_row = false;
+
+                if ( $this->reportfile->lastrowconfig ) {
+                    if ( $this->reportfile->lastrowconfig->isLastRow($dynamicrow) ) {
+                        if ( ! is_null($last_row) ) {
+                            $this->mergeRawValueFromFormatted($last_row);
+                        }
+                        $last_row = $dynamicrow;
+                    } else {
+                        $can_merge_this_row = true;
+                    }
+                } else {
+                    $can_merge_this_row = true;
+                }
+
+                if ( $can_merge_this_row ) {
+                    // merge object (this) formatted values with all rows formatted values
+                    $this->mergeRawValueFromFormatted($dynamicrow);
+                }
+
                 $this->setRowFormatSuccess($row_index);
+            }
+            if ( ! is_null($last_row) ) {
+                $this->mergeRawValueFromFormatted($last_row);
             }
             $this->applyFormatFromRaw(null, $this->formatrules);
             return $operation_result->endWithSuccess();

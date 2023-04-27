@@ -17,6 +17,8 @@ use App\Models\Access\AccessProtocole;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\OsAndServer\ReportServer;
+use App\Traits\RowConfig\HasLastRowConfig;
+use App\Contracts\RowConfig\IHasLastRowConfig;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentResult;
@@ -37,6 +39,7 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property integer $updated_by
  *
  * @property string $name
+ * @property string $label
  * @property string|null $wildcard
  *
  * @property string|null $remotedir_relative_path
@@ -62,9 +65,9 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  *
  * @method static ReportFile first()
  */
-class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveActions, IHasReportTreatmentResults
+class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveActions, IHasReportTreatmentResults, IHasLastRowConfig
 {
-    use HasFactory, HasSelectedRetrieveActions, HasReportTreatmentResults, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasSelectedRetrieveActions, HasReportTreatmentResults, HasLastRowConfig, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -188,6 +191,7 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
      * @param Model|ReportFileType $reportfiletype Le Type de fichier
      * @param Model|Status $status Le statut du fichier
      * @param string $name Le Nom du fichier
+     * @param string $label Libellé du fichier
      * @param string|null $wildcard Le Wildcard
      * @param string|null $description Description du Fichier
      * @param string|null $remotedir_relative_path Chemin relatif du fichier sur le serveur distant
@@ -196,10 +200,11 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
      * @param bool $has_headers Détermine si le fichier a les en-têtes en première ligne
      * @return ReportFile
      */
-    public static function createNew(Report $report, Model|ReportFileType $reportfiletype, Model|Status $status, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true, bool $has_headers = true): ReportFile
+    public static function createNew(Report $report, Model|ReportFileType $reportfiletype, Model|Status $status, string $name, string $label, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true, bool $has_headers = true): ReportFile
     {
         $reportfile = ReportFile::create([
             'name' => $name,
+            'label' => $label,
             'wildcard' => $wildcard,
             'remotedir_relative_path' => $remotedir_relative_path ?? "/",
             'remotedir_absolute_path' => $remotedir_absolute_path ?? "/",
@@ -232,6 +237,7 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
      * @param ReportFileType $reportfiletype Le Type de fichier
      * @param Status $status Le statut du fichier
      * @param string $name Le Nom du fichier
+     * @param string $label Libellé du fichier
      * @param string|null $wildcard Le Wildcard
      * @param string|null $description Description du Fichier
      * @param string|null $remotedir_relative_path Chemin relatif du fichier sur le serveur distant
@@ -240,9 +246,10 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
      * @param bool $has_headers Détermine si le fichier a les en-têtes en première ligne
      * @return $this
      */
-    public function updateOne(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true, bool $has_headers = false): ReportFile
+    public function updateOne(Report $report, ReportFileType $reportfiletype, Status $status, string $name, string $label, string $wildcard = null, string $description = null, string $remotedir_relative_path = null, string $remotedir_absolute_path = null, bool $use_file_extension = true, bool $has_headers = false): ReportFile
     {
         $this->name = $name;
+        $this->label = $label;
         $this->wildcard = $wildcard;
         $this->remotedir_relative_path = $remotedir_relative_path ?? "/";
         $this->remotedir_absolute_path = $remotedir_absolute_path ?? "/";

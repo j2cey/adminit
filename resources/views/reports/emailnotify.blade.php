@@ -35,7 +35,7 @@
                         <table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;">
                             <tr>
                                 <td style="padding:0 0 36px 0;color:#153643;">
-                                    <h6 style="font-size:15px;margin:0 0 10px 0;font-family:Arial,sans-serif;"> {{ $collectedreportfile->reportfile->report->title }} </h6>
+                                    <h6 style="font-size:15px;margin:0 0 10px 0;font-family:Arial,sans-serif;"> {{ $collectedreportfile->reportfile->label }} </h6>
                                 </td>
                             </tr>
                             <tr>

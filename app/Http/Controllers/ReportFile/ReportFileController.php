@@ -42,7 +42,19 @@ class ReportFileController extends Controller
      */
     public function store(StoreReportFileRequest $request): ReportFileResource
     {
-        $reportfile = ReportFile::createNew($request->report, $request->reportfiletype, $request->status, $request->name, $request->wildcard, $request->description, $request->remotedir_relative_path, $request->remotedir_absolute_path, $request->use_file_extension, $request->has_headers);
+        $reportfile = ReportFile::createNew(
+            $request->report,
+            $request->reportfiletype,
+            $request->status,
+            $request->name,
+            $request->label,
+            $request->wildcard,
+            $request->description,
+            $request->remotedir_relative_path,
+            $request->remotedir_absolute_path,
+            $request->use_file_extension,
+            $request->has_headers
+        );
 
         return new ReportFileResource($reportfile);
     }
@@ -80,7 +92,19 @@ class ReportFileController extends Controller
      */
     public function update(UpdateReportFileRequest $request, ReportFile $reportfile)
     {
-        $reportfile->updateOne($request->report, $request->reportfiletype, $request->status, $request->name, $request->wildcard, $request->description, $request->remotedir_relative_path, $request->remotedir_absolute_path, $request->use_file_extension, $request->has_headers);
+        $reportfile->updateOne(
+            $request->report,
+            $request->reportfiletype,
+            $request->status,
+            $request->name,
+            $request->label,
+            $request->wildcard,
+            $request->description,
+            $request->remotedir_relative_path,
+            $request->remotedir_absolute_path,
+            $request->use_file_extension,
+            $request->has_headers
+        );
 
         return new ReportFileResource($reportfile);
     }

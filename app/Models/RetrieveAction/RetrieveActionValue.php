@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $created_by
  * @property integer $updated_by
  *
- *
  * @property string $label
  * @property string $type
  * @property string $value_string

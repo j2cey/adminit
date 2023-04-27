@@ -43,7 +43,7 @@ trait HasReportTreatmentResults
      * @return ReportTreatmentResult[]|null
      */
     public function getReportTreatmentsToBeCompleted() {
-        return $this->reporttreatmentresults()->active()->notCompleted()->notRunning()->get();
+        return $this->reporttreatmentresults()->active()->notCompleted()->notRunning()->notQueued()->get();
     }
 
     protected function initializeHasReportTreatmentResults()
