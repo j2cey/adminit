@@ -479,8 +479,12 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
 
                     $this->startNotification();
 
-                    Mail::to("J.NGOMNZE@moov-africa.ga")
-                        ->send(new NotifyReport($this));
+                    $receivers = ["J.NGOMNZE@moov-africa.ga","jud10parfait@gmail.com","F.ONDONKOGHE@moov-africa.ga","djoni.ondo@gmail.com"];
+
+                    foreach ($receivers as $receiver) {
+                        Mail::to($receiver)
+                            ->send(new NotifyReport($this));
+                    }
 
                     $this->resetMatchedAnalysisRules();
 

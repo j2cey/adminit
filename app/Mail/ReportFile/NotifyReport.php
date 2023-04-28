@@ -25,7 +25,9 @@ class NotifyReport extends Mailable
     {
         $this->subject = $collectedreportfile->reportfile->report->title;
         $this->collectedreportfile = $collectedreportfile;
+
         $this->htmlvalue = $collectedreportfile->htmlformattedvalue->getFormattedValue();
+        //$this->htmlvalue = str_replace(['&quot;'], [''], $collectedreportfile->htmlformattedvalue->getFormattedValue());
     }
 
     /**

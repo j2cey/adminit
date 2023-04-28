@@ -103,6 +103,10 @@ class ReportTreatmentResult extends BaseModel implements Auditable
 
     #region Eloquent Relationships
 
+    public function reporttreatmentsteps() {
+        return $this->hasMany(ReportTreatmentStepResult::class, "report_treatment_result_id");
+    }
+
     public function currentstep() {
         return $this->belongsTo(ReportTreatmentStepResult::class, "currentstep_id");
     }
