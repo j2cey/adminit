@@ -164,9 +164,9 @@ class HtmlFormattedValue extends BaseModel implements IFormattedValueHtml
             $this->resetHtmlValue();
         }
 
-        if ( $this->maintag === HtmlTagKey::TABLE ) {
+        /*if ( $this->maintag === HtmlTagKey::TABLE ) {
             $this->addTableTagDefaultAttributes();
-        }
+        }*/
 
         $this->applied_tag_attributes = $this->applyFormatRulesToAttributes($this->applied_tag_attributes, $formatrules);
         $this->applied_weight_tags = $this->applyFormatRulesToInnerTags($this->applied_weight_tags, $formatrules);
@@ -403,6 +403,20 @@ class HtmlFormattedValue extends BaseModel implements IFormattedValueHtml
     public function getFormattedValue(): ?string
     {
         return $this->htmlvalue;
+        //return str_replace(['&quot;'], [''], $this->htmlvalue);
+    }
+
+    public function formalizeEncodedHtmlValue() {
+        $this->htmlvalue = str_replace(['&quot;'], [''], $this->htmlvalue);
+    }
+
+    protected static function boot(){
+        parent::boot();
+
+        // Pendant l'enregistrement de ce Model
+        static::saving(function ($model) {
+            $model->formalizeEncodedHtmlValue();
+        });
     }
 
     #endregion
