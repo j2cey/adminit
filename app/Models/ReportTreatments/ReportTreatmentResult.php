@@ -35,10 +35,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property int $currentstep_id
  * @property int $report_id
  *
+ * @property string|null $hasreporttreatmentresults_type
+ * @property int|null $hasreporttreatmentresults_id
+ *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * @property ReportTreatmentStepResult $currentstep
+ * @property ReportTreatmentStepResult[] $reporttreatmentsteps
  *
  * @method static ReportTreatmentResult create(string[] $array)
  */

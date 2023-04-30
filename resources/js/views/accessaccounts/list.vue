@@ -218,7 +218,9 @@ export default {
             }).then((result) => {
                 if(result.value) {
 
+                    // eslint-disable-next-line no-undef
                     axios.delete(`/accessaccounts/${accessaccount.uuid}`)
+                        // eslint-disable-next-line no-unused-vars
                         .then(resp => {
                             this.removeAccessAccountFromList(accessaccount)
                         }).catch(error => {

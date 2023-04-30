@@ -13,7 +13,7 @@ class SftpProtocole implements IProtocole
 {
     public static function getDisk(ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum, AccessAccount $account, ReportServer $server, int $port): ?Filesystem
     {
-        $operation_result = $reporttreatmentstepresult->addOperationResult("Get SFTP Proocole Disk", $criticalitylevelenum);
+        $operation_result = $reporttreatmentstepresult->addOperationResult("Récupération Disque/Connexion SFTP", $criticalitylevelenum);
         try {
             $fsMgr = new FilesystemManager(app());
 

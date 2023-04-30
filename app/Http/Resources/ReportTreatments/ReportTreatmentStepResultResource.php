@@ -11,6 +11,7 @@ use App\Http\Resources\StatusResource;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\ReportTreatments\OperationResult;
 use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
@@ -24,8 +25,10 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property string|null $tags
  * @property integer|null $status_id
  *
+ * @property string $name
  * @property Carbon $start_at
  * @property Carbon $end_at
+ * @property string $result
  * @property string $state
  * @property string $message
  *
@@ -40,10 +43,16 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * @property string|null $hasreporttreatmentstepresults_type
+ * @property int|null $hasreporttreatmentstepresults_id
+ *
  * @property Status $status
  * @property ReportTreatmentResult|null $reporttreatmentresult
  * @property ReportTreatmentStepResult $retryof
- * @property Collection $retries
+ * @property ReportTreatmentStepResult[] $retries
+ *
+ * @property OperationResult[] $operationresults
+ * @property OperationResult $latestOperationresult
  */
 class ReportTreatmentStepResultResource extends JsonResource
 {
@@ -60,10 +69,12 @@ class ReportTreatmentStepResultResource extends JsonResource
             'uuid' => $this->uuid,
             'status' => StatusResource::make($this->status),
 
+            'name' => $this->name,
             'reporttreatmentresult' => $this->reporttreatmentresult,
 
             'start_at' => $this->start_at,
             'end_at' => $this->end_at,
+            'result' => $this->result,
             'state' => $this->state,
             'message' => $this->message,
 
@@ -71,6 +82,12 @@ class ReportTreatmentStepResultResource extends JsonResource
             'retry_session_count' => $this->retry_session_count,
             'retryof' => $this->retryof,
             'retries' => $this->retries,
+
+            'latestOperationresult' => OperationResultResource::make($this->latestOperationresult),
+            'operationresults' => OperationResultResource::collection($this->operationresults),
+
+            'hasreporttreatmentstepresults_type' => $this->hasreporttreatmentstepresults_type,
+            'hasreporttreatmentstepresults_id' => $this->hasreporttreatmentstepresults_id,
 
             'description' => $this->description,
             'created_at' => $this->created_at,

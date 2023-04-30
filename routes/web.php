@@ -22,9 +22,6 @@ use App\Http\Controllers\AnalysisRules\ThresholdTypeController;
 use App\Http\Controllers\Reportsetting\ReportsettingController;
 use App\Http\Controllers\ReportFile\ReportFileAccessController;
 use App\Http\Controllers\ReportFile\CollectedReportFileController;
-use App\Http\Controllers\ReportTreatments\OperationResultController;
-use App\Http\Controllers\ReportTreatments\ReportTreatmentResultController;
-use App\Http\Controllers\ReportTreatments\ReportTreatmentStepResultController;
 
 /*
 |--------------------------------------------------------------------------
@@ -202,9 +199,5 @@ Route::resource('accessaccounts',AccessAccountController::class)->middleware('au
 Route::get('accessaccounts.fetch',[AccessAccountController::class,'fetch'])
     ->name('accessaccounts.fetch')
     ->middleware('auth');
-
-Route::resource('reporttreatmentresults',ReportTreatmentResultController::class)->middleware('auth');
-Route::resource('reporttreatmentstepresults',ReportTreatmentStepResultController::class)->middleware('auth');
-Route::resource('operationresults',OperationResultController::class)->middleware('auth');
 
 

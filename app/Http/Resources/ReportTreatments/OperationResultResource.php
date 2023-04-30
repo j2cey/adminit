@@ -30,7 +30,9 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property Carbon $end_at
  * @property int $operation_duration
  * @property string $state
+ * @property string $result
  * @property string $message
+ * @property string $criticality_level
  *
  * @property string $description
  *
@@ -65,7 +67,9 @@ class OperationResultResource extends JsonResource
             'end_at' => $this->end_at,
             'operation_duration' => $this->operation_duration,
             'state' => $this->state,
+            'result' => $this->result,
             'message' => $this->message,
+            'criticality_level' => $this->criticality_level,
 
             'reporttreatmentstepresult' => $this->reporttreatmentstepresult,
             'parentoperation' => $this->parentoperation,

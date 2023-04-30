@@ -25,13 +25,65 @@ class TestFullReportSeeder extends Seeder
      */
     public function run()
     {
-        // Le Rapport
-        $the_report = Report::createNew(
+        // Rapport IME01
+        $ime01_report = Report::createNew(
             "IME01 - OUTPUT DATA PORTAL",
             ReportType::defaultReport()->first(),
             "Rapport des Files pour le OUTPUT DATA PORTAL de IME01"
         );
 
+        $attribute_label = $this->addAttributes($ime01_report);
+        $this->addDefaultFiles($ime01_report, $attribute_label, ReportServer::where('name',"ime01")->first(), "reportsmonitor/output_data_portal");
+
+
+        // Rapport IME02
+        $ime02_report = Report::createNew(
+            "IME02 - OUTPUT DATA PORTAL",
+            ReportType::defaultReport()->first(),
+            "Rapport des Files pour le OUTPUT DATA PORTAL de IME02"
+        );
+
+        $attribute_label = $this->addAttributes($ime02_report);
+        $this->addDefaultFiles($ime02_report, $attribute_label, ReportServer::where('name',"ime02")->first(), "reportsmonitor/output_data_portal");
+
+
+        // Rapport IME03
+        $ime03_report = Report::createNew(
+            "IME03 - OUTPUT DATA PORTAL",
+            ReportType::defaultReport()->first(),
+            "Rapport des Files pour le OUTPUT DATA PORTAL de IME03"
+        );
+
+        $attribute_label = $this->addAttributes($ime03_report);
+        $this->addDefaultFiles($ime03_report, $attribute_label, ReportServer::where('name',"ime03")->first(), "reportsmonitor/output_data_portal");
+
+
+        // Rapport IME04
+        $ime04_report = Report::createNew(
+            "IME04 - OUTPUT DATA PORTAL",
+            ReportType::defaultReport()->first(),
+            "Rapport des Files pour le OUTPUT DATA PORTAL de IME04"
+        );
+
+        $attribute_label = $this->addAttributes($ime04_report);
+        $this->addDefaultFiles($ime04_report, $attribute_label, ReportServer::where('name',"ime04")->first(), "reportsmonitor/output_data_portal");
+
+        // insert Collected File
+        /*$the_report_file_collected = CollectedReportFile::createNew(
+            $the_report_file,
+            "//output_data_portal_files.csv",
+            "40dae48d3ef7bf73850d5250afc86043.csv",
+            1801
+        );*/
+
+        //$the_report_file_collected->fresh();
+        //dd($the_report_file_collected);
+
+        //$the_report_file_collected->setFormattedValue(HtmlTagKey::TABLE_ROW);
+        //$the_report_file_collected->formattedvalues->setValue();
+    }
+
+    private function addAttributes($the_report) {
         $type_string = DynamicAttributeType::string()->first();
         $type_int = DynamicAttributeType::int()->first();
         $type_datetime = DynamicAttributeType::datetime()->first();
@@ -58,26 +110,16 @@ class TestFullReportSeeder extends Seeder
             ['name' => "report_date", 'title' => "Date Rapport", 'type' => $type_datetime, 'status' => null, 'description' => "Date de génération du Rapport"],
         ]);
 
-        $this->addFile($the_report, "files", "Fichiers par Portal", "reportsmonitor/output_data_portal", $attribute_label);
-        $this->addFile($the_report, "kbytes", "Data (KB) par Portal", "reportsmonitor/output_data_portal", $attribute_label);
-        $this->addFile($the_report, "records", "Records par Portal", "reportsmonitor/output_data_portal", $attribute_label);
-
-        // insert Collected File
-        /*$the_report_file_collected = CollectedReportFile::createNew(
-            $the_report_file,
-            "//output_data_portal_files.csv",
-            "40dae48d3ef7bf73850d5250afc86043.csv",
-            1801
-        );*/
-
-        //$the_report_file_collected->fresh();
-        //dd($the_report_file_collected);
-
-        //$the_report_file_collected->setFormattedValue(HtmlTagKey::TABLE_ROW);
-        //$the_report_file_collected->formattedvalues->setValue();
+        return $attribute_label;
     }
 
-    private function addFile(Report $the_report, $filename, $label, $remotedir_relative_path, DynamicAttribute $attribute_label) {
+    private function addDefaultFiles($the_report, $attribute_label, $report_server, $remotedir_relative_path) {
+        $this->addFile($the_report, "files", $report_server, "Fichiers par Portal", $remotedir_relative_path, $attribute_label);
+        $this->addFile($the_report, "kbytes", $report_server, "Data (KB) par Portal", $remotedir_relative_path, $attribute_label);
+        $this->addFile($the_report, "records", $report_server, "Records par Portal", $remotedir_relative_path, $attribute_label);
+    }
+
+    private function addFile(Report $the_report, $filename, $report_server, $label, $remotedir_relative_path, DynamicAttribute $attribute_label) {
         $the_report_file = $the_report->addReportFile(
             ReportFileType::csv()->first(),
             $filename, $label,null,null,$remotedir_relative_path
@@ -87,7 +129,7 @@ class TestFullReportSeeder extends Seeder
 
         $the_report_file_access = $the_report_file->addReportFileAccess(
             AccessAccount::where('username', "cgi")->first(),
-            ReportServer::where('name',"ime01")->first(),
+            $report_server,
             AccessProtocole::ftp()->first()
         );
 
