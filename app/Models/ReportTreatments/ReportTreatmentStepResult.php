@@ -40,6 +40,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property int $retry_session_count
  * @property int $retryof_id
  *
+ * @property string|null $hasreporttreatmentstepresults_type
+ * @property int|null $hasreporttreatmentstepresults_id
+ *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *

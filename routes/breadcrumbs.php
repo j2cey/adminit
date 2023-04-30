@@ -7,6 +7,8 @@ use App\Models\ReportFile\ReportFile;
 use App\Models\ReportFile\CollectedReportFile;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\DynamicAttributes\DynamicAttributeType;
+use App\Models\ReportTreatments\ReportTreatmentResult;
+use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 Breadcrumbs::for('home', function ($trail) {
     $trail->push('Home', route('home'));
@@ -61,3 +63,19 @@ Breadcrumbs::for('collectedreportfiles.show', function (Trail $trail, CollectedR
         ->push($collectedreportfile->id, route('reportfiles.show', $collectedreportfile->uuid));
 });
 #endregion
+
+#region ReportTreatmentResults
+// ReportTreatmentResults
+Breadcrumbs::for('reporttreatmentresults.index', function (Trail $trail) {
+    $trail->parent('home')->push('Traitements Rapports', route('reporttreatmentresults.index'));
+});
+// ReportTreatmentResults.show
+Breadcrumbs::for('reporttreatmentresults.show', function (Trail $trail, ReportTreatmentResult $reporttreatmentresult) {
+    $trail->parent('reporttreatmentresults.index')
+        ->push($reporttreatmentresult->name, route('reporttreatmentresults.show', $reporttreatmentresult->uuid));
+});
+// ReportTreatmentStepResults.show
+Breadcrumbs::for('reporttreatmentstepresults.show', function (Trail $trail, ReportTreatmentStepResult $reporttreatmentstepresult) {
+    $trail->parent('reporttreatmentresults.show', $reporttreatmentstepresult->reporttreatmentresult)
+        ->push($reporttreatmentstepresult->name, route('reporttreatmentstepresults.show', $reporttreatmentstepresult->uuid));
+});

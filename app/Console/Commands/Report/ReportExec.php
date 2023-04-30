@@ -38,8 +38,10 @@ class ReportExec extends Command
      */
     public function handle()
     {
-        $report = Report::getActiveFirst();
-        $report?->exec();
+        $reports = Report::getActives();
+        foreach ($reports as $report) {
+            $report?->exec();
+        }
         return 0;
     }
 }

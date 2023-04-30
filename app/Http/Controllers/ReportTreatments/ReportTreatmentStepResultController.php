@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\ReportTreatments;
 
+use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\Foundation\Application;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
+use App\Http\Resources\ReportTreatments\ReportTreatmentStepResultResource;
 use App\Http\Requests\ReportTreatmentStepResult\StoreReportTreatmentStepResultRequest;
 use App\Http\Requests\ReportTreatmentStepResult\UpdateReportTreatmentStepResultRequest;
 
@@ -43,21 +47,23 @@ class ReportTreatmentStepResultController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ReportTreatments\ReportTreatmentStepResult  $reportTreatmentStepResult
-     * @return \Illuminate\Http\Response
+     * @param ReportTreatmentStepResult $reporttreatmentstepresult
+     * @return Application|Factory|View
      */
-    public function show(ReportTreatmentStepResult $reportTreatmentStepResult)
+    public function show(ReportTreatmentStepResult $reporttreatmentstepresult)
     {
-        //
+        return view('reporttreatmentstepresults.show')
+            ->with('reporttreatmentstepresult', new ReportTreatmentStepResultResource($reporttreatmentstepresult))
+            ;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ReportTreatments\ReportTreatmentStepResult  $reportTreatmentStepResult
+     * @param ReportTreatmentStepResult $reporttreatmentstepresult
      * @return \Illuminate\Http\Response
      */
-    public function edit(ReportTreatmentStepResult $reportTreatmentStepResult)
+    public function edit(ReportTreatmentStepResult $reporttreatmentstepresult)
     {
         //
     }
@@ -66,10 +72,10 @@ class ReportTreatmentStepResultController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\ReportTreatmentStepResult\UpdateReportTreatmentStepResultRequest  $request
-     * @param  \App\Models\ReportTreatments\ReportTreatmentStepResult  $reportTreatmentStepResult
+     * @param ReportTreatmentStepResult $reporttreatmentstepresult
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateReportTreatmentStepResultRequest $request, ReportTreatmentStepResult $reportTreatmentStepResult)
+    public function update(UpdateReportTreatmentStepResultRequest $request, ReportTreatmentStepResult $reporttreatmentstepresult)
     {
         //
     }
@@ -77,10 +83,10 @@ class ReportTreatmentStepResultController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ReportTreatments\ReportTreatmentStepResult  $reportTreatmentStepResult
+     * @param ReportTreatmentStepResult $reporttreatmentstepresult
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ReportTreatmentStepResult $reportTreatmentStepResult)
+    public function destroy(ReportTreatmentStepResult $reporttreatmentstepresult)
     {
         //
     }

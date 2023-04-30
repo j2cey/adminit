@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers\ReportTreatments;
 
+use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\Foundation\Application;
 use App\Models\ReportTreatments\ReportTreatmentResult;
+use App\Http\Resources\ReportTreatments\ReportTreatmentResultResource;
 use App\Http\Requests\ReportTreatmentResult\StoreReportTreatmentResultRequest;
 use App\Http\Requests\ReportTreatmentResult\UpdateReportTreatmentResultRequest;
 
@@ -12,17 +17,21 @@ class ReportTreatmentResultController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|View
      */
     public function index()
     {
-        //
+        $reporttreatmentresults = ReportTreatmentResultResource::collection(ReportTreatmentResult::all());
+
+        return view('reporttreatmentresults.index')
+            ->with('reporttreatmentresults', $reporttreatmentresults)
+            ;
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -33,7 +42,7 @@ class ReportTreatmentResultController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\ReportTreatmentResult\StoreReportTreatmentResultRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(StoreReportTreatmentResultRequest $request)
     {
@@ -43,21 +52,23 @@ class ReportTreatmentResultController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ReportTreatments\ReportTreatmentResult  $reportTreatmentResult
-     * @return \Illuminate\Http\Response
+     * @param ReportTreatmentResult $reporttreatmentresult
+     * @return Application|Factory|View
      */
-    public function show(ReportTreatmentResult $reportTreatmentResult)
+    public function show(ReportTreatmentResult $reporttreatmentresult)
     {
-        //
+        return view('reporttreatmentresults.show')
+            ->with('reporttreatmentresult', new ReportTreatmentResultResource($reporttreatmentresult))
+            ;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ReportTreatments\ReportTreatmentResult  $reportTreatmentResult
-     * @return \Illuminate\Http\Response
+     * @param ReportTreatmentResult $reporttreatmentresult
+     * @return Response
      */
-    public function edit(ReportTreatmentResult $reportTreatmentResult)
+    public function edit(ReportTreatmentResult $reporttreatmentresult)
     {
         //
     }
@@ -66,10 +77,10 @@ class ReportTreatmentResultController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\ReportTreatmentResult\UpdateReportTreatmentResultRequest  $request
-     * @param  \App\Models\ReportTreatments\ReportTreatmentResult  $reportTreatmentResult
-     * @return \Illuminate\Http\Response
+     * @param ReportTreatmentResult $reporttreatmentresult
+     * @return Response
      */
-    public function update(UpdateReportTreatmentResultRequest $request, ReportTreatmentResult $reportTreatmentResult)
+    public function update(UpdateReportTreatmentResultRequest $request, ReportTreatmentResult $reporttreatmentresult)
     {
         //
     }
@@ -77,10 +88,10 @@ class ReportTreatmentResultController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ReportTreatments\ReportTreatmentResult  $reportTreatmentResult
-     * @return \Illuminate\Http\Response
+     * @param ReportTreatmentResult $reporttreatmentresult
+     * @return Response
      */
-    public function destroy(ReportTreatmentResult $reportTreatmentResult)
+    public function destroy(ReportTreatmentResult $reporttreatmentresult)
     {
         //
     }

@@ -47,7 +47,7 @@ import moment from 'moment'
 
 Vue.filter('formatDate', function(value) {
     if (value) {
-        return moment(String(value)).format('DD/MM/YYYY HH:mm')
+        return moment(String(value)).format('DD/MM/YY HH:mm')
     }
 })
 
@@ -110,6 +110,7 @@ Vue.use(Buefy)
 /**
  * Added laravel-permission-to-vuejs
  */
+// eslint-disable-next-line no-unused-vars
 import LaravelPermissionToVueJS from 'laravel-permission-to-vuejs'
 //Vue.use(LaravelPermissionToVueJS)
 /**
@@ -162,6 +163,10 @@ Vue.component('reportfile-index', require('./views/reportfiles/list').default);
 Vue.component('reportattribute-index', require('./views/reportattributes/list').default);
 Vue.component('collectedreportfile-item', require('./views/collectedreportfiles/item').default);
 Vue.component('dynamicattribute-item', require('./views/dynamicattributes/item').default);
+
+Vue.component('reporttreatmentresult-list', require('./views/reporttreatmentresults/list').default);
+Vue.component('reporttreatmentresult-item', require('./views/reporttreatmentresults/item').default);
+Vue.component('reporttreatmentstepresult-item', require('./views/reporttreatmentstepresults/item').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

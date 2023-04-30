@@ -112,6 +112,12 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
     public static function getActiveFirst() {
         return Report::active()->first();
     }
+    /**
+     * @return Report[]|null
+     */
+    public static function getActives() {
+        return Report::active()->get();
+    }
 
     #endregion
 

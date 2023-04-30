@@ -1,0 +1,4 @@
+label,data,trend,trend_date,trend_times,trend_step,trend_cumul,trend_age,data_treated,trend_hourOfWeek,trend_hourOfWeek_date,trend_hourOfWeek_times,trend_hourOfWeek_step,report_date
+GTEVC GTSGBDO|CBEVCMA,17,eq,2023-05-01 00:30:02.852,1,0,0,00:00:00,17,eq,2023-05-01 00:30:02.876,1,0,2023-05-01 00:30:02.855
+GTEVCTR GTSGBDO|CEVCTMA,7,eq,2023-05-01 00:30:03.162,1,0,0,00:00:00,7,eq,2023-05-01 00:30:03.190,1,0,2023-05-01 00:30:03.168
+TOTAL,24,eq,2023-05-01 00:30:03.426,1,0,0,00:00:00,24,eq,2023-05-01 00:30:03.451,1,0,2023-05-01 00:30:03.429

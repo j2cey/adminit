@@ -11,7 +11,7 @@
                 <div class="tw-mb-4">
 
                     <h2 class="tw-text-blue-600 tw-text-sm tw-font-bold tw-mb-3 tw-border-b tw-border-gray-400 tw-pb-2">
-                        <span class="text text-align-left">List Of Reports</span>
+                        <span class="text text-align-left">Liste des Rapports</span>
                         <span class="text text-align-right">
                             <b-button size="is-small" type="is-info is-light" @click="$emit('create_new_report')"><i class="fas fa-plus"></i></b-button>
                         </span>

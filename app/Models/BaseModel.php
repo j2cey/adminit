@@ -62,5 +62,16 @@ class BaseModel extends Model
             ->where('status_id', Status::active()->first()->id);
     }
 
+    public function activate() {
+        $this->changeStatus(Status::active()->first());
+    }
+    public function deactivate() {
+        $this->changeStatus(Status::inactive()->first());
+    }
+
+    public function changeStatus(Status|Model $status) {
+        $this->status()->associate($status)->save();
+    }
+
     #endregion
 }
