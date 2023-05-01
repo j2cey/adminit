@@ -235,5 +235,13 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
         }
     }
 
+    /**
+     * @param $reportId
+     * @return Report|null
+     */
+    public static function getById($reportId) {
+        return Report::find($reportId);
+    }
+
     #endregion
 }
