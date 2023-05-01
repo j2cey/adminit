@@ -109,7 +109,7 @@ class FormatRuleType extends BaseModel implements Auditable
     }
 
     /**
-     * @return FormatRuleType|Model|Builder|object
+     * @return Builder|Model|object|null
      */
     public static function getTextColor() {
         return FormatRuleType::textColor()->first();
