@@ -67,7 +67,6 @@ class FormatTextSize extends BaseModel implements IInnerFormatRule
     #region Custom Functions
 
     public static function createNew(): FormatTextSize {
-
         return FormatTextSize::create();
     }
 

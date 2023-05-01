@@ -46,6 +46,7 @@ class TestFullReportSeeder extends Seeder
             ReportType::defaultReport()->first(),
             "Rapport des Files pour le OUTPUT DATA PORTAL de IME02"
         );
+        $ime02_report->deactivate();
 
         $attribute_label = $this->addAttributes($ime02_report);
         $this->addDefaultFiles($ime02_report, $attribute_label, ReportServer::where('name',"ime02")->first(), "reportsmonitor/output_data_portal", "cgi");

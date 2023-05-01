@@ -22,9 +22,9 @@ class CreateFormatTextSizesTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
-            $table->integer('format_value')->default(8)->comment('the (size) format');
-            $table->integer('min_value')->default(8)->comment('the min (size) value');
-            $table->integer('max_value')->default(20)->comment('the max (size) value');
+            $table->integer('format_value')->default(7)->comment('the (size) format');
+            $table->integer('min_value')->default(7)->comment('the min (size) value');
+            $table->integer('max_value')->default(30)->comment('the max (size) value');
 
             $table->string('comment')->nullable()->comment('format comment');
 

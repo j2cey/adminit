@@ -70,7 +70,7 @@ class BaseModel extends Model
     }
 
     public function changeStatus(Status|Model $status) {
-        $this->status()->associate($status)->save();
+        return $this->status()->associate($status)->save();
     }
 
     #endregion

@@ -399,6 +399,14 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
         }
     }
 
+    /**
+     * @param $reportfileId
+     * @return ReportFile|null
+     */
+    public static function getById($reportfileId) {
+        return ReportFile::find($reportfileId);
+    }
+
     protected static function boot(){
         parent::boot();
 
