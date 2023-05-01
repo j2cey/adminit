@@ -37,7 +37,7 @@ class TestFullReportSeeder extends Seeder
         );
 
         $attribute_label = $this->addAttributes($ime01_report);
-        $this->addDefaultFiles($ime01_report, $attribute_label, ReportServer::where('name',"ime01")->first(), "reportsmonitor/output_data_portal");
+        $this->addDefaultFiles($ime01_report, $attribute_label, ReportServer::where('name',"ime01")->first(), "reportsmonitor/output_data_portal", "cgi");
 
 
         // Rapport IME02
@@ -48,7 +48,7 @@ class TestFullReportSeeder extends Seeder
         );
 
         $attribute_label = $this->addAttributes($ime02_report);
-        $this->addDefaultFiles($ime02_report, $attribute_label, ReportServer::where('name',"ime02")->first(), "reportsmonitor/output_data_portal");
+        $this->addDefaultFiles($ime02_report, $attribute_label, ReportServer::where('name',"ime02")->first(), "reportsmonitor/output_data_portal", "cgi");
 
 
         // Rapport IME03
@@ -59,7 +59,7 @@ class TestFullReportSeeder extends Seeder
         );
 
         $attribute_label = $this->addAttributes($ime03_report);
-        $this->addDefaultFiles($ime03_report, $attribute_label, ReportServer::where('name',"ime03")->first(), "reportsmonitor/output_data_portal");
+        $this->addDefaultFiles($ime03_report, $attribute_label, ReportServer::where('name',"ime03")->first(), "reportsmonitor/output_data_portal", "CGI IME03");
 
 
         // Rapport IME04
@@ -70,7 +70,7 @@ class TestFullReportSeeder extends Seeder
         );
 
         $attribute_label = $this->addAttributes($ime04_report);
-        $this->addDefaultFiles($ime04_report, $attribute_label, ReportServer::where('name',"ime04")->first(), "reportsmonitor/output_data_portal");
+        $this->addDefaultFiles($ime04_report, $attribute_label, ReportServer::where('name',"ime04")->first(), "reportsmonitor/output_data_portal", "cgi");
 
         // insert Collected File
         /*$the_report_file_collected = CollectedReportFile::createNew(
@@ -131,13 +131,13 @@ class TestFullReportSeeder extends Seeder
         return $attribute_label;
     }
 
-    private function addDefaultFiles($the_report, $attribute_label, $report_server, $remotedir_relative_path) {
-        $this->addFile($the_report, "files", $report_server, "Fichiers par Portal", $remotedir_relative_path, $attribute_label);
-        $this->addFile($the_report, "kbytes", $report_server, "Data (KB) par Portal", $remotedir_relative_path, $attribute_label);
-        $this->addFile($the_report, "records", $report_server, "Records par Portal", $remotedir_relative_path, $attribute_label);
+    private function addDefaultFiles($the_report, $attribute_label, $report_server, $remotedir_relative_path, $username) {
+        $this->addFile($the_report, "files", $report_server, "Fichiers par Portal", $remotedir_relative_path, $attribute_label, $username);
+        $this->addFile($the_report, "kbytes", $report_server, "Data (KB) par Portal", $remotedir_relative_path, $attribute_label, $username);
+        $this->addFile($the_report, "records", $report_server, "Records par Portal", $remotedir_relative_path, $attribute_label, $username);
     }
 
-    private function addFile(Report $the_report, $filename, $report_server, $label, $remotedir_relative_path, DynamicAttribute $attribute_label) {
+    private function addFile(Report $the_report, $filename, $report_server, $label, $remotedir_relative_path, DynamicAttribute $attribute_label, $username) {
         $the_report_file = $the_report->addReportFile(
             ReportFileType::csv()->first(),
             $filename, $label,null,null,$remotedir_relative_path
@@ -146,20 +146,20 @@ class TestFullReportSeeder extends Seeder
         $the_report_file->setLastRowConfig(false,null,true,$attribute_label,"TOTAL");
 
         $the_report_file_access = $the_report_file->addReportFileAccess(
-            AccessAccount::where('username', "cgi")->first(),
+            AccessAccount::where('username', $username)->first(),
             $report_server,
             AccessProtocole::ftp()->first()
         );
 
         // update account pwd
-        $the_report_file_access->accessaccount->updateOne(
+        /*$the_report_file_access->accessaccount->updateOne(
             $the_report_file_access->accessaccount->login,
             config('app.ftp_password'),
             $the_report_file_access->accessaccount->email,
             $the_report_file_access->accessaccount->username,
             $the_report_file_access->accessaccount->status,
             $the_report_file_access->accessaccount->description
-        );
+        );*/
 
         // retrieve actions
         $the_report_file_access->addSelectedAction(RetrieveAction::retrieveByName()->first());

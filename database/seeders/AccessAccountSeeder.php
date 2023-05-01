@@ -15,6 +15,7 @@ class AccessAccountSeeder extends Seeder
     public function run()
     {
         AccessAccount::createNew("root","root","root@ime.com","Root");
-        AccessAccount::createNew("cgi","cgi","cgi@ime.com","CGI");
+        AccessAccount::createNew("cgi",config('app.ftp_password'),"cgi@ime.com","CGI");
+        AccessAccount::createNew("cgi",config('app.cgi2_password'),"cgi@ime.com","CGI IME03");
     }
 }
