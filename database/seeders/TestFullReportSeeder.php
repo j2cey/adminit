@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\HtmlTagKey;
+use App\Enums\RuleResultEnum;
 use App\Models\Reports\Report;
 use Illuminate\Database\Seeder;
 use App\Models\Reports\ReportType;
@@ -11,10 +12,13 @@ use App\Models\Access\AccessProtocole;
 use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
 use App\Models\FormatRule\FormatRuleType;
+use App\Models\FormatRule\FormatTextColor;
 use App\Models\RetrieveAction\RetrieveAction;
+use App\Models\AnalysisRule\AnalysisRuleType;
 use App\Models\ReportFile\CollectedReportFile;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\DynamicAttributes\DynamicAttributeType;
+use App\Models\AnalysisRuleThreshold\AnalysisRuleThreshold;
 
 class TestFullReportSeeder extends Seeder
 {
@@ -83,7 +87,7 @@ class TestFullReportSeeder extends Seeder
         //$the_report_file_collected->formattedvalues->setValue();
     }
 
-    private function addAttributes($the_report) {
+    private function addAttributes(Report $the_report) {
         $type_string = DynamicAttributeType::string()->first();
         $type_int = DynamicAttributeType::int()->first();
         $type_datetime = DynamicAttributeType::datetime()->first();
@@ -94,6 +98,20 @@ class TestFullReportSeeder extends Seeder
         $attribute_label->addFormatRule(FormatRuleType::textWeight()->first(),"set weight");
 
         $attribute_data = $the_report->addDynamicAttribute("data",$type_int, "Donnée",null,"La donnée");
+
+        $attribute_data_analysis_rule = $attribute_data->addAnalysisRule(AnalysisRuleType::threshold()->first(),"max data", ['threshold' => 500],RuleResultEnum::BROKEN->value);
+
+        $red_color = new FormatTextColor();
+        $red_color->format_value = "#ff0000";
+        $red_color->red = 255;
+        $red_color->green = 0;
+        $red_color->blue = 0;
+        $red_color->hue = 0;
+        $red_color->alpha = 0;
+        $red_color->lightness = 50;
+        $red_color->saturation = 100;
+        $red_color->comment = "";
+        $attribute_data_analysis_rule->addFormatRule(FormatRuleType::textColor()->first(), "red colored", $red_color->toJson());
 
         $the_report->addDynamicAttributeMany([
             ['name' => "trend", 'title' => "Tendance", 'type' => $type_string, 'status' => null,'description' => "La Tendance des changements de la donnée"],
