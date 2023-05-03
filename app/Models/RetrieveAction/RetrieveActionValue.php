@@ -112,6 +112,9 @@ class RetrieveActionValue extends BaseModel implements Auditable
             'description' => $description,
         ]);
 
+        // Assignation du type de selectedretrieveaction
+        $retrieveactionvalue->selectedretrieveaction()->associate($selectedretrieveaction);
+
         $retrieveactionvalue->status()->associate( is_null($status) ? Status::default()->first() : $status );
         $retrieveactionvalue->SelectedRetrieveAction()->associate( $selectedretrieveaction );
 
