@@ -13,6 +13,7 @@ use App\Models\OsAndServer\ReportServer;
 use App\Models\ReportFile\ReportFileType;
 use App\Models\FormatRule\FormatRuleType;
 use App\Models\FormatRule\FormatTextColor;
+use App\Models\FormatRule\FormatTextWeight;
 use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\AnalysisRule\AnalysisRuleType;
 use App\Models\ReportFile\CollectedReportFile;
@@ -96,7 +97,13 @@ class TestFullReportSeeder extends Seeder
         $attribute_label = $the_report->addDynamicAttribute("label",$type_string, "Libellé", null,"Libellé");
         //$attribute_label->addFormatRule(FormatRuleType::textSize()->first(),"set size");
         $attribute_label->addFormatRule(FormatRuleType::textColor()->first(),"set color");
-        $attribute_label->addFormatRule(FormatRuleType::textWeight()->first(),"set weight");
+        $format_text_weight = new FormatTextWeight();
+        $format_text_weight->format_bold = true;
+        $format_text_weight->format_italic = true;
+        $format_text_weight->format_underline = false;
+        $format_text_weight->format_value = json_encode( ['bold','italic'] );
+        $format_text_weight->comment = "";
+        $attribute_label->addFormatRule(FormatRuleType::textWeight()->first(),"set weight", $format_text_weight->toJson());
 
         $attribute_data = $the_report->addDynamicAttribute("data",$type_int, "Donnée",null,"La donnée");
 
@@ -151,16 +158,6 @@ class TestFullReportSeeder extends Seeder
             $report_server,
             AccessProtocole::ftp()->first()
         );
-
-        // update account pwd
-        /*$the_report_file_access->accessaccount->updateOne(
-            $the_report_file_access->accessaccount->login,
-            config('app.ftp_password'),
-            $the_report_file_access->accessaccount->email,
-            $the_report_file_access->accessaccount->username,
-            $the_report_file_access->accessaccount->status,
-            $the_report_file_access->accessaccount->description
-        );*/
 
         // retrieve actions
         $the_report_file_access->addSelectedAction(RetrieveAction::retrieveByName()->first());

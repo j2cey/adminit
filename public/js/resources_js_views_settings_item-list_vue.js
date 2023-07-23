@@ -8,6 +8,8 @@
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _settingBus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./settingBus */ "./resources/js/views/settings/settingBus.js");
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "setting-item-list",
   props: {
@@ -15,56 +17,40 @@ __webpack_require__.r(__webpack_exports__);
       "default": "Settings",
       type: String
     },
-    settings_prop: {},
     settings_grouped_prop: {}
   },
   components: {
+    settingsgroup: function settingsgroup() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_group_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./group */ "./resources/js/views/settings/group.vue"));
+    },
     SettingAddUpdate: function SettingAddUpdate() {
       return __webpack_require__.e(/*! import() */ "resources_js_views_settings_addupdate_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./addupdate */ "./resources/js/views/settings/addupdate.vue"));
-    },
-    SettingItem: function SettingItem() {
-      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_item_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./item */ "./resources/js/views/settings/item.vue"));
     }
   },
   data: function data() {
     return {
       list_title: this.list_title_prop,
-      settings: this.settings_prop,
       settings_grouped: this.settings_grouped_prop,
-      searchSettings: ""
+      searchSettings: "",
+      isOpen: 0,
+      collapses: [{
+        title: 'Title 1',
+        text: 'Text 1'
+      }, {
+        title: 'Title 2',
+        text: 'Text 2'
+      }, {
+        title: 'Title 3',
+        text: 'Text 3'
+      }]
     };
   },
-  methods: {},
-  computed: {
-    filteredSettings: function filteredSettings() {
-      var _this = this;
-      var tempSettings = this.settings;
-      if (this.searchSettings !== '' && this.searchSettings) {
-        tempSettings = tempSettings.filter(function (item) {
-          return item.full_path.toUpperCase().includes(_this.searchSettings.toUpperCase());
-        });
-      }
-
-      // Sorting
-      tempSettings = tempSettings.sort(function (a, b) {
-        var fa = a.full_path.toLowerCase(),
-          fb = b.full_path.toLowerCase();
-        if (fa > fb) {
-          return -1;
-        }
-        if (fa < fb) {
-          return 1;
-        }
-        return 0;
-      });
-      if (!this.ascending) {
-        tempSettings.reverse();
-      }
-      // end Sorting
-
-      return tempSettings;
+  methods: {
+    editSeting: function editSeting($setting) {
+      _settingBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('setting_edit', $setting);
     }
-  }
+  },
+  computed: {}
 });
 
 /***/ }),
@@ -88,159 +74,48 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "card-header"
   }, [_c("h5", {
-    staticClass: "card-title"
-  }, [_vm._v(_vm._s(_vm.list_title) + "\n            "), _c("small", {
-    staticClass: "text text-xs"
-  }, [_vm._v("\n                " + _vm._s(_vm.searchSettings === "" ? "" : " (" + _vm.filteredSettings.length + ")") + "\n            ")])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
-    staticClass: "card-body table-responsive p-0"
-  }, [_c("table", {
-    staticClass: "table table-head-fixed text-nowrap"
-  }, [_c("thead", [_c("tr", [_c("th", [_c("div", {
-    staticClass: "row"
-  }, [_c("div", {
-    staticClass: "col-sm-3 col-6"
-  }), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-3 col-6"
-  }), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-3 col-6"
-  }), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-3 col-6"
-  }, [_c("div", {
-    staticClass: "btn-group"
-  }, [_c("div", {
-    staticClass: "input-group input-group-sm"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.searchSettings,
-      expression: "searchSettings"
-    }],
-    staticClass: "form-control form-control-navbar",
-    attrs: {
-      type: "search",
-      placeholder: "Search",
-      "aria-label": "Search"
-    },
-    domProps: {
-      value: _vm.searchSettings
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.searchSettings = $event.target.value;
-      }
-    }
-  }), _vm._v(" "), _vm._m(1)])])])]), _vm._v(" "), _vm._m(2)])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.filteredSettings, function (setting, index) {
-    return _vm.filteredSettings ? _c("tr", {
-      key: setting.id,
-      staticClass: "text text-xs"
-    }, [index < 10 ? _c("td", [setting.value ? _c("SettingItem", {
-      attrs: {
-        setting_prop: setting
-      }
-    }) : _vm._e()], 1) : _vm._e()]) : _vm._e();
-  }), 0)])]), _vm._v(" "), _c("div", {
-    staticClass: "card-footer"
-  }), _vm._v(" "), _c("SettingAddUpdate")], 1);
-};
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "card-tools"
-  }, [_c("button", {
     staticClass: "btn btn-tool",
     attrs: {
       type: "button",
       "data-card-widget": "collapse"
     }
-  }, [_c("i", {
-    staticClass: "fas fa-plus"
+  }, [_vm._v("\n            " + _vm._s(_vm.list_title) + "\n        ")]), _vm._v(" "), _c("div", {
+    staticClass: "card-tools"
   })]), _vm._v(" "), _c("div", {
-    staticClass: "btn-group"
-  }, [_c("button", {
-    staticClass: "btn btn-tool dropdown-toggle",
-    attrs: {
-      type: "button",
-      "data-toggle": "dropdown"
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-wrench"
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "dropdown-menu dropdown-menu-right",
-    attrs: {
-      role: "menu"
-    }
-  }, [_c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Action")]), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Another action")]), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Something else here")]), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-divider"
-  }), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Separated link")])])]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-tool",
-    attrs: {
-      type: "button",
-      "data-card-widget": "remove"
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-times"
-  })])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "input-group-append"
-  }, [_c("button", {
-    staticClass: "btn btn-navbar",
-    attrs: {
-      type: "button"
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-search"
-  })])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "row"
-  }, [_c("div", {
-    staticClass: "col-sm-3 col-6"
-  }, [_c("span", {
-    staticClass: "text text-sm"
-  }, [_vm._v("Full Path")])]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-4 col-6"
-  }, [_c("span", {
-    staticClass: "text text-sm"
-  }, [_vm._v("Value")])]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-3 col-6"
-  }, [_c("span", {
-    staticClass: "text text-sm"
-  }, [_vm._v("Type")])]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-2 col-6"
-  }, [_c("span", {
-    staticClass: "text text-sm"
-  })])]);
-}];
+    staticClass: "card-body table-responsive p-0"
+  }, _vm._l(_vm.settings_grouped, function (settinggroup) {
+    return _c("settingsgroup", {
+      key: settinggroup.id,
+      ref: settinggroup.id,
+      refInFor: true,
+      attrs: {
+        settinggroup_prop: settinggroup,
+        list_title_prop: settinggroup.name
+      },
+      on: {
+        setting_edit: _vm.editSeting
+      }
+    });
+  }), 1), _vm._v(" "), _c("div", {
+    staticClass: "card-footer"
+  }), _vm._v(" "), _c("SettingAddUpdate")], 1);
+};
+var staticRenderFns = [];
 render._withStripped = true;
 
+
+/***/ }),
+
+/***/ "./resources/js/views/settings/settingBus.js":
+/*!***************************************************!*\
+  !*** ./resources/js/views/settings/settingBus.js ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (new vue__WEBPACK_IMPORTED_MODULE_0__["default"]());
 
 /***/ }),
 

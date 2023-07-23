@@ -128,16 +128,9 @@ class SettingController extends Controller
      */
     public function update(UpdateSettingRequest $request, Setting $setting)
     {
-        $setting->update([
-            'value' => $request->value,
-            'type' => $request->type,
-            'array_sep' => $request->array_sep,
-            'description' => $request->description,
-        ]);
+        $setting->updateThis($request->value, $request->type, $request->array_sep, $request->group,$request->description);
 
-        $setting->setGroup($request->group, true);
-
-        return $setting->load('group');
+        return $setting->load(['maingroup','group']);
     }
 
     /**
@@ -149,5 +142,9 @@ class SettingController extends Controller
     public function destroy(Setting $setting)
     {
         //
+    }
+
+    public function settingtypes() {
+        return Setting::$SETTINGTYPES;
     }
 }

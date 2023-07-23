@@ -3,6 +3,8 @@
 namespace App\Console\Commands\ReportFile;
 
 use Illuminate\Console\Command;
+use App\Enums\TreatmentStepCode;
+use App\Models\ReportFile\ReportFile;
 use App\Models\ReportFile\CollectedReportFile;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
@@ -39,9 +41,30 @@ class ReportFileFormat extends Command
      */
     public function handle()
     {
-        $collectedreportfile = CollectedReportFile::first();
-        $treatmentstepresult = ReportTreatmentStepResult::createNew("Formattage des Données du Fichier Charhées dans la BD");
-        $collectedreportfile->formatImportedValues($treatmentstepresult);
+        $this->info("Formattage Fichiers Rapport en cours de traitement...");
+
+        $reportfiles = ReportFile::getActives();
+        $launched_execs = 0;
+
+        foreach ($reportfiles as $reportfile) {
+            if ( $reportfile->reportTreatmentResultsWaiting()->count() > 0 ) {
+                $reporttreatmentresults = $reportfile->reportTreatmentResultsWaiting;
+
+                foreach ($reporttreatmentresults as $reporttreatmentresult) {
+                    if ( $reporttreatmentresult->currentstep->code == TreatmentStepCode::IMPORTFILE && $reporttreatmentresult->currentstep->isSuccess ) {
+                        $launched_execs += 1;
+                        //$reporttreatmentresult->goToNextStep();
+                        $reportfile->formatLastCollectedFile($reporttreatmentresult, false);
+                        break;
+                    }
+                }
+                if ($launched_execs > 0) {
+                    break;
+                }
+            }
+        }
+
+        $this->info("Traitement termine. " . $launched_execs . " Fichier(s) lancés");
 
         return 0;
     }

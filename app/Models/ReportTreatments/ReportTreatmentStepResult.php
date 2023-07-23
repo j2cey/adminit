@@ -11,6 +11,8 @@ use App\Enums\CriticalityLevelEnum;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\ReportTreatmentResult\IsReportTreatment;
+use App\Contracts\ReportTreatmentResult\IIsReportTreatment;
 
 /**
  * Class ReportTreatmentStepResult
@@ -31,34 +33,38 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|TreatmentStepCode $code
  * @property string|CriticalityLevelEnum $criticality_level
  * @property string $message
+ * @property int $attempts
  *
  * @property string $description
  *
  * @property int $report_treatment_result_id
  *
- * @property int $retry_no
- * @property int $retry_session_count
- * @property int $retryof_id
- *
  * @property string|null $hasreporttreatmentstepresults_type
  * @property int|null $hasreporttreatmentstepresults_id
+ *
+ * @property Carbon $retry_start_at
+ * @property int $retries_session_count
+ * @property Carbon $retry_end_at
+ *
+ * @property string $payload
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * @property ReportTreatmentResult|null $reporttreatmentresult
- * @property ReportTreatmentStepResult $retryof
- * @property ReportTreatmentStepResult[] $retries
  * @property OperationResult[] $operationresults
  * @property OperationResult $latestOperationresult
+ * @property OperationResult $lastoperation
+ * @property OperationResult $currentoperation
  *
  * @method static ReportTreatmentStepResult create(string[] $array)
- * @property boolean $isSuccess
- * @property boolean $isFailed
+ *
+ * @property ReportTreatmentStepResult $latestRetry
+ * @property ReportTreatmentStepResult $lastRetry
  */
-class ReportTreatmentStepResult extends BaseModel implements Auditable
+class ReportTreatmentStepResult extends BaseModel implements Auditable, IIsReportTreatment
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, IsReportTreatment, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $with = ['operationresults'];
@@ -97,46 +103,9 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
 
     #region Accessors & Mutators
 
-    public function getIsSuccessAttribute() {
-        return ($this->result == TreatmentResultEnum::SUCCESS);
-    }
-    public function getIsFailedAttribute() {
-        return ($this->result == TreatmentResultEnum::FAILED);
-    }
-
     #endregion
 
     #region Scopes
-
-    public function scopeWaiting($query) {
-        return $query
-            ->where('state', TreatmentStateEnum::WAITING->value);
-    }
-
-    public function scopeNotRunning($query) {
-        return $query
-            ->whereNotIn('state', [TreatmentStateEnum::RUNNING->value]);
-    }
-
-    public function scopeCompleted($query) {
-        return $query
-            ->where('state', TreatmentStateEnum::COMPLETED->value);
-    }
-
-    public function scopeNotCompleted($query) {
-        return $query
-            ->whereNotIn('state', [TreatmentStateEnum::COMPLETED->value]);
-    }
-
-    public function scopeNotAlltried($query) {
-        return $query
-            ->whereNotIn('state', [TreatmentStateEnum::ALLTRIED->value]);
-    }
-
-    public function scopeFailed($query) {
-        return $query
-            ->where('result', TreatmentResultEnum::FAILED->value);
-    }
 
     #endregion
 
@@ -144,18 +113,21 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
     public function reporttreatmentresult() {
         return $this->belongsTo(ReportTreatmentResult::class, "report_treatment_result_id");
     }
-    public function retryof() {
-        return $this->belongsTo(ReportTreatmentStepResult::class, "retryof_id");
-    }
-    public function retries() {
-        return $this->hasMany(ReportTreatmentStepResult::class, "retryof_id");
-    }
     public function operationresults() {
         return $this->hasMany(OperationResult::class, "report_treatment_step_result_id");
     }
     public function latestOperationresult()
     {
-        return $this->hasOne(OperationResult::class)->latestOfMany();
+        return $this->hasOne(OperationResult::class, "report_treatment_step_result_id")->latestOfMany();
+    }
+    public function lastoperation() {
+        return $this->belongsTo(OperationResult::class, "last_operation_id");
+    }
+    public function currentoperation() {
+        return $this->belongsTo(OperationResult::class, "current_operation_id");
+    }
+    public function runningoperations() {
+        return $this->operationresults()->running();
     }
 
     public function hasreporttreatmentstepresults()
@@ -166,42 +138,63 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
 
     #region Custom Functions
 
+    /**
+     * Create new ReportTreatmentStepResult object
+     * @param TreatmentStepCode $code
+     * @param string|null $name
+     * @param Model|ReportTreatmentResult|null $reporttreatmentresult
+     * @param CriticalityLevelEnum|null $criticality_level
+     * @param string|null $message
+     * @param string|null $description
+     * @param int|null $retries_session_count
+     * @return ReportTreatmentStepResult
+     */
     public static function createNew(
         TreatmentStepCode $code,
         string $name = null, Model|ReportTreatmentResult $reporttreatmentresult = null,
-        Carbon $start_at = null, Carbon $end_at = null,
-        TreatmentStateEnum $state = null, TreatmentResultEnum $result = null, CriticalityLevelEnum $criticality_level = null, string $message = null, string $description = null,
-        ReportTreatmentStepResult $retryof = null, int $retry_no = null, int $retry_session_count = null): ReportTreatmentStepResult
+        CriticalityLevelEnum $criticality_level = null, string $message = null, string $description = null,
+        int $retries_session_count = null): ReportTreatmentStepResult
     {
         $reporttreatmentstepresult = ReportTreatmentStepResult::create([
             'code' => $code->value,
             'name' => $name,
-            'start_at' => $start_at ?? Carbon::now(),
-            'end_at' => $end_at,
-            'state' => $state ? $state->value : TreatmentStateEnum::WAITING->value,
-            'result' => $result ? $result->value : TreatmentResultEnum::NONE->value,
+            'state' => TreatmentStateEnum::WAITING->value,
+            'result' => TreatmentResultEnum::NONE->value,
             'criticality_level' => $criticality_level ?? CriticalityLevelEnum::MEDIUM->value,
             'message' => $message,
             'description' => $description,
-            'retry_no' => $retry_no ?? 0,
-            'retry_session_count' => $retry_session_count,
+            'retries_session_count' => $retries_session_count,
         ]);
 
         if ( ! is_null($reporttreatmentresult) ) $reporttreatmentstepresult->reporttreatmentresult()->associate($reporttreatmentresult);
-        if ( ! is_null($retryof) ) $reporttreatmentstepresult->retryof()->associate($retryof);
 
         $reporttreatmentstepresult->save();
 
         return $reporttreatmentstepresult;
     }
 
+    /**
+     * Update this ReportTreatmentStepResult object
+     * @param TreatmentStepCode $code
+     * @param string|null $name
+     * @param Model|ReportTreatmentResult|null $reporttreatmentresult
+     * @param Carbon|null $start_at
+     * @param Carbon|null $end_at
+     * @param string|null $state
+     * @param string|null $result
+     * @param string|null $criticality_level
+     * @param string|null $message
+     * @param string|null $description
+     * @param int|null $retries_session_count
+     * @return $this
+     */
     public function updateThis(
         TreatmentStepCode $code,
         string $name = null, Model|ReportTreatmentResult $reporttreatmentresult = null,
         Carbon $start_at = null, Carbon $end_at = null,
         string $state = null, string $result = null, string $criticality_level = null,
         string $message = null, string $description = null,
-        ReportTreatmentStepResult $retryof = null, int $retry_no = null, int $retry_session_count = null): ReportTreatmentStepResult
+        int $retries_session_count = null): ReportTreatmentStepResult
     {
         $this->code = $code;
         $this->name = $name;
@@ -213,138 +206,164 @@ class ReportTreatmentStepResult extends BaseModel implements Auditable
         $this->message = $message;
         $this->description = $description;
 
-        $this->retry_no = $retry_no;
-        $this->retry_session_count = $retry_session_count;
+        $this->retries_session_count = $retries_session_count;
 
         if ( ! is_null($reporttreatmentresult) ) $this->reporttreatmentresult()->associate($reporttreatmentresult);
-        if ( ! is_null($retryof) ) $this->retryof()->associate($retryof);
 
         $this->save();
 
         return $this;
     }
 
-    public function addRetry(TreatmentStepCode $code, string $name = null, CriticalityLevelEnum $criticality_level = null, $retry_session_count = null): ReportTreatmentStepResult
-    {
-        $retry_no = $this->retries()->count() + 1;
-        $this->retry_session_count = is_null($retry_session_count) ? (is_null($this->retry_session_count) ? 0 : $this->retry_session_count) : $retry_session_count;
-        $this->save();
-
-        return self::createNew(
-            $code,
-            $name,
-            null,
-            Carbon::now(),
-            null,
-            null,
-            null,
-            $criticality_level,
-            null,
-            null,
-            $this,
-            $retry_no,
-            0
-        );
-    }
-
-    public function addOperationResult($operation_name, CriticalityLevelEnum $criticalitylevelenum): OperationResult {
+    /**
+     * Add an OperationResult object to this ReportTreatmentStepResult object
+     * @param $operation_name
+     * @param CriticalityLevelEnum $criticalitylevel
+     * @param bool $is_last_operation
+     * @return OperationResult
+     */
+    public function addOperationResult($operation_name, CriticalityLevelEnum $criticalitylevel, bool $is_last_operation = false, bool $is_current_operation = false): OperationResult {
         $operation_no = $this->operationresults()->count() + 1;
-        return OperationResult::createNew($operation_name,$operation_no,$this,null,null,null,null,null, $criticalitylevelenum);
-    }
-
-    /*public function setResultFailed() {
-        $this->result = TreatmentResultEnum::FAILED;
-        $this->end_at = Carbon::now();
-        $this->save();
-    }
-
-    public function setResultSuccess() {
-        $this->result = TreatmentResultEnum::SUCCESS;
-        $this->end_at = Carbon::now();
-        $this->save();
-    }*/
-
-    public function startTreatment() {
-        $this->start_at = Carbon::now();
-        $this->state = TreatmentStateEnum::RUNNING;
-
-        $this->save();
-
-        $this->setTreatmentResultStart();
-    }
-
-    public function endTreatmentWithSuccess(string $message = null) {
-        $this->end_at = Carbon::now();
-        $this->state = TreatmentStateEnum::COMPLETED;
-        $this->result = TreatmentResultEnum::SUCCESS;
-
-        if ( ! is_null($message) ) {
-            $this->message = $message;
+        $operationresult = OperationResult::createNew($operation_name, $operation_no, $this, $criticalitylevel);
+        if ($is_last_operation) {
+            $this->setLastOperation($operationresult);
+        }
+        if ($is_current_operation) {
+            $this->setCurrentOperation($operationresult);
         }
 
-        $this->save();
-
-        $this->updateRetryOf();
-        $this->setTreatmentResultEnd($this);
+        return $operationresult;
     }
 
-    public function updateRetryOf() {
-        if ( ! is_null($this->retryof) ) {
+    /**
+     * Start the treatment of this ReportTreatmentStepResult object
+     * @return $this
+     */
+    public function startStepTreatment() {
 
-            $max_retries = config('Settings.reporttreatment.max_retries');
+        $this->setStarting(true);
+        $this->setRunningOrRetrying(true);
 
-            if ( $this->isSuccess ) {
-                $this->retryof->endTreatmentWithSuccess();
-            } else {
-                $this->retryof->endTreatmentWithFailure();
-            }
+        $this->setTreatmentResultStarted($this);
 
-            if ( $this->retryof->retry_session_count >= $max_retries ) {
-                $this->retryof->try_end_at = Carbon::now();
-                $this->retryof->state = TreatmentStateEnum::ALLTRIED;
-            } else {
-                $this->retryof->retry_session_count += 1;
-            }
+        return $this;
+    }
 
-            $this->retryof->save();
+    /**
+     * End the treatment of this ReportTreatmentStepResult object
+     * @param TreatmentResultEnum $result
+     * @param string|null $message
+     * @param bool $complete_treatment
+     * @return void
+     */
+    public function endStepTreatment(TreatmentResultEnum $result, string $message = null, bool $complete_treatment = false) {
+
+        $this->setEnding($result, $message, $complete_treatment);
+
+        /** Notification de Fin de Traitement au Traitement Principal:
+         *      - cette etape est terminee
+         *      - cette est etape est en echec
+         */
+        if ($complete_treatment || $this->isFailed) {
+            $this->setTreatmentResultEnded($this);
         }
     }
 
-    public function endTreatmentWithFailure(string $message = null) {
-        $this->end_at = Carbon::now();
-        $this->result = TreatmentResultEnum::FAILED;
-
-        if ( ! is_null($message) ) {
-            $this->message = $message;
-        }
-
-        $this->state = TreatmentStateEnum::COMPLETED;
-
-        $this->save();
-
-        $this->updateRetryOf();
-        $this->setTreatmentResultEnd($this);
+    /**
+     * End this ReportTreatmentStepResult object with success
+     * @param string|null $message
+     * @param bool $complete_treatment
+     * @return void
+     */
+    public function endTreatmentWithSuccess(string $message = null, bool $complete_treatment = true) {
+        $this->endStepTreatment(TreatmentResultEnum::SUCCESS, $message, $complete_treatment);
     }
 
-    public function setTreatmentResultEnd(Model|ReportTreatmentStepResult $step) {
-        if ( ! is_null($this->retryof) ) {
-            $this->retryof->setTreatmentResultEnd($step);
-        } else {
-            if ( ! is_null($this->reporttreatmentresult) ) {
-                $this->reporttreatmentresult->stepComplted($step);
-            }
+    /**
+     * End this ReportTreatmentStepResult object with failure
+     * @param string|null $message
+     * @param bool $complete_treatment
+     * @return void
+     */
+    public function endTreatmentWithFailure(string $message = null, bool $complete_treatment = true) {
+        $this->endStepTreatment(TreatmentResultEnum::FAILED, $message, $complete_treatment);
+    }
+
+    #region interact with (the parent) ReportTreatmentResult object
+
+    /**
+     * Set TreatmentResult (parent) started
+     * @return void
+     */
+    public function setTreatmentResultStarted(Model|ReportTreatmentStepResult $step) {
+        if ( ! is_null($this->reporttreatmentresult) ) {
+            $this->reporttreatmentresult->stepStarted($step);
         }
     }
 
-    public function setTreatmentResultStart() {
-        if ( ! is_null($this->retryof) ) {
-            $this->retryof->setTreatmentResultStart();
-        } else {
-            if ( ! is_null($this->reporttreatmentresult) ) {
-                $this->reporttreatmentresult->setRunning();
-            }
+    /**
+     * Set TreatmentResult (parent) ended
+     * @param Model|ReportTreatmentStepResult $step
+     * @return void
+     */
+    public function setTreatmentResultEnded(Model|ReportTreatmentStepResult $step) {
+        if ( ! is_null($this->reporttreatmentresult) ) {
+            $this->reporttreatmentresult->stepEnded($step);
         }
     }
+
+    #endregion
+
+
+    #region interact with (step's oprations) OperationResult objects
+
+    public function setLastOperation(Model|OperationResult $operation) {
+        $this->lastoperation()->associate($operation)->save();
+    }
+
+    public function setCurrentOperation(Model|OperationResult $operation) {
+        $this->currentoperation()->associate($operation)->save();
+    }
+
+    /**
+     * Can be called when an operation is started so this Step Treatment's state got updated as well
+     * @param Model|OperationResult $operation
+     * @return void
+     */
+    public function operationStarted(Model|OperationResult $operation) {
+        $this->startStepTreatment();
+    }
+
+    /**
+     * Can be called when an operation is completed so this Step Treatment's state got updated as well
+     * @param Model|OperationResult $operation
+     * @return void
+     */
+    public function operationCompleted(Model|OperationResult $operation) {
+
+        /**  condition de Fin de Traitement:
+         *      - l'etape qui s'acheve n'est pas un echec
+         *      - l'etape qui s'acheve est la derniere et est un succes
+         */
+        $complete_treatment = !$operation->isFailed && $operation->isLastOperation && $operation->isSuccess;
+
+        //\Log::info("operationCompleted - Step:".$this->id."; operation:".$operation->id.", ".$operation->state->name."/".$operation->result->name." is last:".$operation->isLastOperation);
+
+        $this->endStepTreatment($operation->result,$operation->message, $complete_treatment);
+    }
+
+    public function setAsCurrentStep() {
+        $this->reporttreatmentresult->setCurrentStep($this);
+    }
+
+    /**
+     * @return OperationResult|null
+     */
+    public function getFirstOperationWaiting() {
+        return $this->operationresults()->waiting()->first();
+    }
+
+    #endregion
 
     #endregion
 }

@@ -9,6 +9,12 @@ abstract class Permissions
         $additionalactions = null;
         return new PermissionAction("role", $customlevels, $additionalactions);
     }
+    public static function Permission() : PermissionAction {
+        $customlevels = ['create' => 1,'update' => 1,'delete' => 1];
+        $additionalactions = null;
+        return new PermissionAction("permission", $customlevels, $additionalactions);
+    }
+
     public static function Report() : PermissionAction {
         return new PermissionAction("report");
     }
@@ -137,5 +143,11 @@ abstract class Permissions
     }
     public static function LastRowConfig() : PermissionAction {
         return new PermissionAction("lastrowconfig");
+    }
+    public static function ReportTreatmentWorkflow() : PermissionAction {
+        return new PermissionAction("reporttreatmentworkflow");
+    }
+    public static function ReportTreatmentWorkflowStep() : PermissionAction {
+        return new PermissionAction("reporttreatmentworkflowstep");
     }
 }

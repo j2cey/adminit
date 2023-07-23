@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property Status $status
  * @method static active()
+ * @property boolean $isActive
  */
 class BaseModel extends Model
 {
@@ -48,6 +49,13 @@ class BaseModel extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+    #endregion
+
+    #region Accessors & Mutators
+
+    public function getIsActiveAttribute() {
+        return ($this->status->code === 'active');
+    }
     #endregion
 
     #region Scopes

@@ -1,11 +1,16 @@
 <template>
     <div class="card collapsed-card">
         <div class="card-header">
-            <h5 class="card-title">{{ list_title ? list_title : 'Roles' }}</h5>
+            <h5 type="button" class="btn btn-tool" data-card-widget="collapse">
+                {{ list_title }}
+                <small class="text text-xs">
+                    {{ searchRoles === "" ? "" : " (" + filteredRoles.length + ")" }}
+                </small>
+            </h5>
 
             <div class="card-tools">
 
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <!--<button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-plus"></i>
                 </button>
                 <div class="btn-group">
@@ -22,7 +27,7 @@
                 </div>
                 <button type="button" class="btn btn-tool" data-card-widget="remove">
                     <i class="fas fa-times"></i>
-                </button>
+                </button>-->
             </div>
         </div>
         <!-- /.card-header -->
@@ -32,7 +37,11 @@
                 <tr>
                     <th>
                         <div class="row">
-                            <div class="col-sm-3 col-6"></div>
+                            <div class="col-sm-3 col-6">
+                                <div class="btn-group">
+                                    <b-button size="is-small" type="is-info is-light" @click="createRole">Ajouter</b-button>
+                                </div>
+                            </div>
                             <div class="col-sm-3 col-6"></div>
                             <div class="col-sm-3 col-6"></div>
                             <div class="col-sm-3 col-6">
@@ -71,7 +80,7 @@
                 <tbody>
                 <tr v-for="(role, index) in filteredRoles" v-if="filteredRoles" :key="role.id" class="text text-xs">
                     <td v-if="index < 10">
-                        <RoleItem v-if="role.name" :role_prop="role"></RoleItem>
+                        <RoleItem v-if="role.name" :role_prop="role" v-on:role_deleted="deleteRole"></RoleItem>
                     </td>
                 </tr>
                 </tbody>
@@ -88,60 +97,82 @@
 </template>
 
 <script>
-    export default {
-        name: "role-item-list",
-        props: {
-            list_title_prop: null,
-            roles_prop: {}
+import RoleBus from "../roles/roleBus";
+
+export default {
+    name: "role-item-list",
+    props: {
+        list_title_prop: {default: "Roles", type: String},
+        roles_prop: {}
+    },
+    components: {
+        RoleAddUpdate: () => import('./addupdate'),
+        RoleItem: () => import('./item')
+    },
+    mounted() {
+        RoleBus.$on('role_created', (newrole) => {
+            this.roles.push(newrole)
+            this.$emit('role_created', newrole)
+        })
+    },
+    data() {
+        return {
+            list_title: this.list_title_prop,
+            roles: this.roles_prop,
+            searchRoles: "",
+        };
+    },
+    methods: {
+        createRole() {
+            RoleBus.$emit('role_create');
         },
-        components: {
-            RoleAddUpdate: () => import('./addupdate'),
-            RoleItem: () => import('./item')
-        },
-        data() {
-            return {
-                list_title: this.list_title_prop,
-                roles: this.roles_prop,
-                searchRoles: null,
-            };
-        },
-        methods: {
-        },
-        computed: {
-            filteredRoles() {
+        deleteRole($event) {
+            console.log("role_deleted received at list: ", $event)
 
-                let tempRoles = this.roles
+            let roleIndex = this.roles.findIndex(c => {
+                return $event.id === c.id
+            })
 
-                if (this.searchRoles !== '' && this.searchRoles) {
-                    tempRoles = tempRoles.filter((item) => {
-                        return item.name
-                            .toUpperCase()
-                            .includes(this.searchRoles.toUpperCase())
-                    })
-                }
-
-                // Sorting
-                tempRoles = tempRoles.sort((a, b) => {
-                    let fa = a.name.toLowerCase(), fb = b.name.toLowerCase()
-
-                    if (fa > fb) {
-                        return -1
-                    }
-                    if (fa < fb) {
-                        return 1
-                    }
-                    return 0
-                })
-
-                if (!this.ascending) {
-                    tempRoles.reverse()
-                }
-                // end Sorting
-
-                return tempRoles
+            if (roleIndex !== -1) {
+                this.roles.splice(roleIndex, 1)
             }
+        },
+    },
+    computed: {
+        filteredRoles() {
+
+            let tempRoles = this.roles
+
+            if (this.searchRoles !== '' && this.searchRoles) {
+                tempRoles = tempRoles.filter((item) => {
+                    return item.name
+                        .toUpperCase()
+                        .includes(this.searchRoles.toUpperCase())
+                })
+            }
+
+            // Sorting
+            tempRoles = tempRoles.sort((a, b) => {
+                let fa = a.name.toLowerCase(), fb = b.name.toLowerCase()
+
+                if (fa > fb) {
+                    return -1
+                }
+                if (fa < fb) {
+                    return 1
+                }
+                return 0
+            })
+
+            if (!this.ascending) {
+                tempRoles.reverse()
+            }
+            // end Sorting
+
+            return tempRoles
         }
     }
+}
 </script>
 
 <style scoped>

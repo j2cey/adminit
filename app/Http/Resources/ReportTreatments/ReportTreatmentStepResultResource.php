@@ -31,14 +31,16 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property string $result
  * @property string $state
  * @property string $message
+ * @property integer $attempts
+ * @property string $payload
  *
  * @property string $description
  *
  * @property int $report_treatment_result_id
  *
- * @property int $retry_no
- * @property int $retry_session_count
- * @property int $retryof_id
+ * @property Carbon $retry_start_at
+ * @property int $retries_session_count
+ * @property Carbon $retry_end_at
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -48,8 +50,6 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  *
  * @property Status $status
  * @property ReportTreatmentResult|null $reporttreatmentresult
- * @property ReportTreatmentStepResult $retryof
- * @property ReportTreatmentStepResult[] $retries
  *
  * @property OperationResult[] $operationresults
  * @property OperationResult $latestOperationresult
@@ -77,11 +77,12 @@ class ReportTreatmentStepResultResource extends JsonResource
             'result' => $this->result,
             'state' => $this->state,
             'message' => $this->message,
+            'attempts' => $this->attempts,
+            'payload' => $this->payload,
 
-            'retry_no' => $this->retry_no,
-            'retry_session_count' => $this->retry_session_count,
-            'retryof' => $this->retryof,
-            'retries' => $this->retries,
+            'retry_start_at' => $this->retry_start_at,
+            'retry_session_count' => $this->retries_session_count,
+            'retry_end_at' => $this->retry_end_at,
 
             'latestOperationresult' => OperationResultResource::make($this->latestOperationresult),
             'operationresults' => OperationResultResource::collection($this->operationresults),

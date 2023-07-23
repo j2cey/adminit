@@ -2,6 +2,14 @@
 
 namespace App\Http\Requests\Setting;
 
+use App\Models\Setting;
+
+/**
+ * Class UpdateSettingRequest
+ * @package App\Http\Requests\Setting
+ *
+ * @property Setting|null $group
+ */
 class UpdateSettingRequest extends SettingRequest
 {
     /**

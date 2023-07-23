@@ -467,19 +467,6 @@ render._withStripped = true;
 
 /***/ }),
 
-/***/ "./resources/js/views/users/userBus.js":
-/*!*********************************************!*\
-  !*** ./resources/js/views/users/userBus.js ***!
-  \*********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-
-/* harmony default export */ __webpack_exports__["default"] = (new vue__WEBPACK_IMPORTED_MODULE_0__["default"]());
-
-/***/ }),
-
 /***/ "./resources/js/views/users/addupdate.vue":
 /*!************************************************!*\
   !*** ./resources/js/views/users/addupdate.vue ***!

@@ -13,7 +13,8 @@ class FtpProtocole implements IProtocole
 {
     public static function getDisk(ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum, AccessAccount $account, ReportServer $server, int $port): ?Filesystem
     {
-        $operation_result = $reporttreatmentstepresult->addOperationResult("Récupération Disque/Connexion FTP", $criticalitylevelenum);
+        $operation_result = $reporttreatmentstepresult->addOperationResult("Récupération Disque/Connexion FTP", $criticalitylevelenum)
+            ->startOperation();
         try {
             $fsMgr = new FilesystemManager(app());
 

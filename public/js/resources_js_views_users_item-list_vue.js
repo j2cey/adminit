@@ -8,10 +8,15 @@
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _users_userBus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../users/userBus */ "./resources/js/views/users/userBus.js");
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "user-item-list",
   props: {
-    list_title_prop: null,
+    list_title_prop: {
+      "default": "Users",
+      type: String
+    },
     users_prop: {}
   },
   components: {
@@ -22,21 +27,41 @@ __webpack_require__.r(__webpack_exports__);
       return __webpack_require__.e(/*! import() */ "resources_js_views_users_item_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./item */ "./resources/js/views/users/item.vue"));
     }
   },
+  mounted: function mounted() {
+    var _this = this;
+    _users_userBus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('user_created', function (newuser) {
+      _this.users.push(newuser);
+      _this.$emit('user_created', newuser);
+    });
+  },
   data: function data() {
     return {
       list_title: this.list_title_prop,
       users: this.users_prop,
-      searchUsers: null
+      searchUsers: ""
     };
   },
-  methods: {},
+  methods: {
+    createUser: function createUser() {
+      _users_userBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('user_create');
+    },
+    deleteUser: function deleteUser($event) {
+      console.log("user_deleted received at list: ", $event);
+      var userIndex = this.users.findIndex(function (c) {
+        return $event.id === c.id;
+      });
+      if (userIndex !== -1) {
+        this.users.splice(userIndex, 1);
+      }
+    }
+  },
   computed: {
     filteredUsers: function filteredUsers() {
-      var _this = this;
+      var _this2 = this;
       var tempUsers = this.users;
       if (this.searchUsers !== '' && this.searchUsers) {
         tempUsers = tempUsers.filter(function (item) {
-          return item.name.toUpperCase().includes(_this.searchUsers.toUpperCase());
+          return item.name.toUpperCase().includes(_this2.searchUsers.toUpperCase());
         });
       }
 
@@ -83,8 +108,16 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "card-header"
   }, [_c("h5", {
-    staticClass: "card-title"
-  }, [_vm._v(_vm._s(_vm.list_title ? _vm.list_title : "Users"))]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
+    staticClass: "btn btn-tool",
+    attrs: {
+      type: "button",
+      "data-card-widget": "collapse"
+    }
+  }, [_vm._v("\n            " + _vm._s(_vm.list_title) + "\n            "), _c("small", {
+    staticClass: "text text-xs"
+  }, [_vm._v("\n                " + _vm._s(_vm.searchUsers === "" ? "" : " (" + _vm.filteredUsers.length + ")") + "\n            ")])]), _vm._v(" "), _c("div", {
+    staticClass: "card-tools"
+  })]), _vm._v(" "), _c("div", {
     staticClass: "card-body table-responsive p-0"
   }, [_c("table", {
     staticClass: "table table-head-fixed text-nowrap"
@@ -92,7 +125,17 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-sm-3 col-6"
-  }), _vm._v(" "), _c("div", {
+  }, [_c("div", {
+    staticClass: "btn-group"
+  }, [_c("b-button", {
+    attrs: {
+      size: "is-small",
+      type: "is-info is-light"
+    },
+    on: {
+      click: _vm.createUser
+    }
+  }, [_vm._v("Ajouter")])], 1)]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-3 col-6"
   }), _vm._v(" "), _c("div", {
     staticClass: "col-sm-3 col-6"
@@ -124,13 +167,16 @@ var render = function render() {
         _vm.searchUsers = $event.target.value;
       }
     }
-  }), _vm._v(" "), _vm._m(1)])])])]), _vm._v(" "), _vm._m(2)])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.filteredUsers, function (user, index) {
+  }), _vm._v(" "), _vm._m(0)])])])]), _vm._v(" "), _vm._m(1)])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.filteredUsers, function (user, index) {
     return _vm.filteredUsers ? _c("tr", {
       key: user.id,
       staticClass: "text text-xs"
     }, [index < 10 ? _c("td", [user.name ? _c("UserItem", {
       attrs: {
         user_prop: user
+      },
+      on: {
+        user_deleted: _vm.deleteUser
       }
     }) : _vm._e()], 1) : _vm._e()]) : _vm._e();
   }), 0)])]), _vm._v(" "), _c("div", {
@@ -138,65 +184,6 @@ var render = function render() {
   }), _vm._v(" "), _c("UserAddUpdate")], 1);
 };
 var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "card-tools"
-  }, [_c("button", {
-    staticClass: "btn btn-tool",
-    attrs: {
-      type: "button",
-      "data-card-widget": "collapse"
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-plus"
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "btn-group"
-  }, [_c("button", {
-    staticClass: "btn btn-tool dropdown-toggle",
-    attrs: {
-      type: "button",
-      "data-toggle": "dropdown"
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-wrench"
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "dropdown-menu dropdown-menu-right",
-    attrs: {
-      user: "menu"
-    }
-  }, [_c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Action")]), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Another action")]), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Something else here")]), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-divider"
-  }), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Separated link")])])]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-tool",
-    attrs: {
-      type: "button",
-      "data-card-widget": "remove"
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-times"
-  })])]);
-}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
@@ -219,14 +206,18 @@ var staticRenderFns = [function () {
   }, [_c("span", {
     staticClass: "text text-sm"
   }, [_vm._v("Name")])]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-4 col-6"
-  }, [_c("span", {
-    staticClass: "text text-sm"
-  }, [_vm._v("E-mail")])]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-3 col-6"
   }, [_c("span", {
     staticClass: "text text-sm"
+  }, [_vm._v("E-mail")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-2 col-6"
+  }, [_c("span", {
+    staticClass: "text text-sm"
   }, [_vm._v("Role(s)")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-2 col-6"
+  }, [_c("span", {
+    staticClass: "text text-sm"
+  }, [_vm._v("Statut")])]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-2 col-6"
   }, [_c("span", {
     staticClass: "text text-sm"
@@ -234,6 +225,19 @@ var staticRenderFns = [function () {
 }];
 render._withStripped = true;
 
+
+/***/ }),
+
+/***/ "./resources/js/views/users/userBus.js":
+/*!*********************************************!*\
+  !*** ./resources/js/views/users/userBus.js ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (new vue__WEBPACK_IMPORTED_MODULE_0__["default"]());
 
 /***/ }),
 

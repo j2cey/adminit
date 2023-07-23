@@ -28,8 +28,12 @@ class CreateSettingsTable extends Migration
             $table->string('description')->nullable()->comment('description');
             $table->string('full_path')->nullable()->comment('chemin complet');
 
+            $table->foreignId('main_group_id')->nullable()
+                ->comment('reference du goupe principal de l entrée (le cas échéant)')
+                ->constrained('settings')->onDelete('set null');
+
             $table->foreignId('group_id')->nullable()
-                ->comment('reference du goupe de l entrée (le cas échéant)')
+                ->comment('reference du goupe direct de l entrée (le cas échéant)')
                 ->constrained('settings')->onDelete('set null');
 
             $table->timestamps();
@@ -45,6 +49,7 @@ class CreateSettingsTable extends Migration
     public function down()
     {
         Schema::table($this->table_name, function (Blueprint $table) {
+            $table->dropForeign(['main_group_id']);
             $table->dropForeign(['group_id']);
         });
         Schema::dropIfExists($this->table_name);

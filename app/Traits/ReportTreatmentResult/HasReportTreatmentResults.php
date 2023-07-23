@@ -2,13 +2,16 @@
 
 namespace App\Traits\ReportTreatmentResult;
 
-use Illuminate\Support\Carbon;
+use App\Models\Reports\Report;
 use App\Enums\TreatmentStateEnum;
-use App\Enums\TreatmentResultEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
+/**
+ * @property ReportTreatmentResult[] $reportTreatmentResultsNotCompleted
+ * @property ReportTreatmentResult[] $reportTreatmentResultsWaiting
+ */
 trait HasReportTreatmentResults
 {
     public function reporttreatmentresults() {
@@ -17,7 +20,18 @@ trait HasReportTreatmentResults
 
     public function reportTreatmentResultsWaiting() {
         return $this->reporttreatmentresults()
-            ->where('state', TreatmentStateEnum::WAITING->value);
+            ->active()->waiting();
+            //->where('state', TreatmentStateEnum::WAITING->value);
+    }
+
+    public function reportTreatmentResultsRunning() {
+        return $this->reporttreatmentresults()
+            ->active()->running();
+    }
+
+    public function reportTreatmentResultsQueued() {
+        return $this->reporttreatmentresults()
+            ->active()->queued();
     }
 
     public function reportTreatmentResultsNotCompleted() {
@@ -25,8 +39,8 @@ trait HasReportTreatmentResults
             ->whereNotIn('state', [TreatmentStateEnum::COMPLETED->value]);
     }
 
-    public function addReportTreatmentResult(string $name = null, Model|ReportTreatmentStepResult $currentstep = null, Carbon $start_at = null, Carbon $end_at = null, TreatmentStateEnum $state = null, TreatmentResultEnum $result = null, string $description = null): ReportTreatmentResult {
-        $reporttreatmentresult = ReportTreatmentResult::createNew($name, $currentstep, $start_at, $end_at, $state, $result, $description);
+    public function addReportTreatmentResult(Model|Report $report, string $name = null, Model|ReportTreatmentStepResult $currentstep = null, string $description = null): ReportTreatmentResult {
+        $reporttreatmentresult = ReportTreatmentResult::createNew($report, $name, $currentstep, $description);
         $this->reporttreatmentresults()->save($reporttreatmentresult);
 
         return $reporttreatmentresult;

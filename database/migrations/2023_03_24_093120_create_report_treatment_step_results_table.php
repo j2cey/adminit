@@ -25,12 +25,12 @@ class CreateReportTreatmentStepResultsTable extends Migration
             $table->string('name')->nullable()->comment('treatment step name');
             $table->timestamp('start_at')->nullable()->comment('treatment step start date');
             $table->timestamp('end_at')->nullable()->comment('treatment step end date');
-            $table->timestamp('try_end_at')->nullable()->comment('treatment step try end date');
-            $table->string('code')->nullable()->comment('treatment step code: [downloadfile, importfile, formatdata, notifyreport]');
-            $table->string('result')->nullable()->comment('treatment step result: [none, success, failed]');
-            $table->string('state')->nullable()->comment('treatment step state: [waiting, queued, running, completed]');
-            $table->string('criticality_level')->nullable()->comment('treatment step criticality level: [High, Medium, Low]');
+            $table->string('code')->nullable()->index()->comment('treatment step code: [downloadfile, importfile, formatdata, notifyreport]');
+            $table->string('result')->nullable()->index()->comment('treatment step result: [none, success, failed]');
+            $table->string('state')->nullable()->index()->comment('treatment step state: [waiting, queued, running, completed]');
+            $table->string('criticality_level')->nullable()->index()->comment('treatment step criticality level: [High, Medium, Low]');
             $table->string('message', 500)->nullable()->comment('treatment step last message');
+            $table->integer('attempts')->default(0)->comment('number of attempts');
 
             $table->string('description', 500)->nullable()->comment('treatment step description');
 
@@ -38,11 +38,14 @@ class CreateReportTreatmentStepResultsTable extends Migration
                 ->comment('report treatment result reference')
                 ->constrained()->onDelete('set null');
 
-            $table->integer('retry_no')->nullable()->comment('retry number');
-            $table->integer('retry_session_count')->nullable()->comment('retry count for current session');
+            $table->timestamp('retry_start_at')->nullable()->comment('treatment retry start date');
+            $table->integer('retries_session_count')->nullable()->comment('retry count for current session');
+            $table->timestamp('retry_end_at')->nullable()->comment('treatment retry end date');
 
             $table->string('hasreporttreatmentstepresults_type')->nullable()->comment('referenced report treatment step result owner s model (class name)');
             $table->bigInteger('hasreporttreatmentstepresults_id')->nullable()->comment('referenced report treatment step result owner s model id (object id)');
+
+            $table->longText('payload')->nullable();
 
             $table->baseFields();
         });

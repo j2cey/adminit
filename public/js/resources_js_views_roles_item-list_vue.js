@@ -8,10 +8,15 @@
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _roles_roleBus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../roles/roleBus */ "./resources/js/views/roles/roleBus.js");
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "role-item-list",
   props: {
-    list_title_prop: null,
+    list_title_prop: {
+      "default": "Roles",
+      type: String
+    },
     roles_prop: {}
   },
   components: {
@@ -22,21 +27,41 @@ __webpack_require__.r(__webpack_exports__);
       return __webpack_require__.e(/*! import() */ "resources_js_views_roles_item_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./item */ "./resources/js/views/roles/item.vue"));
     }
   },
+  mounted: function mounted() {
+    var _this = this;
+    _roles_roleBus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('role_created', function (newrole) {
+      _this.roles.push(newrole);
+      _this.$emit('role_created', newrole);
+    });
+  },
   data: function data() {
     return {
       list_title: this.list_title_prop,
       roles: this.roles_prop,
-      searchRoles: null
+      searchRoles: ""
     };
   },
-  methods: {},
+  methods: {
+    createRole: function createRole() {
+      _roles_roleBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('role_create');
+    },
+    deleteRole: function deleteRole($event) {
+      console.log("role_deleted received at list: ", $event);
+      var roleIndex = this.roles.findIndex(function (c) {
+        return $event.id === c.id;
+      });
+      if (roleIndex !== -1) {
+        this.roles.splice(roleIndex, 1);
+      }
+    }
+  },
   computed: {
     filteredRoles: function filteredRoles() {
-      var _this = this;
+      var _this2 = this;
       var tempRoles = this.roles;
       if (this.searchRoles !== '' && this.searchRoles) {
         tempRoles = tempRoles.filter(function (item) {
-          return item.name.toUpperCase().includes(_this.searchRoles.toUpperCase());
+          return item.name.toUpperCase().includes(_this2.searchRoles.toUpperCase());
         });
       }
 
@@ -83,8 +108,16 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "card-header"
   }, [_c("h5", {
-    staticClass: "card-title"
-  }, [_vm._v(_vm._s(_vm.list_title ? _vm.list_title : "Roles"))]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
+    staticClass: "btn btn-tool",
+    attrs: {
+      type: "button",
+      "data-card-widget": "collapse"
+    }
+  }, [_vm._v("\n            " + _vm._s(_vm.list_title) + "\n            "), _c("small", {
+    staticClass: "text text-xs"
+  }, [_vm._v("\n                " + _vm._s(_vm.searchRoles === "" ? "" : " (" + _vm.filteredRoles.length + ")") + "\n            ")])]), _vm._v(" "), _c("div", {
+    staticClass: "card-tools"
+  })]), _vm._v(" "), _c("div", {
     staticClass: "card-body table-responsive p-0"
   }, [_c("table", {
     staticClass: "table table-head-fixed text-nowrap"
@@ -92,7 +125,17 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-sm-3 col-6"
-  }), _vm._v(" "), _c("div", {
+  }, [_c("div", {
+    staticClass: "btn-group"
+  }, [_c("b-button", {
+    attrs: {
+      size: "is-small",
+      type: "is-info is-light"
+    },
+    on: {
+      click: _vm.createRole
+    }
+  }, [_vm._v("Ajouter")])], 1)]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-3 col-6"
   }), _vm._v(" "), _c("div", {
     staticClass: "col-sm-3 col-6"
@@ -124,13 +167,16 @@ var render = function render() {
         _vm.searchRoles = $event.target.value;
       }
     }
-  }), _vm._v(" "), _vm._m(1)])])])]), _vm._v(" "), _vm._m(2)])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.filteredRoles, function (role, index) {
+  }), _vm._v(" "), _vm._m(0)])])])]), _vm._v(" "), _vm._m(1)])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.filteredRoles, function (role, index) {
     return _vm.filteredRoles ? _c("tr", {
       key: role.id,
       staticClass: "text text-xs"
     }, [index < 10 ? _c("td", [role.name ? _c("RoleItem", {
       attrs: {
         role_prop: role
+      },
+      on: {
+        role_deleted: _vm.deleteRole
       }
     }) : _vm._e()], 1) : _vm._e()]) : _vm._e();
   }), 0)])]), _vm._v(" "), _c("div", {
@@ -138,65 +184,6 @@ var render = function render() {
   }), _vm._v(" "), _c("RoleAddUpdate")], 1);
 };
 var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "card-tools"
-  }, [_c("button", {
-    staticClass: "btn btn-tool",
-    attrs: {
-      type: "button",
-      "data-card-widget": "collapse"
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-plus"
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "btn-group"
-  }, [_c("button", {
-    staticClass: "btn btn-tool dropdown-toggle",
-    attrs: {
-      type: "button",
-      "data-toggle": "dropdown"
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-wrench"
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "dropdown-menu dropdown-menu-right",
-    attrs: {
-      role: "menu"
-    }
-  }, [_c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Action")]), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Another action")]), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Something else here")]), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-divider"
-  }), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-item",
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Separated link")])])]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-tool",
-    attrs: {
-      type: "button",
-      "data-card-widget": "remove"
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-times"
-  })])]);
-}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {

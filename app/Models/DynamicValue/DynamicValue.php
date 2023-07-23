@@ -2,6 +2,7 @@
 
 namespace App\Models\DynamicValue;
 
+use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -124,11 +125,26 @@ class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasF
         return $this->getValue() === $attribute_value;
     }
 
+    /**
+     * @param int $id
+     * @return DynamicValue|null
+     */
+    public static function getById(int $id) {
+        return DynamicValue::find($id);
+    }
+
     #endregion
 
     public static function boot()
     {
         parent::boot();
+
+        self::created(function ($model) {
+            // init formatted value
+            //$dynamicvalue = DynamicValue::getById($event->dynamicvalueId);
+            $model->setFormattedValue(HtmlTagKey::TABLE_COL);//, $thevalue);
+            $model->setDefaultFormatSize();
+        });
 
         self::deleting(function ($model) {
             $model->innerdynamicvalue->delete();

@@ -3,8 +3,10 @@
 namespace App\Console\Commands\ReportFile;
 
 use Illuminate\Console\Command;
+use App\Enums\TreatmentStepCode;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReportFile\NotifyReport;
+use App\Models\ReportFile\ReportFile;
 use App\Models\ReportFile\CollectedReportFile;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
@@ -41,13 +43,30 @@ class ReportFileNotify extends Command
      */
     public function handle()
     {
-        \Log::info("Notification Fichiers Rapport en cours de traitement...");
+        $this->info("Notification Fichiers Rapport en cours de traitement...");
 
-        $collectedreportfile = CollectedReportFile::first();
-        $treatmentstepresult = ReportTreatmentStepResult::createNew("Notification du Fichier Rapport");
-        $collectedreportfile->notify(report_treatment_step_result: $treatmentstepresult, format_if_any: false);
+        $reportfiles = ReportFile::getActives();
+        $launched_execs = 0;
 
-        \Log::info("Traitement termine.");
+        foreach ($reportfiles as $reportfile) {
+            if ( $reportfile->reportTreatmentResultsWaiting()->count() > 0 ) {
+                $reporttreatmentresults = $reportfile->reportTreatmentResultsWaiting;
+
+                foreach ($reporttreatmentresults as $reporttreatmentresult) {
+                    if ( $reporttreatmentresult->currentstep->code == TreatmentStepCode::FORMATDATA && $reporttreatmentresult->currentstep->isSuccess ) {
+                        $launched_execs += 1;
+                        //$reporttreatmentresult->goToNextStep();
+                        $reportfile->notifyLastCollectedFile($reporttreatmentresult, false);
+                        break;
+                    }
+                }
+                if ($launched_execs > 0) {
+                    break;
+                }
+            }
+        }
+
+        $this->info("Traitement termine. " . $launched_execs . " Fichier(s) lancés");
 
         return 0;
     }

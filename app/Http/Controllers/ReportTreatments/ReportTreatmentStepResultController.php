@@ -6,6 +6,7 @@ use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\Foundation\Application;
+use App\Models\ReportTreatments\OperationResult;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 use App\Http\Resources\ReportTreatments\ReportTreatmentStepResultResource;
 use App\Http\Requests\ReportTreatmentStepResult\StoreReportTreatmentStepResultRequest;
@@ -52,6 +53,7 @@ class ReportTreatmentStepResultController extends Controller
      */
     public function show(ReportTreatmentStepResult $reporttreatmentstepresult)
     {
+        //dd(OperationResult::find(1)->isLastOperation);
         return view('reporttreatmentstepresults.show')
             ->with('reporttreatmentstepresult', new ReportTreatmentStepResultResource($reporttreatmentstepresult))
             ;

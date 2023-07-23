@@ -41,7 +41,9 @@ var FormatRule = /*#__PURE__*/_createClass(function FormatRule(formatrule) {
   },
   mounted: function mounted() {
     var _this = this;
-    this.$watch("$refs.formatrule.innerformatrule", function (new_value, old_value) {
+    this.$watch("$refs.formatrule.innerformatrule",
+    // eslint-disable-next-line no-unused-vars
+    function (new_value, old_value) {
       _this.innerformatrule = new_value;
     });
   },

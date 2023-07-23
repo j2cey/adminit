@@ -17,6 +17,15 @@
                         <dd class="col-sm-8 offset-sm-4 text-xs">{{ reporttreatmentstepresult.end_at | formatDate }}</dd>
                         <dt class="text text-xs">Création</dt>
                         <dd class="text text-xs">{{ reporttreatmentstepresult.created_at | formatDate}}</dd>
+
+                        <dt class="text text-xs">Tentatives</dt>
+                        <dd class="text text-xs">{{ reporttreatmentstepresult.attempts }}</dd>
+                        <dt class="text text-xs">Début Réssais</dt>
+                        <dd class="text text-xs">{{ reporttreatmentstepresult.retry_start_at | formatDate}}</dd>
+                        <dt class="text text-xs">Nombre Réssais</dt>
+                        <dd class="text text-xs">{{ reporttreatmentstepresult.retries_session_count }}</dd>
+                        <dt class="text text-xs">Fin Réssais</dt>
+                        <dd class="text text-xs">{{ reporttreatmentstepresult.retry_end_at | formatDate}}</dd>
                     </dl>
                 </div>
                 <div class="col">
@@ -53,6 +62,8 @@
                         <dt class="text text-xs">Object</dt>
                         <dd class="col-sm-8 offset-sm-4 text-xs">{{ reporttreatmentstepresult.hasreporttreatmentstepresults_type }}</dd>
                         <dd class="col-sm-8 offset-sm-4 text-xs">{{ reporttreatmentstepresult.hasreporttreatmentstepresults_id }}</dd>
+                        <dt class="text text-xs">Payload</dt>
+                        <dd class="col-sm-8 offset-sm-4 text-xs">{{ reporttreatmentstepresult.payload }}</dd>
                     </dl>
                 </div>
             </div>

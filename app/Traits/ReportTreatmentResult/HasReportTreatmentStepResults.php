@@ -20,44 +20,45 @@ trait HasReportTreatmentStepResults
         return $this->reporttreatmentstepresults()->waiting();
     }
 
+    public function reportTreatmentStepResultsToRetry() {
+        return $this->reporttreatmentstepresults()->waiting()->failed();
+    }
+
+    /**
+     * @return ReportTreatmentStepResult
+     */
+    public function getFirstStepToRetry() {
+        return $this->reportTreatmentStepResultsToRetry()->first();
+    }
+
     public function reportTreatmentStepResultsNotCompleted() {
         return $this->reporttreatmentstepresults()
             ->whereNotIn('state', [TreatmentStateEnum::COMPLETED->value]);
     }
 
+    public function reportTreatmentStepsImport() {
+        return $this->reporttreatmentstepresults()
+            ->completed()
+            ->success()
+            ->whereIn('code', [TreatmentStepCode::DOWNLOADFILE->value]);
+    }
+
     public function addReportTreatmentStepResult(Model|ReportTreatmentResult $reporttreatmentresult, TreatmentStepCode $code, string $name = null, CriticalityLevelEnum $criticality_level = null, bool $set_as_current_step = false, Status $status = null): ReportTreatmentStepResult
     {
-        $reporttreatmentstepstoretry = $this->getReportTreatmentStepsToRetry();
-        if ( count( $reporttreatmentstepstoretry ) === 0 ) {
-            // if all step-results of this object are completed,
-            // we add new one to the report-treatment-result
+        if ( $this->reportTreatmentStepResultsToRetry()->count() > 0 ) {
+            /**
+             * we got at least one step waiting and failed,
+             * so we retry it
+             */
+            $reporttreatmentstepresult = $this->getFirstStepToRetry();
+        } else {
             $reporttreatmentstepresult = $reporttreatmentresult->addStep($code, $name, $criticality_level, $set_as_current_step);
             $this->reporttreatmentstepresults()->save($reporttreatmentstepresult);
-        } else {
-            //dd($getreporttreatmentstepstobecompleted);
-            // else, we add a retry to the first incompleted step-result
-            $reporttreatmentstepresult = $reporttreatmentstepstoretry[0]->addRetry($code, $name, $criticality_level);
         }
 
         if ( ! is_null($status) ) $reporttreatmentstepresult->status()->associate($status);
 
         return $reporttreatmentstepresult;
-    }
-
-    /**
-     * @return ReportTreatmentStepResult[]|null
-     */
-    public function getReportTreatmentStepsToBeCompleted() {
-        return $this->reporttreatmentstepresults()->active()->notCompleted()->notRunning()->get();
-    }
-
-    /**
-     * @return ReportTreatmentStepResult[]|null
-     */
-    public function getReportTreatmentStepsToRetry() {
-        return $this->reporttreatmentstepresults()->active()->notAlltried()->notRunning()->failed()->get();
-            /*->withCount('retries')->having('retries_count', '>', '2')
-            ->get();*/
     }
 
     protected function initializeHasReportTreatmentStepResults()

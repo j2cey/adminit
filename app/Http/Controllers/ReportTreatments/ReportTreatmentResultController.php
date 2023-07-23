@@ -22,9 +22,21 @@ class ReportTreatmentResultController extends Controller
     public function index()
     {
         $reporttreatmentresults = ReportTreatmentResultResource::collection(ReportTreatmentResult::all());
+        $waiting = ReportTreatmentResult::waiting()->count();
+        $queued = ReportTreatmentResult::queued()->count();
+        $running = ReportTreatmentResult::running()->count();
+        $retrying = ReportTreatmentResult::retrying()->count();
+        $success = ReportTreatmentResult::success()->completed()->count();
+        $failed = ReportTreatmentResult::failed()->waiting()->count();
 
         return view('reporttreatmentresults.index')
             ->with('reporttreatmentresults', $reporttreatmentresults)
+            ->with('waiting', $waiting)
+            ->with('queued', $queued)
+            ->with('running', $running)
+            ->with('retrying', $retrying)
+            ->with('success', $success)
+            ->with('failed', $failed)
             ;
     }
 

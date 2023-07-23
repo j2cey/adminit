@@ -25,8 +25,15 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property Carbon $end_at
  * @property string $state
  * @property string $result
+ * @property string $message
+ * @property int $attempts
+ * @property string $payload
  *
  * @property string $description
+ *
+ * @property Carbon $retry_start_at
+ * @property int $retries_session_count
+ * @property Carbon $retry_end_at
  *
  * @property int $currentstep_num
  * @property int $currentstep_id
@@ -37,6 +44,13 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property integer $stepsWaitingCount
+ * @property integer $stepsQueuedCount
+ * @property integer $stepsRunningCount
+ * @property integer $stepsRetryingCount
+ * @property integer $stepsSuccessCount
+ * @property integer $stepsFailedCount
  *
  * @property Status $status
  * @property Report $report
@@ -65,6 +79,13 @@ class ReportTreatmentResultResource extends JsonResource
             'end_at' => $this->end_at,
             'state' => $this->state,
             'result' => $this->result,
+            'message' => $this->message,
+            'attempts' => $this->attempts,
+            'payload' => $this->payload,
+
+            'retry_start_at' => $this->retry_start_at,
+            'retry_session_count' => $this->retries_session_count,
+            'retry_end_at' => $this->retry_end_at,
 
             'reporttreatmentsteps' => ReportTreatmentStepResultResource::collection($this->reporttreatmentsteps),
 
@@ -76,6 +97,12 @@ class ReportTreatmentResultResource extends JsonResource
             'description' => $this->description,
             'created_at' => $this->created_at,
 
+            'stepsWaitingCount' => $this->stepsWaitingCount,
+            'stepsQueuedCount' => $this->stepsQueuedCount,
+            'stepsRunningCount' => $this->stepsRunningCount,
+            'stepsRetryingCount' => $this->stepsRetryingCount,
+            'stepsSuccessCount' => $this->stepsSuccessCount,
+            'stepsFailedCount' => $this->stepsFailedCount,
 
             'show_url' => route('reporttreatmentresults.show', $this->uuid),
             'edit_url' => route('reporttreatmentresults.edit', $this->uuid),

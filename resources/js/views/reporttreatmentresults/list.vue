@@ -1,5 +1,81 @@
 <template>
     <section>
+        <div class="tile is-ancestor">
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-info is-light">
+                    <p class="title is-4">Waiting</p>
+                    <p class="subtitle is-6">{{ waiting }}</p>
+                </article>
+            </div>
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-warning is-light">
+                    <p class="title is-4">Queued</p>
+                    <p class="subtitle is-6">{{ queued }}</p>
+                </article>
+            </div>
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-danger is-light">
+                    <p class="title is-4">Running</p>
+                    <p class="subtitle is-6">{{ running }}</p>
+                </article>
+            </div>
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-danger is-light">
+                    <p class="title is-4">Retrying</p>
+                    <p class="subtitle is-6">{{ retrying }}</p>
+                </article>
+            </div>
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-success is-light">
+                    <p class="title is-4">Success</p>
+                    <p class="subtitle is-6">{{ success }}</p>
+                </article>
+            </div>
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-danger is-light">
+                    <p class="title is-4">Failed</p>
+                    <p class="subtitle is-6">{{ failed }}</p>
+                </article>
+            </div>
+        </div>
+
+<!--        <b-field grouped group-multiline>
+            <div class="control">
+                <b-taglist attached>
+                    <b-tag type="is-dark">Waiting</b-tag>
+                    <b-tag type="is-info">0.5.1</b-tag>
+                </b-taglist>
+            </div>
+
+            <div class="control">
+                <b-taglist attached>
+                    <b-tag type="is-dark">Queued</b-tag>
+                    <b-tag type="is-warning">0.5.1</b-tag>
+                </b-taglist>
+            </div>
+
+            <div class="control">
+                <b-taglist attached>
+                    <b-tag type="is-dark">Running</b-tag>
+                    <b-tag type="is-danger">0.5.1</b-tag>
+                </b-taglist>
+            </div>
+
+            <div class="control">
+                <b-taglist attached>
+                    <b-tag type="is-dark">Success</b-tag>
+                    <b-tag type="is-success is-light">0.5.1</b-tag>
+                </b-taglist>
+            </div>
+
+            <div class="control">
+                <b-taglist attached>
+                    <b-tag type="is-dark">Failed</b-tag>
+                    <b-tag type="is-danger is-light">0.5.1</b-tag>
+                </b-taglist>
+            </div>
+        </b-field>-->
+
         <b-field grouped group-multiline>
             <b-select v-model="perPage" :disabled="!isPaginated">
                 <option value="5">5 per page</option>
@@ -58,6 +134,18 @@
                                 {{ props.row[column.field] }}
                             </a>
                         </span>
+                        <span v-else-if="column.field === 'report'" class="has-text-info is-italic text-xs">
+                            <span v-if="props.row[column.field]">
+                                <b-tag type="is-default is-light">{{ props.row[column.field].title }}</b-tag>
+                            </span>
+                            <span v-else></span>
+                        </span>
+                        <span v-else-if="column.field === 'currentstep'" class="has-text-warning is-italic text-xs">
+                            <span v-if="props.row[column.field]">
+                                <b-tag type="is-default is-light">{{ props.row[column.field].name }}</b-tag>
+                            </span>
+                            <span v-else></span>
+                        </span>
                         <span v-else-if="column.field === 'result'" class="has-text-info is-italic text-xs">
                             <span v-if="props.row[column.field]">
                                 <b-tag rounded v-if="props.row[column.field] === 'success'" type="is-success">{{ props.row[column.field] }}</b-tag>
@@ -74,6 +162,9 @@
                                 <b-tag rounded v-else type="is-default">{{ props.row[column.field] }}</b-tag>
                             </span>
                             <span v-else></span>
+                        </span>
+                        <span v-else-if="column.field === 'start_at'" class="tag is-info is-light">
+                            {{ props.row['start_at'] | formatDate }} / {{ props.row['end_at'] | formatDate }}
                         </span>
                         <span v-else-if="column.date" class="tag is-info is-light">
                             {{ props.row[column.field] | formatDate }}
@@ -125,7 +216,13 @@ import ReportTreatmentResultBus from "../reporttreatmentresults/reporttreatmentr
 export default {
     name: "reporttreatmentresult-list",
     props: {
-        reporttreatmentresults_prop: {}
+        reporttreatmentresults_prop: {},
+        waiting_prop: {type: Number, default: 0},
+        queued_prop: {type: Number, default: 0},
+        running_prop: {type: Number, default: 0},
+        retrying_prop: {type: Number, default: 0},
+        success_prop: {type: Number, default: 0},
+        failed_prop: {type: Number, default: 0},
     },
     components: {
         ReportTreatmentResultItem: () => import('../reporttreatmentresults/item'),
@@ -142,6 +239,12 @@ export default {
     data() {
         return {
             reporttreatmentresults: this.reporttreatmentresults_prop,
+            waiting: this.waiting_prop,
+            queued: this.queued_prop,
+            running: this.running_prop,
+            retrying: this.retrying_prop,
+            success: this.success_prop,
+            failed: this.failed_prop,
             isPaginated: true,
             isPaginationSimple: false,
             isPaginationRounded: true,
@@ -150,7 +253,7 @@ export default {
             sortIcon: 'arrow-up',
             sortIconSize: 'is-small',
             currentPage: 1,
-            perPage: 5,
+            perPage: 10,
             defaultOpenedDetails: [-1],
             showDetailIcon: true,
             useTransition: false,
@@ -165,6 +268,14 @@ export default {
                     sortable: true,
                 },
                 {
+                    field: 'report',
+                    key: 'report',
+                    label: 'Report',
+                    numeric: false,
+                    searchable: false,
+                    sortable: true,
+                },
+                {
                     field: 'name',
                     key: 'name',
                     label: 'Name',
@@ -174,18 +285,10 @@ export default {
                 {
                     field: 'start_at',
                     key: 'start_at',
-                    label: 'Start at',
+                    label: 'Start/End',
                     searchable: false,
                     sortable: true,
-                    date: true,
-                },
-                {
-                    field: 'end_at',
-                    key: 'end_at',
-                    label: 'End at',
-                    searchable: false,
-                    sortable: true,
-                    date: true,
+                    date: false,
                 },
                 {
                     field: 'result',
@@ -202,12 +305,11 @@ export default {
                     sortable: true,
                 },
                 {
-                    field: 'actions',
-                    key: 'actions',
-                    label: '',
-                    width: '100',
-                    centered: true,
-                    sortable: false,
+                    field: 'currentstep',
+                    key: 'currentstep',
+                    label: 'Current/Last Step',
+                    searchable: false,
+                    sortable: true,
                 }
             ]
         };

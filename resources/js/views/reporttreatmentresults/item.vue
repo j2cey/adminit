@@ -1,5 +1,49 @@
 <template>
     <b-tabs size="is-small" type="is-boxed">
+
+        <b-field grouped group-multiline>
+            <div class="control">
+                <b-taglist attached>
+                    <b-tag type="is-dark">Waiting</b-tag>
+                    <b-tag type="is-info">{{ reporttreatmentresult.stepsWaitingCount }}</b-tag>
+                </b-taglist>
+            </div>
+
+            <div class="control">
+                <b-taglist attached>
+                    <b-tag type="is-dark">Queued</b-tag>
+                    <b-tag type="is-warning">{{ reporttreatmentresult.stepsQueuedCount }}</b-tag>
+                </b-taglist>
+            </div>
+
+            <div class="control">
+                <b-taglist attached>
+                    <b-tag type="is-dark">Running</b-tag>
+                    <b-tag type="is-danger">{{ reporttreatmentresult.stepsRunningCount }}</b-tag>
+                </b-taglist>
+            </div>
+            <div class="control">
+                <b-taglist attached>
+                    <b-tag type="is-dark">Retrying</b-tag>
+                    <b-tag type="is-danger">{{ reporttreatmentresult.stepsRetryingCount }}</b-tag>
+                </b-taglist>
+            </div>
+
+            <div class="control">
+                <b-taglist attached>
+                    <b-tag type="is-dark">Success</b-tag>
+                    <b-tag type="is-success is-light">{{ reporttreatmentresult.stepsSuccessCount }}</b-tag>
+                </b-taglist>
+            </div>
+
+            <div class="control">
+                <b-taglist attached>
+                    <b-tag type="is-dark">Failed</b-tag>
+                    <b-tag type="is-danger is-light">{{ reporttreatmentresult.stepsFailedCount }}</b-tag>
+                </b-taglist>
+            </div>
+        </b-field>
+
         <b-tab-item>
             <template #header>
                 <b-icon icon="info-circle" pack="fa"></b-icon>
@@ -17,6 +61,15 @@
                         <dd class="col-sm-8 offset-sm-4 text-xs">{{ reporttreatmentresult.end_at | formatDate }}</dd>
                         <dt class="text text-xs">Création</dt>
                         <dd class="text text-xs">{{ reporttreatmentresult.created_at | formatDate}}</dd>
+
+                        <dt class="text text-xs">Tentatives</dt>
+                        <dd class="text text-xs">{{ reporttreatmentresult.attempts }}</dd>
+                        <dt class="text text-xs">Début Réssais</dt>
+                        <dd class="text text-xs">{{ reporttreatmentresult.retry_start_at | formatDate}}</dd>
+                        <dt class="text text-xs">Nombre Réssais</dt>
+                        <dd class="text text-xs">{{ reporttreatmentresult.retries_session_count }}</dd>
+                        <dt class="text text-xs">Fin Réssais</dt>
+                        <dd class="text text-xs">{{ reporttreatmentresult.retry_end_at | formatDate}}</dd>
                     </dl>
                 </div>
                 <div class="col">
@@ -30,7 +83,7 @@
                         <dt class="text text-xs">State</dt>
                         <dd class="text text-xs">
                             <span v-if="reporttreatmentresult.state === 'completed'" class="badge badge-pill badge-success">{{ reporttreatmentresult.state }}</span>
-                            <span v-else-if="reporttreatmentresult.state === 'running'" class="badge badge-pill badge-danger">{{ reporttreatmentresult.state }}</span>
+                            <span v-else-if="reporttreatmentresult.state === 'running' || reporttreatmentresult.state === 'retrying'" class="badge badge-pill badge-danger">{{ reporttreatmentresult.state }}</span>
                             <span v-else-if="reporttreatmentresult.state === 'queued'" class="badge badge-pill badge-warning">{{ reporttreatmentresult.state }}</span>
                             <span v-else class="badge badge-pill badge-info">{{ reporttreatmentresult.state }}</span>
                         </dd>

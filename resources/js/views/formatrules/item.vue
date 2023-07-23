@@ -71,6 +71,7 @@
         mounted() {
             this.$watch(
                 "$refs.formatrule.innerformatrule",
+                // eslint-disable-next-line no-unused-vars
                 (new_value, old_value) => {
                     this.innerformatrule = new_value
                 }

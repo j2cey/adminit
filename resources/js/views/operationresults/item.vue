@@ -19,6 +19,10 @@
                 </dd>
                 <dt class="text text-xs">Création</dt>
                 <dd class="text text-xs">{{ operationresult.created_at | formatDate }}</dd>
+
+                <dt class="text text-xs">Tentatives</dt>
+                <dd class="text text-xs">{{ operationresult.attempts }}</dd>
+                <dt class="text text-xs">Début Réssais</dt>
             </dl>
         </div>
         <div class="col">
@@ -38,6 +42,15 @@
                 </dd>
                 <dt class="text text-xs">Message</dt>
                 <dd class="col-sm-8 offset-sm-4 text-xs">{{ operationresult.message }}</dd>
+                <dd class="text text-xs">{{ operationresult.retry_start_at | formatDate}}</dd>
+                <dt class="text text-xs">Nombre Réssais</dt>
+                <dd class="text text-xs">{{ operationresult.retries_session_count }}</dd>
+                <dt class="text text-xs">Fin Réssais</dt>
+                <dd class="text text-xs">{{ operationresult.retry_end_at | formatDate}}</dd>
+                <dt class="text text-xs">Nombre de Sous-operations</dt>
+                <dd class="text text-xs">{{ operationresult.childrenoperations.length | formatDate}}</dd>
+                <dt class="text text-xs">Payload</dt>
+                <dd class="col-sm-8 offset-sm-4 text-xs">{{ operationresult.payload }}</dd>
             </dl>
         </div>
     </div>

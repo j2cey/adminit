@@ -27,16 +27,24 @@ class CreateOperationResultsTable extends Migration
             $table->timestamp('start_at')->nullable()->comment('operation start date');
             $table->timestamp('end_at')->nullable()->comment('operation end date');
             $table->integer('operation_duration')->nullable()->comment('operation duration');
-            $table->string('result')->nullable()->comment('operation result: [none, success, failed]');
-            $table->string('state')->nullable()->comment('operation state: [waiting, queued, running, completed]');
-            $table->string('criticality_level')->nullable()->comment('operation criticality level: [High, Medium, Low]');
+            $table->string('result')->nullable()->index()->comment('operation result: [none, success, failed]');
+            $table->string('state')->nullable()->index()->comment('operation state: [waiting, queued, running, completed]');
+            $table->string('criticality_level')->index()->nullable()->comment('operation criticality level: [High, Medium, Low]');
+            $table->string('code')->nullable()->index()->comment('treatment code: [downloadfile, importfile, formatdata, notifyreport]');
             $table->string('message', 1000)->nullable()->comment('operation message');
+            $table->integer('attempts')->default(0)->comment('number of attempts');
 
             $table->string('description', 500)->nullable()->comment('operation description');
 
             $table->foreignId('report_treatment_step_result_id')->nullable()
                 ->comment('report treatment step result reference')
                 ->constrained()->onDelete('set null');
+
+            $table->timestamp('retry_start_at')->nullable()->comment('treatment retry start date');
+            $table->integer('retries_session_count')->nullable()->comment('retry count for current session');
+            $table->timestamp('retry_end_at')->nullable()->comment('treatment retry end date');
+
+            $table->longText('payload')->nullable();
 
             $table->baseFields();
         });

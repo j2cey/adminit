@@ -3,7 +3,7 @@
 namespace App\Console\Commands\ReportFile;
 
 use Illuminate\Console\Command;
-use App\Models\ReportFile\ReportFileAccess;
+use App\Models\ReportFile\ReportFile;
 
 class ReportFileDownload extends Command
 {
@@ -38,15 +38,22 @@ class ReportFileDownload extends Command
      */
     public function handle()
     {
-        \Log::info("Download Fichiers Rapport en cours de traitement...");
+        $this->info("Download Fichiers Rapport en cours de traitement...");
 
-        $reportfileaccess = ReportFileAccess::first();
-        if( ! is_null($reportfileaccess) ) {
-            $result = $reportfileaccess->executeTreatment();
-            //dd($result->operationresults,$result->operationresults[0]->isSuccess,$result->operationresults[0]->state);
+        $reportfiles = ReportFile::getActives();
+        $launched_execs = 0;
+
+        foreach ($reportfiles as $reportfile) {
+            if ( $reportfile->report->isActive && $reportfile->isActive ) {
+                if ($reportfile->reportTreatmentResultsNotCompleted()->count() === 0) {
+                    $launched_execs += 1;
+                    $reportfile->collectFile(null, false);
+                    break;
+                }
+            }
         }
-        $this->info("Traitement termine.");
-        \Log::info("Traitement termine.");
+
+        $this->info("Traitement termine. " . $launched_execs . " Fichier(s) lancés");
         return 0;
     }
 }

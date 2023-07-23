@@ -32,9 +32,15 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property string $state
  * @property string $result
  * @property string $message
+ * @property integer $attempts
  * @property string $criticality_level
+ * @property string $payload
  *
  * @property string $description
+ *
+ * @property Carbon $retry_start_at
+ * @property int $retries_session_count
+ * @property Carbon $retry_end_at
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -44,6 +50,7 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  *
  * @property ReportTreatmentStepResult|null $reporttreatmentstepresult
  * @property OperationResult|null $parentoperation
+ * @property OperationResult[]|null $childrenoperations
  */
 class OperationResultResource extends JsonResource
 {
@@ -69,10 +76,17 @@ class OperationResultResource extends JsonResource
             'state' => $this->state,
             'result' => $this->result,
             'message' => $this->message,
+            'attempts' => $this->attempts,
             'criticality_level' => $this->criticality_level,
+            'payload' => $this->payload,
 
             'reporttreatmentstepresult' => $this->reporttreatmentstepresult,
             'parentoperation' => $this->parentoperation,
+            'childrenoperations' => $this->childrenoperations,
+
+            'retry_start_at' => $this->retry_start_at,
+            'retry_session_count' => $this->retries_session_count,
+            'retry_end_at' => $this->retry_end_at,
 
             'description' => $this->description,
             'created_at' => $this->created_at,

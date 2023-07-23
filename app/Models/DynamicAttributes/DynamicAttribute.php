@@ -6,6 +6,7 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
+use App\Events\DynamicValueCreated;
 use App\Models\FormatRule\FormatRule;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\DynamicValue\DynamicRow;
@@ -226,15 +227,14 @@ class DynamicAttribute extends BaseModel implements Auditable, IHasAnalysisRules
     public function addValue($thevalue, DynamicRow $new_dynamicrow) {
         $dynamicvalue = DynamicValue::createNew($thevalue,$this,$new_dynamicrow);
 
-        // init formatted value
-        $dynamicvalue->setFormattedValue(HtmlTagKey::TABLE_COL);//, $thevalue);
-        $dynamicvalue->setDefaultFormatSize();
+        DynamicValueCreated::dispatch($dynamicvalue->id, HtmlTagKey::TABLE_COL);
 
         return $dynamicvalue;
     }
 
     /**
      * @param DynamicValue $dynamicValue
+     * @param IHasMatchedAnalysisRules $ihasmatchedanalysisrules
      * @return array|Collection|FormatRule[]
      */
     public function getFormatRulesForNotification(DynamicValue $dynamicValue, IHasMatchedAnalysisRules $ihasmatchedanalysisrules)

@@ -16,10 +16,10 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  */
 class DeleteFile implements IRetrieveAction
 {
-    public static function execAction(Filesystem $disk, ReportFile $file,ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum): OperationResult
+    public static function execAction(Filesystem $disk, ReportFile $file,ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum, bool $is_last_operation = false): OperationResult
     {
-        $operationresult = $reporttreatmentstepresult->addOperationResult("Suppression du Fichier Remote", CriticalityLevelEnum::HIGH)
-            ->setCriticalityLevel($criticalitylevelenum);
+        $operationresult = $reporttreatmentstepresult->addOperationResult("Suppression du Fichier Remote", CriticalityLevelEnum::HIGH, $is_last_operation)
+            ->startOperation();
 
         try{
             $result = $disk->delete($file->fileRemotePath);

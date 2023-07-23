@@ -9,15 +9,24 @@ enum TreatmentStepCode: string
 {
     use EnumTrait;
 
-    #[Description('Telechargement Fichier')]
+    #[Description('Téléchargement Fichier')]
     case DOWNLOADFILE = 'downloadfile';
 
     #[Description('Importation Fichier')]
     case IMPORTFILE = 'importfile';
 
-    #[Description('Formattage données')]
-    case FORMATDATA = 'formatdata';
+    #[Description('Préparation du Formattage')]
+    case PREPAREFORMATTING = 'prepareformatting';
 
-    #[Description('Notification Rapport')]
-    case NOTIFYREPORT = 'notifyreport';
+    #[Description('Formattage Colonnes par ligne')]
+    case FORMATROWCOLUMNS = 'formatrowcolumns';
+
+    #[Description('Merge colonnes Formatées')]
+    case MERGECOLUMNS = 'mergecolumns';
+
+    #[Description('Merge Lignes')]
+    case MERGEROWS = 'mergerows';
+
+    #[Description('Notification Fichier')]
+    case NOTIFYFILE = 'notifyfile';
 }

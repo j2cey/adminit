@@ -2,7 +2,6 @@
 
 namespace App\Models\RetrieveAction;
 
-use Illuminate\Support\Carbon;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Support\Facades\Storage;
@@ -19,9 +18,10 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  */
 class ByName implements IRetrieveAction
 {
-    public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum): OperationResult
+    public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum, bool $is_last_operation = false): OperationResult
     {
-        $operationresult = $reporttreatmentstepresult->addOperationResult("Récupération du ReportFile par Nom",CriticalityLevelEnum::HIGH)->setCriticalityLevel($criticalitylevelenum);
+        $operationresult = $reporttreatmentstepresult->addOperationResult("Récupération du ReportFile par Nom",CriticalityLevelEnum::HIGH, $is_last_operation)
+            ->startOperation();
 
         //if ( ! $disk->exists($file->fileRemotePath) ) {
         //    return $operationresult->endWithFailure("Erreur Connexion / Disponibilité fichier");
@@ -38,9 +38,9 @@ class ByName implements IRetrieveAction
                 $result = Storage::disk('public')->put('/' . $collectedreportfiles_folder . '/' . $local_file_name, $disk->readStream($file->fileRemotePath));
                 if ($result) {
                     //crée un nouveau fichier collecté (CollectedReportFile)
-                    CollectedReportFile::createNew($file, $file->fileRemotePath, $local_file_name, $disk->size($file->fileRemotePath));
+                    $collectedreportfile = CollectedReportFile::createNew($file, $file->fileRemotePath, $local_file_name, $disk->size($file->fileRemotePath));
 
-                    $operationresult->endWithSuccess("Download success !");
+                    $operationresult->endWithSuccess("Download success ! " . "New file collected save as: " . $collectedreportfile->local_file_name);
                 } else {
                     $operationresult->endWithFailure("Error download by name !");
                 }

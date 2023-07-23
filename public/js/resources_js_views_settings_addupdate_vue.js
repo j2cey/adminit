@@ -32,58 +32,150 @@ var Setting = /*#__PURE__*/_createClass(function Setting(setting) {
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "setting-addupdate",
   components: {
-    Multiselect: (vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default())
+    Multiselect: (vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default()),
+    stringvalue: function stringvalue() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_valuefields_stringvalue_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./valuefields/stringvalue */ "./resources/js/views/settings/valuefields/stringvalue.vue"));
+    },
+    integervalue: function integervalue() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_valuefields_integervalue_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./valuefields/integervalue */ "./resources/js/views/settings/valuefields/integervalue.vue"));
+    },
+    boolvalue: function boolvalue() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_valuefields_boolvalue_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./valuefields/boolvalue */ "./resources/js/views/settings/valuefields/boolvalue.vue"));
+    },
+    floatvalue: function floatvalue() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_valuefields_floatvalue_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./valuefields/floatvalue */ "./resources/js/views/settings/valuefields/floatvalue.vue"));
+    },
+    arrayvalue: function arrayvalue() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_valuefields_arrayvalue_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./valuefields/arrayvalue */ "./resources/js/views/settings/valuefields/arrayvalue.vue"));
+    }
   },
   mounted: function mounted() {
     var _this = this;
+    this.$watch("$refs.setting.value",
+    // eslint-disable-next-line no-unused-vars
+    function (new_value, old_value) {
+      _this.setting.value = new_value;
+    });
+    _settingBus__WEBPACK_IMPORTED_MODULE_1__["default"].$on('setting_create', function () {
+      _this.editing = false;
+      _this.setting = new Setting({});
+      // eslint-disable-next-line no-undef
+      _this.settingForm = new Form(_this.setting);
+
+      // eslint-disable-next-line no-undef
+      $('#addUpdateSetting').modal();
+    });
     _settingBus__WEBPACK_IMPORTED_MODULE_1__["default"].$on('setting_edit', function (setting) {
       _this.editing = true;
       _this.setting = new Setting(setting);
+      _this.settingtype_selected = _this.getSettingType(setting.type);
+
+      // eslint-disable-next-line no-undef
       _this.settingForm = new Form(_this.setting);
       _this.settingId = setting.id;
       _this.formTitle = 'Edit Setting';
+      _this.forceRerenderValueField();
+
+      // eslint-disable-next-line no-undef
       $('#addUpdateSetting').modal();
     });
   },
   created: function created() {
     var _this2 = this;
+    // eslint-disable-next-line no-undef
     axios.get('/settings.fetch').then(function (_ref) {
       var data = _ref.data;
       return _this2.groups = data;
+    });
+    // eslint-disable-next-line no-undef
+    axios.get('/settings.types').then(function (_ref2) {
+      var data = _ref2.data;
+      return _this2.settingtypes = data;
     });
   },
   data: function data() {
     return {
       formTitle: 'Create New Setting',
       setting: {},
+      // eslint-disable-next-line no-undef
       settingForm: new Form(new Setting({})),
       settingId: null,
       editing: false,
       loading: false,
-      groups: []
+      groups: [],
+      settingtypes: [],
+      settingtype_selected: null,
+      commom_key: 0,
+      fieldvalue_key: this.generateRandomInteger(10000)
     };
   },
   methods: {
-    updateSetting: function updateSetting() {
+    forceRerenderValueField: function forceRerenderValueField() {
+      this.commom_key = this.generateRandomInteger(10000);
+      this.fieldvalue_key = this.settingForm.type + this.commom_key;
+    },
+    generateRandomInteger: function generateRandomInteger(max) {
+      return Math.floor(Math.random() * max) + 1;
+    },
+    getSettingType: function getSettingType($type) {
+      var typeIndex = this.settingtypes.findIndex(function (s) {
+        return $type === s.value;
+      });
+      if (typeIndex !== -1) {
+        return this.settingtypes[typeIndex];
+      } else {
+        return null;
+      }
+    },
+    settingTypeSelected: function settingTypeSelected() {
+      this.settingForm.type = this.settingtype_selected.value;
+      this.forceRerenderValueField();
+    },
+    createSetting: function createSetting() {
       var _this3 = this;
       this.loading = true;
-      this.settingForm.put("/settings/".concat(this.settingId)).then(function (setting) {
+      this.settingForm.post('/settings').then(function (newsetting) {
         _this3.loading = false;
-        _this3.resetForm();
-        $('#addUpdateSetting').modal('hide');
+        _this3.closeModal();
         _this3.$swal({
+          html: '<small>Paramètre créé avec succès !</small>',
+          icon: 'success',
+          timer: 3000
+        }).then(function () {
+          _settingBus__WEBPACK_IMPORTED_MODULE_1__["default"].$emit('setting_created', newsetting);
+        });
+
+        // eslint-disable-next-line no-unused-vars
+      })["catch"](function (error) {
+        _this3.loading = false;
+      });
+    },
+    updateSetting: function updateSetting() {
+      var _this4 = this;
+      this.loading = true;
+      this.settingForm.put("/settings/".concat(this.settingId)).then(function (setting) {
+        _this4.loading = false;
+        _this4.resetForm();
+        console.log("updateSetting: ", setting);
+
+        // eslint-disable-next-line no-undef
+        $('#addUpdateSetting').modal('hide');
+        _this4.$swal({
           html: '<small>Setting successfully updated !</small>',
           icon: 'success',
           timer: 3000
         }).then(function () {
           _settingBus__WEBPACK_IMPORTED_MODULE_1__["default"].$emit('setting_updated', setting);
         });
+
+        // eslint-disable-next-line no-unused-vars
       })["catch"](function (error) {
-        _this3.loading = false;
+        _this4.loading = false;
       });
     },
     closeModal: function closeModal() {
       this.resetForm();
+      // eslint-disable-next-line no-undef
       $('#addUpdateSetting').modal('hide');
     },
     resetForm: function resetForm() {
@@ -93,6 +185,13 @@ var Setting = /*#__PURE__*/_createClass(function Setting(setting) {
   computed: {
     isValidForm: function isValidForm() {
       return !this.loading;
+    },
+    settingValueField: function settingValueField() {
+      if (this.settingForm.type) {
+        return this.settingForm.type + 'value';
+      } else {
+        return 'stringvalue';
+      }
     }
   }
 });
@@ -182,7 +281,7 @@ var render = function render() {
       id: "name",
       name: "name",
       placeholder: "Name",
-      readonly: ""
+      readonly: _vm.editing
     },
     domProps: {
       value: _vm.settingForm.name
@@ -206,32 +305,32 @@ var render = function render() {
   }, [_c("label", {
     staticClass: "col-sm-4 col-form-label text-xs text-xs",
     attrs: {
-      "for": "type"
+      "for": "select_type"
     }
   }, [_vm._v("Type")]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-8"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.settingForm.type,
-      expression: "settingForm.type"
-    }],
-    staticClass: "form-control form-control-sm",
+  }, [_c("multiselect", {
+    key: "value",
     attrs: {
-      type: "text",
-      id: "type",
-      name: "type",
+      id: "select_type",
+      "selected.sync": "settingtype_selected",
+      value: "",
+      options: _vm.settingtypes,
+      searchable: true,
+      multiple: false,
+      label: "label",
+      "track-by": "value",
       placeholder: "Type"
     },
-    domProps: {
-      value: _vm.settingForm.type
-    },
     on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.settingForm, "type", $event.target.value);
-      }
+      input: _vm.settingTypeSelected
+    },
+    model: {
+      value: _vm.settingtype_selected,
+      callback: function callback($$v) {
+        _vm.settingtype_selected = $$v;
+      },
+      expression: "settingtype_selected"
     }
   }), _vm._v(" "), _vm.settingForm.errors.has("type") ? _c("span", {
     staticClass: "invalid-feedback d-block text-xs",
@@ -241,7 +340,7 @@ var render = function render() {
     domProps: {
       textContent: _vm._s(_vm.settingForm.errors.get("type"))
     }
-  }) : _vm._e()])]), _vm._v(" "), _c("div", {
+  }) : _vm._e()], 1)]), _vm._v(" "), _c("div", {
     staticClass: "form-group row"
   }, [_c("label", {
     staticClass: "col-sm-4 col-form-label text-xs text-xs",
@@ -250,30 +349,15 @@ var render = function render() {
     }
   }, [_vm._v("Value")]), _vm._v(" "), _c("div", {
     staticClass: "col-sm-8"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.settingForm.value,
-      expression: "settingForm.value"
-    }],
-    staticClass: "form-control form-control-sm",
+  }, [_vm.settingtype_selected ? _c(_vm.settingValueField, {
+    key: _vm.fieldvalue_key,
+    ref: _vm.settingForm.full_path,
+    tag: "component",
     attrs: {
-      type: "text",
       id: "value",
-      name: "value",
-      placeholder: "Value"
-    },
-    domProps: {
-      value: _vm.settingForm.value
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.settingForm, "value", $event.target.value);
-      }
+      setting_prop: _vm.settingForm
     }
-  }), _vm._v(" "), _vm.settingForm.errors.has("value") ? _c("span", {
+  }) : _vm._e(), _vm._v(" "), _vm.settingForm.errors.has("value") ? _c("span", {
     staticClass: "invalid-feedback d-block text-xs",
     attrs: {
       role: "alert"
@@ -281,7 +365,7 @@ var render = function render() {
     domProps: {
       textContent: _vm._s(_vm.settingForm.errors.get("value"))
     }
-  }) : _vm._e()])]), _vm._v(" "), _c("div", {
+  }) : _vm._e()], 1)]), _vm._v(" "), _c("div", {
     staticClass: "form-group row"
   }, [_c("label", {
     staticClass: "col-sm-4 col-form-label text-xs text-xs",
@@ -433,18 +517,17 @@ var render = function render() {
     }
   }) : _vm._e()])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer justify-content-between"
-  }, [_c("button", {
-    staticClass: "btn btn-secondary btn-sm",
+  }, [_c("b-button", {
     attrs: {
-      type: "button"
-    },
-    on: {
-      click: _vm.closeModal
+      type: "is-dark",
+      size: "is-small",
+      "data-dismiss": "modal"
     }
-  }, [_vm._v("Close")]), _vm._v(" "), _vm.editing ? _c("button", {
-    staticClass: "btn btn-primary btn-sm",
+  }, [_vm._v("Close")]), _vm._v(" "), _vm.editing ? _c("b-button", {
     attrs: {
-      type: "button",
+      type: "is-primary",
+      size: "is-small",
+      loading: _vm.loading,
       disabled: !_vm.isValidForm
     },
     on: {
@@ -452,10 +535,11 @@ var render = function render() {
         return _vm.updateSetting();
       }
     }
-  }, [_vm._v("Save")]) : _c("button", {
-    staticClass: "btn btn-primary btn-sm",
+  }, [_vm._v("Save")]) : _c("b-button", {
     attrs: {
-      type: "button",
+      type: "is-primary",
+      size: "is-small",
+      loading: _vm.loading,
       disabled: !_vm.isValidForm
     },
     on: {
@@ -463,24 +547,11 @@ var render = function render() {
         return _vm.createSetting();
       }
     }
-  }, [_vm._v("Create New Setting")])])])])]);
+  }, [_vm._v("Create New Setting")])], 1)])])]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
 
-
-/***/ }),
-
-/***/ "./resources/js/views/settings/settingBus.js":
-/*!***************************************************!*\
-  !*** ./resources/js/views/settings/settingBus.js ***!
-  \***************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-
-/* harmony default export */ __webpack_exports__["default"] = (new vue__WEBPACK_IMPORTED_MODULE_0__["default"]());
 
 /***/ }),
 

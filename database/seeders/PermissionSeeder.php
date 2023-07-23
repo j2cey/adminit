@@ -51,7 +51,7 @@ class PermissionSeeder extends Seeder
         foreach ($class_methods as $class_method) {
             $permissions = Permissions::$class_method()->getAllPermissions();
             foreach ($permissions as $permission) {
-                Permission::create(['name' => $permission[0], 'level' => $permission[1]]);
+                Permission::firstOrCreate(['name' => $permission[0], 'level' => $permission[1]]);
             }
         }
 

@@ -6,9 +6,21 @@ use App\Models\Setting;
 use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class SettingRequest
+ * @package App\Http\Requests\Setting
+ *
+ * @property string $name
+ * @property string|null $full_path
+ * @property string|null $value
+ * @property string $type
+ * @property string $array_sep
+ * @property string|null $description
+ */
 class SettingRequest extends FormRequest
 {
     use RequestTraits;
+
     /**
      * Determine if the user is authorized to make this request.
      *

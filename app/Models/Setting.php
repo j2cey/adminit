@@ -23,17 +23,76 @@ use App\Traits\ReflexiveRelationship\HasReflexivePath;
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Setting|null $group
+ * @method static Setting create(array $data)
  */
 class Setting extends Model implements Auditable
 {
     use HasFactory, HasReflexivePath, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
+    protected $with = ['maingroup','group'];
+
+    public static $SETTINGTYPES = [
+        [
+            'label' => "string", 'value' => "string", 'parserFunc' => "getParsedStringValue", 'validationRule' => "required|string"
+        ],
+        [
+            'label' => "integer", 'value' => "integer", 'parserFunc' => "getParsedIntegerValue", 'validationRule' => "required|integer"
+        ],
+        [
+            'label' => "bool", 'value' => "bool", 'parserFunc' => "getParsedBoolValue", 'validationRule' => "required|boolean"
+        ],
+        [
+            'label' => "float", 'value' => "float", 'parserFunc' => "getParsedFloatValue", 'validationRule' => "required|integer"
+        ],
+        [
+            'label' => "array", 'value' => "array", 'parserFunc' => "getParsedArrayValue", 'validationRule' => "required|string"
+        ],
+    ];
+
+    #region Validation Tools
+
+    public static function defaultRules($type,$value) {
+        $rules = [
+            'name' => ['required'],
+            'type' => ['required'],
+            'value' => "",
+        ];
+        if ( ! is_null($value) ) {
+            $settingtype = self::getSettingType($type);
+            $rules['value'] = $settingtype['validationRule'];
+        }
+        return $rules;
+    }
+    public static function createRules($type,$value)  {
+        return array_merge(self::defaultRules($type,$value), [
+
+        ]);
+    }
+    public static function updateRules($model) {
+        return array_merge(self::defaultRules($model->type,$model->value), [
+
+        ]);
+    }
+    public static function validationMessages() {
+        return [];
+    }
+
+    #endregion
 
     #region Relationships
 
+    public function maingroup() {
+        return $this->belongsTo(Setting::class, "main_group_id");
+    }
+
     public function group() {
         return $this->belongsTo(Setting::class, "group_id");
+    }
+
+    public function mainsubsettings() {
+        return $this->hasMany(Setting::class, 'main_group_id');
     }
 
     public function subsettings() {
@@ -43,6 +102,51 @@ class Setting extends Model implements Auditable
     #endregion
 
     #region Custom Functions
+
+    /**
+     * @param string $name
+     * @param Setting|null $group
+     * @param $value
+     * @param $type
+     * @param string $array_sep
+     * @param $description
+     * @return Setting
+     */
+    public static function createNew(string $name, Setting $group = null, $value = null, $type = null, string $array_sep = ",", $description = null): Setting
+    {
+        $data = ['name' => $name, 'array_sep' => $array_sep];
+
+        if (!is_null($value)) {
+            $data['value'] = $value;
+        }
+        if (!is_null($type)) {
+            $data['type'] = $type;
+        }
+        if (!is_null($description)) {
+            $data['description'] = $description;
+        }
+        $setting = Setting::create($data);
+
+        if (!is_null($group)) {
+            $setting->setGroup($group);
+            $setting->setMainGroup($group);
+        }
+
+        return $setting;
+    }
+
+    public function updateThis($value, $type, $array_sep, $group, $description) {
+        $this->value = $value;
+        $this->type = $type;
+        $this->array_sep = $array_sep;
+        $this->description = $description;
+
+        $this->setGroup($group);
+        $this->setMainGroup($group);
+        $this->save();
+
+        return $this;
+    }
 
     public static function getAllGrouped() {
         try {
@@ -55,14 +159,15 @@ class Setting extends Model implements Auditable
 
             $all_settings = Setting::all()->toArray();
             $tree_settings = self::buildTree($all_settings);
+            $final_array = self::cleanTree($tree_settings);
 
-            return self::cleanTree($tree_settings);
+            return $final_array;
         } catch (\Exception $e) {
             return [];
         }
     }
 
-    private static function buildTree(array $elements, $parentId = 0) {
+    public static function buildTree(array $elements, $parentId = 0) {
         $branch = array();
 
         foreach ($elements as $element) {
@@ -78,7 +183,7 @@ class Setting extends Model implements Auditable
         return $branch;
     }
 
-    private static function cleanTree($tree) {
+    public static function cleanTree($tree) {
         $final_tree = [];
         foreach ($tree as $key => $item) {
             if (isset($item['children'])) {
@@ -92,20 +197,64 @@ class Setting extends Model implements Auditable
     }
 
     private static function getParsedValue($setting) {
+        $type = self::getSettingType($setting['type']);
+        // call the type parser function from a string stored in the variable 'parserFunc'
+        return self::{$type['parserFunc']}($setting);
+    }
+
+    private static function getParsedStringValue($setting) {
         if ($setting['value'] === null) {
             return $setting['value'];
-        } elseif ($setting['type'] === "string") {
-            return $setting['value'];
-        } elseif ($setting['type'] === "integer") {
-            return (int)$setting['value'];
-        } elseif ($setting['type'] === "bool" || $setting['type'] === "boolean") {
-            return (bool)$setting['value'];
-        } elseif ($setting['type'] === "float") {
-            return (float)$setting['value'];
-        } elseif ($setting['type'] === "array") {
-            return explode($setting['array_sep'], $setting['value']);
         }
         return $setting['value'];
+    }
+    private static function getParsedIntegerValue($setting) {
+        if ($setting['value'] === null) {
+            return $setting['value'];
+        }
+        return (int)$setting['value'];
+    }
+    private static function getParsedBoolValue($setting) {
+        if ($setting['value'] === null) {
+            return $setting['value'];
+        }
+        return (bool)$setting['value'];
+    }
+    private static function getParsedFloatValue($setting) {
+        if ($setting['value'] === null) {
+            return $setting['value'];
+        }
+        return (float)$setting['value'];
+    }
+    private static function getParsedArrayValue($setting) {
+        if ($setting['value'] === null) {
+            return $setting['value'];
+        }
+        return explode($setting['array_sep'], $setting['value']);
+    }
+
+    public static function getSettingType($type) {
+        foreach (self::$SETTINGTYPES as $SETTINGTYPE) {
+            if ($SETTINGTYPE['value'] === $type) {
+                return $SETTINGTYPE;
+            }
+        }
+        return null;
+    }
+
+    public function setMainGroup(Setting $group = null, $save = true) : Setting {
+
+        $maingroup = $this->getMainGroup($group);
+
+        if ( is_null($maingroup) ) {
+            $this->maingroup()->disassociate();
+        } else {
+            $this->maingroup()->associate($maingroup);
+        }
+
+        if ($save) { $this->save(); }
+
+        return $this;
     }
 
     public function setGroup(Setting $group = null, $save = true) : Setting {
@@ -118,6 +267,40 @@ class Setting extends Model implements Auditable
         if ($save) { $this->save(); }
 
         return $this;
+    }
+
+    /**
+     * @param Setting|null $group
+     * @return Setting|mixed|null
+     */
+    public function getMainGroup(Setting $group = null) {
+        if ( is_null($group) ) {
+            return null;
+        }
+        $maingroup = $group;
+        $next_group = $group->group;
+        while ( ! is_null($next_group) ) {
+            $maingroup = $next_group;
+            $next_group = $maingroup->group;
+        }
+        return $maingroup;
+    }
+
+    /**
+     * @return Setting|null
+     */
+    public static function getReportTreatmentActivate() {
+        return Setting::where('full_path', "reporttreatment.activate")->first();
+    }
+
+    public static function setReportTreatmentActivate(bool $activate) {
+        $setting = Setting::getReportTreatmentActivate();
+        if ($setting) {
+            $value = $activate ? "1" : "0";
+            $setting->update([
+                'value' => $value
+            ]);
+        }
     }
 
     #endregion

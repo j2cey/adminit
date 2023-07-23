@@ -23,7 +23,7 @@ class NotifyReport extends Mailable
      */
     public function __construct(CollectedReportFile $collectedreportfile)
     {
-        $this->subject = $collectedreportfile->reportfile->report->title;
+        $this->subject = $collectedreportfile->reportfile->report->title . " (" . $collectedreportfile->reportfile->name . ")";
         $this->collectedreportfile = $collectedreportfile;
 
         $this->htmlvalue = $collectedreportfile->htmlformattedvalue->getFormattedValue();

@@ -36,6 +36,33 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     editRole: function editRole(role) {
       _roleBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('role_edit', role);
+    },
+    deleteRole: function deleteRole(role) {
+      var _this2 = this;
+      this.$swal({
+        title: 'Etes-vous sure ?',
+        text: "Vous ne pourrez pas revenir en arrière !",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Oui, supprimer !',
+        cancelButtonText: 'Annuler'
+      }).then(function (result) {
+        if (result.value) {
+          axios["delete"]("/roles/".concat(role.id)).then(function (resp) {
+            _this2.$swal({
+              html: '<small>Profile supprimé avec succès !</small>',
+              icon: 'success',
+              timer: 3000
+            }).then(function () {
+              _this2.$emit('role_deleted', role);
+            });
+          })["catch"](function (error) {
+            window.handleErrors(error);
+          });
+        }
+      });
     }
   },
   computed: {}
@@ -90,6 +117,20 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fa fa-pencil-square-o",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])]), _vm._v(" "), _c("span", {
+    staticClass: "text text-xs text-center"
+  }, [_c("a", {
+    staticClass: "text text-danger",
+    on: {
+      click: function click($event) {
+        return _vm.deleteRole(_vm.role);
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-trash",
     attrs: {
       "aria-hidden": "true"
     }

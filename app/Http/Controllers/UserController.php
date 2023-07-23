@@ -61,6 +61,12 @@ class UserController extends Controller
         return User::all();
     }
 
+    public function fetchone($id) {
+        $user = User::find($id);
+
+        return new UserResource($user);
+    }
+
     /**
      * [edit description]
      * @param  User $user [description]

@@ -4,12 +4,15 @@ namespace App\Models\ReportTreatments;
 
 use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
+use App\Enums\TreatmentStepCode;
 use App\Enums\TreatmentStateEnum;
 use App\Enums\TreatmentResultEnum;
 use App\Enums\CriticalityLevelEnum;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\ReportTreatmentResult\IsReportTreatment;
+use App\Contracts\ReportTreatmentResult\IIsReportTreatment;
 
 /**
  * Class ReportTreatmentStepResult
@@ -26,12 +29,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $start_at
  * @property Carbon $end_at
  * @property int $operation_duration
- * @property string $result
- * @property string $state
+ * @property TreatmentResultEnum $result
+ * @property TreatmentStateEnum $state
+ * @property string|TreatmentStepCode $code
  * @property string $criticality_level
  * @property string $message
+ * @property int $attempts
  *
  * @property string $description
+ *
+ * @property Carbon $retry_start_at
+ * @property int $retries_session_count
+ * @property Carbon $retry_end_at
+ *
+ * @property string $payload
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -41,17 +52,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property ReportTreatmentStepResult|null $reporttreatmentstepresult
  * @property OperationResult|null $parentoperation
- * @property boolean $isSuccess
- * @property boolean $isFailed
+ * @property OperationResult[]|null $childrenoperations
  * @method static OperationResult create(string[] $array)
+ * @property boolean $isLastOperation
  */
-class OperationResult extends BaseModel implements Auditable
+class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, IsReportTreatment, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $casts = [
         'result' => TreatmentResultEnum::class,
+        'state' => TreatmentStateEnum::class,
+        'criticality_level' => CriticalityLevelEnum::class,
+        'code' => TreatmentStepCode::class,
     ];
 
     #region Validation Rules
@@ -82,12 +96,17 @@ class OperationResult extends BaseModel implements Auditable
 
     #region Accessors & Mutators
 
-    public function getIsSuccessAttribute() {
-        return ($this->result == TreatmentResultEnum::SUCCESS);
+    public function getIsLastOperationAttribute() {
+        if ( is_null( $this->reporttreatmentstepresult->lastoperation )) {
+            return false;
+        } else {
+            return $this->reporttreatmentstepresult->lastoperation->id === $this->id;
+        }
     }
-    public function getIsFailedAttribute() {
-        return ($this->result == TreatmentResultEnum::FAILED);
-    }
+
+    #endregion
+
+    #region Scopes
 
     #endregion
 
@@ -98,26 +117,39 @@ class OperationResult extends BaseModel implements Auditable
     public function parentoperation() {
         return $this->belongsTo(OperationResult::class, "parent_operation_id");
     }
+    public function childrenoperations() {
+        return $this->hasMany(OperationResult::class, "parent_operation_id");
+    }
+    public function lastoperation() {
+        return $this->belongsTo(OperationResult::class, "last_operation_id");
+    }
     #endregion
 
     #region Custom Functions
 
+    /**
+     * Create a new OperationResult Object
+     * @param string $name
+     * @param int|null $operation_no
+     * @param Model|ReportTreatmentStepResult|null $reporttreatmentstepresult
+     * @param CriticalityLevelEnum|null $criticality_level
+     * @param string|null $message
+     * @param string|null $description
+     * @param Model|OperationResult|null $parentoperation
+     * @return OperationResult
+     */
     public static function createNew(
         string $name,
         int $operation_no = null,
         Model|ReportTreatmentStepResult $reporttreatmentstepresult = null,
-        Carbon $start_at = null, Carbon $end_at = null, int $operation_duration = null,
-        TreatmentStateEnum $state = null, TreatmentResultEnum $result = null, CriticalityLevelEnum $criticality_level = null,
+        CriticalityLevelEnum $criticality_level = null,
         string $message = null, string $description = null, Model|OperationResult $parentoperation = null): OperationResult
     {
         $operationresult = OperationResult::create([
             'name' => $name,
-            'operation_no' => $operation_no,
-            'start_at' => $start_at ?? Carbon::now(),
-            'end_at' => $end_at ?? Carbon::now(),
-            'operation_duration' => $operation_duration,
-            'state' => $state ? $state->value : TreatmentStateEnum::WAITING->value,
-            'result' => $result ? $result->value : TreatmentResultEnum::NONE->value,
+            'operation_no' => $operation_no ?? 0,
+            'state' => TreatmentStateEnum::WAITING->value,
+            'result' => TreatmentResultEnum::NONE->value,
             'criticality_level' => $criticality_level ? $criticality_level->value : CriticalityLevelEnum::MEDIUM->value,
             'message' => $message,
             'description' => $description,
@@ -131,6 +163,22 @@ class OperationResult extends BaseModel implements Auditable
         return $operationresult;
     }
 
+    /**
+     * Update this OperationResult Object
+     * @param string $name
+     * @param int|null $operation_no
+     * @param Model|ReportTreatmentStepResult|null $reporttreatmentstepresult
+     * @param Carbon|null $start_at
+     * @param Carbon|null $end_at
+     * @param int|null $operation_duration
+     * @param TreatmentStateEnum|null $state
+     * @param TreatmentResultEnum|null $result
+     * @param CriticalityLevelEnum|null $criticality_level
+     * @param string|null $message
+     * @param string|null $description
+     * @param Model|OperationResult|null $parentoperation
+     * @return $this
+     */
     public function updateThis(
         string $name,
         int $operation_no = null,
@@ -158,28 +206,100 @@ class OperationResult extends BaseModel implements Auditable
         return $this;
     }
 
-    public function endWithSuccess(string $message = null): OperationResult
+    /**
+     * Start the treatment of this OperationResult object
+     * @return $this
+     */
+    public function startOperation(): OperationResult
     {
-        $this->state = TreatmentStateEnum::COMPLETED->value;
-        $this->result = TreatmentResultEnum::SUCCESS->value;
-        $this->message = $message ?? "Success";
-        $this->end_at = Carbon::now();
-        $this->save();
+        $this->setStarting(true);
+        $this->setRunning(true);
+
+        if ( is_null($this->parentoperation) ) {
+            $this->reporttreatmentstepresult->operationStarted($this);
+        } else {
+            $this->parentoperation->childOperationStarted($this);
+        }
 
         return $this;
     }
 
+    /**
+     * End the treatment of this OperationResult object
+     * @param TreatmentResultEnum $treatmentresultenum
+     * @param string $message
+     * @param bool $complete_treatment
+     * @return void
+     */
+    public function endOperation(TreatmentResultEnum $treatmentresultenum, string $message, bool $complete_treatment) {
+        $this->setEnding($treatmentresultenum, $message, $complete_treatment);
+
+        if ( is_null($this->parentoperation) ) {
+            $this->reporttreatmentstepresult->operationCompleted($this);
+        } else {
+            $this->parentoperation->childOperationCompleted($this);
+        }
+    }
+
+    /**
+     * End the treatment of this OperationResult object with success
+     * @param string|null $message
+     * @return $this
+     */
+    public function endWithSuccess(string $message = null, bool $complete_treatment = true): OperationResult
+    {
+        $this->endOperation(TreatmentResultEnum::SUCCESS, $message ?? "Success", $complete_treatment);
+
+        return $this;
+    }
+
+    /**
+     * End the treatment of this OperationResult object with failure
+     * @param string|null $message
+     * @return $this
+     */
     public function endWithFailure(string $message = null): OperationResult
     {
-        $this->state = TreatmentStateEnum::COMPLETED->value;
-        $this->result = TreatmentResultEnum::FAILED->value;
-        $this->message = $message ?? "Failed";
-        $this->end_at = Carbon::now();
-        $this->save();
+        $this->endOperation(TreatmentResultEnum::FAILED, $message ?? "Failed", true);
 
         return $this;
     }
 
+    public function childOperationStarted(Model|OperationResult $childoperation) {
+        if ( ! $this->isRunning ) {
+            $this->startOperation();
+        }
+    }
+
+    public function childOperationCompleted(Model|OperationResult $childoperation) {
+        /**  condition de Fin de l'operation:
+         *      - l'operation enfant qui s'acheve n'est pas un echec
+         *      - l'operation enfant qui s'acheve est la derniere et est un succes
+         */
+        $complete_treatment = !$childoperation->isFailed && $childoperation->isLastOperation && $childoperation->isSuccess;
+        $this->endOperation($childoperation->result,$childoperation->message, $complete_treatment);
+    }
+
+    public function setAsLastOperation() {
+        if ( is_null($this->parentoperation) ) {
+            $this->reporttreatmentstepresult->setLastOperation($this);
+        } else {
+            $this->parentoperation->setLastOperation($this);
+        }
+    }
+
+    /**
+     * @return OperationResult
+     */
+    public function setAsCurrentOperation() {
+        $this->reporttreatmentstepresult->setCurrentOperation($this);
+        return $this;
+    }
+
+    /**
+     * @param CriticalityLevelEnum $criticalitylevel
+     * @return OperationResult
+     */
     public function setCriticalityLevel(CriticalityLevelEnum $criticalitylevel): OperationResult
     {
         $this->criticality_level = $criticalitylevel->value;
@@ -188,11 +308,50 @@ class OperationResult extends BaseModel implements Auditable
         return $this;
     }
 
-    public function setReportTreatmentStepResult(Model|ReportTreatmentStepResult|null $reporttreatmentstepresult) {
+    /**
+     * @return OperationResult
+     */
+    public function setCode(TreatmentStepCode $code) {
+        $this->code = $code;
+        $this->save();
+
+        return $this;
+    }
+
+    public function setReportTreatmentStepResult(Model|ReportTreatmentStepResult $reporttreatmentstepresult = null) {
         if ( ! is_null($reporttreatmentstepresult) ) $this->reporttreatmentstepresult()->associate($reporttreatmentstepresult);
     }
-    public function setParent(Model|OperationResult|null $parentoperation) {
-        if ( ! is_null($parentoperation) ) $this->parentoperation()->associate($parentoperation);
+    public function setParent(Model|OperationResult $childoperation = null) {
+        $operation_no = $this->childrenoperations()->count() + 1;
+        if ( ! is_null($childoperation) ) {
+            $this->parentoperation()->associate($childoperation)->save();
+            $childoperation->update([
+                'operation_no' => $operation_no
+            ]);
+        }
+    }
+    public function addChildOperation(string $name, CriticalityLevelEnum $criticality_level = null) {
+        $childoperation = OperationResult::createNew($name,null,null,$criticality_level);
+        $childoperation->setParent($childoperation);
+        return $childoperation;
+    }
+
+    /**
+     * @return OperationResult|null
+     */
+    public function getNextChildOperationWaiting() {
+        if ( $this->childrenoperations()->waiting()->notFailed()->count() >= $this->childrenoperations()->count() ) {
+            return null;
+        }
+        $nextchildoperation = $this->childrenoperations()
+            ->waiting()->notFailed()
+            ->orderBy('operation_no', 'ACS')->first();
+
+        return $nextchildoperation;
+    }
+
+    public function setLastOperation(Model|OperationResult $operation) {
+        $this->lastoperation()->associate($operation)->save();
     }
 
     #endregion

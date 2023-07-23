@@ -15,23 +15,51 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     setting_prop: {}
   },
-  components: {},
+  components: {
+    stringdisplay: function stringdisplay() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_valuedisplay_stringdisplay_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./valuedisplay/stringdisplay */ "./resources/js/views/settings/valuedisplay/stringdisplay.vue"));
+    },
+    integerdisplay: function integerdisplay() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_valuedisplay_integerdisplay_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./valuedisplay/integerdisplay */ "./resources/js/views/settings/valuedisplay/integerdisplay.vue"));
+    },
+    booldisplay: function booldisplay() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_valuedisplay_booldisplay_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./valuedisplay/booldisplay */ "./resources/js/views/settings/valuedisplay/booldisplay.vue"));
+    },
+    floatdisplay: function floatdisplay() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_valuedisplay_floatdisplay_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./valuedisplay/floatdisplay */ "./resources/js/views/settings/valuedisplay/floatdisplay.vue"));
+    },
+    arraydisplay: function arraydisplay() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_settings_valuedisplay_arraydisplay_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./valuedisplay/arraydisplay */ "./resources/js/views/settings/valuedisplay/arraydisplay.vue"));
+    }
+  },
   mounted: function mounted() {
     var _this = this;
     _settingBus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('setting_updated', function (setting) {
+      console.log("setting_updated received");
       if (_this.setting.id === setting.id) {
         _this.setting = setting;
+        _this.forceRerenderValueDisplay();
+        console.log("setting_updated updated: ", _this.setting, "fieldvalue_key: ", _this.fieldvalue_key);
       }
     });
   },
   data: function data() {
     return {
-      setting: this.setting_prop
+      setting: this.setting_prop,
+      commom_key: 0,
+      fieldvalue_key: this.generateRandomInteger(10000)
     };
   },
   methods: {
+    generateRandomInteger: function generateRandomInteger(max) {
+      return Math.floor(Math.random() * max) + 1;
+    },
+    forceRerenderValueDisplay: function forceRerenderValueDisplay() {
+      this.commom_key = this.generateRandomInteger(10000);
+      this.fieldvalue_key = this.setting.id + this.commom_key;
+    },
     editSetting: function editSetting(setting) {
-      _settingBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('setting_edit', setting);
+      this.$emit('setting_edit', setting);
     }
   },
   computed: {}
@@ -62,21 +90,32 @@ var render = function render() {
     staticStyle: {
       "max-width": "100%"
     }
-  }, [_vm._v(_vm._s(_vm.setting.full_path))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-4 col-6 border-right"
+  }, [_vm._v(_vm._s(_vm.setting.name))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-3 col-6 border-right"
   }, [_c("span", {
     staticClass: "text text-xs"
-  }, [_vm._v(_vm._s(_vm.setting.value))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-3 col-6 border-right"
-  }, [_vm.setting.type === "string" ? _c("span", {
-    staticClass: "badge badge-primary text-xs"
-  }, [_vm._v(_vm._s(_vm.setting.type))]) : _vm.setting.type === "integer" ? _c("span", {
-    staticClass: "badge badge-success text-xs"
-  }, [_vm._v(_vm._s(_vm.setting.type))]) : _vm.setting.type === "array" ? _c("span", {
-    staticClass: "badge badge-warning text-xs"
-  }, [_vm._v(_vm._s(_vm.setting.type))]) : _c("span", {
-    staticClass: "badge badge-secondary text-xs"
-  }, [_vm._v(_vm._s(_vm.setting.type))])]), _vm._v(" "), _c("div", {
+  }, [_vm.setting.type ? _c(_vm.setting.type + "display", {
+    key: _vm.fieldvalue_key,
+    ref: _vm.setting.full_path,
+    tag: "component",
+    attrs: {
+      id: "value",
+      setting_prop: _vm.setting
+    }
+  }) : _vm._e()], 1)]), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-4 col-6 border-right"
+  }, [_c("b-field", [_c("b-input", {
+    staticStyle: {
+      "min-height": "2px"
+    },
+    attrs: {
+      type: "textarea",
+      "group-multiline": "",
+      "custom-class": "text text-xs border-0",
+      readonly: "",
+      value: _vm.setting.description
+    }
+  })], 1)], 1), _vm._v(" "), _c("div", {
     staticClass: "col-sm-2 col-6"
   }, [_c("span", {
     staticClass: "text text-xs text-center"
@@ -97,19 +136,6 @@ var render = function render() {
 var staticRenderFns = [];
 render._withStripped = true;
 
-
-/***/ }),
-
-/***/ "./resources/js/views/settings/settingBus.js":
-/*!***************************************************!*\
-  !*** ./resources/js/views/settings/settingBus.js ***!
-  \***************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-
-/* harmony default export */ __webpack_exports__["default"] = (new vue__WEBPACK_IMPORTED_MODULE_0__["default"]());
 
 /***/ }),
 

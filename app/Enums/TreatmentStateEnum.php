@@ -21,6 +21,9 @@ enum TreatmentStateEnum: string
     #[Description('Terminé')]
     case COMPLETED = 'completed';
 
+    #[Description('En cours de réessai')]
+    case RETRYING = 'retrying';
+
     #[Description('Terminé & tout rééssayé')]
     case ALLTRIED = 'alltried';
 }

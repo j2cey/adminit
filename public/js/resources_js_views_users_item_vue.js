@@ -18,6 +18,9 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     RoleDisplay: function RoleDisplay() {
       return __webpack_require__.e(/*! import() */ "resources_js_views_roles_display_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../roles/display */ "./resources/js/views/roles/display.vue"));
+    },
+    StatusDisplay: function StatusDisplay() {
+      return __webpack_require__.e(/*! import() */ "resources_js_views_statuses_inline-display_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../statuses/inline-display */ "./resources/js/views/statuses/inline-display.vue"));
     }
   },
   mounted: function mounted() {
@@ -28,6 +31,13 @@ __webpack_require__.r(__webpack_exports__);
       }
     });
   },
+  created: function created() {
+    var _this2 = this;
+    axios.get('/users.fetchone/' + this.user_prop.id).then(function (_ref) {
+      var data = _ref.data;
+      return _this2.user = data;
+    });
+  },
   data: function data() {
     return {
       user: this.user_prop
@@ -36,6 +46,33 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     editUser: function editUser(user) {
       _userBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('user_edit', user);
+    },
+    deleteUser: function deleteUser(user) {
+      var _this3 = this;
+      this.$swal({
+        title: 'Etes-vous sure ?',
+        text: "Vous ne pourrez pas revenir en arrière !",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Oui, supprimer !',
+        cancelButtonText: 'Annuler'
+      }).then(function (result) {
+        if (result.value) {
+          axios["delete"]("/users/".concat(user.id)).then(function (resp) {
+            _this3.$swal({
+              html: '<small>Utilisateur supprimé avec succès !</small>',
+              icon: 'success',
+              timer: 3000
+            }).then(function () {
+              _this3.$emit('user_deleted', user);
+            });
+          })["catch"](function (error) {
+            window.handleErrors(error);
+          });
+        }
+      });
     }
   },
   computed: {}
@@ -64,11 +101,11 @@ var render = function render() {
   }, [_c("span", {
     staticClass: "text text-sm"
   }, [_vm._v(_vm._s(_vm.user.name))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-4 col-6 border-right"
+    staticClass: "col-sm-3 col-6 border-right"
   }, [_c("span", {
     staticClass: "text text-xs"
   }, [_vm._v(_vm._s(_vm.user.email))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-3 col-6 border-right"
+    staticClass: "col-sm-2 col-6 border-right"
   }, _vm._l(_vm.user.roles, function (role) {
     return _vm.user.roles ? _c("div", {
       key: role.id
@@ -78,6 +115,15 @@ var render = function render() {
       }
     })], 1) : _vm._e();
   }), 0), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-2 col-6 border-right"
+  }, [_vm.user.status ? _c("StatusDisplay", {
+    key: _vm.user.id,
+    attrs: {
+      model_type_prop: _vm.user.model_type,
+      model_id_prop: _vm.user.id,
+      status_prop: _vm.user.status
+    }
+  }) : _vm._e()], 1), _vm._v(" "), _c("div", {
     staticClass: "col-sm-2 col-6"
   }, [_c("span", {
     staticClass: "text text-xs text-center"
@@ -93,24 +139,25 @@ var render = function render() {
     attrs: {
       "aria-hidden": "true"
     }
+  })])]), _vm._v(" "), _c("span", {
+    staticClass: "text text-xs text-center"
+  }, [_c("a", {
+    staticClass: "text text-danger",
+    on: {
+      click: function click($event) {
+        return _vm.deleteUser(_vm.user);
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-trash",
+    attrs: {
+      "aria-hidden": "true"
+    }
   })])])])]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
 
-
-/***/ }),
-
-/***/ "./resources/js/views/users/userBus.js":
-/*!*********************************************!*\
-  !*** ./resources/js/views/users/userBus.js ***!
-  \*********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-
-/* harmony default export */ __webpack_exports__["default"] = (new vue__WEBPACK_IMPORTED_MODULE_0__["default"]());
 
 /***/ }),
 

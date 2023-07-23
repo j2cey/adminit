@@ -58,6 +58,10 @@ Route::get('settings.fetch',[SettingController::class,'fetch'])
     ->name('settings.fetch')
     ->middleware('auth');
 
+Route::get('settings.types',[SettingController::class,'settingtypes'])
+    ->name('settings.types')
+    ->middleware('auth');
+
 Route::get('settings.test', function () {
     dd(config('Settings.selretrieveaction.default_actions_scopes'));
 });
@@ -89,6 +93,9 @@ Route::get('users.fetch',[UserController::class,'fetch'])
     ->middleware('auth');
 Route::get('users.fetchall',[UserController::class,'fetchall'])
     ->name('users.fetchall')
+    ->middleware('auth');
+Route::get('users.fetchone/{id}',[UserController::class,'fetchone'])
+    ->name('users.fetchone')
     ->middleware('auth');
 
 #endregion

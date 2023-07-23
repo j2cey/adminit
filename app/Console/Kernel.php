@@ -24,8 +24,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // exec Report schedule
-        $schedule->command('report:exec')->everyFiveMinutes();
+        $reporttreatment_activate = config('Settings.reporttreatment.activate');
+        //\Log::info("reporttreatment_activate: ". $reporttreatment_activate);
+        if ($reporttreatment_activate) {
+            // exec Report schedule
+            //$schedule->command('report:exec')->cron('* * * * *');
+            $schedule->command('report:exec')->everyMinute();
+        }
     }
 
     /**

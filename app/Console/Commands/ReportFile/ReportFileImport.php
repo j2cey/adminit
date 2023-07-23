@@ -3,7 +3,9 @@
 namespace App\Console\Commands\ReportFile;
 
 use Illuminate\Console\Command;
+use App\Enums\TreatmentStepCode;
 use App\Imports\ReportFilesImport;
+use App\Models\ReportFile\ReportFile;
 use App\Models\ReportFile\CollectedReportFile;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
@@ -40,16 +42,30 @@ class ReportFileImport extends Command
      */
     public function handle()
     {
-        \Log::info("Importation Fichiers Rapport en cours de traitement...");
+        $this->info("Importation Fichiers Rapport en cours de traitement...");
 
-        $file_to_import = CollectedReportFile::first();
+        $reportfiles = ReportFile::getActives();
+        $launched_execs = 0;
 
-        if ( ! is_null($file_to_import) ) {
-            $treatmentstepresult = ReportTreatmentStepResult::createNew("Chargement du Fichier Rapport dans la BD");
-            $file_to_import->importToDb($treatmentstepresult,true);
+        foreach ($reportfiles as $reportfile) {
+            if ( $reportfile->reportTreatmentResultsWaiting()->count() > 0 ) {
+                $reporttreatmentresults = $reportfile->reportTreatmentResultsWaiting;
+
+                foreach ($reporttreatmentresults as $reporttreatmentresult) {
+                    if ( $reporttreatmentresult->currentstep->code == TreatmentStepCode::DOWNLOADFILE && $reporttreatmentresult->currentstep->isSuccess ) {
+                        $launched_execs += 1;
+                        //$reporttreatmentresult->goToNextStep();
+                        $reportfile->importLastCollectedFile($reporttreatmentresult, false);
+                        break;
+                    }
+                }
+                if ($launched_execs > 0) {
+                    break;
+                }
+            }
         }
 
-        \Log::info("Traitement termine.");
+        $this->info("Traitement termine. " . $launched_execs . " Fichier(s) lancés");
 
         return 0;
     }

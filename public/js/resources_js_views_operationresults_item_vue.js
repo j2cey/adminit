@@ -89,7 +89,13 @@ var render = function render() {
     staticClass: "text text-xs"
   }, [_vm._v("Création")]), _vm._v(" "), _c("dd", {
     staticClass: "text text-xs"
-  }, [_vm._v(_vm._s(_vm._f("formatDate")(_vm.operationresult.created_at)))])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm._f("formatDate")(_vm.operationresult.created_at)))]), _vm._v(" "), _c("dt", {
+    staticClass: "text text-xs"
+  }, [_vm._v("Tentatives")]), _vm._v(" "), _c("dd", {
+    staticClass: "text text-xs"
+  }, [_vm._v(_vm._s(_vm.operationresult.attempts))]), _vm._v(" "), _c("dt", {
+    staticClass: "text text-xs"
+  }, [_vm._v("Début Réssais")])])]), _vm._v(" "), _c("div", {
     staticClass: "col"
   }, [_c("dl", [_c("dt", {
     staticClass: "text text-xs"
@@ -117,7 +123,25 @@ var render = function render() {
     staticClass: "text text-xs"
   }, [_vm._v("Message")]), _vm._v(" "), _c("dd", {
     staticClass: "col-sm-8 offset-sm-4 text-xs"
-  }, [_vm._v(_vm._s(_vm.operationresult.message))])])])]);
+  }, [_vm._v(_vm._s(_vm.operationresult.message))]), _vm._v(" "), _c("dd", {
+    staticClass: "text text-xs"
+  }, [_vm._v(_vm._s(_vm._f("formatDate")(_vm.operationresult.retry_start_at)))]), _vm._v(" "), _c("dt", {
+    staticClass: "text text-xs"
+  }, [_vm._v("Nombre Réssais")]), _vm._v(" "), _c("dd", {
+    staticClass: "text text-xs"
+  }, [_vm._v(_vm._s(_vm.operationresult.retries_session_count))]), _vm._v(" "), _c("dt", {
+    staticClass: "text text-xs"
+  }, [_vm._v("Fin Réssais")]), _vm._v(" "), _c("dd", {
+    staticClass: "text text-xs"
+  }, [_vm._v(_vm._s(_vm._f("formatDate")(_vm.operationresult.retry_end_at)))]), _vm._v(" "), _c("dt", {
+    staticClass: "text text-xs"
+  }, [_vm._v("Nombre de Sous-operations")]), _vm._v(" "), _c("dd", {
+    staticClass: "text text-xs"
+  }, [_vm._v(_vm._s(_vm._f("formatDate")(_vm.operationresult.childrenoperations.length)))]), _vm._v(" "), _c("dt", {
+    staticClass: "text text-xs"
+  }, [_vm._v("Payload")]), _vm._v(" "), _c("dd", {
+    staticClass: "col-sm-8 offset-sm-4 text-xs"
+  }, [_vm._v(_vm._s(_vm.operationresult.payload))])])])]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
