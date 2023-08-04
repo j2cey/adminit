@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\ReportTreatmentResult;
+namespace App\Traits\ReportTreatment;
 
 use App\Models\Reports\Report;
 use App\Enums\TreatmentStateEnum;

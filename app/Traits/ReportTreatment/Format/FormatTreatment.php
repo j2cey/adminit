@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\ReportTreatmentResult\Format;
+namespace App\Traits\ReportTreatment\Format;
 
 use App\Enums\TreatmentStepCode;
 use App\Enums\CriticalityLevelEnum;

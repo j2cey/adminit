@@ -3,15 +3,14 @@
 namespace App\Http\Resources\ReportTreatments;
 
 use App\Models\Status;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\ReportTreatments\OperationResult;
-use App\Models\ReportTreatments\ReportTreatmentResult;
+use App\Models\ReportTreatments\ReportTreatment;
 
 /**
- * Class ReportTreatmentStepResultResource
+ * Class ReportTreatmentStepResource
  * @package App\Http\Resources\ReportTreatments
  *
  * @property integer $id
@@ -31,7 +30,7 @@ use App\Models\ReportTreatments\ReportTreatmentResult;
  *
  * @property string $description
  *
- * @property int $report_treatment_result_id
+ * @property int $report_treatment_id
  *
  * @property Carbon $retry_start_at
  * @property int $retries_session_count
@@ -40,22 +39,22 @@ use App\Models\ReportTreatments\ReportTreatmentResult;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @property string|null $hasreporttreatmentstepresults_type
- * @property int|null $hasreporttreatmentstepresults_id
+ * @property string|null $hasreporttreatmentsteps_type
+ * @property int|null $hasreporttreatmentsteps_id
  *
  * @property Status $status
- * @property ReportTreatmentResult|null $reporttreatmentresult
+ * @property ReportTreatment|null $reporttreatment
  *
  * @property OperationResult[] $operationresults
  * @property OperationResult $latestOperationresult
  */
-class ReportTreatmentStepResultResource extends JsonResource
+class ReportTreatmentStepResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
-     * @return array
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
@@ -65,7 +64,7 @@ class ReportTreatmentStepResultResource extends JsonResource
             'status' => StatusResource::make($this->status),
 
             'name' => $this->name,
-            'reporttreatmentresult' => $this->reporttreatmentresult,
+            'reporttreatment' => $this->reporttreatment,
 
             'start_at' => $this->start_at,
             'end_at' => $this->end_at,
@@ -82,15 +81,15 @@ class ReportTreatmentStepResultResource extends JsonResource
             'latestOperationresult' => OperationResultResource::make($this->latestOperationresult),
             'operationresults' => OperationResultResource::collection($this->operationresults),
 
-            'hasreporttreatmentstepresults_type' => $this->hasreporttreatmentstepresults_type,
-            'hasreporttreatmentstepresults_id' => $this->hasreporttreatmentstepresults_id,
+            'hasreporttreatmentsteps_type' => $this->hasreporttreatmentsteps_type,
+            'hasreporttreatmentsteps_id' => $this->hasreporttreatmentsteps_id,
 
             'description' => $this->description,
             'created_at' => $this->created_at,
 
-            'show_url' => route('reporttreatmentstepresults.show', $this->uuid),
-            'edit_url' => route('reporttreatmentstepresults.edit', $this->uuid),
-            'destroy_url' => route('reporttreatmentstepresults.destroy', $this->uuid),
+            'show_url' => route('reporttreatmentsteps.show', $this->uuid),
+            'edit_url' => route('reporttreatmentsteps.edit', $this->uuid),
+            'destroy_url' => route('reporttreatmentsteps.destroy', $this->uuid),
         ];
     }
 }

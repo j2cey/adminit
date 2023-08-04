@@ -15,7 +15,7 @@ use App\Traits\ReportTreatment\IsReportTreatment;
 use App\Contracts\ReportTreatment\IIsReportTreatment;
 
 /**
- * Class ReportTreatmentStepResult
+ * Class TreatmentOperation
  * @package App\Models\ReportTreatments
  *
  * @property integer $id
@@ -47,16 +47,16 @@ use App\Contracts\ReportTreatment\IIsReportTreatment;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @property int|null $report_treatment_step_result_id
+ * @property int|null $report_treatment_step_id
  * @property int|null $parent_operation_id
  *
- * @property ReportTreatmentStepResult|null $reporttreatmentstepresult
- * @property OperationResult|null $parentoperation
- * @property OperationResult[]|null $childrenoperations
- * @method static OperationResult create(string[] $array)
+ * @property ReportTreatmentStep|null $reporttreatmentstep
+ * @property TreatmentOperation|null $parentoperation
+ * @property TreatmentOperation[]|null $childrenoperations
+ * @method static TreatmentOperation create(string[] $array)
  * @property boolean $isLastOperation
  */
-class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
+class TreatmentOperation extends BaseModel implements Auditable, IIsReportTreatment
 {
     use HasFactory, IsReportTreatment, \OwenIt\Auditing\Auditable;
 
@@ -97,10 +97,10 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
     #region Accessors & Mutators
 
     public function getIsLastOperationAttribute() {
-        if ( is_null( $this->reporttreatmentstepresult->lastoperation )) {
+        if ( is_null( $this->reporttreatmentstep->lastoperation )) {
             return false;
         } else {
-            return $this->reporttreatmentstepresult->lastoperation->id === $this->id;
+            return $this->reporttreatmentstep->lastoperation->id === $this->id;
         }
     }
 
@@ -111,41 +111,41 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
     #endregion
 
     #region Eloquent Relationships
-    public function reporttreatmentstepresult() {
-        return $this->belongsTo(ReportTreatmentStepResult::class, "report_treatment_step_result_id");
+    public function reporttreatmentstep() {
+        return $this->belongsTo(ReportTreatmentStep::class, "report_treatment_step_id");
     }
     public function parentoperation() {
-        return $this->belongsTo(OperationResult::class, "parent_operation_id");
+        return $this->belongsTo(TreatmentOperation::class, "parent_operation_id");
     }
     public function childrenoperations() {
-        return $this->hasMany(OperationResult::class, "parent_operation_id");
+        return $this->hasMany(TreatmentOperation::class, "parent_operation_id");
     }
     public function lastoperation() {
-        return $this->belongsTo(OperationResult::class, "last_operation_id");
+        return $this->belongsTo(TreatmentOperation::class, "last_operation_id");
     }
     #endregion
 
     #region Custom Functions
 
     /**
-     * Create a new OperationResult Object
+     * Create a new TreatmentOperation Object
      * @param string $name
      * @param int|null $operation_no
-     * @param Model|ReportTreatmentStepResult|null $reporttreatmentstepresult
+     * @param Model|ReportTreatmentStep|null $reporttreatmentstep
      * @param CriticalityLevelEnum|null $criticality_level
      * @param string|null $message
      * @param string|null $description
-     * @param Model|OperationResult|null $parentoperation
-     * @return OperationResult
+     * @param Model|TreatmentOperation|null $parentoperation
+     * @return TreatmentOperation
      */
     public static function createNew(
         string $name,
         int $operation_no = null,
-        Model|ReportTreatmentStepResult $reporttreatmentstepresult = null,
+        Model|ReportTreatmentStep $reporttreatmentstep = null,
         CriticalityLevelEnum $criticality_level = null,
-        string $message = null, string $description = null, Model|OperationResult $parentoperation = null): OperationResult
+        string $message = null, string $description = null, Model|TreatmentOperation $parentoperation = null): TreatmentOperation
     {
-        $operationresult = OperationResult::create([
+        $treatmentoperation = TreatmentOperation::create([
             'name' => $name,
             'operation_no' => $operation_no ?? 0,
             'state' => TreatmentStateEnum::WAITING->value,
@@ -155,19 +155,19 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
             'description' => $description,
         ]);
 
-        $operationresult->setReportTreatmentStepResult($reporttreatmentstepresult);
-        $operationresult->setParent($parentoperation);
+        $treatmentoperation->setReportTreatmentStep($reporttreatmentstep);
+        $treatmentoperation->setParent($parentoperation);
 
-        $operationresult->save();
+        $treatmentoperation->save();
 
-        return $operationresult;
+        return $treatmentoperation;
     }
 
     /**
-     * Update this OperationResult Object
+     * Update this TreatmentOperation Object
      * @param string $name
      * @param int|null $operation_no
-     * @param Model|ReportTreatmentStepResult|null $reporttreatmentstepresult
+     * @param Model|ReportTreatmentStep|null $reporttreatmentstep
      * @param Carbon|null $start_at
      * @param Carbon|null $end_at
      * @param int|null $operation_duration
@@ -176,16 +176,16 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
      * @param CriticalityLevelEnum|null $criticality_level
      * @param string|null $message
      * @param string|null $description
-     * @param Model|OperationResult|null $parentoperation
+     * @param Model|TreatmentOperation|null $parentoperation
      * @return $this
      */
     public function updateThis(
         string $name,
         int $operation_no = null,
-        Model|ReportTreatmentStepResult $reporttreatmentstepresult = null,
+        Model|ReportTreatmentStep $reporttreatmentstep = null,
         Carbon $start_at = null, Carbon $end_at = null, int $operation_duration = null,
         TreatmentStateEnum $state = null, TreatmentResultEnum $result = null, CriticalityLevelEnum $criticality_level = null,
-        string $message = null, string $description = null, Model|OperationResult $parentoperation = null): OperationResult
+        string $message = null, string $description = null, Model|TreatmentOperation $parentoperation = null): TreatmentOperation
     {
         $this->name = $name;
         $this->operation_no = $operation_no;
@@ -198,7 +198,7 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
         $this->message = $message;
         $this->description = $description;
 
-        $this->setReportTreatmentStepResult($reporttreatmentstepresult);
+        $this->setReportTreatmentStep($reporttreatmentstep);
         $this->setParent($parentoperation);
 
         $this->save();
@@ -207,16 +207,16 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
     }
 
     /**
-     * Start the treatment of this OperationResult object
+     * Start the treatment of this TreatmentOperation object
      * @return $this
      */
-    public function startOperation(): OperationResult
+    public function startOperation(): TreatmentOperation
     {
         $this->setStarting(true);
         $this->setRunning(true);
 
         if ( is_null($this->parentoperation) ) {
-            $this->reporttreatmentstepresult->operationStarted($this);
+            $this->reporttreatmentstep->operationStarted($this);
         } else {
             $this->parentoperation->childOperationStarted($this);
         }
@@ -225,7 +225,7 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
     }
 
     /**
-     * End the treatment of this OperationResult object
+     * End the treatment of this TreatmentOperation object
      * @param TreatmentResultEnum $treatmentresultenum
      * @param string $message
      * @param bool $complete_treatment
@@ -235,18 +235,18 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
         $this->setEnding($treatmentresultenum, $message, $complete_treatment);
 
         if ( is_null($this->parentoperation) ) {
-            $this->reporttreatmentstepresult->operationCompleted($this);
+            $this->reporttreatmentstep->operationCompleted($this);
         } else {
             $this->parentoperation->childOperationCompleted($this);
         }
     }
 
     /**
-     * End the treatment of this OperationResult object with success
+     * End the treatment of this TreatmentOperation object with success
      * @param string|null $message
      * @return $this
      */
-    public function endWithSuccess(string $message = null, bool $complete_treatment = true): OperationResult
+    public function endWithSuccess(string $message = null, bool $complete_treatment = true): TreatmentOperation
     {
         $this->endOperation(TreatmentResultEnum::SUCCESS, $message ?? "Success", $complete_treatment);
 
@@ -254,24 +254,24 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
     }
 
     /**
-     * End the treatment of this OperationResult object with failure
+     * End the treatment of this TreatmentOperation object with failure
      * @param string|null $message
      * @return $this
      */
-    public function endWithFailure(string $message = null): OperationResult
+    public function endWithFailure(string $message = null): TreatmentOperation
     {
         $this->endOperation(TreatmentResultEnum::FAILED, $message ?? "Failed", true);
 
         return $this;
     }
 
-    public function childOperationStarted(Model|OperationResult $childoperation) {
+    public function childOperationStarted(Model|TreatmentOperation $childoperation) {
         if ( ! $this->isRunning ) {
             $this->startOperation();
         }
     }
 
-    public function childOperationCompleted(Model|OperationResult $childoperation) {
+    public function childOperationCompleted(Model|TreatmentOperation $childoperation) {
         /**  condition de Fin de l'operation:
          *      - l'operation enfant qui s'acheve n'est pas un echec
          *      - l'operation enfant qui s'acheve est la derniere et est un succes
@@ -282,25 +282,25 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
 
     public function setAsLastOperation() {
         if ( is_null($this->parentoperation) ) {
-            $this->reporttreatmentstepresult->setLastOperation($this);
+            $this->reporttreatmentstep->setLastOperation($this);
         } else {
             $this->parentoperation->setLastOperation($this);
         }
     }
 
     /**
-     * @return OperationResult
+     * @return TreatmentOperation
      */
     public function setAsCurrentOperation() {
-        $this->reporttreatmentstepresult->setCurrentOperation($this);
+        $this->reporttreatmentstep->setCurrentOperation($this);
         return $this;
     }
 
     /**
      * @param CriticalityLevelEnum $criticalitylevel
-     * @return OperationResult
+     * @return TreatmentOperation
      */
-    public function setCriticalityLevel(CriticalityLevelEnum $criticalitylevel): OperationResult
+    public function setCriticalityLevel(CriticalityLevelEnum $criticalitylevel): TreatmentOperation
     {
         $this->criticality_level = $criticalitylevel->value;
         $this->save();
@@ -309,7 +309,7 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
     }
 
     /**
-     * @return OperationResult
+     * @return TreatmentOperation
      */
     public function setCode(TreatmentStepCode $code) {
         $this->code = $code;
@@ -318,10 +318,10 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
         return $this;
     }
 
-    public function setReportTreatmentStepResult(Model|ReportTreatmentStepResult $reporttreatmentstepresult = null) {
-        if ( ! is_null($reporttreatmentstepresult) ) $this->reporttreatmentstepresult()->associate($reporttreatmentstepresult);
+    public function setReportTreatmentStep(Model|ReportTreatmentStep $reporttreatmentstep = null) {
+        if ( ! is_null($reporttreatmentstep) ) $this->reporttreatmentstep()->associate($reporttreatmentstep);
     }
-    public function setParent(Model|OperationResult $childoperation = null) {
+    public function setParent(Model|TreatmentOperation $childoperation = null) {
         $operation_no = $this->childrenoperations()->count() + 1;
         if ( ! is_null($childoperation) ) {
             $this->parentoperation()->associate($childoperation)->save();
@@ -331,13 +331,13 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
         }
     }
     public function addChildOperation(string $name, CriticalityLevelEnum $criticality_level = null) {
-        $childoperation = OperationResult::createNew($name,null,null,$criticality_level);
+        $childoperation = TreatmentOperation::createNew($name,null,null,$criticality_level);
         $childoperation->setParent($childoperation);
         return $childoperation;
     }
 
     /**
-     * @return OperationResult|null
+     * @return TreatmentOperation|null
      */
     public function getNextChildOperationWaiting() {
         if ( $this->childrenoperations()->waiting()->notFailed()->count() >= $this->childrenoperations()->count() ) {
@@ -350,7 +350,7 @@ class OperationResult extends BaseModel implements Auditable, IIsReportTreatment
         return $nextchildoperation;
     }
 
-    public function setLastOperation(Model|OperationResult $operation) {
+    public function setLastOperation(Model|TreatmentOperation $operation) {
         $this->lastoperation()->associate($operation)->save();
     }
 

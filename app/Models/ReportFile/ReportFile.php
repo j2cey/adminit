@@ -25,9 +25,9 @@ use App\Contracts\RowConfig\IHasLastRowConfig;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentResult;
-use App\Traits\ReportTreatmentResult\HasReportTreatmentResults;
+use App\Traits\ReportTreatment\HasReportTreatmentResults;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
-use App\Contracts\ReportTreatmentResult\IHasReportTreatmentResults;
+use App\Contracts\ReportTreatment\IHasReportTreatmentResults;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
 /**
@@ -413,8 +413,24 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
         }
     }
 
-    private function createNewTreatment() {
-        return $this->addReportTreatmentResult($this->report, "Traitement du fichier " . $this->name);
+    /**
+     * Create a new treatment (ReportTreatmentResult) for this file.
+     * @return ReportTreatmentResult|null
+     */
+    private function createNewTreatment(): ?ReportTreatmentResult
+    {
+        if ( $this->reportTreatmentResultsWaiting()->count() === 0 && $this->reportTreatmentResultsRunning()->count() === 0 && $this->reportTreatmentResultsQueued()->count() === 0 ) {
+            /** Ce fichier n'a
+             *      - aucun traitement en attente
+             *      - aucun traitement en cours d'execution
+             *      - aucun traitement en file d'attente
+             *
+             *  Alors, on peut lancer au nouveau Traitement pour ce fichier
+             */
+            return $this->addReportTreatmentResult($this->report, "Traitement du fichier " . $this->name);
+        } else {
+            return null;
+        }
     }
 
     /**

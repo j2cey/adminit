@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Resources\StatusResource;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\ReportTreatments\OperationResult;
-use App\Models\ReportTreatments\ReportTreatmentResult;
+use App\Models\ReportTreatments\TreatmentOperation;
+use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 /**
  * Class ReportTreatmentStepResultResource
@@ -21,17 +21,18 @@ use App\Models\ReportTreatments\ReportTreatmentResult;
  * @property integer|null $status_id
  *
  * @property string $name
+ * @property int $operation_no
  * @property Carbon $start_at
  * @property Carbon $end_at
- * @property string $result
+ * @property int $operation_duration
  * @property string $state
+ * @property string $result
  * @property string $message
  * @property integer $attempts
+ * @property string $criticality_level
  * @property string $payload
  *
  * @property string $description
- *
- * @property int $report_treatment_result_id
  *
  * @property Carbon $retry_start_at
  * @property int $retries_session_count
@@ -40,16 +41,15 @@ use App\Models\ReportTreatments\ReportTreatmentResult;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @property string|null $hasreporttreatmentstepresults_type
- * @property int|null $hasreporttreatmentstepresults_id
+ * @property int|null $report_treatment_step_result_id
+ * @property int|null $parent_operation_id
  *
- * @property Status $status
- * @property ReportTreatmentResult|null $reporttreatmentresult
- *
- * @property OperationResult[] $operationresults
- * @property OperationResult $latestOperationresult
+ * @property ReportTreatmentStepResult|null $reporttreatmentstepresult
+ * @property TreatmentOperation|null $parentoperation
+ * @property TreatmentOperation[]|null $childrenoperations
+ * @property Status|null $status
  */
-class ReportTreatmentStepResultResource extends JsonResource
+class TreatmentOperationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -65,32 +65,32 @@ class ReportTreatmentStepResultResource extends JsonResource
             'status' => StatusResource::make($this->status),
 
             'name' => $this->name,
-            'reporttreatmentresult' => $this->reporttreatmentresult,
+            'operation_no' => $this->operation_no,
 
             'start_at' => $this->start_at,
             'end_at' => $this->end_at,
-            'result' => $this->result,
+            'operation_duration' => $this->operation_duration,
             'state' => $this->state,
+            'result' => $this->result,
             'message' => $this->message,
             'attempts' => $this->attempts,
+            'criticality_level' => $this->criticality_level,
             'payload' => $this->payload,
+
+            'reporttreatmentstepresult' => $this->reporttreatmentstepresult,
+            'parentoperation' => $this->parentoperation,
+            'childrenoperations' => $this->childrenoperations,
 
             'retry_start_at' => $this->retry_start_at,
             'retry_session_count' => $this->retries_session_count,
             'retry_end_at' => $this->retry_end_at,
 
-            'latestOperationresult' => OperationResultResource::make($this->latestOperationresult),
-            'operationresults' => OperationResultResource::collection($this->operationresults),
-
-            'hasreporttreatmentstepresults_type' => $this->hasreporttreatmentstepresults_type,
-            'hasreporttreatmentstepresults_id' => $this->hasreporttreatmentstepresults_id,
-
             'description' => $this->description,
             'created_at' => $this->created_at,
 
-            'show_url' => route('reporttreatmentstepresults.show', $this->uuid),
-            'edit_url' => route('reporttreatmentstepresults.edit', $this->uuid),
-            'destroy_url' => route('reporttreatmentstepresults.destroy', $this->uuid),
+            'show_url' => route('treatmentoperations.show', $this->uuid),
+            'edit_url' => route('treatmentoperations.edit', $this->uuid),
+            'destroy_url' => route('treatmentoperations.destroy', $this->uuid),
         ];
     }
 }

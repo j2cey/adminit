@@ -12,12 +12,12 @@ use App\Enums\CriticalityLevelEnum;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\ReportTreatment\IsReportTreatment;
 use App\Contracts\ReportTreatment\IIsReportTreatment;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class ReportTreatmentResult
+ * Class ReportTreatment
  * @package App\Models\ReportTreatments
  *
  * @property integer $id
@@ -40,8 +40,8 @@ use App\Contracts\ReportTreatment\IIsReportTreatment;
  * @property int $currentstep_id
  * @property int $report_id
  *
- * @property string|null $hasreporttreatmentresults_type
- * @property int|null $hasreporttreatmentresults_id
+ * @property string|null $hasreporttreatments_type
+ * @property int|null $hasreporttreatments_id
  *
  * @property Carbon $retry_start_at
  * @property int $retries_session_count
@@ -53,13 +53,13 @@ use App\Contracts\ReportTreatment\IIsReportTreatment;
  * @property string $payload
  *
  * @property Report $report
- * @property ReportTreatmentStepResult $currentstep
- * @property ReportTreatmentStepResult[] $reporttreatmentsteps
+ * @property ReportTreatmentStep $currentstep
+ * @property ReportTreatmentStep[] $reporttreatmentsteps
  * @property ReportTreatmentWorkflowStep $workflowstep
  *
- * @method static ReportTreatmentResult create(string[] $array)
+ * @method static ReportTreatment create(string[] $array)
  */
-class ReportTreatmentResult extends BaseModel implements Auditable, IIsReportTreatment
+class ReportTreatment extends BaseModel implements Auditable, IIsReportTreatment
 {
     use HasFactory, IsReportTreatment, \OwenIt\Auditing\Auditable;
 
@@ -139,11 +139,11 @@ class ReportTreatmentResult extends BaseModel implements Auditable, IIsReportTre
     }
 
     public function reporttreatmentsteps() {
-        return $this->hasMany(ReportTreatmentStepResult::class, "report_treatment_result_id");
+        return $this->hasMany(ReportTreatmentStep::class, "report_treatment_id");
     }
 
     public function currentstep() {
-        return $this->belongsTo(ReportTreatmentStepResult::class, "currentstep_id");
+        return $this->belongsTo(ReportTreatmentStep::class, "currentstep_id");
     }
 
     public function runningsteps() {
@@ -159,19 +159,19 @@ class ReportTreatmentResult extends BaseModel implements Auditable, IIsReportTre
     #region Custom Functions
 
     /**
-     * Create a new ReportTreatmentResult object
+     * Create a new ReportTreatment object
      * @param Model|Report $report
      * @param string|null $name
-     * @param Model|ReportTreatmentStepResult|null $currentstep
+     * @param Model|ReportTreatmentStep|null $currentstep
      * @param string|null $description
-     * @return ReportTreatmentResult
+     * @return ReportTreatment
      */
     public static function createNew(
         Model|Report $report,
-        string $name = null, Model|ReportTreatmentStepResult $currentstep = null,
-        string $description = null): ReportTreatmentResult
+        string $name = null, Model|ReportTreatmentStep $currentstep = null,
+        string $description = null): ReportTreatment
     {
-        $reporttreatmentresult = ReportTreatmentResult::create([
+        $reporttreatment = ReportTreatment::create([
             'name' => $name,
             'state' => TreatmentStateEnum::WAITING->value,
             'result' => TreatmentResultEnum::NONE->value,
@@ -179,21 +179,21 @@ class ReportTreatmentResult extends BaseModel implements Auditable, IIsReportTre
             'description' => $description,
         ]);
 
-        $reporttreatmentresult->report()->associate($report);
+        $reporttreatment->report()->associate($report);
 
-        if ( ! is_null($currentstep) ) $reporttreatmentresult->currentstep()->associate($currentstep);
+        if ( ! is_null($currentstep) ) $reporttreatment->currentstep()->associate($currentstep);
 
-        $reporttreatmentresult->workflowstep()->associate($reporttreatmentresult->report->treatmentworkflow->firstworkflowstep);
+        $reporttreatment->workflowstep()->associate($reporttreatment->report->treatmentworkflow->firstworkflowstep);
 
-        $reporttreatmentresult->save();
+        $reporttreatment->save();
 
-        return $reporttreatmentresult;
+        return $reporttreatment;
     }
 
     /**
-     * Update this ReportTreatmentResult object
+     * Update this ReportTreatment object
      * @param string|null $name
-     * @param Model|ReportTreatmentStepResult|null $currentstep
+     * @param Model|ReportTreatmentStep|null $currentstep
      * @param int|null $currentstep_num
      * @param Carbon|null $start_at
      * @param Carbon|null $end_at
@@ -204,9 +204,9 @@ class ReportTreatmentResult extends BaseModel implements Auditable, IIsReportTre
      */
     public function updateThis(
         string $name = null,
-        Model|ReportTreatmentStepResult $currentstep = null, int $currentstep_num = null,
+        Model|ReportTreatmentStep $currentstep = null, int $currentstep_num = null,
         Carbon $start_at = null, Carbon $end_at = null,
-        TreatmentStateEnum $state = null, TreatmentResultEnum $result = null, string $description = null): ReportTreatmentResult
+        TreatmentStateEnum $state = null, TreatmentResultEnum $result = null, string $description = null): ReportTreatment
     {
         $this->name = $name;
         $this->start_at = $start_at ?? Carbon::now();
@@ -229,11 +229,11 @@ class ReportTreatmentResult extends BaseModel implements Auditable, IIsReportTre
      * @param string|null $name
      * @param CriticalityLevelEnum|null $criticality_level
      * @param bool $set_as_current_step
-     * @return ReportTreatmentStepResult
+     * @return ReportTreatmentStep
      */
-    public function addStep(TreatmentStepCode $code, string $name = null, CriticalityLevelEnum $criticality_level = null, bool $set_as_current_step = false): ReportTreatmentStepResult
+    public function addStep(TreatmentStepCode $code, string $name = null, CriticalityLevelEnum $criticality_level = null, bool $set_as_current_step = false): ReportTreatmentStep
     {
-        $step = ReportTreatmentStepResult::createNew($code, $name,$this,$criticality_level);
+        $step = ReportTreatmentStep::createNew($code, $name,$this,$criticality_level);
         if ( $set_as_current_step ) {
             $this->setCurrentStep($step);
         }
@@ -243,10 +243,10 @@ class ReportTreatmentResult extends BaseModel implements Auditable, IIsReportTre
 
     /**
      * Set a step as current step
-     * @param Model|ReportTreatmentStepResult $currentstep
-     * @return ReportTreatmentStepResult
+     * @param Model|ReportTreatmentStep $currentstep
+     * @return ReportTreatmentStep
      */
-    public function setCurrentStep(Model|ReportTreatmentStepResult $currentstep): ReportTreatmentStepResult
+    public function setCurrentStep(Model|ReportTreatmentStep $currentstep): ReportTreatmentStep
     {
         $this->goToNextStep();
         $this->currentstep()->associate($currentstep);
@@ -267,29 +267,29 @@ class ReportTreatmentResult extends BaseModel implements Auditable, IIsReportTre
     }
 
     /**
-     * Start the treatment of this ReportTreatmentStepResult object
+     * Start the treatment of this ReportTreatmentStep object
      * @return void
      */
-    public function startTreatment(Model|ReportTreatmentStepResult $step = null) {
+    public function startTreatment(Model|ReportTreatmentStep $step = null) {
         $this->setStarting(true);
         $this->setRunningOrRetrying(true);
     }
 
     /**
      * Can be called when a step is started so this Treatment's state got updated as well
-     * @param Model|ReportTreatmentStepResult $step
+     * @param Model|ReportTreatmentStep $step
      * @return void
      */
-    public function stepStarted(Model|ReportTreatmentStepResult $step) {
+    public function stepStarted(Model|ReportTreatmentStep $step) {
         $this->startTreatment($step);
     }
 
     /**
      * Can be called when a step is completed so this Treatment's state got updated as well
-     * @param Model|ReportTreatmentStepResult $step
+     * @param Model|ReportTreatmentStep $step
      * @return void
      */
-    public function stepEnded(Model|ReportTreatmentStepResult $step) {
+    public function stepEnded(Model|ReportTreatmentStep $step) {
 
         $got_next_step = $this->setNextStep($step);
 
@@ -304,7 +304,7 @@ class ReportTreatmentResult extends BaseModel implements Auditable, IIsReportTre
         $this->setEnding($step->result, $step->message, $complete_treatment);
     }
 
-    public function setNextStep(Model|ReportTreatmentStepResult $step) {
+    public function setNextStep(Model|ReportTreatmentStep $step) {
         if ( $step->isCompleted && $step->isSuccess ) {
             if ( is_null( $this->workflowstep->nextworkflowstep ) ) {
                 //$this->workflowstep()->disassociate();
@@ -323,7 +323,7 @@ class ReportTreatmentResult extends BaseModel implements Auditable, IIsReportTre
     }
 
     public static function setReportTreatmentQueued(int $treatmentId) {
-        ReportTreatmentResult::where('id', $treatmentId)
+        ReportTreatment::where('id', $treatmentId)
             ->update([
                 'state' => TreatmentStateEnum::QUEUED->value,
             ]);
@@ -332,11 +332,11 @@ class ReportTreatmentResult extends BaseModel implements Auditable, IIsReportTre
     #endregion
 
     /**
-     * @param $reporttreatmentresultId
-     * @return ReportTreatmentResult|null
+     * @param $reporttreatmentId
+     * @return ReportTreatment|null
      */
-    public static function getById($reporttreatmentresultId) {
-        return ReportTreatmentResult::find($reporttreatmentresultId);
+    public static function getById($reporttreatmentId) {
+        return ReportTreatment::find($reporttreatmentId);
     }
 
     /**

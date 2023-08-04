@@ -36,8 +36,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
-use App\Traits\ReportTreatmentResult\HasReportTreatmentStepResults;
-use App\Contracts\ReportTreatmentResult\IHasReportTreatmentStepResults;
+use App\Traits\ReportTreatment\HasReportTreatmentStepResults;
+use App\Contracts\ReportTreatment\IHasReportTreatmentStepResults;
 
 /**
  * Class CollectedReportFile

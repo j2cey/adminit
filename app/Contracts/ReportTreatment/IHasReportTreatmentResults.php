@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts\ReportTreatmentResult;
+namespace App\Contracts\ReportTreatment;
 
 use App\Models\Reports\Report;
 use Illuminate\Database\Eloquent\Model;

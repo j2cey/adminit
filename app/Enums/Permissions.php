@@ -114,11 +114,20 @@ abstract class Permissions
     public static function ReportTreatmentResult() : PermissionAction {
         return new PermissionAction("reporttreatmentresult");
     }
+    public static function ReportTreatment() : PermissionAction {
+        return new PermissionAction("reporttreatment");
+    }
     public static function ReportTreatmentStepResult() : PermissionAction {
         return new PermissionAction("reporttreatmentstepresult");
     }
+    public static function ReportTreatmentStep() : PermissionAction {
+        return new PermissionAction("reporttreatmentstep");
+    }
     public static function OperationResult() : PermissionAction {
         return new PermissionAction("operationresult");
+    }
+    public static function TreatmentOperation() : PermissionAction {
+        return new PermissionAction("treatmentoperation");
     }
     public static function FormatRuleType() : PermissionAction {
         return new PermissionAction("formatruletype");

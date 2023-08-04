@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts\ReportTreatmentResult;
+namespace App\Contracts\ReportTreatment;
 
 use App\Models\Status;
 use App\Enums\TreatmentStepCode;

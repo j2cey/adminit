@@ -25,8 +25,8 @@ use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
-use App\Traits\ReportTreatmentResult\HasReportTreatmentStepResults;
-use App\Contracts\ReportTreatmentResult\IHasReportTreatmentStepResults;
+use App\Traits\ReportTreatment\HasReportTreatmentStepResults;
+use App\Contracts\ReportTreatment\IHasReportTreatmentStepResults;
 
 /**
  * Class ReportFileAccess
