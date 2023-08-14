@@ -17,16 +17,18 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\OsAndServer\ReportServer;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use App\Models\ReportTreatments\ReportTreatment;
 use App\Models\RetrieveAction\RetrieveActionType;
 use App\Contracts\RetrieveAction\IRetrieveAction;
+use App\Models\ReportTreatments\ReportTreatmentStep;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
-use App\Traits\ReportTreatment\HasReportTreatmentStepResults;
-use App\Contracts\ReportTreatment\IHasReportTreatmentStepResults;
+use App\Traits\ReportTreatment\HasReportTreatmentSteps;
+use App\Contracts\ReportTreatment\IHasReportTreatmentSteps;
 
 /**
  * Class ReportFileAccess
@@ -60,9 +62,9 @@ use App\Contracts\ReportTreatment\IHasReportTreatmentStepResults;
  *
  * @method static ReportFileAccess|null first()
  */
-class ReportFileAccess extends BaseModel implements Auditable, IHasSelectedRetrieveActions, IHasReportTreatmentStepResults
+class ReportFileAccess extends BaseModel implements Auditable, IHasSelectedRetrieveActions, IHasReportTreatmentSteps
 {
-    use HasFactory, HasSelectedRetrieveActions, HasCode, HasReportTreatmentStepResults, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasSelectedRetrieveActions, HasCode, HasReportTreatmentSteps, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -251,50 +253,50 @@ class ReportFileAccess extends BaseModel implements Auditable, IHasSelectedRetri
         }
     }
 
-    public function executeTreatment(ReportTreatmentResult $reporttreatmentresult) {
-        $reporttreatmentresult->refresh();
-        if ( $reporttreatmentresult->canBeExecuted ) {
+    public function executeTreatment(ReportTreatment $reporttreatment) {
+        $reporttreatment->refresh();
+        if ( $reporttreatment->canBeExecuted ) {
 
-            $reporttreatmentstepresult = $this->addReportTreatmentStepResult($reporttreatmentresult, TreatmentStepCode::DOWNLOADFILE, TreatmentStepCode::DOWNLOADFILE->toArray()['name'] . " (".$this->reportfile->name.")", CriticalityLevelEnum::HIGH, true);
+            $reporttreatmentstep = $this->addReportTreatmentStep($reporttreatment, TreatmentStepCode::DOWNLOADFILE, TreatmentStepCode::DOWNLOADFILE->toArray()['name'] . " (".$this->reportfile->name.")", CriticalityLevelEnum::HIGH, true);
 
             try {
 
                 // 1. Définir le disk en fonction du protocole
-                $remoteDisk = $this->getDisk($reporttreatmentstepresult, CriticalityLevelEnum::HIGH);
+                $remoteDisk = $this->getDisk($reporttreatmentstep, CriticalityLevelEnum::HIGH);
 
-                if ($reporttreatmentstepresult->isSuccess) {
+                if ($reporttreatmentstep->isSuccess) {
                     // 2. Récupère l'action à exécuter pour la Récupération du fichier (retrieve_mode)
-                    $retrievemode_action = $this->getRetrieveModeAction($reporttreatmentstepresult, CriticalityLevelEnum::HIGH);
+                    $retrievemode_action = $this->getRetrieveModeAction($reporttreatmentstep, CriticalityLevelEnum::HIGH);
 
-                    if ($reporttreatmentstepresult->isSuccess) {
+                    if ($reporttreatmentstep->isSuccess) {
                         // 3. Execute cette action
-                        $retrievemode_action::execAction($remoteDisk, $this->reportfile, $reporttreatmentstepresult, CriticalityLevelEnum::HIGH);
+                        $retrievemode_action::execAction($remoteDisk, $this->reportfile, $reporttreatmentstep, CriticalityLevelEnum::HIGH);
 
-                        if ($reporttreatmentstepresult->isSuccess) {
+                        if ($reporttreatmentstep->isSuccess) {
                             // 4. Récupère l'action à exécuter après la Récupération du fichier (to_perform_after_retrieving)
                             $to_perform_after_retrieving = $this->getToPerformAfterRetrievingAction();
 
                             // 5. Execution de cette action
-                            $last_operation = $to_perform_after_retrieving::execAction($remoteDisk, $this->reportfile, $reporttreatmentstepresult, CriticalityLevelEnum::HIGH, true);
+                            $last_operation = $to_perform_after_retrieving::execAction($remoteDisk, $this->reportfile, $reporttreatmentstep, CriticalityLevelEnum::HIGH, true);
                             if ( $last_operation->isSuccess ) {
-                                ReportFileDownloadedJob::dispatch($this->reportfile->id, $reporttreatmentresult)->onQueue(QueueEnum::DOWNLOADFILES->value);
+                                ReportFileDownloadedJob::dispatch($this->reportfile->id, $reporttreatment)->onQueue(QueueEnum::DOWNLOADFILES->value);
                             }
                         }
                     }
                 }
             } catch (\Exception $e) {
-                $reporttreatmentstepresult->endTreatmentWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode());
+                $reporttreatmentstep->endTreatmentWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode());
             }
         }
     }
 
     /**
-     * @param ReportTreatmentStepResult $reporttreatmentstepresult
+     * @param ReportTreatmentStep $reporttreatmentstep
      * @param CriticalityLevelEnum $criticalitylevelenum
      * @return Filesystem
      */
-    private function getDisk(ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum): Filesystem {
-        return $this->accessprotocole->innerprotocole()::getDisk($reporttreatmentstepresult, $criticalitylevelenum, $this->accessaccount, $this->reportserver,$this->port);
+    private function getDisk(ReportTreatmentStep $reporttreatmentstep, CriticalityLevelEnum $criticalitylevelenum): Filesystem {
+        return $this->accessprotocole->innerprotocole()::getDisk($reporttreatmentstep, $criticalitylevelenum, $this->accessaccount, $this->reportserver,$this->port);
     }
 
     /**

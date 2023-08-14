@@ -22,12 +22,13 @@ use App\Models\OsAndServer\ReportServer;
 use App\Traits\RowConfig\HasLastRowConfig;
 use App\Jobs\MergeReportFileFormattedRowsJob;
 use App\Contracts\RowConfig\IHasLastRowConfig;
+use App\Models\ReportTreatments\ReportTreatment;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentResult;
-use App\Traits\ReportTreatment\HasReportTreatmentResults;
+use App\Traits\ReportTreatment\HasReportTreatments;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
-use App\Contracts\ReportTreatment\IHasReportTreatmentResults;
+use App\Contracts\ReportTreatment\IHasReportTreatments;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
 /**
@@ -68,9 +69,9 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  *
  * @method static ReportFile first()
  */
-class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveActions, IHasReportTreatmentResults, IHasLastRowConfig
+class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveActions, IHasReportTreatments, IHasLastRowConfig
 {
-    use HasFactory, HasSelectedRetrieveActions, HasReportTreatmentResults, HasLastRowConfig, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasSelectedRetrieveActions, HasReportTreatments, HasLastRowConfig, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -307,8 +308,8 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
              *
              *  Alors, on peut lancer au nouveau Traitement pour ce fichier
              */
-            $reporttreatmentresult = $this->createNewTreatment();
-            $this->execTreatment($reporttreatmentresult);
+            $reporttreatment = $this->createNewTreatment();
+            $this->execTreatment($reporttreatment);
         } else {
             // On récupère les traitements en cours de ce fichier
             //$waiting_report_treatments = $this->reportTreatmentResultsWaiting;
@@ -321,105 +322,105 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
         }
     }
 
-    public function execTreatment(ReportTreatmentResult $reporttreatmentresult) {
-        \Log::info("execTreatment ".$reporttreatmentresult->id.", " . $reporttreatmentresult->workflowstep->code->value);
-        if ( $reporttreatmentresult->workflowstep->code === TreatmentStepCode::DOWNLOADFILE ) {
-            $this->collectFile($reporttreatmentresult, false);
-        } elseif ( $reporttreatmentresult->workflowstep->code === TreatmentStepCode::IMPORTFILE ) {
-            $this->importLastCollectedFile($reporttreatmentresult, false);
-        } elseif ( $reporttreatmentresult->workflowstep->code === TreatmentStepCode::MERGECOLUMNS ) {
-            $this->mergeColumns($reporttreatmentresult);
-        } elseif ( $reporttreatmentresult->workflowstep->code === TreatmentStepCode::MERGEROWS ) {
-            $this->mergeRows($reporttreatmentresult, false);
-        } elseif ( $reporttreatmentresult->workflowstep->code === TreatmentStepCode::NOTIFYFILE ) {
-            $this->notifyLastCollectedFile($reporttreatmentresult, false);
+    public function execTreatment(ReportTreatment $reporttreatment) {
+        \Log::info("execTreatment ".$reporttreatment->id.", " . $reporttreatment->workflowstep->code->value);
+        if ( $reporttreatment->workflowstep->code === TreatmentStepCode::DOWNLOADFILE ) {
+            $this->collectFile($reporttreatment, false);
+        } elseif ( $reporttreatment->workflowstep->code === TreatmentStepCode::IMPORTFILE ) {
+            $this->importLastCollectedFile($reporttreatment, false);
+        } elseif ( $reporttreatment->workflowstep->code === TreatmentStepCode::MERGECOLUMNS ) {
+            $this->mergeColumns($reporttreatment);
+        } elseif ( $reporttreatment->workflowstep->code === TreatmentStepCode::MERGEROWS ) {
+            $this->mergeRows($reporttreatment, false);
+        } elseif ( $reporttreatment->workflowstep->code === TreatmentStepCode::NOTIFYFILE ) {
+            $this->notifyLastCollectedFile($reporttreatment, false);
         }
     }
 
-    public function collectFile(ReportTreatmentResult $reporttreatmentresult = null, $dispatch = false) {
+    public function collectFile(ReportTreatment $reporttreatment = null, $dispatch = false) {
         $reportfileaccess = $this->getActiveReportFileAccess();
-        if ( is_null( $reporttreatmentresult ) ) $reporttreatmentresult = $this->createNewTreatment();
+        if ( is_null( $reporttreatment ) ) $reporttreatment = $this->createNewTreatment();
 
         /*if ($dispatch) {
-            //CollectReportFileJob::dispatchSync($reporttreatmentresult, $reportfileaccess);
-            //Queue::push(new CollectReportFileJob($reporttreatmentresult, $reportfileaccess));
-            dispatch(new CollectReportFileJob($reporttreatmentresult, $reportfileaccess))->onQueue(QueueEnum::DOWNLOADFILES->value);
+            //CollectReportFileJob::dispatchSync($reporttreatment, $reportfileaccess);
+            //Queue::push(new CollectReportFileJob($reporttreatment, $reportfileaccess));
+            dispatch(new CollectReportFileJob($reporttreatment, $reportfileaccess))->onQueue(QueueEnum::DOWNLOADFILES->value);
         } else {
-            $reportfileaccess->executeTreatment($reporttreatmentresult);
+            $reportfileaccess->executeTreatment($reporttreatment);
         }*/
 
-        $reportfileaccess->executeTreatment($reporttreatmentresult);
+        $reportfileaccess->executeTreatment($reporttreatment);
     }
 
-    public function importLastCollectedFile(ReportTreatmentResult $reporttreatmentresult, $dispatch = false) {
+    public function importLastCollectedFile(ReportTreatment $reporttreatment, $dispatch = false) {
         $latestcollectedreportfile = $this->latestCollectedReportFile;
 
         /*if ($dispatch) {
-            //ImportReportFileJob::dispatch($reporttreatmentresult, $latestcollectedreportfile);
-            //Queue::push(new ImportReportFileJob($reporttreatmentresult, $latestcollectedreportfile));
-            dispatch(new ImportReportFileJob($reporttreatmentresult, $latestcollectedreportfile))->onQueue(QueueEnum::IMPORTFILES->value);
+            //ImportReportFileJob::dispatch($reporttreatment, $latestcollectedreportfile);
+            //Queue::push(new ImportReportFileJob($reporttreatment, $latestcollectedreportfile));
+            dispatch(new ImportReportFileJob($reporttreatment, $latestcollectedreportfile))->onQueue(QueueEnum::IMPORTFILES->value);
         } else {
-            $latestcollectedreportfile->importToDb($reporttreatmentresult);
+            $latestcollectedreportfile->importToDb($reporttreatment);
         }*/
-        $latestcollectedreportfile->importToDb($reporttreatmentresult);
+        $latestcollectedreportfile->importToDb($reporttreatment);
     }
 
-    public function prepareFormatting(ReportTreatmentResult $reporttreatmentresult) {
+    public function prepareFormatting(ReportTreatment $reporttreatment) {
         $latestcollectedreportfile = $this->latestCollectedReportFile;
-        $reporttreatmentresult->addStep(TreatmentStepCode::PREPAREFORMATTING, "Formattage fichier " . $latestcollectedreportfile->local_file_name,CriticalityLevelEnum::HIGH,true);
-        $reporttreatmentresult->setNextWorkflowStep();
+        $reporttreatment->addStep(TreatmentStepCode::PREPAREFORMATTING, "Formattage fichier " . $latestcollectedreportfile->local_file_name,CriticalityLevelEnum::HIGH,true);
+        $reporttreatment->setNextWorkflowStep();
     }
 
-    public function mergeColumns(ReportTreatmentResult $reporttreatmentresult) {
+    public function mergeColumns(ReportTreatment $reporttreatment) {
         $latestcollectedreportfile = $this->latestCollectedReportFile;
-        $latestcollectedreportfile->mergeColumns($reporttreatmentresult);
+        $latestcollectedreportfile->mergeColumns($reporttreatment);
     }
 
-    public function mergeRows(ReportTreatmentResult $reporttreatmentresult) {
+    public function mergeRows(ReportTreatment $reporttreatment) {
         $latestcollectedreportfile = $this->latestCollectedReportFile;
-        $latestcollectedreportfile->mergeRows($reporttreatmentresult);
+        $latestcollectedreportfile->mergeRows($reporttreatment);
     }
 
-    public function formatLastCollectedFileRows(ReportTreatmentResult $reporttreatmentresult, $dispatch = false) {
+    public function formatLastCollectedFileRows(ReportTreatment $reporttreatment, $dispatch = false) {
         $latestcollectedreportfile = $this->latestCollectedReportFile;
         /*if ($dispatch) {
-            //Queue::push(new FormatReportFileJob($reporttreatmentresult, $latestcollectedreportfile));
-            dispatch(new FormatReportFileJob($reporttreatmentresult, $latestcollectedreportfile))->onQueue(QueueEnum::FORMATFILES->value);
+            //Queue::push(new FormatReportFileJob($reporttreatment, $latestcollectedreportfile));
+            dispatch(new FormatReportFileJob($reporttreatment, $latestcollectedreportfile))->onQueue(QueueEnum::FORMATFILES->value);
         } else {
-            $latestcollectedreportfile->formatFileRows($reporttreatmentresult);
+            $latestcollectedreportfile->formatFileRows($reporttreatment);
         }*/
-        $latestcollectedreportfile->formatFileRows($reporttreatmentresult);
+        $latestcollectedreportfile->formatFileRows($reporttreatment);
     }
 
-    public function mergeFormattedValuesLastCollectedFile(ReportTreatmentResult $reporttreatmentresult, $dispatch = false) {
+    public function mergeFormattedValuesLastCollectedFile(ReportTreatment $reporttreatment, $dispatch = false) {
         $latestcollectedreportfile = $this->latestCollectedReportFile;
         if ($dispatch) {
-            //FormatReportFileJob::dispatch($reporttreatmentresult, $latestcollectedreportfile);
-            //Queue::push(new FormatReportFileJob($reporttreatmentresult, $latestcollectedreportfile));
-            dispatch(new MergeReportFileFormattedRowsJob($reporttreatmentresult, $latestcollectedreportfile));
+            //FormatReportFileJob::dispatch($reporttreatment, $latestcollectedreportfile);
+            //Queue::push(new FormatReportFileJob($reporttreatment, $latestcollectedreportfile));
+            dispatch(new MergeReportFileFormattedRowsJob($reporttreatment, $latestcollectedreportfile));
         } else {
-            $latestcollectedreportfile->mergeLinesFormattedValues($reporttreatmentresult)->onQueue(QueueEnum::FORMATFILES->value);
+            $latestcollectedreportfile->mergeLinesFormattedValues($reporttreatment)->onQueue(QueueEnum::FORMATFILES->value);
         }
     }
 
-    public function notifyLastCollectedFile(ReportTreatmentResult $reporttreatmentresult, $dispatch = false) {
+    public function notifyLastCollectedFile(ReportTreatment $reporttreatment, $dispatch = false) {
         $latestcollectedreportfile = $this->latestCollectedReportFile;
         if ($dispatch) {
-            //NotifyReportJob::dispatch($reporttreatmentresult, $latestcollectedreportfile);
-            //Queue::push(new NotifyReportJob($reporttreatmentresult, $latestcollectedreportfile));
-            dispatch(new NotifyReportJob($reporttreatmentresult, $latestcollectedreportfile))->onQueue(QueueEnum::NOTIFYFILES->value);
+            //NotifyReportJob::dispatch($reporttreatment, $latestcollectedreportfile);
+            //Queue::push(new NotifyReportJob($reporttreatment, $latestcollectedreportfile));
+            dispatch(new NotifyReportJob($reporttreatment, $latestcollectedreportfile))->onQueue(QueueEnum::NOTIFYFILES->value);
         } else {
-            $latestcollectedreportfile->notify($reporttreatmentresult);
+            $latestcollectedreportfile->notify($reporttreatment);
         }
     }
 
     /**
      * Create a new treatment (ReportTreatmentResult) for this file.
-     * @return ReportTreatmentResult|null
+     * @return ReportTreatment|null
      */
-    private function createNewTreatment(): ?ReportTreatmentResult
+    private function createNewTreatment(): ?ReportTreatment
     {
-        if ( $this->reportTreatmentResultsWaiting()->count() === 0 && $this->reportTreatmentResultsRunning()->count() === 0 && $this->reportTreatmentResultsQueued()->count() === 0 ) {
+        if ( $this->reportTreatmentsWaiting()->count() === 0 && $this->reportTreatmentsRunning()->count() === 0 && $this->reportTreatmentsQueued()->count() === 0 ) {
             /** Ce fichier n'a
              *      - aucun traitement en attente
              *      - aucun traitement en cours d'execution
@@ -427,7 +428,7 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
              *
              *  Alors, on peut lancer au nouveau Traitement pour ce fichier
              */
-            return $this->addReportTreatmentResult($this->report, "Traitement du fichier " . $this->name);
+            return $this->addReportTreatment($this->report, "Traitement du fichier " . $this->name);
         } else {
             return null;
         }

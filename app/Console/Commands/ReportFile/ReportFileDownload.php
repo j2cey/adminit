@@ -45,7 +45,7 @@ class ReportFileDownload extends Command
 
         foreach ($reportfiles as $reportfile) {
             if ( $reportfile->report->isActive && $reportfile->isActive ) {
-                if ($reportfile->reportTreatmentResultsNotCompleted()->count() === 0) {
+                if ($reportfile->reportTreatmentsNotCompleted()->count() === 0) {
                     $launched_execs += 1;
                     $reportfile->collectFile(null, false);
                     break;

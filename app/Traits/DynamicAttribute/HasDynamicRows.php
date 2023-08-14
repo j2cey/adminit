@@ -47,7 +47,7 @@ trait HasDynamicRows
     /**
      * @return Model|DynamicRow
      */
-    public function addRow(): Model|DynamicRow
+    public function addRow(array $raw_value = null): Model|DynamicRow
     {
         //$dynamicrow = DynamicRow::createNew($this->dynamicrows()->count() + 1);
         $line_num = $this->dynamicrows()->count() + 1;
@@ -56,6 +56,7 @@ trait HasDynamicRows
             'line_num' => $line_num,
             'firstinserted_at' => Carbon::now(),
             'columns_values' => "[]",
+            'raw_value' => is_null($raw_value) ? "[]" : json_encode($raw_value),
         ]);
 
         $dynamicrow->setFormattedValue(HtmlTagKey::TABLE_ROW);

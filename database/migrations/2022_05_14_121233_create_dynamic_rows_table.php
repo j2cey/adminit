@@ -30,6 +30,7 @@ class CreateDynamicRowsTable extends Migration
             $table->bigInteger('hasdynamicrow_id')->nullable()->comment('referenced value row id');
 
             $table->json('columns_values')->comment('all columns values for this line');
+            $table->json('raw_value')->comment('the line raw value');
 
             $table->baseFields();
         });

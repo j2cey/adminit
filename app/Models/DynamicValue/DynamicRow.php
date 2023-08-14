@@ -21,6 +21,7 @@ use App\Models\DynamicAttributes\DynamicAttribute;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use App\Contracts\DynamicAttribute\IHasDynamicRows;
 use App\Contracts\FormattedValue\IHasFormattedValue;
+use App\Models\ReportTreatments\ReportTreatmentStep;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
@@ -47,6 +48,7 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property integer $hasdynamicrow_id
  *
  * @property array $columns_values
+ * @property array $raw_value
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -109,9 +111,10 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
 
     /**
      * @param $line_num
+     * @param array|null $raw_value
      * @return Model|DynamicRow
      */
-    public static function createNew($line_num): Model|DynamicRow
+    public static function createNew($line_num, array $raw_value = null): Model|DynamicRow
     {
         //$related_object->dynamicrows()->save($dynamicrow);
         //$dynamicrow->setFormattedValue(HtmlTagKey::TABLE_ROW);
@@ -120,6 +123,7 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
             'line_num' => $line_num,
             'firstinserted_at' => Carbon::now(),
             'columns_values' => "[]",
+            'raw_value' => is_null($raw_value) ? "[]" : json_encode($raw_value),
         ]);
     }
 
@@ -160,8 +164,8 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
         return $merged_values;
     }
 
-    public function mergeFormattedColumnsValues(ReportTreatmentStepResult $step, bool $is_last_operation, int $row_index = null) {
-        $operation = $step->addOperationResult("Merge " . $row_index . " (" . $this->line_num . ") ",CriticalityLevelEnum::HIGH,$is_last_operation,true);
+    public function mergeFormattedColumnsValues(ReportTreatmentStep $step, bool $is_last_operation, int $row_index = null) {
+        $operation = $step->addTreatmentOperation("Merge " . $row_index . " (" . $this->line_num . ") ",CriticalityLevelEnum::HIGH,$is_last_operation,true);
         $operation->startOperation();
         try {
             // reset rawvalue from formatted values

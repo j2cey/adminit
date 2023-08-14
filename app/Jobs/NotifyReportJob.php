@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use App\Models\ReportFile\CollectedReportFile;
+use App\Models\ReportTreatments\ReportTreatment;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
 use App\Models\ReportTreatments\ReportTreatmentResult;
 
@@ -17,7 +18,7 @@ class NotifyReportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private ReportTreatmentResult $reporttreatmentresult;
+    private ReportTreatment $reporttreatment;
     private CollectedReportFile $collectedreportfile;
 
     /**
@@ -25,12 +26,12 @@ class NotifyReportJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(ReportTreatmentResult $reporttreatmentresult, CollectedReportFile $collectedreportfile)
+    public function __construct(ReportTreatment $reporttreatment, CollectedReportFile $collectedreportfile)
     {
         //$this->onQueue(QueueEnum::NOTIFYFILES->value);
         //
-        $reporttreatmentresult->setQueued();
-        $this->reporttreatmentresult = $reporttreatmentresult;
+        $reporttreatment->setQueued();
+        $this->reporttreatment = $reporttreatment;
         $this->collectedreportfile = $collectedreportfile;
     }
 
@@ -45,11 +46,11 @@ class NotifyReportJob implements ShouldQueue
      */
     public function handle()
     {
-        $this->collectedreportfile->notify($this->reporttreatmentresult);
+        $this->collectedreportfile->notify($this->reporttreatment);
     }
 
     public function failed(\Exception $e = null)
     {
-        $this->reporttreatmentresult->setFailed($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
+        $this->reporttreatment->setFailed($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
     }
 }
