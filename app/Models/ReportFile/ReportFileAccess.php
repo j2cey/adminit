@@ -3,32 +3,21 @@
 namespace App\Models\ReportFile;
 
 use App\Models\Status;
-use App\Enums\QueueEnum;
 use App\Models\BaseModel;
 use Illuminate\Support\Str;
 use App\Traits\Code\HasCode;
 use Illuminate\Support\Carbon;
-use App\Enums\TreatmentStepCode;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\Access\AccessAccount;
-use App\Jobs\ReportFileDownloadedJob;
 use App\Models\Access\AccessProtocole;
 use Illuminate\Support\Facades\Storage;
 use App\Models\OsAndServer\ReportServer;
 use OwenIt\Auditing\Contracts\Auditable;
-use Illuminate\Contracts\Filesystem\Filesystem;
-use App\Models\ReportTreatments\ReportTreatment;
-use App\Models\RetrieveAction\RetrieveActionType;
-use App\Contracts\RetrieveAction\IRetrieveAction;
-use App\Models\ReportTreatments\ReportTreatmentStep;
+use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\ReportTreatments\ReportTreatmentResult;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
-use App\Traits\ReportTreatment\HasReportTreatmentSteps;
-use App\Contracts\ReportTreatment\IHasReportTreatmentSteps;
 
 /**
  * Class ReportFileAccess
@@ -62,9 +51,9 @@ use App\Contracts\ReportTreatment\IHasReportTreatmentSteps;
  *
  * @method static ReportFileAccess|null first()
  */
-class ReportFileAccess extends BaseModel implements Auditable, IHasSelectedRetrieveActions, IHasReportTreatmentSteps
+class ReportFileAccess extends BaseModel implements Auditable, IHasSelectedRetrieveActions
 {
-    use HasFactory, HasSelectedRetrieveActions, HasCode, HasReportTreatmentSteps, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasSelectedRetrieveActions, HasCode, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -257,94 +246,45 @@ class ReportFileAccess extends BaseModel implements Auditable, IHasSelectedRetri
         $reporttreatment->refresh();
         if ( $reporttreatment->canBeExecuted ) {
 
-            $reporttreatmentstep = $this->addReportTreatmentStep($reporttreatment, TreatmentStepCode::DOWNLOADFILE, TreatmentStepCode::DOWNLOADFILE->toArray()['name'] . " (".$this->reportfile->name.")", CriticalityLevelEnum::HIGH, true);
+            $reporttreatmentstep = $this->addReportTreatmentStep($reporttreatment, TreatmentCodeEnum::DOWNLOADFILE, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'] . " (".$this->reportfile->name.")", CriticalityLevelEnum::HIGH, true);
 
             try {
 
                 // 1. Définir le disk en fonction du protocole
                 $remoteDisk = $this->getDisk($reporttreatmentstep, CriticalityLevelEnum::HIGH);
 
-                if ($reporttreatmentstep->isSuccess) {
+                if ($reporttreatmentstep->lastoperation->isSuccess) {
                     // 2. Récupère l'action à exécuter pour la Récupération du fichier (retrieve_mode)
                     $retrievemode_action = $this->getRetrieveModeAction($reporttreatmentstep, CriticalityLevelEnum::HIGH);
 
-                    if ($reporttreatmentstep->isSuccess) {
+                    if ($reporttreatmentstep->lastoperation->isSuccess) {
                         // 3. Execute cette action
                         $retrievemode_action::execAction($remoteDisk, $this->reportfile, $reporttreatmentstep, CriticalityLevelEnum::HIGH);
 
-                        if ($reporttreatmentstep->isSuccess) {
+                        if ($reporttreatmentstep->lastoperation->isSuccess) {
                             // 4. Récupère l'action à exécuter après la Récupération du fichier (to_perform_after_retrieving)
                             $to_perform_after_retrieving = $this->getToPerformAfterRetrievingAction();
 
                             // 5. Execution de cette action
                             $last_operation = $to_perform_after_retrieving::execAction($remoteDisk, $this->reportfile, $reporttreatmentstep, CriticalityLevelEnum::HIGH, true);
                             if ( $last_operation->isSuccess ) {
-                                ReportFileDownloadedJob::dispatch($this->reportfile->id, $reporttreatment)->onQueue(QueueEnum::DOWNLOADFILES->value);
+                                //ReportFileDownloadedJob::dispatch($this->reportfile->id, $reporttreatment)->onQueue(QueueEnum::DOWNLOADFILES->value);
+                                $reporttreatmentstep->endTreatmentStepWithSuccess();
                             }
                         }
                     }
                 }
             } catch (\Exception $e) {
-                $reporttreatmentstep->endTreatmentWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode());
+                $reporttreatmentstep->endTreatmentStepWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode());
             }
         }
     }
 
-    /**
-     * @param ReportTreatmentStep $reporttreatmentstep
-     * @param CriticalityLevelEnum $criticalitylevelenum
-     * @return Filesystem
-     */
-    private function getDisk(ReportTreatmentStep $reporttreatmentstep, CriticalityLevelEnum $criticalitylevelenum): Filesystem {
-        return $this->accessprotocole->innerprotocole()::getDisk($reporttreatmentstep, $criticalitylevelenum, $this->accessaccount, $this->reportserver,$this->port);
-    }
 
-    /**
-     * @return IRetrieveAction|null
-     */
-    private function getRetrieveModeAction(ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum)
-    {
-        $operation_result = $reporttreatmentstepresult->addOperationResult("Recuperation du Mode d Action", $criticalitylevelenum)
-            ->startOperation();
-        foreach ($this->selectedretrieveactions as $selectedretrieveaction) {
-            if ( $selectedretrieveaction->retrieveaction->retrieveactiontype->code === RetrieveActionType::retrieveMode()->first()->code ) {
-                $operation_result->endWithSuccess();
-                return $selectedretrieveaction->retrieveaction->action_class;
-            }
-        }
 
-        $operation_result->endWithFailure();
-        return null;
 
-        /*$selected_retrievemode_action = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
-            $query->with(['retrieveactiontype' => function () {
-                RetrieveActionType::retrieveMode();
-            }]);
-        }])->first();
 
-        return $selected_retrievemode_action->retrieveaction->action_class ?? null;*/
-    }
 
-    /**
-     * @return IRetrieveAction|null
-     */
-    private function getToPerformAfterRetrievingAction()
-    {
-        foreach ($this->selectedretrieveactions as $selectedretrieveaction) {
-            if ( $selectedretrieveaction->retrieveaction->retrieveactiontype->code === RetrieveActionType::toPerformAfterRetrieving()->first()->code ) {
-                return $selectedretrieveaction->retrieveaction->action_class;
-            }
-        }
-
-        return null;
-
-        /*$to_perform_after_retrieving = $this->selectedretrieveactions()->with( [ 'retrieveaction' => function( $query ) {
-            $query->with(['retrieveactiontype' => function ($query) {
-                RetrieveActionType::toPerformAfterRetrieving($query);
-            }]);
-        }])->first();
-        return $to_perform_after_retrieving->retrieveaction->action_class ?? null;*/
-    }
 
 
 

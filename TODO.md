@@ -56,3 +56,10 @@
 
 ## DynamicAttribute
 [] -> add and manage fieldkey attribute
+
+## Job Queues
+[] -> track blocked queues -> where "reserved_at" for limit time
+[] -> track failed jobs
+
+## Job Batches
+[] -> track and delete  -> where "pending_jobs=0" and "finished_at" for limit time

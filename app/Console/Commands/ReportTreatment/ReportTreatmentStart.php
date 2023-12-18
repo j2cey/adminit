@@ -12,7 +12,7 @@ class ReportTreatmentStart extends Command
      *
      * @var string
      */
-    protected $signature = 'reporttreatment:start';
+    protected $signature = 'treatment:start';
 
     /**
      * The console command description.

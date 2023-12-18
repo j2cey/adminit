@@ -6,18 +6,18 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use App\Enums\ValueTypeEnum;
 use Illuminate\Support\Carbon;
-use App\Enums\TreatmentStateEnum;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Traits\FileHeader\HasFileHeader;
 use App\Models\ReportFile\ReportFileType;
+use App\Enums\Treatments\TreatmentStateEnum;
 use App\Contracts\FileHeader\IHasFileHeader;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\ReportTreatments\ReportTreatmentWorkflow;
 use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
+use App\Traits\ReportTreatment\Workflow\HasTreatmentWorkflow;
 
 /**
  * Class Report
@@ -41,15 +41,13 @@ use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
  * @property Carbon $updated_at
  *
  * @method static Report create(string[] $array)
- *
- * @property ReportTreatmentWorkflow $treatmentworkflow
  */
 class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHasFileHeader
 {
-    use HasDynamicAttributes, HasFileHeader, HasFactory, \OwenIt\Auditing\Auditable;
+    use HasDynamicAttributes, HasFileHeader, HasTreatmentWorkflow, HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
-    protected $with = ['reporttype', 'treatmentworkflow'];
+    protected $with = ['reporttype'];
     //protected $appends = [];
 
     protected $casts = [
@@ -92,11 +90,6 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
         return $this->hasMany(ReportFile::class, "report_id");
     }
 
-    public function treatmentworkflow()
-    {
-        return $this->hasOne(ReportTreatmentWorkflow::class, "report_id");
-    }
-
     #endregion
 
     #region SCOPES based Custom Functions
@@ -105,6 +98,7 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
      * @return ReportFile[]|null
      */
     public function getActiveReportFiles() {
+
         return $this->reportfiles()->active()->get();
     }
 
@@ -140,7 +134,6 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
 
         $report->reporttype()->associate($reporttype);
         $report->setFileheader()->setDefaultFormatSize();
-        $report->setDefaultTreatmentWorkflow();
 
         $report->save();
 
@@ -231,10 +224,12 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
     }
 
     public function exec() {
+
         $activereportfiles = $this->getActiveReportFiles();
 
         foreach ($activereportfiles as $activereportfile) {
             $activereportfile->exec();
+            break;
         }
     }
 
@@ -244,14 +239,6 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
      */
     public static function getById($reportId) {
         return Report::find($reportId);
-    }
-
-    public function setDefaultTreatmentWorkflow(string $name = null, Status $status = null, string $description = null): ReportTreatmentWorkflow {
-        if ( is_null($this->treatmentworkflow) ) {
-            return ReportTreatmentWorkflow::createDefaultTreatmentWorkflow($this, $name, $status, $description);
-        } else {
-            return $this->treatmentworkflow;
-        }
     }
 
     #endregion

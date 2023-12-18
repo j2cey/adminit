@@ -22,6 +22,8 @@ class CreateDynamicValuesTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
+            $table->string('raw_value')->nullable()->comment('the raw value');
+
             $table->foreignId('dynamic_row_id')->nullable()
                 ->comment('dynamic value row reference')
                 ->constrained()->onDelete('set null');
@@ -30,8 +32,13 @@ class CreateDynamicValuesTable extends Migration
                 ->comment('dynamic attribute reference')
                 ->constrained()->onDelete('set null');
 
-            $table->string('innerdynamicvalue_type')->comment('referenced value');
-            $table->bigInteger('innerdynamicvalue_id')->comment('referenced value id');
+            $table->string('innerdynamicvalue_type')->nullable()->comment('referenced value');
+            $table->bigInteger('innerdynamicvalue_id')->nullable()->comment('referenced value id');
+
+            $table->boolean('is_imported')->default(0)->comment('determine whether the value is imported');
+            $table->boolean('is_formatted')->default(0)->comment('determine whether the value is formatted');
+            $table->boolean('is_merged')->default(0)->comment('determine whether the value is merged');
+            $table->boolean('is_next_to_merge')->default(0)->comment('determine whether the value is the next one to be merged');
 
             $table->timestamps();
         });

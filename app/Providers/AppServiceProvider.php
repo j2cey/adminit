@@ -3,21 +3,28 @@
 namespace App\Providers;
 
 use App\Models\Setting;
+use App\Jobs\ReportFileNotifyJob;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Config;
+use App\Jobs\ReportFileDownloadJob;
+use App\Jobs\ReportFileLinesImportJob;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Validator;
+use App\Jobs\ReportFileLineValuesImportJob;
+use App\Jobs\ReportFileLinesValuesImportJob;
 use App\Repositories\Eloquent\UserRepository;
+use App\Jobs\ReportFileMergeFormattedRowsJob;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Repositories\Eloquent\SubjectRepository;
 use App\Repositories\Contracts\IUserRepositoryContract;
 use App\Repositories\Eloquent\ReportRepositoryContract;
 use App\Repositories\Contracts\IReportRepositoryContract;
+use App\Services\Steps\ReportFileNotifyService;
 use App\Repositories\Contracts\ISubjectRepositoryContract;
-
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\ParallelTesting;
+use App\Services\Steps\DownloadFileStepService;
+use App\Services\Steps\ImportFileStepService;
+use App\Services\Steps\ReportFileImportDataService;
+use App\Services\Steps\ReportFileMergeFormattedRowsService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +38,25 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(IUserRepositoryContract::class, UserRepository::class);
         $this->app->bind(ISubjectRepositoryContract::class, SubjectRepository::class);
         $this->app->bind(IReportRepositoryContract::class, ReportRepositoryContract::class);
+
+        $this->app->bindMethod([ReportFileDownloadJob::class, 'handle'], function ($job, $app) {
+            return $job->handle($app->make(DownloadFileStepService::class));
+        });
+        $this->app->bindMethod([ReportFileLinesImportJob::class, 'handle'], function ($job, $app) {
+            return $job->handle($app->make(ImportFileStepService::class));
+        });
+        $this->app->bindMethod([ReportFileLinesValuesImportJob::class, 'handle'], function ($job, $app) {
+            return $job->handle($app->make(ReportFileImportDataService::class));
+        });
+        $this->app->bindMethod([ReportFileLineValuesImportJob::class, 'handle'], function ($job, $app) {
+            return $job->handle($app->make(ReportFileImportDataService::class));
+        });
+        $this->app->bindMethod([ReportFileMergeFormattedRowsJob::class, 'handle'], function ($job, $app) {
+            return $job->handle($app->make(ReportFileMergeFormattedRowsService::class));
+        });
+        $this->app->bindMethod([ReportFileNotifyJob::class, 'handle'], function ($job, $app) {
+            return $job->handle($app->make(ReportFileNotifyService::class));
+        });
     }
 
     /**

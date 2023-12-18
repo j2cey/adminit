@@ -61,11 +61,34 @@ trait InnerDynamicValue
         ]);
 
         $dynamicvalue = $innervalue->createDynamicValue();                 // create a new DynamicValue wich will wrappe the current inner value
+
         $dynamicvalue->dynamicrow()->associate($row);                      // associate the created DynamicValue with the given row
-        $dynamicvalue->dynamicattribute()->associate($dynamicattribute)    // associate the created DynamicValue with the given DynamicAttribute
-        ->save();                                                          // save the association from the DynamicValue (the wrapper)
+        $dynamicvalue->dynamicattribute()->associate($dynamicattribute);    // associate the created DynamicValue with the given DynamicAttribute
+
+        $dynamicvalue->save();                                                          // save the association from the DynamicValue (the wrapper)
 
         $row->setLastInserted();                                           // update the row's last inserted date
+
+        return $innervalue;
+    }
+
+    public static function createFromDynamicValue(DynamicValue $dynamicvalue): IInnerDynamicValue
+    {
+        $innervalue = self::create([
+            'thevalue' => self::getFormattedValue($dynamicvalue->raw_value),
+        ]);
+
+        $dynamicvalue->innerdynamicvalue_id = $innervalue->id;
+        $dynamicvalue->save();
+
+        //$dynamicvalue->innerdynamicvalue()->associate($innervalue);
+        //$innervalue->dynamicvalue()->save();
+        //$dynamicvalue = $innervalue->createDynamicValue();               // create a new DynamicValue wich will wrappe the current inner value
+        //$dynamicvalue->dynamicrow()->associate($row);                      // associate the created DynamicValue with the given row
+        //$dynamicvalue->dynamicattribute()->associate($dynamicattribute)    // associate the created DynamicValue with the given DynamicAttribute
+        //->save();                                                          // save the association from the DynamicValue (the wrapper)
+
+        $dynamicvalue->dynamicrow->setLastInserted();                                           // update the row's last inserted date
 
         return $innervalue;
     }

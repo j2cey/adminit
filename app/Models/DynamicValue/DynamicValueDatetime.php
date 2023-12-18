@@ -89,5 +89,9 @@ class DynamicValueDatetime extends Model implements IInnerDynamicValue
             ":" . $thevalue_arr['second'];*/
     }
 
+    private static function prepareDateFormat($thevalue) {
+        return substr($thevalue,0,11);
+    }
+
     #endregion
 }

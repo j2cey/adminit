@@ -13,3 +13,26 @@ MySQL Failed! Error: SET PASSWORD has no significance for user ‘root’@’loc
 	sudo mysql_secure_installation
 6.	When promoted for the password enter the SetRootPasswordHere (or whatever you set when you ran the above SQL query)
 	That is all.
+
+### Adjust wait_timeout MySQL
+1. Open MySQL.
+
+sudo service mysql start
+
+ 
+2. Open the command window.
+
+sudo mysql -u username -p
+
+ 
+3. Change the timeout.
+
+SET @@GLOBAL.interactive_timeout=31536000
+
+ 
+4. Restart server.
+
+sudo service mysql restart
+
+ 
+The windows timeout default is 31536000. You can choose the time you prefer.  The way to follow the timeout is show global variables like 'wait_timeout'.

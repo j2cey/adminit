@@ -153,10 +153,10 @@ abstract class Permissions
     public static function LastRowConfig() : PermissionAction {
         return new PermissionAction("lastrowconfig");
     }
-    public static function ReportTreatmentWorkflow() : PermissionAction {
-        return new PermissionAction("reporttreatmentworkflow");
+    public static function TreatmentWorkflow() : PermissionAction {
+        return new PermissionAction("treatmentworkflow");
     }
-    public static function ReportTreatmentWorkflowStep() : PermissionAction {
-        return new PermissionAction("reporttreatmentworkflowstep");
+    public static function TreatmentWorkflowStep() : PermissionAction {
+        return new PermissionAction("treatmentworkflowstep");
     }
 }

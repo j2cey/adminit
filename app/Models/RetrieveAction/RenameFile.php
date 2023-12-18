@@ -2,41 +2,49 @@
 
 namespace App\Models\RetrieveAction;
 
-use Illuminate\Support\Carbon;
+
+use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
+use App\Models\ReportTreatments\Treatment;
+use App\Enums\Treatments\TreatmentCodeEnum;
+use App\Enums\Treatments\TreatmentResultEnum;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use App\Models\ReportTreatments\OperationResult;
 use App\Contracts\RetrieveAction\IRetrieveAction;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 class RenameFile implements IRetrieveAction
 {
     /**
      * @param Filesystem $disk
      * @param ReportFile $file
-     * @param ReportTreatmentStepResult $reporttreatmentstepresult
-     * @return OperationResult
+     * @param Treatment $treatment
+     * @param CriticalityLevelEnum $criticalitylevelenum
+     * @param bool $is_last_subtreatment
+     * @param bool $can_end_uppertreatment
+     * @return InnerTreatment
      */
-    public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum, bool $is_last_operation = false): OperationResult
+    public static function execAction(Filesystem $disk, ReportFile $file, Treatment $treatment, CriticalityLevelEnum $criticalitylevelenum, bool $is_last_subtreatment = false, bool $can_end_uppertreatment = false): InnerTreatment
     {
-        $operationresult = $reporttreatmentstepresult->addOperationResult("Renommage du ReportFile", CriticalityLevelEnum::HIGH, $is_last_operation)
-            ->startOperation();
+        $operation = $treatment->operationAddOrGet(TreatmentCodeEnum::DOWNLOADFILE_RENAME, CriticalityLevelEnum::HIGH, $is_last_subtreatment, $can_end_uppertreatment, false, [], null)
+            ->starting();
 
         // variable du nom en local avec nom , temps , extension
-        $local_file_name = md5($file->name . '_' . time()) . '.' . $file->extension;
+        //$local_file_name = md5($file->name . '_' . time()) . '.' . $file->extension;
 
         try{
-            $result = $disk->move($file->fileRemotePath, $local_file_name);
+            $remote_file_name = $treatment->getPayloadEntry("NewRemoteFileName");
+            $remote_file_name = (empty($remote_file_name)) ? $file->fileRemotePath : $remote_file_name;
+
+            $result = $disk->move($remote_file_name, $file->localName);
 
             if($result) {
-                return $operationresult->endWithSuccess("Rename success !");
+                return $operation->endingWithSuccess("Rename success !");
             } else{
-                return $operationresult->endWithFailure("Error rename !");
+                return $operation->endingWithFailure("Error rename !");
             }
         }
         catch (\Exception $e){
-            return $operationresult->endWithFailure($e->getMessage());
+            return $operation->endingWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode());
         }
     }
 

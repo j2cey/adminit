@@ -164,9 +164,10 @@ Vue.component('reportattribute-index', require('./views/reportattributes/list').
 Vue.component('collectedreportfile-item', require('./views/collectedreportfiles/item').default);
 Vue.component('dynamicattribute-item', require('./views/dynamicattributes/item').default);
 
-Vue.component('reporttreatmentresult-list', require('./views/reporttreatmentresults/list').default);
-Vue.component('reporttreatmentresult-item', require('./views/reporttreatmentresults/item').default);
-Vue.component('reporttreatmentstepresult-item', require('./views/reporttreatmentstepresults/item').default);
+Vue.component('reporttreatment-list', require('./views/reporttreatments/list').default);
+Vue.component('reporttreatment-item', require('./views/reporttreatments/item').default);
+Vue.component('reporttreatmentstep-item', require('./views/reporttreatmentsteps/item').default);
+Vue.component('treatmentoperation-item', require('./views/treatmentoperations/item').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -81,5 +81,11 @@ class BaseModel extends Model
         return $this->status()->associate($status)->save();
     }
 
+    public function saveObject(bool $save) {
+        if ($save) {
+            $this->save();
+        }
+    }
+
     #endregion
 }

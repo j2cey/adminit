@@ -1,10 +1,13 @@
 <template>
     <div class="row">
-        <div class="col-sm-3 col-6 border-right">
+        <div class="col-sm-2 col-6 border-right">
+            <span class="text text-xs d-inline-block text-truncate text-xs-left">{{ reportfileaccess ? reportfileaccess.id : '' }}</span>
+        </div>
+        <div class="col-sm-2 col-6 border-right">
             <span class="text text-xs d-inline-block text-truncate text-xs-left">{{ reportfileaccess.accessaccount ? reportfileaccess.accessaccount.login : '' }}</span>
         </div>
         <!-- /.col -->
-        <div class="col-sm-3 col-6 border-right">
+        <div class="col-sm-2 col-6 border-right">
             <span class="text text-xs d-inline-block text-truncate text-xs-left" style="max-width: 100%;">{{ reportfileaccess.reportserver ? reportfileaccess.reportserver.ip_address : '' }}</span>
         </div>
         <!-- /.col -->

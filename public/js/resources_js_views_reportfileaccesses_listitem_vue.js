@@ -87,11 +87,15 @@ var render = function render() {
   return _c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-sm-3 col-6 border-right"
+    staticClass: "col-sm-2 col-6 border-right"
+  }, [_c("span", {
+    staticClass: "text text-xs d-inline-block text-truncate text-xs-left"
+  }, [_vm._v(_vm._s(_vm.reportfileaccess ? _vm.reportfileaccess.id : ""))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-2 col-6 border-right"
   }, [_c("span", {
     staticClass: "text text-xs d-inline-block text-truncate text-xs-left"
   }, [_vm._v(_vm._s(_vm.reportfileaccess.accessaccount ? _vm.reportfileaccess.accessaccount.login : ""))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-3 col-6 border-right"
+    staticClass: "col-sm-2 col-6 border-right"
   }, [_c("span", {
     staticClass: "text text-xs d-inline-block text-truncate text-xs-left",
     staticStyle: {

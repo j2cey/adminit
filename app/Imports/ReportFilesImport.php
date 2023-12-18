@@ -14,8 +14,8 @@ use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use App\Models\ReportFile\CollectedReportFile;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
-use App\Models\ReportTreatments\OperationResult;
 use Maatwebsite\Excel\Concerns\RemembersRowNumber;
+use App\Models\ReportTreatments\TreatmentOperation;
 
 class ReportFilesImport implements ToModel, WithChunkReading, WithEvents, WithValidation, SkipsOnError
 {
@@ -24,12 +24,12 @@ class ReportFilesImport implements ToModel, WithChunkReading, WithEvents, WithVa
     private int $_rownum = 0;
     private int $_totalrows = 0;
     private CollectedReportFile $_collectedreportfile;
-    private OperationResult $_operation_result;
+    private TreatmentOperation $_operation;
 
-    public function __construct(CollectedReportFile $collectedreportfile, OperationResult $operation_result)
+    public function __construct(CollectedReportFile $collectedreportfile, TreatmentOperation $operation, bool $all_sub_treatments_launched, bool $can_end_upper_treatment)
     {
         $this->_collectedreportfile = $collectedreportfile;
-        $this->_operation_result = $operation_result->startOperation();
+        $this->_operation = $operation->starting($all_sub_treatments_launched, $can_end_upper_treatment);
     }
 
     /**
@@ -61,7 +61,7 @@ class ReportFilesImport implements ToModel, WithChunkReading, WithEvents, WithVa
         }
 
         if ( $this->_collectedreportfile->imported ) {
-            $this->_operation_result->endWithSuccess("file already imported. " . $this->_collectedreportfile->imported);
+            $this->_operation->endWithSuccess("file already imported. " . $this->_collectedreportfile->imported);
             return null;
         }
 

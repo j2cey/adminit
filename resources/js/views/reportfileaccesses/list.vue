@@ -51,11 +51,15 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-2 col-6">
+                                <span class="text text-sm">ID</span>
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-sm-2 col-6">
                                 <span class="text text-sm">Compte</span>
                             </div>
                             <!-- /.col -->
-                            <div class="col-sm-3 col-6">
+                            <div class="col-sm-2 col-6">
                                 <span class="text text-sm">Serveur</span>
                             </div>
                             <!-- /.col -->

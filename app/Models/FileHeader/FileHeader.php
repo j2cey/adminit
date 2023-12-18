@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @method static FileHeader create()
+ * @method static FileHeader create(array $array)
  */
 class FileHeader extends BaseModel implements Auditable, IHasFormatRules
 {
@@ -77,7 +77,7 @@ class FileHeader extends BaseModel implements Auditable, IHasFormatRules
      */
     public static function createNew(array $array = null): FileHeader
     {
-        return FileHeader::create();
+        return FileHeader::create($array);
     }
 
     public function updateThis(string $title, Status $status = null, string $description = null): FileHeader

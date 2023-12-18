@@ -3,32 +3,21 @@
 namespace App\Models\ReportFile;
 
 use App\Models\Status;
-use App\Enums\QueueEnum;
 use App\Models\BaseModel;
-use App\Jobs\NotifyReportJob;
 use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
-use App\Enums\TreatmentStepCode;
-use App\Jobs\ImportReportFileJob;
-use App\Jobs\FormatReportFileJob;
-use App\Jobs\CollectReportFileJob;
-use App\Enums\CriticalityLevelEnum;
 use App\Models\Access\AccessAccount;
-use Illuminate\Support\Facades\Queue;
 use App\Models\Access\AccessProtocole;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\OsAndServer\ReportServer;
 use App\Traits\RowConfig\HasLastRowConfig;
-use App\Jobs\MergeReportFileFormattedRowsJob;
 use App\Contracts\RowConfig\IHasLastRowConfig;
-use App\Models\ReportTreatments\ReportTreatment;
+use App\Traits\ReportTreatment\HasMainTreatments;
+use App\Contracts\ReportTreatment\IHasMainTreatments;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\ReportTreatments\ReportTreatmentResult;
-use App\Traits\ReportTreatment\HasReportTreatments;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
-use App\Contracts\ReportTreatment\IHasReportTreatments;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
 /**
@@ -36,7 +25,6 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @package App\Models\ReportFile
  *
  * @property integer $id
- *CollectedReportFile
  * @property string $uuid
  * @property bool $is_default
  * @property integer $created_by
@@ -66,18 +54,31 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property mixed $selectedretrieveactions
  * @property CollectedReportFile[] $collectedreportfiles
  * @property CollectedReportFile $latestCollectedReportFile
+ * @property string $localName
+ * @property ReportFileReceiver[] $receivers
  *
  * @method static ReportFile first()
+ * @method static self create(array $array)
  */
-class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveActions, IHasReportTreatments, IHasLastRowConfig
+class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveActions, IHasMainTreatments, IHasLastRowConfig
 {
-    use HasFactory, HasSelectedRetrieveActions, HasReportTreatments, HasLastRowConfig, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasSelectedRetrieveActions, HasMainTreatments, HasLastRowConfig, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
     //protected $appends = ['revenue'];
 
     protected $with = ['report','reportfiletype'];//,'selectedretrieveactions'];
+    public string $runtime_gui;
+
+    public static string $REPORTFILE_TREATMENT_LOG_INFO_PART = "reportfile";
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->setRuntimeGUI();
+    }
 
     public static function defaultRules() {
         return [
@@ -136,6 +137,10 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
         return $this->hasOne(CollectedReportFile::class)->latestOfMany();
     }
 
+    public function receivers() {
+        return $this->hasMany(ReportFileReceiver::class,'report_file_id');
+    }
+
     #endregion
 
     #region SCOPES based Custom Functions
@@ -162,9 +167,13 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
 
     public function getFileRemotePathAttribute() {
         //variable contenant le chemin , le nom , l'extension du rapport de fichier
-        return $this->remotedir_relative_path . "/" . $this->name . ( $this->use_file_extension ? "." . $this->extension : "");
+        return $this->getFileRemotePath($this->name);
     }
 
+    public function getLocalNameAttribute() {
+        // variable du nom en local avec nom , temps , extension
+        return $this->runtime_gui . '.' . $this->extension;
+    }
 
     /**
      * Retourne le type de récupération
@@ -297,143 +306,6 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
         return true;
     }
 
-
-    public function exec() {
-
-        if ( $this->reportTreatmentResultsWaiting()->count() === 0 && $this->reportTreatmentResultsRunning()->count() === 0 && $this->reportTreatmentResultsQueued()->count() === 0 ) {
-            /** Ce fichier n'a
-             *      - aucun traitement en attente
-             *      - aucun traitement en cours d'execution
-             *      - aucun traitement en file d'attente
-             *
-             *  Alors, on peut lancer au nouveau Traitement pour ce fichier
-             */
-            $reporttreatment = $this->createNewTreatment();
-            $this->execTreatment($reporttreatment);
-        } else {
-            // On récupère les traitements en cours de ce fichier
-            //$waiting_report_treatments = $this->reportTreatmentResultsWaiting;
-
-            //\Log::info("Fichier ".$this->id.", aucun traitement en attente. En execution:".$this->reportTreatmentResultsRunning()->count().", En File:".$this->reportTreatmentResultsQueued()->count());
-            if ( $this->reportTreatmentResultsWaiting()->count() > 0 ) {
-                $waiting_report_treatment = $this->reportTreatmentResultsWaiting()->first();
-                $this->execTreatment($waiting_report_treatment);
-            }
-        }
-    }
-
-    public function execTreatment(ReportTreatment $reporttreatment) {
-        \Log::info("execTreatment ".$reporttreatment->id.", " . $reporttreatment->workflowstep->code->value);
-        if ( $reporttreatment->workflowstep->code === TreatmentStepCode::DOWNLOADFILE ) {
-            $this->collectFile($reporttreatment, false);
-        } elseif ( $reporttreatment->workflowstep->code === TreatmentStepCode::IMPORTFILE ) {
-            $this->importLastCollectedFile($reporttreatment, false);
-        } elseif ( $reporttreatment->workflowstep->code === TreatmentStepCode::MERGECOLUMNS ) {
-            $this->mergeColumns($reporttreatment);
-        } elseif ( $reporttreatment->workflowstep->code === TreatmentStepCode::MERGEROWS ) {
-            $this->mergeRows($reporttreatment, false);
-        } elseif ( $reporttreatment->workflowstep->code === TreatmentStepCode::NOTIFYFILE ) {
-            $this->notifyLastCollectedFile($reporttreatment, false);
-        }
-    }
-
-    public function collectFile(ReportTreatment $reporttreatment = null, $dispatch = false) {
-        $reportfileaccess = $this->getActiveReportFileAccess();
-        if ( is_null( $reporttreatment ) ) $reporttreatment = $this->createNewTreatment();
-
-        /*if ($dispatch) {
-            //CollectReportFileJob::dispatchSync($reporttreatment, $reportfileaccess);
-            //Queue::push(new CollectReportFileJob($reporttreatment, $reportfileaccess));
-            dispatch(new CollectReportFileJob($reporttreatment, $reportfileaccess))->onQueue(QueueEnum::DOWNLOADFILES->value);
-        } else {
-            $reportfileaccess->executeTreatment($reporttreatment);
-        }*/
-
-        $reportfileaccess->executeTreatment($reporttreatment);
-    }
-
-    public function importLastCollectedFile(ReportTreatment $reporttreatment, $dispatch = false) {
-        $latestcollectedreportfile = $this->latestCollectedReportFile;
-
-        /*if ($dispatch) {
-            //ImportReportFileJob::dispatch($reporttreatment, $latestcollectedreportfile);
-            //Queue::push(new ImportReportFileJob($reporttreatment, $latestcollectedreportfile));
-            dispatch(new ImportReportFileJob($reporttreatment, $latestcollectedreportfile))->onQueue(QueueEnum::IMPORTFILES->value);
-        } else {
-            $latestcollectedreportfile->importToDb($reporttreatment);
-        }*/
-        $latestcollectedreportfile->importToDb($reporttreatment);
-    }
-
-    public function prepareFormatting(ReportTreatment $reporttreatment) {
-        $latestcollectedreportfile = $this->latestCollectedReportFile;
-        $reporttreatment->addStep(TreatmentStepCode::PREPAREFORMATTING, "Formattage fichier " . $latestcollectedreportfile->local_file_name,CriticalityLevelEnum::HIGH,true);
-        $reporttreatment->setNextWorkflowStep();
-    }
-
-    public function mergeColumns(ReportTreatment $reporttreatment) {
-        $latestcollectedreportfile = $this->latestCollectedReportFile;
-        $latestcollectedreportfile->mergeColumns($reporttreatment);
-    }
-
-    public function mergeRows(ReportTreatment $reporttreatment) {
-        $latestcollectedreportfile = $this->latestCollectedReportFile;
-        $latestcollectedreportfile->mergeRows($reporttreatment);
-    }
-
-    public function formatLastCollectedFileRows(ReportTreatment $reporttreatment, $dispatch = false) {
-        $latestcollectedreportfile = $this->latestCollectedReportFile;
-        /*if ($dispatch) {
-            //Queue::push(new FormatReportFileJob($reporttreatment, $latestcollectedreportfile));
-            dispatch(new FormatReportFileJob($reporttreatment, $latestcollectedreportfile))->onQueue(QueueEnum::FORMATFILES->value);
-        } else {
-            $latestcollectedreportfile->formatFileRows($reporttreatment);
-        }*/
-        $latestcollectedreportfile->formatFileRows($reporttreatment);
-    }
-
-    public function mergeFormattedValuesLastCollectedFile(ReportTreatment $reporttreatment, $dispatch = false) {
-        $latestcollectedreportfile = $this->latestCollectedReportFile;
-        if ($dispatch) {
-            //FormatReportFileJob::dispatch($reporttreatment, $latestcollectedreportfile);
-            //Queue::push(new FormatReportFileJob($reporttreatment, $latestcollectedreportfile));
-            dispatch(new MergeReportFileFormattedRowsJob($reporttreatment, $latestcollectedreportfile));
-        } else {
-            $latestcollectedreportfile->mergeLinesFormattedValues($reporttreatment)->onQueue(QueueEnum::FORMATFILES->value);
-        }
-    }
-
-    public function notifyLastCollectedFile(ReportTreatment $reporttreatment, $dispatch = false) {
-        $latestcollectedreportfile = $this->latestCollectedReportFile;
-        if ($dispatch) {
-            //NotifyReportJob::dispatch($reporttreatment, $latestcollectedreportfile);
-            //Queue::push(new NotifyReportJob($reporttreatment, $latestcollectedreportfile));
-            dispatch(new NotifyReportJob($reporttreatment, $latestcollectedreportfile))->onQueue(QueueEnum::NOTIFYFILES->value);
-        } else {
-            $latestcollectedreportfile->notify($reporttreatment);
-        }
-    }
-
-    /**
-     * Create a new treatment (ReportTreatmentResult) for this file.
-     * @return ReportTreatment|null
-     */
-    private function createNewTreatment(): ?ReportTreatment
-    {
-        if ( $this->reportTreatmentsWaiting()->count() === 0 && $this->reportTreatmentsRunning()->count() === 0 && $this->reportTreatmentsQueued()->count() === 0 ) {
-            /** Ce fichier n'a
-             *      - aucun traitement en attente
-             *      - aucun traitement en cours d'execution
-             *      - aucun traitement en file d'attente
-             *
-             *  Alors, on peut lancer au nouveau Traitement pour ce fichier
-             */
-            return $this->addReportTreatment($this->report, "Traitement du fichier " . $this->name);
-        } else {
-            return null;
-        }
-    }
-
     /**
      * @param $reportfileId
      * @return ReportFile|null
@@ -449,16 +321,13 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
         return ReportFile::active()->get();
     }
 
-    protected static function boot(){
-        parent::boot();
+    private function setRuntimeGUI() {
+        $this->runtime_gui = md5($this->name . '_' . time());
+    }
 
-        // Pendant la création de ce Model
-        static::creating(function ($model) {
-        });
-
-        // Pendant la modification de ce Model
-        static::updating(function ($model) {
-        });
+    public function getFileRemotePath(string $name) {
+        //retourne le chemin , le nom , l'extension du rapport de fichier
+        return $this->remotedir_relative_path . "/" . $name . ( $this->use_file_extension ? "." . $this->extension : "");
     }
 
     #endregion

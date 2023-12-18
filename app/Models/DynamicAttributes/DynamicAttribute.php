@@ -6,16 +6,13 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
-use App\Events\DynamicValueCreated;
 use App\Models\FormatRule\FormatRule;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\DynamicValue\DynamicRow;
 use OwenIt\Auditing\Contracts\Auditable;
-use App\Models\AnalysisRule\AnalysisRule;
 use App\Traits\FormatRule\HasFormatRules;
 use App\Models\DynamicValue\DynamicValue;
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\AnalysisRule\AnalysisRuleType;
 use App\Contracts\FormatRule\IHasFormatRules;
 use App\Traits\AnalysisRules\HasAnalysisRules;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -27,7 +24,7 @@ use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
 use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
 
 /**
- * Class DynamicAttribute
+ * Class DynamicAttribu                                                                te
  * @package App\Models\DynamicAttributes
  *
  * @property integer $id
@@ -224,10 +221,16 @@ class DynamicAttribute extends BaseModel implements Auditable, IHasAnalysisRules
 
 
 
-    public function addValue($thevalue, DynamicRow $new_dynamicrow) {
-        $dynamicvalue = DynamicValue::createNew($thevalue,$this,$new_dynamicrow);
+    public function addValue($thevalue, DynamicRow $dynamicrow) {
 
-        DynamicValueCreated::dispatch($dynamicvalue->id, HtmlTagKey::TABLE_COL);
+        $dynamicvalue = DynamicValue::where("dynamic_row_id", $dynamicrow->id)->where("dynamic_attribute_id")->first();
+
+        if (! $dynamicvalue) {
+            $dynamicvalue = DynamicValue::createNew($thevalue, $this, $dynamicrow);
+            //DynamicValueCreatedEvent::dispatch($dynamicvalue->id, HtmlTagKey::TABLE_COL);
+            $dynamicvalue->setFormattedValue(HtmlTagKey::TABLE_COL);//, $thevalue);
+            $dynamicvalue->setDefaultFormatSize();
+        }
 
         return $dynamicvalue;
     }
@@ -249,6 +252,13 @@ class DynamicAttribute extends BaseModel implements Auditable, IHasAnalysisRules
             $formatrules = $formatrules->merge($curr_formatrules);
         }
         return $formatrules;
+    }
+
+    public static function getById(int|null $id): ?DynamicAttribute {
+        if ( is_null($id) ) {
+            return null;
+        }
+        return DynamicAttribute::find($id);
     }
 
     #endregion

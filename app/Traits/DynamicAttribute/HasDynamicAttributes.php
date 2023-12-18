@@ -42,7 +42,7 @@ trait HasDynamicAttributes
 
 
     /**
-     * Get the lastets of the model's dynamic dynamicattributes
+     * Get the lastest of the model's dynamic dynamicattributes
      * @return mixed
      */
     public function latestDynamicattribute()

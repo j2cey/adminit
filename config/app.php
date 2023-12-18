@@ -33,6 +33,7 @@ return [
     'ftp_password' => env('FTP_PASSWORD', 'FTP_PASSWORD'),
     'cgi2_password' => env('CGI2_PASSWORD', 'CGI2_PASSWORD'),
     'admin_password' => env('ADMIN_PASSWORD', 'ADMIN_PASSWORD'),
+    'vagrant_password' => env('VAGRANT_PASSWORD', 'VAGRANT_PASSWORD'),
 
     'collectedreportfiles_folder' => env('COLLECTEDREPORTFILES_FOLDER', 'collectedreportfiles'),
 

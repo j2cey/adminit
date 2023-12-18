@@ -2,12 +2,13 @@
 
 namespace App\Models\RetrieveAction;
 
+use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
+use App\Models\ReportTreatments\Treatment;
+use App\Enums\Treatments\TreatmentCodeEnum;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use App\Models\ReportTreatments\OperationResult;
 use App\Contracts\RetrieveAction\IRetrieveAction;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 /**
  * Class ByName Logique de Suppression du ReportFile
@@ -16,25 +17,31 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  */
 class DeleteFile implements IRetrieveAction
 {
-    public static function execAction(Filesystem $disk, ReportFile $file,ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum, bool $is_last_operation = false): OperationResult
+    public static function execAction(Filesystem $disk, ReportFile $file, Treatment $treatment, CriticalityLevelEnum $criticalitylevel, int $exec_id, bool $is_last_subtreatment, bool $can_end_uppertreatment = false): InnerTreatment
     {
-        $operationresult = $reporttreatmentstepresult->addOperationResult("Suppression du Fichier Remote", CriticalityLevelEnum::HIGH, $is_last_operation)
-            ->startOperation();
+        /*
+        $operation = $treatment->operationAddOrGet(TreatmentCodeEnum::DOWNLOADFILE_DELETE, $criticalitylevel, $exec_id, $is_last_subtreatment, $can_end_uppertreatment, false, false, [], null)
+            ->starting();
+        */
+        $innertreatment = new InnerTreatment($treatment, TreatmentCodeEnum::DOWNLOADFILE_DELETE, $criticalitylevel, $is_last_subtreatment, $can_end_uppertreatment, true, null);
 
         try{
-            $result = $disk->delete($file->fileRemotePath);
+            $remote_file_name = $treatment->getPayloadEntry("NewRemoteFileName");
+            // \Log::info("DeleteFile - NewRemoteFileName: ".$remote_file_name);
+            $remote_file_name = (empty($remote_file_name)) ? $file->fileRemotePath : $remote_file_name;
+            // \Log::info("DeleteFile - remote_file_name: ".$remote_file_name);
+
+            $result = $disk->delete($remote_file_name);
 
             if($result) {
-                $operationresult->endWithSuccess("Delete success !");
-                return $operationresult;
-            } else{
-                $operationresult->endWithFailure("Error delete !");
-                return $operationresult;
+                return $innertreatment->succeed("Delete success !");
+            } else {
+                return $innertreatment->failed("Error delete ! " . $result);
             }
         }
-        catch (\Exception $e){
-            $operationresult->endWithFailure($e->getMessage());
-            return $operationresult;}
+        catch (\Exception $e) {
+            return $innertreatment->failed($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode());
+        }
     }
 
 }

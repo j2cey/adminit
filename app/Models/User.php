@@ -9,7 +9,6 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use LaravelAndVueJS\Traits\LaravelPermissionToVueJS;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;

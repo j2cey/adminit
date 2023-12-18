@@ -26,6 +26,7 @@
         "owen-it/laravel-auditing": "^12.0",
         "spatie/laravel-permission": "^4.0",
         "spatie/laravel-tags": "^4.3",
+        "symfony/process": "^5.4",
         "tabuna/breadcrumbs": "^2.3"
     },
     "require-dev": {

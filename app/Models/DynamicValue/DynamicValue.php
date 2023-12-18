@@ -4,8 +4,12 @@ namespace App\Models\DynamicValue;
 
 use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
+use App\Traits\Import\IsImportable;
+use App\Traits\Format\IsFormattable;
 use Illuminate\Database\Eloquent\Model;
+use App\Contracts\Import\IIsImportable;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Contracts\Format\IIsFormattable;
 use App\Traits\FormatRule\HasFormatRules;
 use App\Contracts\FormatRule\IHasFormatRules;
 use App\Traits\FormattedValue\HasFormattedValue;
@@ -22,11 +26,18 @@ use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
  *
  * @property integer $id
  *
+ * @property string $raw_value
+ *
  * @property integer $dynamic_row_id
  * @property integer $dynamic_attribute_id
  *
  * @property string $innerdynamicvalue_type
  * @property integer $innerdynamicvalue_id
+ *
+ * @property bool $is_imported
+ * @property bool $is_formatted
+ * @property bool $is_merged
+ * @property bool $is_next_to_merge
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -36,9 +47,9 @@ use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
  * @property DynamicAttribute $dynamicattribute
  * @method static DynamicValue create(array $array)
  */
-class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasFormatRules
+class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasFormatRules, IIsImportable, IIsFormattable
 {
-    use HasFactory, HasFormattedValue, HasFormatRules, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasFormattedValue, HasFormatRules, IsImportable, IsFormattable, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $with = ['innerdynamicvalue'];
@@ -113,7 +124,15 @@ class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasF
             ->dynamicvalue;
     }
 
+    public function initInnerValue() {
+        $this->dynamicattribute->dynamicattributetype->model_type::createFromDynamicValue($this);
+    }
+
     public function getValue() {
+        if ( is_null($this->innerdynamicvalue) ) {
+            $this->initInnerValue();
+            $this->load('innerdynamicvalue');
+        }
         return $this->innerdynamicvalue->getValue();
     }
 
@@ -125,12 +144,29 @@ class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasF
         return $this->getValue() === $attribute_value;
     }
 
+    public function applyValueFormat() {
+        //$dynamicvalue->refresh();
+        $this->resetRawValues();
+        $this->applyFormatFromRaw($this->getValue(), $this->getFormatRulesForNotification($this->dynamicrow->hasdynamicrow), true);
+
+        if ($this->dynamicattribute->can_be_notified) {
+            $this->dynamicrow->refresh();
+            // merge the dynamicvalue's formatted value to the row
+            $this->dynamicrow->mergeRawValueFromFormatted($this);
+        }
+    }
+
     /**
      * @param int $id
      * @return DynamicValue|null
      */
     public static function getById(int $id) {
-        return DynamicValue::find($id);
+        return DynamicValue::where('id', $id)->first();
+    }
+
+    public function getHtmlTagKey(): HtmlTagKey
+    {
+        return HtmlTagKey::TABLE_COL;
     }
 
     #endregion
@@ -139,15 +175,26 @@ class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasF
     {
         parent::boot();
 
+        self::creating(function ($model) {
+
+        });
+
         self::created(function ($model) {
-            // init formatted value
-            //$dynamicvalue = DynamicValue::getById($event->dynamicvalueId);
-            $model->setFormattedValue(HtmlTagKey::TABLE_COL);//, $thevalue);
-            $model->setDefaultFormatSize();
+            //event( new DynamicValueCreatedEvent($model->id) );
         });
 
         self::deleting(function ($model) {
             $model->innerdynamicvalue->delete();
         });
+    }
+
+    public function getImportedSuccessRate(): float
+    {
+        return 100;
+    }
+
+    public function getFormattedSuccessRate(): float
+    {
+        return 100;
     }
 }

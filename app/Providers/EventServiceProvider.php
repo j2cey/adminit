@@ -2,17 +2,22 @@
 
 namespace App\Providers;
 
-use App\Events\DynamicValueCreated;
-use App\Listeners\InitFormattedValue;
+use App\Events\JobProcessedEvent;
+use App\Events\LaunchTreatmentEvent;
+use App\Observers\TreatmentObserver;
+use App\Events\TreatmentCreatedEvent;
+use App\Observers\DynamicRowObserver;
+use App\Listeners\JobProcessedListener;
+use App\Models\DynamicValue\DynamicRow;
+use App\Events\DynamicValueCreatedEvent;
 use Illuminate\Auth\Events\Registered;
-use App\Events\ReportFileImportedEvent;
-use App\Events\ReportFileNotifiedEvent;
-use App\Events\ReportFileFormattedEvent;
-use App\Events\ReportFileDownloadedEvent;
-use App\Listeners\ReportFileImportedListener;
-use App\Listeners\ReportFileNotifiedListener;
-use App\Listeners\ReportFileFormattedListener;
-use App\Listeners\ReportFileDownloadedListener;
+use App\Listeners\SetInnerValueListener;
+use App\Listeners\LaunchTreatmentListener;
+use App\Models\ReportTreatments\Treatment;
+use App\Listeners\TreatmentCreatedListener;
+use App\Observers\TreatmentServiceObserver;
+use App\Listeners\InitFormattedValueListener;
+use App\Models\ReportTreatments\TreatmentService;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -27,11 +32,19 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        ReportFileDownloadedEvent::class => [ ReportFileDownloadedListener::class, ],
-        ReportFileImportedEvent::class => [ ReportFileImportedListener::class, ],
-        ReportFileFormattedEvent::class => [ ReportFileFormattedListener::class, ],
-        ReportFileNotifiedEvent::class => [ ReportFileNotifiedListener::class, ],
-        DynamicValueCreated::class => [ InitFormattedValue::class, ],
+        DynamicValueCreatedEvent::class => [
+            SetInnerValueListener::class,
+            InitFormattedValueListener::class,
+        ],
+
+        LaunchTreatmentEvent::class => [ LaunchTreatmentListener::class, ],
+
+        TreatmentCreatedEvent::class => [ TreatmentCreatedListener::class, ],
+
+        //TreatmentStartingEvent::class => [ TreatmentStartingListener::class, ],
+        //TreatmentEndingEvent::class => [ TreatmentEndingListener::class, ],
+
+        JobProcessedEvent::class => [ JobProcessedListener::class, ],
     ];
 
     /**
@@ -41,6 +54,8 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Treatment::observe(TreatmentObserver::class);
+        DynamicRow::observe(DynamicRowObserver::class);
+        TreatmentService::observe(TreatmentServiceObserver::class);
     }
 }

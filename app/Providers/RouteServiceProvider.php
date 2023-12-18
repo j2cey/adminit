@@ -61,8 +61,8 @@ class RouteServiceProvider extends ServiceProvider
                     require base_path('routes/enums.php');
                     /* RetrieveAction routes */
                     require base_path('routes/retrieveaction.php');
-                    /* ReportTreatmentResult routes */
-                    require base_path('routes/reporttreatmentresult.php');
+                    /* ReportTreatment routes */
+                    require base_path('routes/reporttreatment.php');
                 });
         });
     }

@@ -29,8 +29,16 @@ class CreateDynamicRowsTable extends Migration
             $table->string('hasdynamicrow_type')->nullable()->comment('referenced value row');
             $table->bigInteger('hasdynamicrow_id')->nullable()->comment('referenced value row id');
 
-            $table->json('columns_values')->comment('all columns values for this line');
-            $table->json('raw_value')->comment('the line raw value');
+            $table->json('columns_values')->nullable()->comment('all columns values for this line');
+            $table->json('raw_value')->nullable()->comment('the line raw value');
+
+            $table->boolean('is_imported')->default(0)->comment('determine whether the row is imported');
+            $table->boolean('is_formatted')->default(0)->comment('determine whether the row is formatted');
+            $table->boolean('is_merged')->default(0)->comment('determine whether the row is merged');
+            $table->boolean('is_next_to_merge')->default(0)->comment('determine whether the row is the next one to be merged');
+
+            $table->string('hasdynamicattributes_class')->nullable()->comment('referenced object which hold the attributes collection');
+            $table->bigInteger('hasdynamicattributes_id')->nullable()->comment('referenced object ID which hold the attributes collection');
 
             $table->baseFields();
         });

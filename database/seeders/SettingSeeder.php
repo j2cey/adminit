@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Setting;
+use App\Enums\Settings;
 use Illuminate\Database\Seeder;
 
 class SettingSeeder extends Seeder
@@ -14,6 +15,7 @@ class SettingSeeder extends Seeder
      */
     public function run()
     {
+        /*
         // groupe app_name
         Setting::createNew("app_name", null, "Gestion-Cheques", "string", ",", "Application Name.");
         // groupe roles
@@ -36,8 +38,8 @@ class SettingSeeder extends Seeder
 
         // groupe ReportFileType
         $group = Setting::createNew("reportfiletype", null, null, "string", ",", "settings ReportFileType.");
-        // value ldap.reportfiletype_extension_is_unique
-        Setting::createNew("reportfiletype_extension_is_unique", $group, "0", "bool", ",", "Détermine si l'extension d'un ReportFileType doit être UNIQUE.");
+        // value reportfiletype.extension_is_unique
+        Setting::createNew("extension_is_unique", $group, "0", "bool", ",", "Détermine si l'extension d'un ReportFileType doit être UNIQUE.");
 
         // groupe ReportFile
         $group = Setting::createNew("reportfile", null, null, "string", ",", "settings ReportFile.");
@@ -61,6 +63,32 @@ class SettingSeeder extends Seeder
         $group = Setting::createNew("formatcolumns", $group, null, null, ",", "Formattage des colonnes.");
         // value reporttreatment.formatcolumns.append_batch_max
         Setting::createNew("append_batch_max", $group, "5", "integer", ",", "nombre max de colonnes a ajouter au batch de traitement de la ligne.");
+
+        // groupe queues
+        $group = Setting::createNew("queues", null, null, "string", ",", "settings for Queues.");
+        // sub group queues.workerbounds
+        $group = Setting::createNew("workerbounds", $group, null, null, ",", "Min et Max du nombre de workers par type de traitement.");
+        // value queues.workerbounds.listeners
+        Setting::createNew("listeners", $group, "1,5", "array", ",", "workers bounds pour listeners.");
+        // value queues.workerbounds.downloadfiles
+        Setting::createNew("downloadfiles", $group, "1,5", "array", ",", "workers bounds pour downloadfiles.");
+        // value queues.workerbounds.importlines
+        Setting::createNew("importlines", $group, "1,5", "array", ",", "workers bounds pour importlines.");
+        // value queues.workerbounds.importvalues
+        Setting::createNew("importvalues", $group, "1,5", "array", ",", "workers bounds pour importvalues.");
+        // value queues.workerbounds.formatvalues
+        Setting::createNew("formatvalues", $group, "1,5", "array", ",", "workers bounds pour formatvalues.");
+        */
+        $class_methods = get_class_methods(Settings::class);
+
+        foreach ($class_methods as $class_method) {
+            $branch = Settings::$class_method();
+            $branch->save();
+            foreach ($branch->getChildren() as $child) {
+                $child->save();
+                $child->saveChildren();
+            }
+        }
     }
 
 }

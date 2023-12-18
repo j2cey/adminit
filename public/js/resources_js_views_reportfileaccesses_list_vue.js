@@ -261,11 +261,15 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-sm-3 col-6"
+    staticClass: "col-sm-2 col-6"
+  }, [_c("span", {
+    staticClass: "text text-sm"
+  }, [_vm._v("ID")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-sm-2 col-6"
   }, [_c("span", {
     staticClass: "text text-sm"
   }, [_vm._v("Compte")])]), _vm._v(" "), _c("div", {
-    staticClass: "col-sm-3 col-6"
+    staticClass: "col-sm-2 col-6"
   }, [_c("span", {
     staticClass: "text text-sm"
   }, [_vm._v("Serveur")])]), _vm._v(" "), _c("div", {

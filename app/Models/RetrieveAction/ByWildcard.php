@@ -2,15 +2,16 @@
 
 namespace App\Models\RetrieveAction;
 
-use Illuminate\Support\Carbon;
+use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Support\Facades\Storage;
+use App\Models\ReportTreatments\Treatment;
+use App\Enums\Treatments\TreatmentCodeEnum;
+use App\Enums\Treatments\TreatmentResultEnum;
 use App\Models\ReportFile\CollectedReportFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use App\Models\ReportTreatments\OperationResult;
 use App\Contracts\RetrieveAction\IRetrieveAction;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 /**
  * Class ByWildcard Logique de Récupération du ReportFile par wildcard
@@ -18,33 +19,35 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  */
 class ByWildcard implements IRetrieveAction
 {
-    public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum, bool $is_last_operation = false): OperationResult
+    public static function execAction(Filesystem $disk, ReportFile $file, Treatment $treatment, CriticalityLevelEnum $criticalitylevel, int $exec_id, bool $is_last_subtreatment = false, bool $can_end_uppertreatment = false): InnerTreatment
     {
-        $operationresult = $reporttreatmentstepresult->addOperationResult("Récupération du ReportFile par Wildcard", CriticalityLevelEnum::HIGH, $is_last_operation)
-            ->startOperation();
+        /*
+        $operation = $treatment->operationAddOrGet("Récupération du ReportFile par Wildcard", CriticalityLevelEnum::HIGH, $exec_id, $is_last_subtreatment, $can_end_uppertreatment, true, false, [], null)
+            ->starting();
+        */
+        $innertreatment = new InnerTreatment($treatment, TreatmentCodeEnum::DOWNLOADFILE_WILDCARD, $criticalitylevel, $is_last_subtreatment, $can_end_uppertreatment, true, null);
 
         // récupère le chemin du répertoire des CollectedReportFile
         $collectedreportfiles_folder = config('app.collectedreportfiles_folder');
 
         // variable du nom en local avec nom , temps , extension
-        $local_file_name = md5($file->name . '_' . time()) . '.' . $file->extension;
+        //$local_file_name = md5($file->name . '_' . time()) . '.' . $file->extension;
 
         try {
             //stocker dans la base de données
-            $result = Storage::disk('public')->put('/' . $collectedreportfiles_folder . '/' . $local_file_name, $disk->readStream($file->fileRemotePath));
+            $result = Storage::disk('public')->put('/' . $collectedreportfiles_folder . '/' . $file->localName, $disk->readStream($file->fileRemotePath));
             if ($result) {
                 //crée un nouveau fichier
-                $collectedreportfile = CollectedReportFile::createNew($file, $file->fileRemotePath, $local_file_name, $disk->size($file->fileRemotePath));
+                $collectedreportfile = CollectedReportFile::createNew($file, $file->fileRemotePath, $file->localName, $disk->size($file->fileRemotePath));
+                //$operation->getMainTreatment()->setCollectedReportFile($collectedreportfile);
+                $treatment->getMainTreatment()->setCollectedReportFile($collectedreportfile);
 
-                $operationresult->endWithSuccess("Download success !");
-                return $operationresult;
+                return $innertreatment->succeed("Download success !");
             } else {
-                $operationresult->endWithFailure("Error download by wildcard !");
-                return $operationresult;
+                return $innertreatment->failed("Error download by wildcard !");
             }
         } catch (\Exception $e) {
-            $operationresult->endWithFailure($e->getMessage());
-            return $operationresult;
+            return $innertreatment->failed($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode());
         }
     }
 }

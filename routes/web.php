@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Models\ReportFile\ReportFile;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\StatusController;
@@ -46,6 +48,22 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+Route::get('test', function () {
+    $reporttreatment = \App\Models\ReportTreatments\ReportTreatment::getById(1);
+    dd($reporttreatment);
+    //$queuecode_value = "listeners";
+    //dd( ( \App\Enums\Settings::Queues()->workerbounds()->$queuecode_value()->get() ));
+    /*$class_methods = get_class_methods(\App\Enums\Settings::class);
+
+    foreach ($class_methods as $class_method) {
+        $branch = \App\Enums\Settings::$class_method();
+        dump("branch: ", $branch);
+        foreach ($branch->getChildren() as $child) {
+            dump("child: ", $child);
+        }
+    }*/
+});
 
 #region System Settings
 
@@ -200,6 +218,17 @@ Route::get('reportfileaccesses.download',[ReportFileAccessController::class,'dow
 Route::get('reportfileaccesses.test', function () {
     //$reportfile = App\Models\ReportFile\ReportFile::createNew( \App\Models\Reports\Report::createNew("new Report", App\Models\Reports\ReportType::defaultReport()->first()) )
     //$reportfileaccess = \App\Models\ReportFile\ReportFileAccess::createNew()
+    $reportfile = ReportFile::getById(1);
+    $reportfileaccess = $reportfile->getActiveReportFileAccess();
+    if (count(\App\Models\ReportTreatments\ReportTreatment::get()) == 0) {
+        $step = $reportfile->createNewTreatment()->stepAddOrGet(\App\Enums\Treatments\TreatmentCodeEnum::DOWNLOADFILE);
+    } else {
+        $step = \App\Models\ReportTreatments\ReportTreatmentStep::getById(1);
+    }
+    $disk = $reportfileaccess->getDisk($step, \App\Enums\CriticalityLevelEnum::HIGH);
+    //dd($reportfile->localName, $reportfile->fileRemotePath, $disk->readStream("/" . $reportfile->fileRemotePath));
+    $collectedreportfiles_folder = config('app.collectedreportfiles_folder');
+    $result = Storage::disk('public')->put('/' . $collectedreportfiles_folder . '/' . $reportfile->localName, $disk->readStream($reportfile->fileRemotePath));
 });
 
 Route::resource('accessaccounts',AccessAccountController::class)->middleware('auth');

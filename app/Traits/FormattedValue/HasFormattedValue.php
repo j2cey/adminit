@@ -3,6 +3,7 @@
 namespace App\Traits\FormattedValue;
 
 use App\Enums\HtmlTagKey;
+use App\Models\SystemLog;
 use App\Models\FormatRule\FormatRule;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\FormattedValue\SmsFormattedValue;
@@ -16,6 +17,10 @@ use App\Contracts\FormattedValue\IHasFormattedValue;
  */
 trait HasFormattedValue
 {
+    public static string $FORMATTEDVALUE_LOG_PART = "formattedvalue";
+
+    public abstract function getHtmlTagKey(): HtmlTagKey;
+
     /**
      * @return MorphOne
      */
@@ -32,7 +37,9 @@ trait HasFormattedValue
         return $this->morphOne(SmsFormattedValue::class, 'hasformattedvalue');
     }
 
-    public function setFormattedValue(HtmlTagKey $tagkey = null, $rawvalue = null) {
+    public function setFormattedValue(HtmlTagKey $tagkey = null, $rawvalue = null): int
+    {
+        $values_set = 0;
         $data = [];
         if ( ! is_null($rawvalue) ) {
             $data['rawvalue'] = $rawvalue;
@@ -40,10 +47,13 @@ trait HasFormattedValue
         if ( is_null( $this->htmlformattedvalue ) ) {
             $data['maintag'] = $tagkey->value;
             $this->htmlformattedvalue()->save(HtmlFormattedValue::createNew($data));
+            $values_set++;
         }
         if ( is_null( $this->smsformattedvalue ) ) {
             $this->smsformattedvalue()->save(SmsFormattedValue::createNew($data));
+            $values_set++;
         }
+        return $values_set;
     }
 
     /**
@@ -73,10 +83,14 @@ trait HasFormattedValue
     }
 
     public function mergeRawValues(IHasFormattedValue $hasformattedvalue) {
+        $hasformattedvalue->fresh();
+        $hasformattedvalue->load(['htmlformattedvalue','smsformattedvalue']);
         $this->htmlformattedvalue->mergeRawValue($hasformattedvalue->htmlformattedvalue, $hasformattedvalue->htmlformattedvalue->getRawValue());
         $this->smsformattedvalue->mergeRawValue($hasformattedvalue->smsformattedvalue, $hasformattedvalue->htmlformattedvalue->getRawValue());
     }
-    public function mergeRawValueFromFormatted(IHasFormattedValue $hasformattedvalue) {
+    public function  mergeRawValueFromFormatted(IHasFormattedValue $hasformattedvalue) {
+        $hasformattedvalue->fresh();
+        $hasformattedvalue->load(['htmlformattedvalue','smsformattedvalue']);
         $this->htmlformattedvalue->mergeRawValue($hasformattedvalue->htmlformattedvalue, $hasformattedvalue->htmlformattedvalue->getFormattedValue());
         $this->smsformattedvalue->mergeRawValue($hasformattedvalue->smsformattedvalue, $hasformattedvalue->htmlformattedvalue->getFormattedValue());
     }
@@ -101,6 +115,14 @@ trait HasFormattedValue
         $this->smsformattedvalue->delete();
     }
 
+    public function initFormattedValue() {
+        SystemLog::infoTreatments( "INIT FormattedValue for " . get_class($this) . " ( " . $this->id . " )", self::$FORMATTEDVALUE_LOG_PART );
+        $values_set = $this->setFormattedValue( $this->getHtmlTagKey() );
+        if ( $values_set > 0 ) {
+            $this->setDefaultFormatSize();
+        }
+    }
+
     #endregion
 
     protected function initializeHasFormattedValue()
@@ -111,6 +133,10 @@ trait HasFormattedValue
 
     public static function bootHasFormattedValue()
     {
+        static::created(function ($model) {
+            $model->initFormattedValue();
+        });
+
         static::deleting(function ($model) {
             $model->removeFormattedValues();
         });

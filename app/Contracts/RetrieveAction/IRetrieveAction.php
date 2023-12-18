@@ -2,13 +2,13 @@
 
 namespace App\Contracts\RetrieveAction;
 
+use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
+use App\Models\ReportTreatments\Treatment;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use App\Models\ReportTreatments\OperationResult;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
 
 interface IRetrieveAction
 {
-    public static function execAction(Filesystem $disk, ReportFile $file, ReportTreatmentStepResult $reporttreatmentstepresult, CriticalityLevelEnum $criticalitylevelenum, bool $is_last_operation = false): OperationResult;
+    public static function execAction(Filesystem $disk, ReportFile $file, Treatment $treatment, CriticalityLevelEnum $criticalitylevel, int $exec_id, bool $is_last_subtreatment, bool $can_end_uppertreatment): InnerTreatment;
 }

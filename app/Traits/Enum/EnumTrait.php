@@ -5,6 +5,7 @@ namespace App\Traits\Enum;
 use Illuminate\Support\Str;
 use ReflectionClassConstant;
 use App\Enums\Attributes\Description;
+use App\Enums\Attributes\ServiceClass;
 
 trait EnumTrait
 {
@@ -22,6 +23,10 @@ trait EnumTrait
         //return ['name' => $this->name, 'value' => $this->value];
     }
 
+    public function toFullArray() {
+        return ['name' => self::getDescription($this), 'value' => $this->value, 'serviceclass' => self::getServiceClass($this)];;
+    }
+
     /**
      * @param self $enum
      */
@@ -35,6 +40,21 @@ trait EnumTrait
         }
 
         return $classAttributes[0]->newInstance()->description;
+    }
+
+    /**
+     * @param self $enum
+     */
+    private static function getServiceClass(self $enum): string
+    {
+        $ref = new ReflectionClassConstant(self::class, $enum->name);
+        $classAttributes = $ref->getAttributes(ServiceClass::class);
+
+        if (count($classAttributes) === 0) {
+            return Str::headline($enum->value);
+        }
+
+        return $classAttributes[0]->newInstance()->serviceclass;
     }
 
     /**

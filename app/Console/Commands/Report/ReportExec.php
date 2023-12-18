@@ -40,7 +40,10 @@ class ReportExec extends Command
     {
         $reports = Report::getActives();
         foreach ($reports as $report) {
+            $this->warn("Report " . $report->id . "(" . $report->title . ")" . " executing...");
             $report?->exec();
+            $this->info("Reports executed...");
+            break;
         }
         return 0;
     }

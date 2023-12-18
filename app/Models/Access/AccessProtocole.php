@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * @method static Builder local()
  * @method static Builder ftp()
  * @method static Builder sftp()
  * @method static AccessProtocole first()
@@ -85,6 +86,11 @@ class AccessProtocole extends BaseModel implements Auditable
     public function scopeFtp($query) {
         return $query
             ->where('code', "ftp");
+    }
+
+    public function scopeLocal($query) {
+        return $query
+            ->where('code', "local");
     }
 
     public function scopeSftp($query) {

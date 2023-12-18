@@ -24,6 +24,9 @@ use App\Traits\ReflexiveRelationship\HasReflexivePath;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Setting|null $group
+ *
+ * @property mixed $typed_value
+ *
  * @method static Setting create(array $data)
  */
 class Setting extends Model implements Auditable
@@ -196,7 +199,11 @@ class Setting extends Model implements Auditable
         return $final_tree;
     }
 
-    private static function getParsedValue($setting) {
+    public function getTypedValueAttribute() {
+        return $this->getParsedValue($this);
+    }
+
+    public static function getParsedValue($setting) {
         $type = self::getSettingType($setting['type']);
         // call the type parser function from a string stored in the variable 'parserFunc'
         return self::{$type['parserFunc']}($setting);
@@ -217,6 +224,12 @@ class Setting extends Model implements Auditable
     private static function getParsedBoolValue($setting) {
         if ($setting['value'] === null) {
             return $setting['value'];
+        }
+        if ($setting['value'] == "true") {
+            return true;
+        }
+        if ($setting['value'] == "false") {
+            return false;
         }
         return (bool)$setting['value'];
     }
@@ -289,12 +302,26 @@ class Setting extends Model implements Auditable
     /**
      * @return Setting|null
      */
-    public static function getReportTreatmentActivate() {
+    public static function getByFullPath(string $value) {
+        return Setting::where('full_path', $value)->first();
+    }
+
+    /**
+     * @return Setting|null
+     */
+    public static function getTreatmentActivate() {
         return Setting::where('full_path', "reporttreatment.activate")->first();
     }
 
-    public static function setReportTreatmentActivate(bool $activate) {
-        $setting = Setting::getReportTreatmentActivate();
+    /**
+     * @return Setting|null
+     */
+    public static function getQueueWorkerBounds(string $queuecode) {
+        return Setting::where('full_path', 'queues.workersbounds.' . $queuecode)->first();
+    }
+
+    public static function setTreatmentActivate(bool $activate) {
+        $setting = Setting::getTreatmentActivate();
         if ($setting) {
             $value = $activate ? "1" : "0";
             $setting->update([

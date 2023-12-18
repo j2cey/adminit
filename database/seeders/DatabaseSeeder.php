@@ -43,5 +43,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RetrieveActionSeeder::class);
         $this->call(FormatTypeSeeder::class);
 
+        $this->call(JobLauncherSeeder::class);
+
     }
 }

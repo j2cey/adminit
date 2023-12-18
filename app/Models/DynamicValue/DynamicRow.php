@@ -2,30 +2,26 @@
 
 namespace App\Models\DynamicValue;
 
-use App\Enums\QueueEnum;
 use App\Models\BaseModel;
-use Illuminate\Bus\Batch;
+use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
-use App\Enums\CriticalityLevelEnum;
-use App\Jobs\FormatDynamicValueJob;
-use Illuminate\Support\Facades\Bus;
+use App\Traits\Import\IsImportable;
+use App\Traits\Format\IsFormattable;
 use Illuminate\Database\Eloquent\Model;
+use App\Contracts\Import\IIsImportable;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Contracts\Format\IIsFormattable;
 use App\Traits\FormatRule\HasFormatRules;
+use Illuminate\Database\Eloquent\Builder;
 use App\Contracts\FormatRule\IHasFormatRules;
-use App\Jobs\MergeReportFileFormattedRowsJob;
-use App\Models\ReportFile\CollectedReportFile;
 use App\Traits\FormattedValue\HasFormattedValue;
-use App\Models\ReportTreatments\OperationResult;
+use App\Traits\DynamicAttribute\HasDynamicValues;
 use App\Models\DynamicAttributes\DynamicAttribute;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use App\Contracts\DynamicAttribute\IHasDynamicRows;
 use App\Contracts\FormattedValue\IHasFormattedValue;
-use App\Models\ReportTreatments\ReportTreatmentStep;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
+use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
 
 /**
  * Class DynamicRow
@@ -47,8 +43,16 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property string $hasdynamicrow_type
  * @property integer $hasdynamicrow_id
  *
- * @property array $columns_values
- * @property array $raw_value
+ * @property string $columns_values
+ * @property string $raw_value
+ *
+ * @property bool $is_imported
+ * @property bool $is_formatted
+ * @property bool $is_merged
+ * @property bool $is_next_to_merge
+ *
+ * @property string|null $hasdynamicattributes_class
+ * @property int|null $hasdynamicattributes_id
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -56,15 +60,18 @@ use App\Models\ReportTreatments\ReportTreatmentStepResult;
  * @property DynamicValue[] $dynamicvalues
  * @property IHasDynamicRows|IHasMatchedAnalysisRules $hasdynamicrow
  * @method static DynamicRow create(array $array)
+ *
+ * @method static Builder formatted()
  */
-class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHasFormatRules
+class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHasFormatRules, IIsImportable, IIsFormattable
 {
-    use HasFactory, HasFormattedValue, HasFormatRules, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasDynamicValues, HasFormattedValue, HasFormatRules, IsImportable, IsFormattable, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $with = ['dynamicvalues'];
     protected $casts = [
-        'columns_values' => 'array'
+        //'columns_values' => 'array',
+        //'raw_value' => 'array'
     ];
 
     #region Validation Rules
@@ -90,6 +97,14 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
         return [
 
         ];
+    }
+
+    #endregion
+
+    #region Scopes
+
+    public function scopeFormatted($query) {
+        return $query->where('is_formatted', 1);
     }
 
     #endregion
@@ -149,6 +164,16 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
         return $result;
     }
 
+    public function getDynamicValue(DynamicAttribute $dynamicattribute): ?DynamicValue {
+        $dynamicvalues = $this->dynamicvalues;
+        foreach ($dynamicvalues as $dynamicvalue) {
+            if ( $dynamicvalue->dynamicattribute->id === $dynamicattribute->id ) {
+                return $dynamicvalue;
+            }
+        }
+        return null;
+    }
+
     public function mergeColumnsValues() {
         $this->columns_values = [];
         $merged_values = [];
@@ -164,173 +189,6 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
         return $merged_values;
     }
 
-    public function mergeFormattedColumnsValues(ReportTreatmentStep $step, bool $is_last_operation, int $row_index = null) {
-        $operation = $step->addTreatmentOperation("Merge " . $row_index . " (" . $this->line_num . ") ",CriticalityLevelEnum::HIGH,$is_last_operation,true);
-        $operation->startOperation();
-        try {
-            // reset rawvalue from formatted values
-            $this->resetRawValues();
-
-            // get all dynamic values attached to this row
-            $dynamicvalues = $this->dynamicvalues;
-
-            foreach ($dynamicvalues as $dynamicvalue) {
-                if ($dynamicvalue->dynamicattribute->can_be_notified) {
-                    // merge each row (this) formatted value with all dynamic values formatted values
-                    $this->mergeRawValueFromFormatted($dynamicvalue);
-                }
-            }
-            $this->applyFormatFromRaw(null, $this->formatrules, true);
-            return $operation->endWithSuccess("Ligne " . $row_index . " (" . $this->line_num . ") " . "merged");
-        } catch (\Exception $e) {
-            return $operation->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
-        }
-    }
-
-    public function formatRowColumns(CollectedReportFile $collectedreportfile, OperationResult $operation, int $row_index, string $batch_id, array $valueIds = null) {
-        \Log::info("pickRowColumnForBatch, operation:".$operation->id);
-        if ( is_null($valueIds) ) {
-            \Log::info("valueIds is null");
-        } else {
-            $jobs = [];
-            $append_batch_max = config('Settings.reporttreatment.formatcolumns.append_batch_max');
-            for ($i = 1; $i <= $append_batch_max; $i++) {
-                if(count($valueIds) > 0) {
-                    $value_id = array_shift($valueIds);
-                    $last_treatment = empty($valueIds);
-                    $jobs[] = new FormatDynamicValueJob($operation, $this, $row_index, $value_id, $last_treatment);
-                }
-            }
-
-            //$childopertion = $operation->addChildOperation("Format Dynamic Value ".$value_id." for File " . $collectedreportfile->local_file_name . ', Row ' . $this->id, CriticalityLevelEnum::HIGH);
-            \Log::info("pickRowColumnForBatch, operation:" . $operation->id);
-            //\Log::info("row_index:" . $row_index . ", value_id:" . $value_id . ", batch_id:" . $batch_id);
-            // remove first id from values ids list
-            $operation->addToPayload("valueIds", $valueIds);
-
-            if ($batch_id == "0") {
-                \Log::info("creating New Batch");
-                // create new batch
-                // Batching jobs 🥳
-                $batch = Bus::batch(
-                    $jobs
-                )->name('Format File ' . $collectedreportfile->local_file_name . ', Row ' . $row_index . "(" . $this->id . ")")->onQueue(QueueEnum::FORMATFILES->value)->dispatch();
-                $operation->addToPayload("batchId", $batch->id);
-            } else {
-                \Log::info("Add to Existing Batch " . $batch_id);
-                // add new job to the batch
-                $batch = Bus::findBatch($batch_id);
-                $batch->add(
-                    $jobs
-                );
-            }
-        }
-    }
-
-    public function pickRowColumnsToFormat(OperationResult $operation, int $row_index) {
-        // get all dynamic values attached to this row
-        $dynamicvalues = $this->dynamicvalues;
-        $childopertion =new OperationResult();
-        foreach ($dynamicvalues as $col_index => $dynamicvalue) {
-            //$jobs[] = new FormatDynamicValueJob($operation, $this, $row_index, $dynamicvalue);
-            //FormatDynamicValueJob::dispatchSync($operation, $this, $row_index, $dynamicvalue);
-            $childopertion = $operation->addChildOperation("Format Dynamic Value " . $col_index . " (".$dynamicvalue->id.")", CriticalityLevelEnum::HIGH);
-            $childopertion->addToPayload("dynamicrowId",$this->id);
-            $childopertion->addToPayload("dynamicvalueId",$dynamicvalue->id);
-            $childopertion->addToPayload("rowIndex", $row_index);
-        }
-        $childopertion->setAsLastOperation();
-    }
-
-    public function formatDynamicValues(OperationResult $operation, CollectedReportFile $collectedreportfile, int $row_index = null) {
-        //$operation_name = "Format File Row Columns - " . $collectedreportfile->local_file_name . is_null($row_index) ? " (".$this->line_num.")" : " Line ".$this->line_num."(".$row_index.")";
-        $is_last_operation = ($operation->reporttreatmentstepresult->operationresults()->count() + 1) >= $collectedreportfile->dynamicrows()->count();
-
-        //$operation_result = $reporttreatmentstepresult->addOperationResult($operation_name, CriticalityLevelEnum::HIGH, $is_last_operation);
-
-        if ( $is_last_operation ) {
-            $operation->setAsLastOperation();
-        }
-
-        try {
-            $operation->startOperation();
-
-            // reset rawvalue from formatted values
-            $this->resetRawValues();
-
-            // get all dynamic values attached to this row
-            $dynamicvalues = $this->dynamicvalues;
-            $dynamicvalues_ids = $this->dynamicvalues()->pluck('id');
-
-            //$jobs = [];
-            foreach ($dynamicvalues as $dynamicvalue) {
-                //$jobs[] = new FormatDynamicValueJob($operation, $this, $row_index, $dynamicvalue);
-                FormatDynamicValueJob::dispatchSync($operation, $this, $row_index, $dynamicvalue);
-            }
-            // Batching jobs 🥳
-            /*Bus::batch($jobs)->then(function (Batch $batch) {
-                //dispatch(new MergeReportFileFormattedRowsJob());
-                // 👆 will be executed after all jobs finish successfully
-            })->name('Format Dynamic Values - '. $row_index)->onQueue(QueueEnum::FORMATFILES->value)->dispatch();*/
-            //Bus::chain($jobs)->onQueue(QueueEnum::FORMATFILES->value)->dispatch();
-        } catch (\Exception $e) {
-            return $operation->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
-        }
-    }
-
-    public function formatDynamicValue(OperationResult $operation, int $dynamicvalueId, int $row_index = null, bool $last_treatment = false) {
-        try {
-            $operation->startOperation();
-
-            // apply formating (without rule) for each value
-            $dynamicvalue = DynamicValue::getById($dynamicvalueId);
-            $dynamicvalue->resetRawValues();
-            $dynamicvalue->applyFormatFromRaw($dynamicvalue->getValue(), $dynamicvalue->getFormatRulesForNotification($this->hasdynamicrow), true);
-            if ($dynamicvalue->dynamicattribute->can_be_notified) {
-                // merge each row (this) formatted value with all dynamic values formatted values
-                $this->mergeRawValueFromFormatted($dynamicvalue);
-            }
-
-            $operation->reporttreatmentstepresult->reporttreatmentresult->setWaiting();
-            $operation->endWithSuccess("value ".$dynamicvalueId." formatted, row ".$this->id." (".$row_index.")",$last_treatment);
-        } catch (\Exception $e) {
-            return $operation->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
-        }
-    }
-
-    public function mergeColumnsFormattedValues(ReportTreatmentStepResult $reporttreatmentstepresult, CollectedReportFile $collectedreportfile, int $row_index = null) {
-        $operation_name = "Format File Row Columns - " . $collectedreportfile->local_file_name . is_null($row_index) ? " (".$this->line_num.")" : " Line ".$this->line_num."(".$row_index.")";
-        $is_last_operation = ($reporttreatmentstepresult->operationresults()->count() + 1) >= $collectedreportfile->dynamicrows()->count();
-
-        $operation_result = $reporttreatmentstepresult->addOperationResult($operation_name, CriticalityLevelEnum::HIGH, $is_last_operation)
-            ->startOperation();
-        try {
-            // reset rawvalue from formatted values
-            $this->resetRawValues();
-
-            // get all dynamic values attached to this row
-            $dynamicvalues = $this->dynamicvalues;
-
-            foreach ($dynamicvalues as $dynamicvalue) {
-                // apply formating (without rule) for each value
-                $dynamicvalue->resetRawValues();
-                $dynamicvalue->applyFormatFromRaw($dynamicvalue->getValue(), $dynamicvalue->getFormatRulesForNotification($this->hasdynamicrow), true);
-                if ($dynamicvalue->dynamicattribute->can_be_notified) {
-                    // merge each row (this) formatted value with all dynamic values formatted values
-                    $this->mergeRawValueFromFormatted($dynamicvalue);
-                }
-            }
-            $this->applyFormatFromRaw(null, $this->formatrules, true);
-            if ( $reporttreatmentstepresult->operationresults()->failed()->count() > 0 ) {
-                $operation_result->endWithFailure("There is at least 1 operation failed for this Step");
-            } else {
-                $operation_result->endWithSuccess("Ligne ".$this->line_num . "formatted");
-            }
-        } catch (\Exception $e) {
-            return $operation_result->endWithFailure($e->getMessage() . "; \n" . "File: " . $e->getFile() . "; \n" . "Line: " . $e->getLine() . "; \n" . "Code: " . $e->getCode() );
-        }
-    }
-
     /**
      * @param int $id
      * @return DynamicRow|null
@@ -339,11 +197,26 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
         return DynamicRow::find($id);
     }
 
+    /**
+     * @return null|IHasDynamicAttributes
+     */
+    public function getHasdynamicattributes(): ?IHasDynamicAttributes
+    {
+        if ( is_null($this->hasdynamicattributes_class) || is_null($this->hasdynamicattributes_id) ) {
+            return null;
+        }
+        return $this->hasdynamicattributes_class::where('id', $this->hasdynamicattributes_id)->first();
+    }
+
     #endregion
 
     public static function boot()
     {
         parent::boot();
+
+        self::created(function ($model) {
+
+        });
 
         self::deleting(function ($model) {
             $model->dynamicvalues()->each(function($dynamicvalue) {
@@ -351,5 +224,20 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
             });
             $model->columns_values = "[]";
         });
+    }
+
+    public function getHtmlTagKey(): HtmlTagKey
+    {
+        return HtmlTagKey::TABLE_ROW;
+    }
+
+    public function getImportedSuccessRate(): float
+    {
+        return 100;
+    }
+
+    public function getFormattedSuccessRate(): float
+    {
+        return 100;
     }
 }

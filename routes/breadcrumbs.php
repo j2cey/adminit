@@ -5,7 +5,10 @@ use App\Models\Reports\Report;
 use Tabuna\Breadcrumbs\Breadcrumbs;
 use App\Models\ReportFile\ReportFile;
 use App\Models\ReportFile\CollectedReportFile;
+use App\Models\ReportTreatments\ReportTreatment;
 use App\Models\DynamicAttributes\DynamicAttribute;
+use App\Models\ReportTreatments\TreatmentOperation;
+use App\Models\ReportTreatments\ReportTreatmentStep;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 use App\Models\ReportTreatments\ReportTreatmentResult;
 use App\Models\ReportTreatments\ReportTreatmentStepResult;
@@ -64,18 +67,23 @@ Breadcrumbs::for('collectedreportfiles.show', function (Trail $trail, CollectedR
 });
 #endregion
 
-#region ReportTreatmentResults
+#region ReportTreatments
 // ReportTreatmentResults
-Breadcrumbs::for('reporttreatmentresults.index', function (Trail $trail) {
-    $trail->parent('home')->push('Traitements Rapports', route('reporttreatmentresults.index'));
+Breadcrumbs::for('reporttreatments.index', function (Trail $trail) {
+    $trail->parent('home')->push('Traitements Rapports', route('reporttreatments.index'));
 });
-// ReportTreatmentResults.show
-Breadcrumbs::for('reporttreatmentresults.show', function (Trail $trail, ReportTreatmentResult $reporttreatmentresult) {
-    $trail->parent('reporttreatmentresults.index')
-        ->push($reporttreatmentresult->name, route('reporttreatmentresults.show', $reporttreatmentresult->uuid));
+// ReportTreatments.show
+Breadcrumbs::for('reporttreatments.show', function (Trail $trail, ReportTreatment $reporttreatment) {
+    $trail->parent('reporttreatments.index')
+        ->push($reporttreatment->name, route('reporttreatments.show', $reporttreatment->uuid));
 });
-// ReportTreatmentStepResults.show
-Breadcrumbs::for('reporttreatmentstepresults.show', function (Trail $trail, ReportTreatmentStepResult $reporttreatmentstepresult) {
-    $trail->parent('reporttreatmentresults.show', $reporttreatmentstepresult->reporttreatmentresult)
-        ->push($reporttreatmentstepresult->name, route('reporttreatmentstepresults.show', $reporttreatmentstepresult->uuid));
+// ReportTreatmentSteps.show
+Breadcrumbs::for('reporttreatmentsteps.show', function (Trail $trail, ReportTreatmentStep $reporttreatmentstep) {
+    $trail->parent('reporttreatments.show', $reporttreatmentstep->reporttreatment)
+        ->push($reporttreatmentstep->name, route('reporttreatmentsteps.show', $reporttreatmentstep->uuid));
+});
+// TreatmentOperations.show
+Breadcrumbs::for('treatmentoperations.show', function (Trail $trail, TreatmentOperation $treatmentoperation) {
+    $trail->parent('reporttreatmentsteps.show', $treatmentoperation->reporttreatmentstep)
+        ->push($treatmentoperation->name, route('treatmentoperations.show', $treatmentoperation->uuid));
 });

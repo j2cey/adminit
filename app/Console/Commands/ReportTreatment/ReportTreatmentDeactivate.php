@@ -12,7 +12,7 @@ class ReportTreatmentDeactivate extends Command
      *
      * @var string
      */
-    protected $signature = 'reporttreatment:deactivate';
+    protected $signature = 'treatment:deactivate';
 
     /**
      * The console command description.
@@ -38,9 +38,9 @@ class ReportTreatmentDeactivate extends Command
      */
     public function handle()
     {
-        $this->warn("Report Treatments deactivating...");
-        Setting::setReportTreatmentActivate(false);
-        $this->info("Report Treatments deactivated...");
+        $this->warn("Treatments deactivating...");
+        Setting::setTreatmentActivate(false);
+        $this->info("Treatments deactivated...");
         return 0;
     }
 }

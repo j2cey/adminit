@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Enums\HtmlTagKey;
 use App\Enums\RuleResultEnum;
+use App\Models\Person\Person;
 use App\Models\Reports\Report;
 use Illuminate\Database\Seeder;
 use App\Models\Reports\ReportType;
@@ -16,13 +16,13 @@ use App\Models\FormatRule\FormatTextColor;
 use App\Models\FormatRule\FormatTextWeight;
 use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\AnalysisRule\AnalysisRuleType;
-use App\Models\ReportFile\CollectedReportFile;
+use App\Models\ReportFile\ReportFileReceiver;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\DynamicAttributes\DynamicAttributeType;
-use App\Models\AnalysisRuleThreshold\AnalysisRuleThreshold;
 
 class TestFullReportSeeder extends Seeder
 {
+    private Person $person;
     /**
      * Run the database seeds.
      *
@@ -30,6 +30,11 @@ class TestFullReportSeeder extends Seeder
      */
     public function run()
     {
+        $this->person = Person::createNew("Jude Parfait", "Ngom Nze");
+        $this->person->addNewPhoneNumber("065300354");
+        $this->person->addNewEmailAddress("J.NGOMNZE@moov-africa.ga");
+        $this->person->addNewEmailAddress("jud10parfait@gmail.com");
+
         // Rapport IME01
         $ime01_report = Report::createNew(
             "IME01 - OUTPUT DATA PORTAL",
@@ -39,7 +44,6 @@ class TestFullReportSeeder extends Seeder
 
         $attribute_label = $this->addAttributes($ime01_report);
         $this->addDefaultFiles($ime01_report, $attribute_label, ReportServer::where('name',"ime01")->first(), "reportsmonitor/output_data_portal", "cgi");
-
 
         // Rapport IME02
         $ime02_report = Report::createNew(
@@ -52,7 +56,6 @@ class TestFullReportSeeder extends Seeder
         $attribute_label = $this->addAttributes($ime02_report);
         $this->addDefaultFiles($ime02_report, $attribute_label, ReportServer::where('name',"ime02")->first(), "reportsmonitor/output_data_portal", "cgi");
 
-
         // Rapport IME03
         $ime03_report = Report::createNew(
             "IME03 - OUTPUT DATA PORTAL",
@@ -62,7 +65,6 @@ class TestFullReportSeeder extends Seeder
 
         $attribute_label = $this->addAttributes($ime03_report);
         $this->addDefaultFiles($ime03_report, $attribute_label, ReportServer::where('name',"ime03")->first(), "reportsmonitor/output_data_portal", "CGI IME03");
-
 
         // Rapport IME04
         $ime04_report = Report::createNew(
@@ -146,6 +148,9 @@ class TestFullReportSeeder extends Seeder
     }
 
     private function addFile(Report $the_report, $filename, $report_server, $label, $remotedir_relative_path, DynamicAttribute $attribute_label, $username) {
+        $local_report_server = ReportServer::where('name',"local01")->first();
+        $local_username = "vagrant";
+
         $the_report_file = $the_report->addReportFile(
             ReportFileType::csv()->first(),
             $filename, $label,null,null,$remotedir_relative_path
@@ -158,9 +163,24 @@ class TestFullReportSeeder extends Seeder
             $report_server,
             AccessProtocole::ftp()->first()
         );
+        $the_report_file_access->deactivate();
 
         // retrieve actions
         $the_report_file_access->addSelectedAction(RetrieveAction::retrieveByName()->first());
         $the_report_file_access->addSelectedAction(RetrieveAction::deleteFile()->first());
+
+        // report file access local
+        $the_report_file_access_local = $the_report_file->addReportFileAccess(
+            AccessAccount::where('username', $local_username)->first(),
+            $local_report_server,
+            AccessProtocole::local()->first()
+        );
+        //$the_report_file_access_local->deactivate();
+        // retrieve actions for local
+        $the_report_file_access_local->addSelectedAction(RetrieveAction::retrieveByName()->first());
+        $the_report_file_access_local->addSelectedAction(RetrieveAction::deleteFile()->first());
+
+        ReportFileReceiver::createNew($the_report_file, $this->person, $this->person->emailaddresses[0],$this->person->phonenumbers[0]);
+        ReportFileReceiver::createNew($the_report_file, $this->person, $this->person->emailaddresses[1],$this->person->phonenumbers[0]);
     }
 }
