@@ -229,7 +229,7 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
 
         foreach ($activereportfiles as $activereportfile) {
             $activereportfile->exec();
-            break;
+            //break;
         }
     }
 

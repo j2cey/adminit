@@ -2,7 +2,7 @@
 
 namespace App\Models\ReportTreatments\Treatment;
 
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use App\Traits\Time\HasDuration;
 use Illuminate\Database\Eloquent\Builder;
 use App\Enums\Treatments\TreatmentStateEnum;

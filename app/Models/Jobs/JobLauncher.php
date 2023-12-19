@@ -116,7 +116,8 @@ class JobLauncher extends BaseModel implements Auditable
         return $launcher->increaseJobsCount();
     }
 
-    private static function getLauncherWithTransactionLock($query, $queuecode, &$launcher) {
+    private static function getLauncherWithTransactionLock($query, $queuecode, &$launcher): JobLauncher
+    {
         DB::transaction(function () use ($query, $queuecode, &$launcher) {
             $launcher_most_free = $query->first();
 
@@ -131,7 +132,8 @@ class JobLauncher extends BaseModel implements Auditable
         return $launcher;
     }
 
-    private static function getLauncherWithoutTransactionLock($query, $queuecode, &$launcher) {
+    private static function getLauncherWithoutTransactionLock($query, $queuecode, &$launcher): JobLauncher
+    {
         $launcher_most_free = $query->first();
 
         if ($launcher_most_free) {

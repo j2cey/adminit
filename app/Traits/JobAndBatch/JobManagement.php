@@ -2,7 +2,6 @@
 
 namespace App\Traits\JobAndBatch;
 
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Settings\ArchiveUnit;
 use App\Enums\Settings\ArchiveState;

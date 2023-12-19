@@ -3,7 +3,7 @@
 
 namespace App\Search\Queries;
 
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
 use Illuminate\Database\Eloquent\Builder;
 

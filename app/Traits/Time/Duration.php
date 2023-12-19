@@ -2,7 +2,7 @@
 
 namespace App\Traits\Time;
 
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 
 class Duration
 {

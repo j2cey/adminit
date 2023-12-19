@@ -50,6 +50,6 @@ class MainTreatmentType implements ITreatmentType
 
     public static function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false)
     {
-        \Log::info("MainTreatmentType - postEnding");
+
     }
 }

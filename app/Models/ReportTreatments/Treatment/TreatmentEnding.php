@@ -64,7 +64,6 @@ trait TreatmentEnding
     }
 
     public function postEnding(TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
-        \Log::info("TreatmentEnding - postEnding");
         $this->treatmenttype_class::postEnding($this, $treatmentresultenum, $child_treatment, $message, $complete_treatment);
         $this->service->postEnding($this, $treatmentresultenum, $child_treatment, $message, $complete_treatment);
     }

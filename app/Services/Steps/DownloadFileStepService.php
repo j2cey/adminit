@@ -11,6 +11,7 @@ use App\Models\ReportFile\ReportFileAccess;
 use App\Enums\Treatments\TreatmentResultEnum;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\Models\RetrieveAction\RetrieveActionType;
+use App\Contracts\RetrieveAction\IRetrieveAction;
 use App\Traits\ReportTreatment\Step\TreatmentStepService;
 use App\Contracts\ReportTreatment\Step\ITreatmentStepService;
 
@@ -32,10 +33,6 @@ class DownloadFileStepService implements ITreatmentStepService
         return self::launchExecOpertion($treatment, null, true, true, [], true);
     }
 
-    public static function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
-
-    }
-
     public static function exec(Treatment $treatment): ?Treatment {
         //Log::channel('stderr')->info('Something happened!');
         //ConsoleLog::info("DownloadFileStepService executing...");
@@ -51,6 +48,14 @@ class DownloadFileStepService implements ITreatmentStepService
         return $treatment;
     }
 
+    public static function startExec() {
+
+    }
+
+    public static function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
+
+    }
+
     /**
      * @param ReportFileAccess $reportfileaccess
      * @param Treatment $treatment
@@ -58,17 +63,13 @@ class DownloadFileStepService implements ITreatmentStepService
      * @param int $exec_id
      * @param bool $is_last_subtreatment
      * @param bool $can_end_uppertreatment
-     * @param $retrievemode_action
+     * @param IRetrieveAction|string|null $retrievemode_action
      * @return InnerTreatment
      */
-    public static function getRetrieveModeAction(ReportFileAccess $reportfileaccess, Treatment $treatment, CriticalityLevelEnum $criticality_level, int $exec_id, bool $is_last_subtreatment, bool $can_end_uppertreatment, &$retrievemode_action): InnerTreatment
+    public static function getRetrieveModeAction(ReportFileAccess $reportfileaccess, Treatment $treatment, CriticalityLevelEnum $criticality_level, int $exec_id, bool $is_last_subtreatment, bool $can_end_uppertreatment, IRetrieveAction|string|null &$retrievemode_action): InnerTreatment
     {
         $innertreatment = new InnerTreatment($treatment, TreatmentCodeEnum::DOWNLOADFILE_RETRIEVEMODEACTION_GET, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, true, null);
         try {
-            /*
-            $operation = $treatment->operationAddOrGet(TreatmentCodeEnum::DOWNLOADFILE_RETRIEVEMODEACTION_GET, $criticality_level, $exec_id, $is_last_subtreatment, $can_end_uppertreatment, false, false, [], null)
-                ->starting();
-            */
 
             foreach ($reportfileaccess->selectedretrieveactions as $selectedretrieveaction) {
                 if ( $selectedretrieveaction->retrieveaction->retrieveactiontype->code === RetrieveActionType::retrieveMode()->first()->code ) {

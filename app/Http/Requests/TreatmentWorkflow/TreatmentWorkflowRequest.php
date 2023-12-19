@@ -3,7 +3,6 @@
 namespace App\Http\Requests\TreatmentWorkflow;
 
 use App\Models\Status;
-use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
 use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;

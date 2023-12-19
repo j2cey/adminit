@@ -43,7 +43,7 @@ class ReportExec extends Command
             $this->warn("Report " . $report->id . "(" . $report->title . ")" . " executing...");
             $report?->exec();
             $this->info("Reports executed...");
-            break;
+            //break;
         }
         return 0;
     }

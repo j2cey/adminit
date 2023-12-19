@@ -62,6 +62,7 @@ class TestFullReportSeeder extends Seeder
             ReportType::defaultReport()->first(),
             "Rapport des Files pour le OUTPUT DATA PORTAL de IME03"
         );
+        $ime03_report->deactivate();
 
         $attribute_label = $this->addAttributes($ime03_report);
         $this->addDefaultFiles($ime03_report, $attribute_label, ReportServer::where('name',"ime03")->first(), "reportsmonitor/output_data_portal", "CGI IME03");
@@ -72,6 +73,7 @@ class TestFullReportSeeder extends Seeder
             ReportType::defaultReport()->first(),
             "Rapport des Files pour le OUTPUT DATA PORTAL de IME04"
         );
+        $ime04_report->deactivate();
 
         $attribute_label = $this->addAttributes($ime04_report);
         $this->addDefaultFiles($ime04_report, $attribute_label, ReportServer::where('name',"ime04")->first(), "reportsmonitor/output_data_portal", "cgi");

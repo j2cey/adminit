@@ -2,7 +2,6 @@
 
 namespace App\Traits\ReportTreatment\Administration;
 
-use Carbon\Carbon;
 use App\Enums\Settings\ArchiveUnit;
 use App\Enums\Settings\ArchiveState;
 use App\Traits\Archive\ArchiveDates;

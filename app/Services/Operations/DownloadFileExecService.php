@@ -9,6 +9,7 @@ use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Enums\Treatments\TreatmentResultEnum;
 use App\Services\Steps\DownloadFileStepService;
 use App\Models\ReportTreatments\TreatmentService;
+use App\Contracts\RetrieveAction\IRetrieveAction;
 use App\Traits\ReportTreatment\Operation\TreatmentOperationService;
 use App\Contracts\ReportTreatment\Operation\ITreatmentOperationService;
 
