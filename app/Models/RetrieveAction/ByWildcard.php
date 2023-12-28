@@ -6,7 +6,7 @@ use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Support\Facades\Storage;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Enums\Treatments\TreatmentResultEnum;
 use App\Models\ReportFile\CollectedReportFile;

@@ -252,4 +252,15 @@ class NotificationResult extends BaseModel implements Auditable
     }
 
     #endregion
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::deleting(function ($model) {
+            $model->subnotificationresults()->each(function($subnotificationresult) {
+                $subnotificationresult->delete(); // <-- direct deletion
+            });
+        });
+    }
 }

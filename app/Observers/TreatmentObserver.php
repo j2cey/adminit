@@ -2,7 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
+use App\Enums\Treatments\TreatmentStateEnum;
 
 class TreatmentObserver
 {
@@ -29,8 +30,16 @@ class TreatmentObserver
             $treatment->uppertreatment->saveSubTreatment($treatment);
         }
 
-        $treatment->setService($treatment->code);
+        $service = $treatment->setService($treatment->code);
         $treatment->addResult();
+
+        $treatment->setState(TreatmentStateEnum::NOTSTARTED);
+
+        // dispatch treatment if any
+        if ( $treatment->dispatch_on_creation ) {
+            //$service->treatment()->save($this);
+            $service->dispatch($treatment->reportfile);
+        }
     }
 
     /**

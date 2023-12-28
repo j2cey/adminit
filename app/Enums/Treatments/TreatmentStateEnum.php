@@ -9,6 +9,9 @@ enum TreatmentStateEnum: string
 {
     use EnumTrait;
 
+    #[Description('En cours de creation')]
+    case CREATING = 'creating';
+
     #[Description('Pas encore demarre')]
     case NOTSTARTED = 'notstarted';
 

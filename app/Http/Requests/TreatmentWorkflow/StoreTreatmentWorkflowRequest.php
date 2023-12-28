@@ -6,9 +6,9 @@ use App\Enums\Permissions;
 use App\Models\Reports\Report;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\ReportTreatments\TreatmentResult;
-use App\Models\ReportTreatments\TreatmentWorkflow;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
+use App\Models\Treatments\TreatmentResult;
+use App\Models\Treatments\TreatmentWorkflow;
+use App\Models\Treatments\ReportTreatmentStepResult;
 
 /**
  * Class StoreTreatmentWorkflowRequest

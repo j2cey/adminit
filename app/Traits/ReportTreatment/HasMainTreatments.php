@@ -4,7 +4,7 @@ namespace App\Traits\ReportTreatment;
 
 
 use App\Models\SystemLog;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 
 trait HasMainTreatments
 {

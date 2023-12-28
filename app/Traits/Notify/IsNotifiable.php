@@ -88,4 +88,11 @@ trait IsNotifiable
     {
         $this->with = array_unique(array_merge($this->with, ['notificationresult']));
     }
+
+    public static function bootIsNotifiable()
+    {
+        static::deleting(function ($model) {
+            $model->notificationresult?->delete();
+        });
+    }
 }

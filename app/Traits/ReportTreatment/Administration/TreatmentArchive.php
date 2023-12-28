@@ -6,7 +6,7 @@ use App\Enums\Settings\ArchiveUnit;
 use App\Enums\Settings\ArchiveState;
 use App\Traits\Archive\ArchiveDates;
 use Illuminate\Database\Eloquent\Builder;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use Illuminate\Database\Eloquent\Collection;
 
 trait TreatmentArchive

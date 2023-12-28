@@ -5,7 +5,7 @@ namespace App\Console\Commands\ReportValue;
 use App\Enums\HtmlTagKey;
 use Illuminate\Console\Command;
 use App\Models\DynamicValue\DynamicValue;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 
 class ValueFormatInitCmd extends Command
 {

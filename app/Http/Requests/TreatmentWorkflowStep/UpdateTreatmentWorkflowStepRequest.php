@@ -4,8 +4,8 @@ namespace App\Http\Requests\TreatmentWorkflowStep;
 
 use App\Enums\Permissions;
 use Illuminate\Support\Facades\Auth;
-use App\Models\ReportTreatments\TreatmentWorkflow;
-use App\Models\ReportTreatments\TreatmentWorkflowStep;
+use App\Models\Treatments\TreatmentWorkflow;
+use App\Models\Treatments\TreatmentWorkflowStep;
 
 /**
  * Class UpdateTreatmentWorkflowStepRequest

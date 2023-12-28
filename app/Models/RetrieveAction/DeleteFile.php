@@ -5,7 +5,7 @@ namespace App\Models\RetrieveAction;
 use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\ReportFile\ReportFile;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\Contracts\RetrieveAction\IRetrieveAction;

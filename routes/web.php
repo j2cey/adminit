@@ -50,7 +50,7 @@ Route::get('/dashboard', function () {
 require __DIR__.'/auth.php';
 
 Route::get('test', function () {
-    $reporttreatment = \App\Models\ReportTreatments\ReportTreatment::getById(1);
+    $reporttreatment = \App\Models\Treatments\ReportTreatment::getById(1);
     dd($reporttreatment);
     //$queuecode_value = "listeners";
     //dd( ( \App\Enums\Settings::Queues()->workerbounds()->$queuecode_value()->get() ));
@@ -220,10 +220,10 @@ Route::get('reportfileaccesses.test', function () {
     //$reportfileaccess = \App\Models\ReportFile\ReportFileAccess::createNew()
     $reportfile = ReportFile::getById(1);
     $reportfileaccess = $reportfile->getActiveReportFileAccess();
-    if (count(\App\Models\ReportTreatments\ReportTreatment::get()) == 0) {
+    if (count(\App\Models\Treatments\ReportTreatment::get()) == 0) {
         $step = $reportfile->createNewTreatment()->stepAddOrGet(\App\Enums\Treatments\TreatmentCodeEnum::DOWNLOADFILE);
     } else {
-        $step = \App\Models\ReportTreatments\ReportTreatmentStep::getById(1);
+        $step = \App\Models\Treatments\ReportTreatmentStep::getById(1);
     }
     $disk = $reportfileaccess->getDisk($step, \App\Enums\CriticalityLevelEnum::HIGH);
     //dd($reportfile->localName, $reportfile->fileRemotePath, $disk->readStream("/" . $reportfile->fileRemotePath));

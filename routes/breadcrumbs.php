@@ -5,13 +5,13 @@ use App\Models\Reports\Report;
 use Tabuna\Breadcrumbs\Breadcrumbs;
 use App\Models\ReportFile\ReportFile;
 use App\Models\ReportFile\CollectedReportFile;
-use App\Models\ReportTreatments\ReportTreatment;
+use App\Models\Treatments\ReportTreatment;
 use App\Models\DynamicAttributes\DynamicAttribute;
-use App\Models\ReportTreatments\TreatmentOperation;
-use App\Models\ReportTreatments\ReportTreatmentStep;
+use App\Models\Treatments\TreatmentOperation;
+use App\Models\Treatments\ReportTreatmentStep;
 use App\Models\DynamicAttributes\DynamicAttributeType;
-use App\Models\ReportTreatments\ReportTreatmentResult;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
+use App\Models\Treatments\ReportTreatmentResult;
+use App\Models\Treatments\ReportTreatmentStepResult;
 
 Breadcrumbs::for('home', function ($trail) {
     $trail->push('Home', route('home'));

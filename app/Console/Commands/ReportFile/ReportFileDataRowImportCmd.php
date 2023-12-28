@@ -3,7 +3,7 @@
 namespace App\Console\Commands\ReportFile;
 
 use Illuminate\Console\Command;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Services\Steps\ImportDataStepService;
 

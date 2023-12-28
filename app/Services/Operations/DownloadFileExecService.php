@@ -3,12 +3,15 @@
 namespace App\Services\Operations;
 
 use App\Models\SystemLog;
+use App\Services\TreatmentStage;
 use App\Enums\CriticalityLevelEnum;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Enums\Treatments\TreatmentResultEnum;
+use App\Models\ReportFile\CollectedReportFile;
 use App\Services\Steps\DownloadFileStepService;
-use App\Models\ReportTreatments\TreatmentService;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use App\Models\Treatments\TreatmentService;
 use App\Contracts\RetrieveAction\IRetrieveAction;
 use App\Traits\ReportTreatment\Operation\TreatmentOperationService;
 use App\Contracts\ReportTreatment\Operation\ITreatmentOperationService;
@@ -17,14 +20,16 @@ class DownloadFileExecService extends DownloadFileStepService implements ITreatm
 {
     use TreatmentOperationService;
 
-    public static function launch(Treatment $treatment): ?Treatment  {
+    public ?TreatmentStage $stage;
+
+    public function launch(Treatment $treatment): ?Treatment  {
         //ConsoleLog::info("DownloadFileStartService launched.");
         //\Log::info("launch, service DownloadFileStartService - treatment " . $treatment->type->value . ": " . $treatment->name . "( " . $treatment->id . " ) - file: " . $treatment->service->reportfile->name . "(" . $treatment->service->reportfile->id . ")" );
         return self::exec($treatment);
     }
 
     //public function exec(int $file_id, bool $is_last_subtreatment, bool $can_end_uppertreatment): ?IHasTreatmentResults
-    public static function exec(Treatment $treatment): ?Treatment
+    public function exec(): ?Treatment
     {
         //ConsoleLog::info("DownloadFileStartService executing...");
         //\Log::info("exec, service DownloadFileStartService - treatment " . $treatment->type->value . ": " . $treatment->name . "( " . $treatment->id . " ) - file: " . $treatment->service->reportfile->name . "(" . $treatment->service->reportfile->id . ")" );
@@ -73,7 +78,7 @@ class DownloadFileExecService extends DownloadFileStepService implements ITreatm
         }
     }
 
-    public static function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
+    public function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
 
     }
 }

@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\ReportTreatments\TreatmentWorkflowStep;
+use App\Models\Treatments\TreatmentWorkflowStep;
 
 class TreatmentWorkflowStepPolicy
 {
@@ -25,7 +25,7 @@ class TreatmentWorkflowStepPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\TreatmentWorkflowStep  $reportTreatmentWorkflowStep
+     * @param  \App\Models\Treatments\TreatmentWorkflowStep  $reportTreatmentWorkflowStep
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, TreatmentWorkflowStep $reportTreatmentWorkflowStep)
@@ -48,7 +48,7 @@ class TreatmentWorkflowStepPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\TreatmentWorkflowStep  $reportTreatmentWorkflowStep
+     * @param  \App\Models\Treatments\TreatmentWorkflowStep  $reportTreatmentWorkflowStep
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, TreatmentWorkflowStep $reportTreatmentWorkflowStep)
@@ -60,7 +60,7 @@ class TreatmentWorkflowStepPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\TreatmentWorkflowStep  $reportTreatmentWorkflowStep
+     * @param  \App\Models\Treatments\TreatmentWorkflowStep  $reportTreatmentWorkflowStep
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, TreatmentWorkflowStep $reportTreatmentWorkflowStep)
@@ -72,7 +72,7 @@ class TreatmentWorkflowStepPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\TreatmentWorkflowStep  $reportTreatmentWorkflowStep
+     * @param  \App\Models\Treatments\TreatmentWorkflowStep  $reportTreatmentWorkflowStep
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function restore(User $user, TreatmentWorkflowStep $reportTreatmentWorkflowStep)
@@ -84,7 +84,7 @@ class TreatmentWorkflowStepPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\TreatmentWorkflowStep  $reportTreatmentWorkflowStep
+     * @param  \App\Models\Treatments\TreatmentWorkflowStep  $reportTreatmentWorkflowStep
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function forceDelete(User $user, TreatmentWorkflowStep $reportTreatmentWorkflowStep)

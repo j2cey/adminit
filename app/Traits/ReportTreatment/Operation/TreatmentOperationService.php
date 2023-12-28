@@ -3,11 +3,12 @@
 namespace App\Traits\ReportTreatment\Operation;
 
 use App\Models\ReportFile\ReportFile;
+use App\Traits\ReportTreatment\TreatmentService;
 use App\Contracts\ReportTreatment\Step\ITreatmentStepService;
 
 trait TreatmentOperationService
 {
-    //use IsTreatmentService;
+    use TreatmentService;
 
     //private TreatmentOperation $_operation;
     //private ITreatmentStepService $_step_service;

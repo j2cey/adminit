@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Http\Requests\StoreTreatmentRequest;
 use App\Http\Requests\UpdateTreatmentRequest;
 
@@ -42,7 +42,7 @@ class TreatmentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ReportTreatments\Treatment  $treatment
+     * @param  \App\Models\Treatments\Treatment  $treatment
      * @return \Illuminate\Http\Response
      */
     public function show(Treatment $treatment)
@@ -53,7 +53,7 @@ class TreatmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ReportTreatments\Treatment  $treatment
+     * @param  \App\Models\Treatments\Treatment  $treatment
      * @return \Illuminate\Http\Response
      */
     public function edit(Treatment $treatment)
@@ -65,7 +65,7 @@ class TreatmentController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateTreatmentRequest  $request
-     * @param  \App\Models\ReportTreatments\Treatment  $treatment
+     * @param  \App\Models\Treatments\Treatment  $treatment
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateTreatmentRequest $request, Treatment $treatment)
@@ -76,7 +76,7 @@ class TreatmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ReportTreatments\Treatment  $treatment
+     * @param  \App\Models\Treatments\Treatment  $treatment
      * @return \Illuminate\Http\Response
      */
     public function destroy(Treatment $treatment)

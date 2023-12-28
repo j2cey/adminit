@@ -6,8 +6,8 @@ use App\Models\Status;
 use App\Traits\Request\RequestTraits;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\ReportTreatments\TreatmentWorkflow;
-use App\Models\ReportTreatments\TreatmentWorkflowStep;
+use App\Models\Treatments\TreatmentWorkflow;
+use App\Models\Treatments\TreatmentWorkflowStep;
 
 /**
  * Class TreatmentWorkflowStepRequest

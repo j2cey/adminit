@@ -4,7 +4,7 @@ namespace App\Services\Operations;
 
 
 use App\Enums\CriticalityLevelEnum;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentResultEnum;
 use App\Services\Steps\DownloadFileStepService;
 use App\Traits\ReportTreatment\Operation\TreatmentOperationService;

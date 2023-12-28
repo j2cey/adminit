@@ -5,7 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use App\Enums\CriticalityLevelEnum;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
 
 class InnerTreatment

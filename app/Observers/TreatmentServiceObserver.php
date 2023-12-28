@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\ReportTreatments\TreatmentService;
+use App\Models\Treatments\TreatmentService;
 
 class TreatmentServiceObserver
 {

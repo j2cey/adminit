@@ -5,7 +5,7 @@ namespace App\Services\Operations;
 use App\Enums\NotificationTypeEnum;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReportFile\NotifyReport;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Services\Steps\NotifyFileStepService;
 use App\Enums\Treatments\TreatmentResultEnum;
 use App\Traits\ReportTreatment\Operation\TreatmentOperationService;

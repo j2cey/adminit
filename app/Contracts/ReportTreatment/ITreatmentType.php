@@ -2,7 +2,7 @@
 
 namespace App\Contracts\ReportTreatment;
 
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentResultEnum;
 
 interface ITreatmentType

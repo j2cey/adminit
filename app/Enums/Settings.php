@@ -45,7 +45,7 @@ class Settings
     public static function SelectedRetrieveAction() {
         return new SelectedRetrieveAction();
     }
-    public static function ReportTreatment() {
+    public static function Treatment() {
         return new Treatment();
     }
     public static function Queues() {

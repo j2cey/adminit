@@ -2,14 +2,12 @@
 
 namespace App\Jobs;
 
-use App\Enums\QueueEnum;
 use Illuminate\Bus\Queueable;
 use Illuminate\Bus\Batchable;
-use App\Models\Jobs\JobLauncher;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\DynamicValue\DynamicValue;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -65,7 +63,10 @@ class DynamicValueFormatJob implements ShouldQueue
 
         if ($dynamicvalue->dynamicrow->hasdynamicrow->isImportDone) {
             if ($dynamicvalue->dynamicrow->hasdynamicrow->isImported) {
+                //\Log::info("importation done for " . get_class($dynamicvalue->dynamicrow->hasdynamicrow) . " (" . $dynamicvalue->dynamicrow->hasdynamicrow->id . ")");
                 $treatment->endingWithSuccess();
+                //$treatment_payloads = ['collectedReportFileId' => $treatment->service->collectedreportfile->id, 'importTreatmentId' => $treatment->id];
+                //$treatment->launchUpperStep(TreatmentCodeEnum::MERGEFILE, $treatment_payloads, true, null);
             } else {
                 $treatment->endingWithFailure($dynamicvalue->dynamicrow->hasdynamicrow->importresult->last_failed_message ?? "At least one import failed");
             }

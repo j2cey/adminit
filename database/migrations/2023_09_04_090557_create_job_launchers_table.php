@@ -23,7 +23,7 @@ class CreateJobLaunchersTable extends Migration
             $table->id();
             $table->string('queuecode')->nullable()->index()->comment('the Queue code');
             $table->integer('queuecode_index')->nullable()->comment('the Queue code Index');
-            $table->integer('jobs_count')->nullable()->comment('number of jobs launched for this queue');
+            $table->string('queue_name')->nullable()->index()->comment('the Queue name');
             $table->baseFields();
         });
         $this->setTableComment($this->table_name,$this->table_comment);

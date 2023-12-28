@@ -88,4 +88,11 @@ trait IsFormattable
     {
         $this->with = array_unique(array_merge($this->with, ['formattingresult']));
     }
+
+    public static function bootIsFormattable()
+    {
+        static::deleting(function ($model) {
+            $model->formattingresult?->delete();
+        });
+    }
 }

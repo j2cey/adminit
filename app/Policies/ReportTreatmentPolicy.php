@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\ReportTreatments\ReportTreatment;
+use App\Models\Treatments\ReportTreatment;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ReportTreatmentPolicy
@@ -25,7 +25,7 @@ class ReportTreatmentPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\ReportTreatment  $reportTreatment
+     * @param  \App\Models\Treatments\ReportTreatment  $reportTreatment
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, ReportTreatment $reportTreatment)
@@ -48,7 +48,7 @@ class ReportTreatmentPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\ReportTreatment  $reportTreatment
+     * @param  \App\Models\Treatments\ReportTreatment  $reportTreatment
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, ReportTreatment $reportTreatment)
@@ -60,7 +60,7 @@ class ReportTreatmentPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\ReportTreatment  $reportTreatment
+     * @param  \App\Models\Treatments\ReportTreatment  $reportTreatment
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, ReportTreatment $reportTreatment)
@@ -72,7 +72,7 @@ class ReportTreatmentPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\ReportTreatment  $reportTreatment
+     * @param  \App\Models\Treatments\ReportTreatment  $reportTreatment
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function restore(User $user, ReportTreatment $reportTreatment)
@@ -84,7 +84,7 @@ class ReportTreatmentPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\ReportTreatment  $reportTreatment
+     * @param  \App\Models\Treatments\ReportTreatment  $reportTreatment
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function forceDelete(User $user, ReportTreatment $reportTreatment)

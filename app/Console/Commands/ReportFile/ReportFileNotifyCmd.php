@@ -5,7 +5,7 @@ namespace App\Console\Commands\ReportFile;
 use Illuminate\Console\Command;
 use App\Models\ReportFile\ReportFile;
 use App\Enums\Treatments\TreatmentCodeEnum;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
+use App\Models\Treatments\ReportTreatmentStepResult;
 
 class ReportFileNotifyCmd extends Command
 {

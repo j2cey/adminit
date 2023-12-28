@@ -6,9 +6,9 @@ use App\Models\Status;
 use App\Enums\CriticalityLevelEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\Treatments\TreatmentCodeEnum;
-use App\Models\ReportTreatments\TreatmentWorkflow;
+use App\Models\Treatments\TreatmentWorkflow;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
-use App\Models\ReportTreatments\TreatmentWorkflowStep;
+use App\Models\Treatments\TreatmentWorkflowStep;
 
 /**
  * @property TreatmentWorkflow $treatmentworkflow

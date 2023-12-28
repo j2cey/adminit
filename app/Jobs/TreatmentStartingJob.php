@@ -9,7 +9,7 @@ use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Enums\Treatments\TreatmentCodeEnum;
@@ -41,7 +41,7 @@ class TreatmentStartingJob implements ShouldQueue
     {
         $launcher = JobLauncher::getLauncher(QueueEnum::TREATMENTSTARTEND);
         $this->_launcher_id = $launcher->id;
-        $this->onQueue($launcher->getQueueName());
+        $this->onQueue($launcher->queue_name);
 
         $this->_treatment_id = $treatment->id;
         $this->_childtreatment_id = is_null($childtreatment) ? null : $childtreatment->id;
@@ -59,12 +59,11 @@ class TreatmentStartingJob implements ShouldQueue
      */
     public function handle()
     {
-        $launchedjob = JobLauncher::getById($this->_launcher_id)->addLaunchedJob($this->job->getJobId());
         $treatment = Treatment::getById($this->_treatment_id);
 
         $treatment->doStarting(Treatment::getById($this->_childtreatment_id));
 
-        $launchedjob->delete();
+        JobLauncher::getById($this->_launcher_id)?->delete();
         /*
         $inner_treatment = $this->inner_treatment; //InnerTreatment::getByKey($treatment, $this->inner_treatment_key);
         $inner_treatment->setTreatment($treatment);

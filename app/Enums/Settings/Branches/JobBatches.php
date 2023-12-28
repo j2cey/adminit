@@ -19,7 +19,7 @@ class JobBatches extends SettingNode
         parent::__construct("jobbatches",null,null,null,null,"settings Job Batches.");
 
         $this->addChild("max_finished", null, null, "max finished")
-            ->addArchiveChildren(ArchiveState::ENABLED, ArchiveUnit::MINUTE, "30");
+            ->addArchiveChildren(ArchiveState::ENABLED, ArchiveUnit::MINUTE, "50");
         //$max_finished->addChild("unit", "min", "string", "max reserved unit.");
         //$max_finished->addChild("value", "30", "integer", "max reserved value.");
     }

@@ -3,7 +3,7 @@
 namespace App\Services\Operations;
 
 use App\Enums\CriticalityLevelEnum;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Services\Steps\ImportFileStepService;
 use App\Enums\Treatments\TreatmentResultEnum;
@@ -14,11 +14,11 @@ class ImportFileExecService extends ImportFileStepService implements ITreatmentO
 {
     use TreatmentOperationService;
 
-    public static function launch(Treatment $treatment): ?Treatment  {
+    public function launch(Treatment $treatment): ?Treatment  {
         return self::exec($treatment);
     }
 
-    public static function exec(Treatment $treatment): ?Treatment
+    public function exec(): ?Treatment
     {
         try {
 
@@ -61,7 +61,7 @@ class ImportFileExecService extends ImportFileStepService implements ITreatmentO
         }
     }
 
-    public static function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
+    public function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
 
     }
 }

@@ -15,7 +15,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use App\Models\ReportFile\CollectedReportFile;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\RemembersRowNumber;
-use App\Models\ReportTreatments\TreatmentOperation;
+use App\Models\Treatments\TreatmentOperation;
 
 class ReportFilesImport implements ToModel, WithChunkReading, WithEvents, WithValidation, SkipsOnError
 {

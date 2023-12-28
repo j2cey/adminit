@@ -13,11 +13,11 @@ use App\Events\DynamicValueCreatedEvent;
 use Illuminate\Auth\Events\Registered;
 use App\Listeners\SetInnerValueListener;
 use App\Listeners\LaunchTreatmentListener;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Listeners\TreatmentCreatedListener;
 use App\Observers\TreatmentServiceObserver;
 use App\Listeners\InitFormattedValueListener;
-use App\Models\ReportTreatments\TreatmentService;
+use App\Models\Treatments\TreatmentService;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 

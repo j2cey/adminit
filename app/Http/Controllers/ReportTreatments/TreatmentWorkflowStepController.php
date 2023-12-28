@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ReportTreatments;
 
 use App\Http\Controllers\Controller;
-use App\Models\ReportTreatments\TreatmentWorkflowStep;
+use App\Models\Treatments\TreatmentWorkflowStep;
 use App\Http\Resources\ReportTreatments\TreatmentWorkflowStepResource;
 use App\Http\Requests\TreatmentWorkflowStep\StoreTreatmentWorkflowStepRequest;
 use App\Http\Requests\TreatmentWorkflowStep\UpdateTreatmentWorkflowStepRequest;

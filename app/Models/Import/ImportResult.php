@@ -236,4 +236,15 @@ class ImportResult extends BaseModel implements Auditable
     }
 
     #endregion
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::deleting(function ($model) {
+            $model->subimportresults()->each(function($subimportresult) {
+                $subimportresult->delete(); // <-- direct deletion
+            });
+        });
+    }
 }

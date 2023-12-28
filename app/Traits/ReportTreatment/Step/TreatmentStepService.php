@@ -3,12 +3,13 @@
 namespace App\Traits\ReportTreatment\Step;
 
 use App\Models\DynamicValue\DynamicRow;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Models\ReportFile\CollectedReportFile;
+use App\Traits\ReportTreatment\TreatmentService;
 
 trait TreatmentStepService
 {
-    //use IsTreatmentService;
+    use TreatmentService;
 
     //private ReportTreatmentStep $_step;
 

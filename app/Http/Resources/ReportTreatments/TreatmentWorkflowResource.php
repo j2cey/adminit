@@ -8,8 +8,8 @@ use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
 use App\Http\Resources\StatusResource;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\ReportTreatments\ReportTreatmentStepResult;
-use App\Models\ReportTreatments\TreatmentWorkflowStep;
+use App\Models\Treatments\ReportTreatmentStepResult;
+use App\Models\Treatments\TreatmentWorkflowStep;
 
 /**
  * Class TreatmentWorkflowResource

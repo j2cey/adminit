@@ -237,4 +237,15 @@ class FormattingResult extends BaseModel implements Auditable
     }
 
     #endregion
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::deleting(function ($model) {
+            $model->subformattingresults()->each(function($subformattingresult) {
+                $subformattingresult->delete(); // <-- direct deletion
+            });
+        });
+    }
 }

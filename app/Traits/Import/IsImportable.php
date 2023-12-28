@@ -88,4 +88,11 @@ trait IsImportable
     {
         $this->with = array_unique(array_merge($this->with, ['importresult']));
     }
+
+    public static function bootIsImportable()
+    {
+        static::deleting(function ($model) {
+            $model->importresult?->delete();
+        });
+    }
 }

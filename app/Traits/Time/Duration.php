@@ -18,9 +18,9 @@ class Duration
 
     public function end(Carbon|null $end_at): static
     {
-        $this->setEndAt($end_at ?? Carbon::now());
+        $this->setEndAt(is_null($end_at) ? Carbon::now() : $end_at);
 
-        $this->setDuration( $this->getEndAt()->diffInSeconds($this->getStartAt()) );
+        $this->setDuration( $this->getStartAt()->diff($this->getEndAt())->s );
         $this->setDurationHhmmss( gmdate('H:i:s', $this->getDuration()) );
 
         return $this;

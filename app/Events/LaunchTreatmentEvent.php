@@ -5,7 +5,7 @@ namespace App\Events;
 use Illuminate\Broadcasting\Channel;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Queue\SerializesModels;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;

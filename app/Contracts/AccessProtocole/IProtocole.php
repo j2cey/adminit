@@ -6,7 +6,7 @@ use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\Access\AccessAccount;
 use App\Models\OsAndServer\ReportServer;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
 interface IProtocole

@@ -6,20 +6,9 @@ use App\Traits\Enum\EnumTrait;
 use App\Services\Main\MainService;
 use App\Enums\Attributes\Description;
 use App\Enums\Attributes\ServiceClass;
-use App\Services\Operations\MergeRowsExec;
-use App\Services\Operations\ImportDataRow;
-use App\Services\Operations\FormatDataRow;
 use App\Services\Steps\MergeFileStepService;
-use App\Services\Operations\FormatDataExec;
-use App\Services\Steps\MergeColumnsService;
-use App\Services\Operations\FormatDataInit;
-use App\Services\Operations\MergeColumnExec;
-use App\Services\Steps\FormatDataStepService;
 use App\Services\Steps\ImportFileStepService;
-use App\Services\Steps\ImportDataStepService;
 use App\Services\Steps\NotifyFileStepService;
-use App\Services\Steps\ReportFileNotifyService;
-use App\Services\Operations\ImportDataFileExec;
 use App\Services\Steps\DownloadFileStepService;
 use App\Services\Operations\MergeFileExecService;
 use App\Services\Operations\ImportFileExecService;
@@ -53,15 +42,12 @@ enum TreatmentCodeEnum: string
     case IMPORTFILE = 'importfile';
 
     #[Description('Importation Valeurs de Lignes de Fichier')]
-    #[ServiceClass(ImportDataStepService::class)]
     case IMPORTDATA = 'importdata';
 
     #[Description('Formattage Colonnes par ligne')]
-    #[ServiceClass(FormatDataStepService::class)]
     case FORMATDATA = 'formatdata';
 
     #[Description('Merge colonnes Formatées')]
-    #[ServiceClass(MergeColumnsService::class)]
     case MERGECOLUMNS = 'mergecolumns';
 
     #[Description('Merge File Rows')]
@@ -128,31 +114,25 @@ enum TreatmentCodeEnum: string
     case IMPORT_END = 'importend';
 
     #[Description('Import Data File')]
-    #[ServiceClass(ImportDataFileExec::class)]
     case IMPORTDATAFILE_EXEC = 'importdatafileexec';
 
     #[Description('Import Data Row')]
-    #[ServiceClass(ImportDataRow::class)]
     case IMPORTDATAROW = 'importdatarow';
     #endregion
 
     #region format data
     #[Description('Execute Format Data')]
-    #[ServiceClass(FormatDataExec::class)]
     case FORMATDATA_EXEC = 'formatdata_exec';
 
     #[Description('Execute Format Data')]
-    #[ServiceClass(FormatDataRow::class)]
     case FORMATDATAROW = 'formatdatarow';
 
     #[Description('Init Format Data')]
-    #[ServiceClass(FormatDataInit::class)]
     case FORMATDATA_INIT = 'formatdatainit';
     #endregion
 
     #region merge columns
     #[Description('Exec Merge Column')]
-    #[ServiceClass(MergeColumnExec::class)]
     case MERGECOLUMN_EXEC = 'mergecolumnexec';
     #endregion
 
@@ -162,7 +142,6 @@ enum TreatmentCodeEnum: string
     case MERGEFILE_EXEC = 'mergefile_exec';
 
     #[Description('Exec Merge Rows')]
-    #[ServiceClass(MergeRowsExec::class)]
     case MERGEROWS_EXEC = 'mergerowsexec';
 
     #[Description('Merge Formatted Row')]

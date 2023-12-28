@@ -2,7 +2,7 @@
 
 namespace App\Contracts\ReportTreatment\Step;
 
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Contracts\ReportTreatment\IServiceActions;
 
 interface ITreatmentStepService extends IServiceActions

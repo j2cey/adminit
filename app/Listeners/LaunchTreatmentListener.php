@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Events\LaunchTreatmentEvent;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Enums\Treatments\TreatmentStateEnum;
 

@@ -8,7 +8,7 @@ use Illuminate\Bus\Queueable;
 use App\Models\Jobs\JobLauncher;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -34,7 +34,7 @@ class ExecTraceJob implements ShouldQueue
     {
         $launcher = JobLauncher::getLauncher(QueueEnum::EXECTRACE);
         $this->_launcher_id = $launcher->id;
-        $this->onQueue($launcher->getQueueName());
+        $this->onQueue($launcher->queue_name);
 
         $this->_treatment_id = $treatment->id;
         $this->_treatmentcode = $treatmentcode?->value;
@@ -50,5 +50,6 @@ class ExecTraceJob implements ShouldQueue
     public function handle()
     {
         ExecTrace::register( Treatment::getById($this->_treatment_id), ( is_null($this->_treatmentcode) ? null : TreatmentCodeEnum::from($this->_treatmentcode) ), $this->_message, $this->_description );
+        JobLauncher::getById($this->_launcher_id)?->delete();
     }
 }

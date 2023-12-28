@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands\ReportFile;
 
+use App\Enums\Settings;
 use Illuminate\Console\Command;
 use App\Imports\ReportFileImport;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Enums\Treatments\TreatmentStateEnum;
 
@@ -70,7 +71,10 @@ class ReportFileMergeCmd extends Command
      */
     private function treatmentToMergeGet(): ?Treatment
     {
-        $waiting_treatment = Treatment::notstartedOrWaitingGetFirst( TreatmentCodeEnum::MERGEFILE_EXEC );
+        $treatment_code_value = TreatmentCodeEnum::MERGEFILE_EXEC->value;
+        $max_running = Settings::Treatment()->max_running()->$treatment_code_value()->get();
+
+        $waiting_treatment = Treatment::notstartedOrWaitingGetFirst( TreatmentCodeEnum::MERGEFILE_EXEC, $max_running );
         if ( empty($waiting_treatment) ) {
             $this->error("No Waiting Treatments !");
             return null;
@@ -86,14 +90,19 @@ class ReportFileMergeCmd extends Command
 
     private function doImportFile(Treatment $treatment): int
     {
-
         $delay = rand(100000,300000);
         usleep($delay);
 
         if ( $treatment->canBeExecuted ) {
             $treatment->setState(TreatmentStateEnum::PICKING);
             //\Log::info("Merge File From CMD for treatment: " . $treatment->name . " ( " . $treatment->id . " )");
-            $treatment->service->exec();
+            if ( is_null($treatment->service) ) {
+                $delay = rand(100000,300000);
+                usleep($delay);
+                $treatment->rewindToPreviousState();
+            } else {
+                $treatment->service->exec();
+            }
             return 1;
         }
 

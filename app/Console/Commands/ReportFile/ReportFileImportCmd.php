@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands\ReportFile;
 
+use App\Enums\Settings;
 use Illuminate\Console\Command;
 use App\Imports\ReportFileImport;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Enums\Treatments\TreatmentStateEnum;
-use App\Services\Steps\ImportFileStepService;
 
 class ReportFileImportCmd extends Command
 {
@@ -71,7 +71,12 @@ class ReportFileImportCmd extends Command
      */
     private function treatmentToImportGet(): ?Treatment
     {
-        $notstarted_treatment = Treatment::notStartedGetFirst( TreatmentCodeEnum::IMPORTFILE_DOIMPORT );
+        //$max_running = config('Settings.treatment.max_running.importfile_doimport');
+        $treatment_code_value = TreatmentCodeEnum::IMPORTFILE_DOIMPORT->value;
+        $max_running = Settings::Treatment()->max_running()->$treatment_code_value()->get();
+
+        $notstarted_treatment = Treatment::notStartedGetFirst( TreatmentCodeEnum::IMPORTFILE_DOIMPORT, $max_running );
+
         if ( empty($notstarted_treatment) ) {
             $this->error("No Not started Treatments !");
             return null;
@@ -96,9 +101,6 @@ class ReportFileImportCmd extends Command
             if ($treatment->service && $treatment->service->collectedreportfile) {
                 (new ReportFileImport($treatment->service->collectedreportfile, $treatment))->import($treatment->service->collectedreportfile->fileLocalAbsolutePath);
                 return 1;
-            /*} elseif ($treatment->collectedreportfile) {
-                (new ReportFileImport($treatment->collectedreportfile, $treatment))->import($treatment->service->collectedreportfile->fileLocalAbsolutePath);
-                return 1;*/
             } else {
                 $treatment->rewindToPreviousState();
                 return 0;

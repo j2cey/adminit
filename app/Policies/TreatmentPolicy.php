@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\ReportTreatments\Treatment;
+use App\Models\Treatments\Treatment;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TreatmentPolicy
@@ -25,7 +25,7 @@ class TreatmentPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\Treatment  $treatment
+     * @param  \App\Models\Treatments\Treatment  $treatment
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, Treatment $treatment)
@@ -48,7 +48,7 @@ class TreatmentPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\Treatment  $treatment
+     * @param  \App\Models\Treatments\Treatment  $treatment
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, Treatment $treatment)
@@ -60,7 +60,7 @@ class TreatmentPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\Treatment  $treatment
+     * @param  \App\Models\Treatments\Treatment  $treatment
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, Treatment $treatment)
@@ -72,7 +72,7 @@ class TreatmentPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\Treatment  $treatment
+     * @param  \App\Models\Treatments\Treatment  $treatment
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function restore(User $user, Treatment $treatment)
@@ -84,7 +84,7 @@ class TreatmentPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ReportTreatments\Treatment  $treatment
+     * @param  \App\Models\Treatments\Treatment  $treatment
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function forceDelete(User $user, Treatment $treatment)

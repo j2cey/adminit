@@ -6,7 +6,7 @@ use App\Models\Status;
 use App\Models\Reports\Report;
 use App\Traits\Request\RequestTraits;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\ReportTreatments\TreatmentWorkflow;
+use App\Models\Treatments\TreatmentWorkflow;
 
 /**
  * Class TreatmentWorkflowRequest

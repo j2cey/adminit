@@ -46,14 +46,16 @@ class Kernel extends ConsoleKernel
 
         })->everyMinute();*/
 
-        $schedule->command('job:watch')->everyMinute();
-        $schedule->command('jobbatch:watch')->everyMinute();
-        $schedule->command('treatmentarchive:deleteexpired')->everyMinute();
-        $schedule->command('collectedreportfile:watch')->everyMinute();
-
-        $schedule->command('treatment:dispatch')->everyMinute();
         $schedule->command('reportfile:import')->everyMinute();
         $schedule->command('reportfile:merge')->everyMinute();
+
+        $schedule->command('job:watch')->everyFiveMinutes();
+        $schedule->command('jobbatch:watch')->everyFiveMinutes();
+        $schedule->command('treatmentarchive:deleteexpired')->everyFiveMinutes();
+        $schedule->command('collectedreportfile:watch')->everyFiveMinutes();
+
+        $schedule->command('treatment:dispatch')->everyMinute();
+
         /*$schedule->call(function () {
             $dt = Carbon::now();
 

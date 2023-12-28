@@ -64,6 +64,17 @@ class CreateTreatmentsTable extends Migration
             $table->integer('retries_session_count')->nullable()->comment('retry count for current session');
             $table->timestamp('retry_end_at')->nullable()->comment('treatment retry end date');
 
+            /**
+             * Stages
+             */
+
+            $table->integer('current_stage')->nullable()->comment('current stage');
+            $table->integer('stages_count')->nullable()->comment('number of stages to be executed by this treatment');
+
+            /**
+             * Relationships
+             */
+
             $table->foreignId('report_file_id')->nullable()
                 ->comment('report file reference')
                 ->constrained()->onDelete('set null');

@@ -30,7 +30,7 @@ class SystemLogJob implements ShouldQueue
     {
         $launcher = JobLauncher::getLauncher(QueueEnum::SYSTEMLOG);
         $this->_launcher_id = $launcher->id;
-        $this->onQueue($launcher->getQueueName());
+        $this->onQueue($launcher->queue_name);
 
         $this->logtype = $logtype;
         $this->message = $message;
@@ -45,5 +45,6 @@ class SystemLogJob implements ShouldQueue
     public function handle()
     {
         SystemLog::execLog($this->logtype, $this->message, $this->can_log);
+        JobLauncher::getById($this->_launcher_id)?->delete();
     }
 }

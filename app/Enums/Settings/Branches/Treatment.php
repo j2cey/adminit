@@ -10,6 +10,7 @@ use App\Enums\Settings\SettingNode;
  *
  * @method activate()
  * @method max_retries()
+ * @method max_running()
  * @method formatcolumns()
  */
 class Treatment extends SettingNode
@@ -25,5 +26,11 @@ class Treatment extends SettingNode
 
         $this->addChild("merge_file", null, null, "Merge Files.")
             ->addChild("max_retries", "10", "integer", "nombre max de tentatives de retraitement de Merge de fichier.");
+
+        $max_running = $this->addChild("max_running", null, null, "Nombre Max d execution autorise par code de traitement.");
+        $max_running->addChild("downloadfile", "10", "integer", "nombre max d executions pour downloadfile.");
+        $max_running->addChild("importfile_doimport", "1", "integer", "nombre max d executions pour importfile_doimport.");
+        $max_running->addChild("mergefile_exec", "10", "integer", "nombre max d executions pour mergefile.");
+        $max_running->addChild("notifyfile", "10", "integer", "nombre max d executions pour notifyfile.");
     }
 }
