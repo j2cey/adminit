@@ -22,6 +22,17 @@
 
         <b-tab-item>
             <template #header>
+                <b-icon size="small" icon="file"></b-icon>
+                <span class="help-inline pr-1 text-sm"> Champs du Fichier </span>
+                <b-tag rounded type="is-info is-light">{{ reportfile.dynamicattributes.length }}</b-tag>
+            </template>
+
+            <ModelAttributes :currmodel_prop="reportfile" :modelattributes_prop="reportfile.dynamicattributes"></ModelAttributes>
+
+        </b-tab-item>
+
+        <b-tab-item>
+            <template #header>
                 <b-icon icon="source-pull"></b-icon>
                 <span class="help-inline pr-1 text-sm"> Accès </span>
                 <b-tag rounded type="is-info is-light">{{ reportfile.reportfileaccesses.length }}</b-tag>
@@ -67,6 +78,7 @@ export default {
     },
     name: "reportfile-item",
     components: {
+        ModelAttributes: () => import('../modelattributes/list'),
         ReportFileAccessList: () => import('../reportfileaccesses/list'),
         CollectedReportFileList: () => import('../collectedreportfiles/index'),
         SelectedRetrieveActionList: () => import('../selectedretrieveactions/list'),

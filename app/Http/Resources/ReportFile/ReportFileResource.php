@@ -5,6 +5,7 @@ namespace App\Http\Resources\ReportFile;
 use App\Models\ReportFile\CollectedReportFile;
 use App\Models\ReportFile\ReportFile;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
+use App\Http\Resources\DynamicAttributes\DynamicAttributeResource;
 use App\Http\Resources\RetrieveAction\SelectedRetrieveActionResource;
 use function route;
 use App\Models\Status;
@@ -45,6 +46,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $retrieve_by_name_label
  *
  * @property Report $report
+ * @property mixed $dynamicattributes
  * @property mixed $reportfileaccesses
  * @property CollectedReportFile[] $collectedreportfiles
  * @property SelectedRetrieveAction[] $selectedretrieveactions
@@ -74,6 +76,8 @@ class ReportFileResource extends JsonResource
             'use_file_extension' => $this->use_file_extension,
             'has_headers' => $this->has_headers,
             'model_type' => ReportFile::class,
+
+            'dynamicattributes' => DynamicAttributeResource::collection($this->dynamicattributes),
 
             //'selectedretrieveactions' => SelectedRetrieveActionResource::collection($this->selectedretrieveactions),
 

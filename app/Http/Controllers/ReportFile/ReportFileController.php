@@ -11,6 +11,7 @@ use Illuminate\Contracts\Foundation\Application;
 use App\Http\Resources\ReportFile\ReportFileResource;
 use App\Http\Requests\ReportFile\StoreReportFileRequest;
 use App\Http\Requests\ReportFile\UpdateReportFileRequest;
+use App\Http\Resources\DynamicAttributes\DynamicAttributeResource;
 
 class ReportFileController extends Controller
 {
@@ -69,6 +70,23 @@ class ReportFileController extends Controller
     {
         return view('reportfiles.show')
             ->with('reportfile', new ReportFileResource($reportfile))
+            ;
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param $uuid
+     * @return Application|Factory|View
+     */
+    public function attributes($uuid)
+    {
+        $reportfile = ReportFile::where('uuid', $uuid)->first();
+        $dynamicattributes = DynamicAttributeResource::collection($reportfile->dynamicattributes);
+
+        return view('dynamicattributes.index')
+            ->with('reportfile', new ReportFileResource( $reportfile) )
+            ->with('dynamicattributes', $dynamicattributes)
             ;
     }
 

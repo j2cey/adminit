@@ -49,10 +49,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('reportfile:import')->everyMinute();
         $schedule->command('reportfile:merge')->everyMinute();
 
-        $schedule->command('job:watch')->everyFiveMinutes();
-        $schedule->command('jobbatch:watch')->everyFiveMinutes();
-        $schedule->command('treatmentarchive:deleteexpired')->everyFiveMinutes();
-        $schedule->command('collectedreportfile:watch')->everyFiveMinutes();
+        //$schedule->command('job:watch')->everyFiveMinutes();
+        //$schedule->command('jobbatch:watch')->everyFiveMinutes();
+        //$schedule->command('treatmentarchive:deleteexpired')->everyFiveMinutes();
+        //$schedule->command('collectedreportfile:watch')->everyFiveMinutes();
 
         $schedule->command('treatment:dispatch')->everyMinute();
 

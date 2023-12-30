@@ -109,10 +109,11 @@ class ReportController extends Controller
             ->with('report', new ReportResource($report))
             ;
     }
+
     /**
      * Display the specified resource.
      *
-     * @param Report $report
+     * @param $uuid
      * @return Application|Factory|View
      */
     public function reportfiles($uuid)
@@ -124,6 +125,7 @@ class ReportController extends Controller
             ->with('reportfiles', $reportfiles)
             ;
     }
+
     /**
      * Display the specified resource.
      *

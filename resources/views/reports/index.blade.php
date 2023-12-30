@@ -160,10 +160,6 @@
                                                     <span class="badge bg-success">@{{ record.reportfiles.length }}</span>
                                                     <i class="fas fa-paperclip"></i> Fichiers
                                                 </a>
-                                                <a class="btn btn-app btn-sm" data-toggle="collapse" :href="'#more-infos-2-' + record.id" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                                    <span class="badge bg-success">@{{ record.dynamicattributes.length }}</span>
-                                                    <i class="fas fa-table"></i> Champs
-                                                </a>
                                             </p>
 
                                             <div class="collapse" :id="'more-infos-1-' + record.id">
@@ -182,19 +178,8 @@
                                             </div>
                                             <div class="collapse" :id="'more-infos-2-' + record.id">
                                                 <div class="card card-body">
-                                                    <h6><a :href="record.attributes_url" class="tw-inline-block tw-text-gray-500">Champ(s) du Rapport
-                                                        </a>
-                                                    </h6>
 
-                                                    <ol class="list-group list-group">
-                                                        <li class="list-group-item d-flex justify-content-between align-items-start" v-for="attribute in record.dynamicattributes" :key="attribute.uuid">
-
-                                                            <div class="ms-2 me-auto">
-                                                                <div class="fw-bold tw-font-thin tw-text-xs tw-mb-2"><span class="tw-font-bold tw-text-xs tw-mb-2">@{{ attribute.name }}</span> @{{ attribute.dynamicattributetype.name }} </div>
-                                                            </div>
-
-                                                        </li>
-                                                    </ol>
+                                                   Attributes
 
                                                 </div>
                                             </div>

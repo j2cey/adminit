@@ -49,7 +49,7 @@
 
 
 ### Format Rule
-[] - Remplacer when_rule_result_is par un ENUM RuleResultEnum => followed, broken
+[x] - Remplacer when_rule_result_is par un ENUM RuleResultEnum => followed, broken
 
 ### selectedretrieveactions
 [] -> implémenter le polymorphic relationships

@@ -58,49 +58,6 @@
             </div>
             <!-- /.card-body -->        </div>
 
-        <div :id="'reportwrapper_' + report.uuid">
-            <div class="card">
-                <header>
-                    <div class="card-header-title row">
-                        <div class="col-md-6 col-sm-8 col-12">
-                            <span class="text-purple text-xs" @click="collapseClicked(collapse_icon)" data-toggle="collapse" :data-parent="'#reportwrapper_' + report.uuid" :href="'#collapse-reports-'+index">
-                                Champs du Rapport
-                            </span>
-                        </div>
-                        <div class="col-md-6 col-sm-4 col-12 text-right">
-                            <span class="text text-sm">
-                                <span v-if="report.dynamicattributes.length > 0" class="badge badge-success">
-                                    {{ report.dynamicattributes.length }}
-                                </span>
-                                <span v-else class="badge badge-danger">
-                                    {{ report.dynamicattributes.length }}
-                                </span>
-                                <a type="button" class="btn btn-tool" @click="collapseClicked(collapse_icon)" data-toggle="collapse" :data-parent="'#reportwrapper_' + report.uuid" :href="'#collapse-reports-'+index">
-                                    <i :class="currentCollapseIcon"></i>
-                                </a>
-                            </span>
-                        </div>
-                    </div>
-                    <!-- /.user-block -->
-                </header>
-                <!-- /.card-header -->
-                <div :id="'collapse-reports-'+index" class="card-content panel-collapse collapse in">
-
-                    <div class="row">
-
-                        <div class="col-md-12 col-sm-6 col-12">
-
-                            <ReportAttributes :report_prop="report" :reportattributes_prop="report.dynamicattributes"></ReportAttributes>
-
-                        </div>
-                        <!-- /.col -->
-                    </div>
-
-                </div>
-                <!-- /.card-body -->
-            </div>
-        </div>
-
         <div :id="'reportfile_' + report.uuid">
             <div class="card">
                 <header>
@@ -150,7 +107,6 @@
 </template>
 
 <script>
-    import ReportAttributes from "../reportattributes/list";
     import AddUpdateReport from "./addupdate";
     import ReportFiles from "../reportfiles/list";
 
@@ -164,7 +120,6 @@
         },
         components: {
             AddUpdateReport,
-            ReportAttributes,
             ReportFiles,
             FileHeader: () => import('../fileheaders/item'),
         },

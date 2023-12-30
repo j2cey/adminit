@@ -8,11 +8,9 @@
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _reportattributes_list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../reportattributes/list */ "./resources/js/views/reportattributes/list.vue");
-/* harmony import */ var _addupdate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./addupdate */ "./resources/js/views/reports/addupdate.vue");
-/* harmony import */ var _reportfiles_list__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../reportfiles/list */ "./resources/js/views/reportfiles/list.vue");
-/* harmony import */ var _reportBus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./reportBus */ "./resources/js/views/reports/reportBus.js");
-
+/* harmony import */ var _addupdate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./addupdate */ "./resources/js/views/reports/addupdate.vue");
+/* harmony import */ var _reportfiles_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../reportfiles/list */ "./resources/js/views/reportfiles/list.vue");
+/* harmony import */ var _reportBus__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./reportBus */ "./resources/js/views/reports/reportBus.js");
 
 
 
@@ -23,16 +21,15 @@ __webpack_require__.r(__webpack_exports__);
     index_prop: {}
   },
   components: {
-    AddUpdateReport: _addupdate__WEBPACK_IMPORTED_MODULE_1__["default"],
-    ReportAttributes: _reportattributes_list__WEBPACK_IMPORTED_MODULE_0__["default"],
-    ReportFiles: _reportfiles_list__WEBPACK_IMPORTED_MODULE_2__["default"],
+    AddUpdateReport: _addupdate__WEBPACK_IMPORTED_MODULE_0__["default"],
+    ReportFiles: _reportfiles_list__WEBPACK_IMPORTED_MODULE_1__["default"],
     FileHeader: function FileHeader() {
       return __webpack_require__.e(/*! import() */ "resources_js_views_fileheaders_item_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../fileheaders/item */ "./resources/js/views/fileheaders/item.vue"));
     }
   },
   mounted: function mounted() {
     var _this = this;
-    _reportBus__WEBPACK_IMPORTED_MODULE_3__["default"].$on('report_updated', function (updreport) {
+    _reportBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('report_updated', function (updreport) {
       if (_this.report.id === updreport.id) {
         _this.report = updreport;
         window.noty({
@@ -53,7 +50,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     editReport: function editReport(report) {
-      _reportBus__WEBPACK_IMPORTED_MODULE_3__["default"].$emit('edit_report', {
+      _reportBus__WEBPACK_IMPORTED_MODULE_2__["default"].$emit('edit_report', {
         report: report
       });
     },
@@ -78,7 +75,7 @@ __webpack_require__.r(__webpack_exports__);
               icon: 'success',
               timer: 3000
             }).then(function () {
-              _reportBus__WEBPACK_IMPORTED_MODULE_3__["default"].$emit('reportaction_deleted', {
+              _reportBus__WEBPACK_IMPORTED_MODULE_2__["default"].$emit('reportaction_deleted', {
                 key: key,
                 resp: resp
               });
@@ -230,65 +227,6 @@ var render = function render() {
       fileheader_prop: _vm.report.fileheader
     }
   })], 1)], 1)], 1)]), _vm._v(" "), _c("div", {
-    attrs: {
-      id: "reportwrapper_" + _vm.report.uuid
-    }
-  }, [_c("div", {
-    staticClass: "card"
-  }, [_c("header", [_c("div", {
-    staticClass: "card-header-title row"
-  }, [_c("div", {
-    staticClass: "col-md-6 col-sm-8 col-12"
-  }, [_c("span", {
-    staticClass: "text-purple text-xs",
-    attrs: {
-      "data-toggle": "collapse",
-      "data-parent": "#reportwrapper_" + _vm.report.uuid,
-      href: "#collapse-reports-" + _vm.index
-    },
-    on: {
-      click: function click($event) {
-        return _vm.collapseClicked(_vm.collapse_icon);
-      }
-    }
-  }, [_vm._v("\n                            Champs du Rapport\n                        ")])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6 col-sm-4 col-12 text-right"
-  }, [_c("span", {
-    staticClass: "text text-sm"
-  }, [_vm.report.dynamicattributes.length > 0 ? _c("span", {
-    staticClass: "badge badge-success"
-  }, [_vm._v("\n                                " + _vm._s(_vm.report.dynamicattributes.length) + "\n                            ")]) : _c("span", {
-    staticClass: "badge badge-danger"
-  }, [_vm._v("\n                                " + _vm._s(_vm.report.dynamicattributes.length) + "\n                            ")]), _vm._v(" "), _c("a", {
-    staticClass: "btn btn-tool",
-    attrs: {
-      type: "button",
-      "data-toggle": "collapse",
-      "data-parent": "#reportwrapper_" + _vm.report.uuid,
-      href: "#collapse-reports-" + _vm.index
-    },
-    on: {
-      click: function click($event) {
-        return _vm.collapseClicked(_vm.collapse_icon);
-      }
-    }
-  }, [_c("i", {
-    "class": _vm.currentCollapseIcon
-  })])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "card-content panel-collapse collapse in",
-    attrs: {
-      id: "collapse-reports-" + _vm.index
-    }
-  }, [_c("div", {
-    staticClass: "row"
-  }, [_c("div", {
-    staticClass: "col-md-12 col-sm-6 col-12"
-  }, [_c("ReportAttributes", {
-    attrs: {
-      report_prop: _vm.report,
-      reportattributes_prop: _vm.report.dynamicattributes
-    }
-  })], 1)])])])]), _vm._v(" "), _c("div", {
     attrs: {
       id: "reportfile_" + _vm.report.uuid
     }
