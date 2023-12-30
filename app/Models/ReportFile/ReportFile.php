@@ -4,6 +4,7 @@ namespace App\Models\ReportFile;
 
 use App\Models\Status;
 use App\Models\BaseModel;
+use App\Enums\ValueTypeEnum;
 use Illuminate\Support\Carbon;
 use App\Models\Reports\Report;
 use App\Models\Access\AccessAccount;
@@ -14,9 +15,12 @@ use App\Models\OsAndServer\ReportServer;
 use App\Traits\RowConfig\HasLastRowConfig;
 use App\Contracts\RowConfig\IHasLastRowConfig;
 use App\Traits\ReportTreatment\HasMainTreatments;
+use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Contracts\ReportTreatment\IHasMainTreatments;
 use App\Models\RetrieveAction\SelectedRetrieveAction;
+use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
 use App\Traits\SelectedRetrieveAction\HasSelectedRetrieveActions;
 use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
 
@@ -47,6 +51,8 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * @property string|null $attributes_list
+ *
  * @property Report $report
  * @property ReportFileType $reportfiletype
  * @property string $extension
@@ -60,9 +66,9 @@ use App\Contracts\SelectedRetrieveAction\IHasSelectedRetrieveActions;
  * @method static ReportFile first()
  * @method static self create(array $array)
  */
-class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveActions, IHasMainTreatments, IHasLastRowConfig
+class ReportFile extends BaseModel implements Auditable, IHasDynamicAttributes, IHasSelectedRetrieveActions, IHasMainTreatments, IHasLastRowConfig
 {
-    use HasFactory, HasSelectedRetrieveActions, HasMainTreatments, HasLastRowConfig, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasDynamicAttributes, HasSelectedRetrieveActions, HasMainTreatments, HasLastRowConfig, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -293,6 +299,43 @@ class ReportFile extends BaseModel implements Auditable, IHasSelectedRetrieveAct
             $reportserver,
             $accessprotocole
         );
+    }
+
+    /**
+     * Rajoute un attribut à la liste JSON
+     * @param DynamicAttribute $dynamicattribute
+     * @return void
+     */
+    public function setAddAttributeToList(DynamicAttribute $dynamicattribute) {
+        $attributes_list =  (array) json_decode( $this->attributes_list );
+        $new_attribute = [
+            'field' => $dynamicattribute->name,
+            'key' => $dynamicattribute->name,
+            'label' => $dynamicattribute->name,
+            'numeric' => ($dynamicattribute->dynamicattributetype->code === ValueTypeEnum::INT->value),
+            'searchable' => (bool)$dynamicattribute->searchable,
+            'sortable' => (bool)$dynamicattribute->sortable,
+            'date' => (bool)($dynamicattribute->dynamicattributetype->code === ValueTypeEnum::DATETIME->value),
+        ];
+        $attributes_list[] = $new_attribute;
+
+        $this->attributes_list = json_encode( $attributes_list );
+
+        $this->save();
+    }
+
+    /**
+     * Reset puis refait la liste JSON des attributs
+     * @return void
+     */
+    public function setAttributesList() {
+        $this->attributes_list = "[]";
+        $this->save();
+
+        $dynamicattributes_ordered = $this->dynamicattributesOrdered;
+        foreach ($dynamicattributes_ordered as $dynamicattribute) {
+            $this->setAddAttributeToList($dynamicattribute);
+        }
     }
 
     private function setDefaultSelectedRetrieveActions() {

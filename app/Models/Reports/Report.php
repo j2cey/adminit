@@ -35,16 +35,15 @@ use App\Traits\ReportTreatment\Workflow\HasTreatmentWorkflow;
  * @property string $state
  *
  * @property string|null $description
- * @property string|null $attributes_list
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * @method static Report create(string[] $array)
  */
-class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHasFileHeader
+class Report extends BaseModel implements Auditable, IHasFileHeader
 {
-    use HasDynamicAttributes, HasFileHeader, HasTreatmentWorkflow, HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFileHeader, HasTreatmentWorkflow, HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $with = ['reporttype'];
@@ -184,43 +183,6 @@ class Report extends BaseModel implements Auditable, IHasDynamicAttributes, IHas
             $remotedir_absolute_path,
             $use_file_extension
         );
-    }
-
-    /**
-     * Rajoute un attribut à la liste JSON
-     * @param DynamicAttribute $dynamicattribute
-     * @return void
-     */
-    public function setAddAttributeToList(DynamicAttribute $dynamicattribute) {
-        $attributes_list =  (array) json_decode( $this->attributes_list );
-        $new_attribute = [
-            'field' => $dynamicattribute->name,
-            'key' => $dynamicattribute->name,
-            'label' => $dynamicattribute->name,
-            'numeric' => ($dynamicattribute->dynamicattributetype->code === ValueTypeEnum::INT->value),
-            'searchable' => (bool)$dynamicattribute->searchable,
-            'sortable' => (bool)$dynamicattribute->sortable,
-            'date' => (bool)($dynamicattribute->dynamicattributetype->code === ValueTypeEnum::DATETIME->value),
-        ];
-        $attributes_list[] = $new_attribute;
-
-        $this->attributes_list = json_encode( $attributes_list );
-
-        $this->save();
-    }
-
-    /**
-     * Reset puis refait la liste JSON des attributs
-     * @return void
-     */
-    public function setAttributesList() {
-        $this->attributes_list = "[]";
-        $this->save();
-
-        $dynamicattributes_ordered = $this->dynamicattributesOrdered;
-        foreach ($dynamicattributes_ordered as $dynamicattribute) {
-            $this->setAddAttributeToList($dynamicattribute);
-        }
     }
 
     public function exec() {

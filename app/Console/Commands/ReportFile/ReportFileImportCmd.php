@@ -42,6 +42,7 @@ class ReportFileImportCmd extends Command
      */
     public function handle()
     {
+        \Log::warning("ReportFileImportCmd handled...");
         $this->info("Report File Import running...");
         $treatmentId = (int) $this->argument('treatmentId');
         $launched_execs = 0;
@@ -63,6 +64,7 @@ class ReportFileImportCmd extends Command
 
         $this->info("Done. " . $launched_execs . " File(s) imported");
 
+        \Log::info("ReportFileImportCmd handle done !!!");
         return 0;
     }
 

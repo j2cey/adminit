@@ -100,22 +100,26 @@ class AnalysisRuleThreshold extends BaseModel implements IInnerAnalysisRule
     private function syncInnerThreshold(ThresholdType $thresholdtype, Model|IInnerThreshold $innerthreshold = null, array $attributes = []) : IInnerThreshold {
 
         if ( is_null($innerthreshold) ) {
+            \Log::info("syncInnerThreshold for " . $this->id . ". innerthreshold is null");
             // WARNING ! Make sure the association (via 'save' here) really happens
             $innerthreshold = $this->createInnerThreshold($thresholdtype, $attributes);
             $this->innerthreshold()->associate($innerthreshold);
         } else {
             if ($this->thresholdtype->id !== $thresholdtype->id) {
+                \Log::info("syncInnerThreshold for " . $this->id . ". innerthreshold NOT null with new type");
                 // remove the old innerthreshold
                 $this->removeInnerThreshold();
 
                 // and we have to create a new one from new type
                 $innerthreshold = $this->createInnerThreshold($thresholdtype, $attributes);
+                $innerthreshold->updateOne($attributes);
 
                 $innerthreshold->attachUpperThreshold($this);
                 $this->thresholdtype()->associate($thresholdtype);
 
                 $this->save();
             } else {
+                \Log::info("syncInnerThreshold for " . $this->id . ". innerthreshold NOT null with OLD type");
                 $this->innerthreshold->updateOne($attributes);
             }
         }
@@ -129,6 +133,8 @@ class AnalysisRuleThreshold extends BaseModel implements IInnerAnalysisRule
     }
 
     public static function createNew(): AnalysisRuleThreshold {
+
+        \Log::info("AnalysisRuleThreshold createNew ");
 
         $default_treshold_type = ThresholdType::getDefault();
         $innerthreshold = self::createInnerThreshold($default_treshold_type);
@@ -145,12 +151,16 @@ class AnalysisRuleThreshold extends BaseModel implements IInnerAnalysisRule
     {
         if ( ! empty($attributes) ) {
 
+            \Log::info("AnalysisRuleThreshold updateOne " . $this->id);
             $this->threshold = array_key_exists("threshold", $attributes) ? $attributes['threshold'] : $this->threshold;
             $this->comment = array_key_exists("comment", $attributes) ? $attributes['comment'] : $this->comment;
 
             $thresholdtype = $this->getTresholdTypeFromAttributes($attributes);
             if ($thresholdtype) {
+                \Log::info("has thresholdtype " . $this->id);
                 $this->syncInnerThreshold($thresholdtype, $this->innerthreshold, $attributes);
+            } else {
+                \Log::info("NO thresholdtype " . $this->id);
             }
 
             $this->save();

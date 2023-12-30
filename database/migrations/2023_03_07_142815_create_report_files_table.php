@@ -32,6 +32,8 @@ class CreateReportFilesTable extends Migration
             $table->string('use_file_extension')->default(true)->comment("détermine si l extension du fichier doit être utilisé");
             $table->string('has_headers')->default(true)->comment("détermine si le fichier a les en-têtes en première ligne");
 
+            $table->json('attributes_list')->nullable()->comment('all report dynamicattributes');
+
             $table->string('description', 500)->nullable()->comment("description du fichier");
 
             $table->foreignId('report_file_type_id')->nullable()

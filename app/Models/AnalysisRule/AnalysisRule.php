@@ -31,7 +31,7 @@ use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
  * @property integer|null $status_id
  *
  * @property string $title
- * @property string $rule_result_for_notification
+ * @property string|RuleResultEnum $rule_result_for_notification
  * @property integer $num_ord
  * @property string $description
  *
@@ -223,13 +223,15 @@ class AnalysisRule extends BaseModel implements Auditable, IHasFormatRules
 
     /**
      * @param DynamicValue $dynamicvalue
+     * @param IHasMatchedAnalysisRules $ihasmatchedanalysisrules
      * @return array|Collection|FormatRule[]
      */
     public function getFormatRulesForNotification(DynamicValue $dynamicvalue, IHasMatchedAnalysisRules $ihasmatchedanalysisrules) {
         $formatrules = new \Illuminate\Database\Eloquent\Collection;
         $ruleresult = $this->applyRule($dynamicvalue);
 
-        if ( $ruleresult == $this->rule_result_for_notification ) {
+        if ( $ruleresult === $this->rule_result_for_notification ) {
+
             if ( ! empty($this->formatrules) ) {
                 foreach ($this->formatrules as $formatrule) {
                     if ( $formatrule->rule_result == $ruleresult ||  $formatrule->rule_result == RuleResultEnum::ALLWAYS ) {

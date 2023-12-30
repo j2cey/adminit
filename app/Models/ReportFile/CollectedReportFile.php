@@ -241,7 +241,7 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
 
     public function getHeaders(): array {
         $headers = [];
-        foreach ($this->reportfile->report->dynamicattributes as $dynamicAttribute) {
+        foreach ($this->reportfile->dynamicattributes as $dynamicAttribute) {
             if ($dynamicAttribute->can_be_notified) {
                 $headers[] = $dynamicAttribute->title;
             }

@@ -71,6 +71,9 @@ class ThresholdMax extends BaseModel implements IInnerThreshold
             if (array_key_exists("threshold", $attributes)) {
                 $data['threshold'] = $attributes['threshold'];
             }
+            if (array_key_exists("comment", $attributes)) {
+                $data['comment'] = $attributes['comment'];
+            }
             return ThresholdMax::create($data);
         }
     }

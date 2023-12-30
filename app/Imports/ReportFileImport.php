@@ -78,7 +78,7 @@ class ReportFileImport implements WithChunkReading, WithEvents, WithValidation, 
         }
 
         //\Log::info("ReportFileImport rowIndex: " . $rowIndex);
-        $newrow = $collectedreportfile->addRow($treatment->service->getReportfile()->report, $row);
+        $newrow = $collectedreportfile->addRow($treatment->service->getReportfile(), $row);
 
         if ( $rowIndex >= $this->_totalrows ) {
             //$treatment_payloads = ['collectedReportFileId' => $collectedreportfile->id, 'importTreatmentId' => $this->_treatment_id];
