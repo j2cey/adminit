@@ -63,6 +63,7 @@ trait HasTreatmentWorkflow
 
         $treatmentworkflow->addStepAsFirst(TreatmentCodeEnum::DOWNLOADFILE, CriticalityLevelEnum::HIGH)
             ->addStepAsNext(TreatmentCodeEnum::IMPORTFILE, CriticalityLevelEnum::HIGH)
+            ->addStepAsNext(TreatmentCodeEnum::FORMATFILE, CriticalityLevelEnum::HIGH)
             ->addStepAsNext(TreatmentCodeEnum::MERGEFILE, CriticalityLevelEnum::HIGH)
         //    ->addStepAsNext(TreatmentCodeEnum::NOTIFYFILE, CriticalityLevelEnum::HIGH)
         ;

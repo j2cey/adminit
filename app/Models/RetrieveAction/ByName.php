@@ -80,6 +80,7 @@ class ByName implements IRetrieveAction
                 //crée un nouveau fichier collecté (CollectedReportFile)
                 $collectedreportfile = CollectedReportFile::createNew($file, $file->fileRemotePath, $file->localName, $disk->size($remote_file_name));
                 //$operation->getMainTreatment()->setCollectedReportFile($collectedreportfile);
+                $treatment->setCollectedReportFile($collectedreportfile);
                 $treatment->getMainTreatment()->setCollectedReportFile($collectedreportfile);
 
                 return $innertreatment->succeed("Download success ! " . "New file collected save as: " . $collectedreportfile->local_file_name);

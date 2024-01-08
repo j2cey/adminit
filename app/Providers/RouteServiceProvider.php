@@ -62,7 +62,7 @@ class RouteServiceProvider extends ServiceProvider
                     /* RetrieveAction routes */
                     require base_path('routes/retrieveaction.php');
                     /* ReportTreatment routes */
-                    require base_path('routes/reporttreatment.php');
+                    require base_path('routes/treatments.php');
                 });
         });
     }

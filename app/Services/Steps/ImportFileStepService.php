@@ -40,8 +40,8 @@ class ImportFileStepService implements ITreatmentStepService
         $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::IMPORTFILE->toArray()['name'], null);
         $this->stage->setFunction("prepareImport", CriticalityLevelEnum::HIGH, false, false, "Prepare File importation");
 
-        $this->stage
-            ->addNextStageOnSuccess("Launch Import Execution", "launchImportExec", CriticalityLevelEnum::HIGH, true, true,"Launch Import Execution");
+        /*$this->stage
+            ->addNextStageOnSuccess("Launch Import Execution", "launchImportExec", CriticalityLevelEnum::HIGH, true, true,"Launch Import Execution");*/
     }
 
     public static function getQueueCode(): QueueEnum

@@ -47,6 +47,7 @@ class CreateFormattingResultsTable extends Migration
             $table->string('duration_hhmmss')->nullable()->comment('formatting duration in hh:mm:ss format');
 
             $table->string('last_failed_message')->nullable()->comment('last failed message');
+            $table->boolean('merging_ready')->default(false)->comment("determine if merging ready");
 
             $table->string('formattable_type')->nullable()->comment('referenced formatted object model (class name)');
             $table->bigInteger('formattable_id')->nullable()->comment('referenced formatted object model id (object id)');

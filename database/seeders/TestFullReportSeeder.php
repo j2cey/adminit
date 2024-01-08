@@ -18,7 +18,6 @@ use App\Models\FormatRule\FormatTextWeight;
 use App\Models\RetrieveAction\RetrieveAction;
 use App\Models\AnalysisRule\AnalysisRuleType;
 use App\Models\ReportFile\ReportFileReceiver;
-use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\AnalysisRuleThreshold\ThresholdType;
 use App\Models\DynamicAttributes\DynamicAttributeType;
 

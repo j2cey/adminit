@@ -29,8 +29,9 @@ class Treatment extends SettingNode
 
         $max_running = $this->addChild("max_running", null, null, "Nombre Max d execution autorise par code de traitement.");
         $max_running->addChild("downloadfile", "10", "integer", "nombre max d executions pour downloadfile.");
-        $max_running->addChild("importfile_doimport", "1", "integer", "nombre max d executions pour importfile_doimport.");
-        $max_running->addChild("mergefile_exec", "10", "integer", "nombre max d executions pour mergefile.");
+        $max_running->addChild("importfile", "1", "integer", "nombre max d executions pour importfile.");
+        $max_running->addChild("formatfile", "1", "integer", "nombre max d executions pour formatfile.");
+        $max_running->addChild("mergefile", "10", "integer", "nombre max d executions pour mergefile.");
         $max_running->addChild("notifyfile", "10", "integer", "nombre max d executions pour notifyfile.");
     }
 }

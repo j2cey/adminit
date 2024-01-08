@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands\ReportFile;
 
+use App\Enums\Settings;
 use Illuminate\Console\Command;
-use App\Models\ReportFile\ReportFile;
+use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
-use App\Models\Treatments\ReportTreatmentStepResult;
+use App\Enums\Treatments\TreatmentStateEnum;
 
 class ReportFileFormatCmd extends Command
 {
@@ -14,7 +15,7 @@ class ReportFileFormatCmd extends Command
      *
      * @var string
      */
-    protected $signature = 'reportfile:format';
+    protected $signature = 'reportfile:format {treatmentId=""}';
 
     /**
      * The console command description.
@@ -40,30 +41,69 @@ class ReportFileFormatCmd extends Command
      */
     public function handle()
     {
-        $this->info("Formattage Fichiers Rapport en cours de traitement...");
-
-        $reportfiles = ReportFile::getActives();
+        $this->info("Report File Format running...");
+        $treatmentId = (int) $this->argument('treatmentId');
         $launched_execs = 0;
 
-        foreach ($reportfiles as $reportfile) {
-            if ( $reportfile->reportTreatmentResultsWaiting()->count() > 0 ) {
-                $treatmentresults = $reportfile->reportTreatmentResultsWaiting;
-
-                foreach ($treatmentresults as $treatmentresult) {
-                    if ( $treatmentresult->currentstep->code == TreatmentCodeEnum::IMPORTFILE && $treatmentresult->currentstep->isSuccess ) {
-                        $launched_execs += 1;
-                        //$treatmentresult->goToNextStep();
-                        $reportfile->formatLastCollectedFile($treatmentresult, false);
-                        break;
-                    }
-                }
-                if ($launched_execs > 0) {
-                    break;
-                }
+        if ( empty($treatmentId) ) {
+            // Launch all
+            $this->warn("Launch all, treatmentId: " . $treatmentId);
+            $treatment_to_merge = $this->treatmentToFormatGet();
+            if ( ! is_null($treatment_to_merge) ) {
+                $launched_execs+= $this->doFormatFile($treatment_to_merge);
+                $treatment_to_merge->unpick();
             }
+        } else {
+            // Launch one
+            $this->warn("Launch one, treatmentId: " . $treatmentId);
+            $treatment = Treatment::getById($treatmentId);
+            $launched_execs+= $this->doFormatFile($treatment);
         }
 
-        $this->info("Traitement termine. " . $launched_execs . " Fichier(s) lancés");
+        $this->info("Done. " . $launched_execs . " File(s) imported");
+
+        return 0;
+    }
+
+    /**
+     * @return Treatment|null
+     */
+    private function treatmentToFormatGet(): ?Treatment
+    {
+        $treatment_code_value = TreatmentCodeEnum::FORMATFILE->value;
+        $max_running = Settings::Treatment()->max_running()->$treatment_code_value()->get();
+
+        $waiting_treatment = Treatment::notstartedOrWaitingGetFirst( TreatmentCodeEnum::FORMATFILE, $max_running );
+        if ( empty($waiting_treatment) ) {
+            $this->error("No Waiting Treatments !");
+            return null;
+        }
+
+        $waiting_treatment->refresh();
+        if ( $waiting_treatment->isNotStarted || $waiting_treatment->isWaiting ) {
+            return $waiting_treatment;
+        }
+        $this->error("Treatment NO MORE Waiting or No more NOT Started !");
+        return null;
+    }
+
+    private function doFormatFile(Treatment $treatment): int
+    {
+        $delay = rand(100000,300000);
+        usleep($delay);
+
+        if ( $treatment->canBeExecuted ) {
+            $treatment->setState(TreatmentStateEnum::PICKING);
+            //\Log::info("Merge File From CMD for treatment: " . $treatment->name . " ( " . $treatment->id . " )");
+            if ( is_null($treatment->service) ) {
+                $delay = rand(100000,300000);
+                usleep($delay);
+                $treatment->rewindToPreviousState();
+            } else {
+                $treatment->service->exec();
+            }
+            return 1;
+        }
 
         return 0;
     }

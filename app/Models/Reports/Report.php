@@ -4,7 +4,6 @@ namespace App\Models\Reports;
 
 use App\Models\Status;
 use App\Models\BaseModel;
-use App\Enums\ValueTypeEnum;
 use Illuminate\Support\Carbon;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Database\Eloquent\Model;
@@ -13,10 +12,7 @@ use App\Traits\FileHeader\HasFileHeader;
 use App\Models\ReportFile\ReportFileType;
 use App\Enums\Treatments\TreatmentStateEnum;
 use App\Contracts\FileHeader\IHasFileHeader;
-use App\Models\DynamicAttributes\DynamicAttribute;
-use App\Traits\DynamicAttribute\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Contracts\DynamicAttribute\IHasDynamicAttributes;
 use App\Traits\ReportTreatment\Workflow\HasTreatmentWorkflow;
 
 /**

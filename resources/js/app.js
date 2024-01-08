@@ -47,7 +47,7 @@ import moment from 'moment'
 
 Vue.filter('formatDate', function(value) {
     if (value) {
-        return moment(String(value)).format('DD/MM/YY HH:mm')
+        return moment(String(value)).format('DD/MM/YY HH:mm:ss')
     }
 })
 
@@ -164,8 +164,10 @@ Vue.component('reportattribute-index', require('./views/modelattributes/list').d
 Vue.component('collectedreportfile-item', require('./views/collectedreportfiles/item').default);
 Vue.component('dynamicattribute-item', require('./views/dynamicattributes/item').default);
 
-Vue.component('reporttreatment-list', require('./views/reporttreatments/list').default);
-Vue.component('reporttreatment-item', require('./views/reporttreatments/item').default);
+Vue.component('treatment-index', require('./views/treatments/index').default);
+Vue.component('treatment-item', require('./views/treatments/item').default);
+Vue.component('treatment-details', require('./views/treatments/details').default);
+
 Vue.component('reporttreatmentstep-item', require('./views/reporttreatmentsteps/item').default);
 Vue.component('treatmentoperation-item', require('./views/treatmentoperations/item').default);
 

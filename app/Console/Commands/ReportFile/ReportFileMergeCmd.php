@@ -4,7 +4,6 @@ namespace App\Console\Commands\ReportFile;
 
 use App\Enums\Settings;
 use Illuminate\Console\Command;
-use App\Imports\ReportFileImport;
 use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Enums\Treatments\TreatmentStateEnum;
@@ -71,10 +70,10 @@ class ReportFileMergeCmd extends Command
      */
     private function treatmentToMergeGet(): ?Treatment
     {
-        $treatment_code_value = TreatmentCodeEnum::MERGEFILE_EXEC->value;
+        $treatment_code_value = TreatmentCodeEnum::MERGEFILE->value;
         $max_running = Settings::Treatment()->max_running()->$treatment_code_value()->get();
 
-        $waiting_treatment = Treatment::notstartedOrWaitingGetFirst( TreatmentCodeEnum::MERGEFILE_EXEC, $max_running );
+        $waiting_treatment = Treatment::notstartedOrWaitingGetFirst( TreatmentCodeEnum::MERGEFILE, $max_running );
         if ( empty($waiting_treatment) ) {
             $this->error("No Waiting Treatments !");
             return null;

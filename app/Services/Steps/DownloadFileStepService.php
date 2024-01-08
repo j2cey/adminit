@@ -47,7 +47,8 @@ class DownloadFileStepService implements ITreatmentStepService
 
         $this->stage
             ->addNextStageOnSuccess("Get Retrieve Mode", "getRetrieveMode", CriticalityLevelEnum::HIGH, false, false,"Get the relevant s retrieve (download) mode")
-            ->addNextStageOnSuccess("Download file and save new CollectedFile", "downloadFile", CriticalityLevelEnum::HIGH, true,  true, "Download file")
+            ->addNextStageOnSuccess("Download file and save new CollectedFile", "downloadFile", CriticalityLevelEnum::HIGH, false,  false, "Download file")
+            ->addNextStageOnSuccess("Launch Import File Step", "launchImportFileStep", CriticalityLevelEnum::HIGH, false,  false, "launch Import File Step")
             ->addNextStageOnSuccess("Get After Download Action Mode", "getAfterDownloadActionMode", CriticalityLevelEnum::HIGH, false, false, "Get After Download ation Mode")
             ->addNextStageOnSuccess("Perform action after download", "performActionAfterDownloadFile", CriticalityLevelEnum::LOW, true, true, "Perform Action after Download file");
     }
@@ -128,6 +129,11 @@ class DownloadFileStepService implements ITreatmentStepService
             return 1;
         }
         return -1;
+    }
+    public function launchImportFileStep(CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment): int {
+        $treatment_payloads = ['collectedReportFileId' => $this->treatment->collectedreportfile];
+        $this->treatment->launchUpperStep(TreatmentCodeEnum::IMPORTFILE, $treatment_payloads, false, null);
+        return 1;
     }
 
     public function getAfterDownloadActionMode(CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment): int

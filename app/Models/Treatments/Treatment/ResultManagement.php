@@ -2,15 +2,42 @@
 
 namespace App\Models\Treatments\Treatment;
 
+use Illuminate\Database\Query\Builder;
 use App\Models\Treatments\TreatmentResult;
+use App\Enums\Treatments\TreatmentResultEnum;
 
 /**
  * @property boolean $isSuccess
  * @property boolean $isFailed
  *
+ * @method static Builder success()
+ * @method static Builder notFailed()
+ * @method static Builder failed()
  */
 trait ResultManagement
 {
+    #region scopes
+
+    public function scopeSuccess($query){
+        return $query->whereHas('treatmentresult', function($q){
+            $q->where('result', TreatmentResultEnum::SUCCESS->value);
+        });
+    }
+
+    public function scopeNotFailed($query) {
+        return $query->whereHas('treatmentresult', function($q){
+            $q->whereNotIn('result', [TreatmentResultEnum::FAILED->value]);
+        });
+    }
+
+    public function scopeFailed($query) {
+        return $query->whereHas('treatmentresult', function($q){
+            $q->where('result', TreatmentResultEnum::FAILED->value);
+        });
+    }
+
+    #endregion
+
     public function getIsSuccessAttribute() {
         return  $this->treatmentresult->isSuccess;
     }

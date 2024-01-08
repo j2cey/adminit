@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 /**
  * @property bool $isFormatted
  * @property bool $isFormattingDone
+ * @property bool $isMergingReady
  * @property FormattingResult $formattingresult
  *
  * @method static Builder formatted()
@@ -33,6 +34,10 @@ trait IsFormattable
 
     public function getIsFormattingDoneAttribute() {
         return ($this->formattingresult && $this->formattingresult->formatting_done);
+    }
+
+    public function getIsMergingReadyAttribute() {
+        return ($this->formattingresult && $this->formattingresult->merging_ready);
     }
 
     #endregion
@@ -82,6 +87,9 @@ trait IsFormattable
         if ( ! is_null($this->formattingresult) ) {
             $this->formattingresult->allFormattingFailed($message);
         }
+    }
+    public function setMergingReady() {
+        $this->formattingresult?->setMergingReady();
     }
 
     protected function initializeIsFormattable()

@@ -9,13 +9,8 @@ use App\Enums\Attributes\ServiceClass;
 use App\Services\Steps\MergeFileStepService;
 use App\Services\Steps\ImportFileStepService;
 use App\Services\Steps\NotifyFileStepService;
+use App\Services\Steps\FormatFileStepService;
 use App\Services\Steps\DownloadFileStepService;
-use App\Services\Operations\MergeFileExecService;
-use App\Services\Operations\ImportFileExecService;
-use App\Services\Operations\NotifyFileExecService;
-use App\Services\Operations\DownloadFileExecService;
-use App\Services\Operations\ImportFileDoImportService;
-use App\Services\Operations\DownloadFileAfterExecService;
 
 enum TreatmentCodeEnum: string
 {
@@ -41,20 +36,15 @@ enum TreatmentCodeEnum: string
     #[ServiceClass(ImportFileStepService::class)]
     case IMPORTFILE = 'importfile';
 
-    #[Description('Importation Valeurs de Lignes de Fichier')]
-    case IMPORTDATA = 'importdata';
-
-    #[Description('Formattage Colonnes par ligne')]
-    case FORMATDATA = 'formatdata';
-
-    #[Description('Merge colonnes Formatées')]
-    case MERGECOLUMNS = 'mergecolumns';
+    #[Description('Format file')]
+    #[ServiceClass(FormatFileStepService::class)]
+    case FORMATFILE = 'formatfile';
 
     #[Description('Merge File Rows')]
     #[ServiceClass(MergeFileStepService::class)]
     case MERGEFILE = 'mergefile';
 
-    #[Description('Notification Fichier')]
+    #[Description('Notify file')]
     #[ServiceClass(NotifyFileStepService::class)]
     case NOTIFYFILE = 'notifyfile';
     #endregion
@@ -66,11 +56,6 @@ enum TreatmentCodeEnum: string
     #endregion
 
     #region Download File
-
-    #[Description('Execution du Téléchargement de Fichier')]
-    #[ServiceClass(DownloadFileExecService::class)]
-    case DOWNLOADFILE_EXEC = 'downloadfileexec';
-
     #[Description('Récupération du mode Action')]
     case DOWNLOADFILE_RETRIEVEMODEACTION_GET = 'downloadfileretrievemodeactionget';
 
@@ -89,23 +74,11 @@ enum TreatmentCodeEnum: string
     #[Description('Rename downloaded File')]
     case DOWNLOADFILE_RENAME = 'downloadfilerename';
 
-    #[Description('Perform processes after Download File')]
-    #[ServiceClass(DownloadFileAfterExecService::class)]
-    case DOWNLOADFILE_EXEC_AFTER = 'downloadfileexecafter';
-
     #endregion
 
     #region import file
     #[Description('Start Import')]
     case IMPORT_START = 'importstart';
-
-    #[Description('Exec Import file step')]
-    #[ServiceClass(ImportFileExecService::class)]
-    case IMPORTFILE_EXEC = 'importfileexec';
-
-    #[Description('Do Importation using Import Object')]
-    #[ServiceClass(ImportFileDoImportService::class)]
-    case IMPORTFILE_DOIMPORT = 'importfile_doimport';
 
     #[Description('Delete imported data')]
     case IMPORT_DEL = 'importdel';
@@ -137,9 +110,6 @@ enum TreatmentCodeEnum: string
     #endregion
 
     #region merge rows
-    #[Description('Exec Merge File Rows')]
-    #[ServiceClass(MergeFileExecService::class)]
-    case MERGEFILE_EXEC = 'mergefile_exec';
 
     #[Description('Exec Merge Rows')]
     case MERGEROWS_EXEC = 'mergerowsexec';
@@ -152,9 +122,6 @@ enum TreatmentCodeEnum: string
     #endregion
 
     #region
-    #[Description('Exec File Notifiation')]
-    #[ServiceClass(NotifyFileExecService::class)]
-    case NOTIFYFILE_EXEC = 'notifyfile_exec';
 
     #[Description('File Notifiation Start')]
     case NOTIFYFILE_START = 'notifyfile_start';

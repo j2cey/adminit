@@ -46,7 +46,7 @@
                             <a href="/reporttypes" class="nav-link">Type(s) de Rapport</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/reporttreatments" class="nav-link">Traitements</a>
+                            <a href="/treatments" class="nav-link">Traitements</a>
                         </li>
                         <!-- End Level two -->
                     </ul>

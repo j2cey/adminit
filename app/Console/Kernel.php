@@ -47,6 +47,7 @@ class Kernel extends ConsoleKernel
         })->everyMinute();*/
 
         $schedule->command('reportfile:import')->everyMinute();
+        $schedule->command('reportfile:format')->everyMinute();
         $schedule->command('reportfile:merge')->everyMinute();
 
         //$schedule->command('job:watch')->everyFiveMinutes();

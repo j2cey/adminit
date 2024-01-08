@@ -3,9 +3,9 @@
 use Tabuna\Breadcrumbs\Trail;
 use App\Models\Reports\Report;
 use Tabuna\Breadcrumbs\Breadcrumbs;
+use App\Models\Treatments\Treatment;
 use App\Models\ReportFile\ReportFile;
 use App\Models\ReportFile\CollectedReportFile;
-use App\Models\Treatments\ReportTreatment;
 use App\Models\DynamicAttributes\DynamicAttribute;
 use App\Models\Treatments\TreatmentOperation;
 use App\Models\Treatments\ReportTreatmentStep;
@@ -69,17 +69,17 @@ Breadcrumbs::for('collectedreportfiles.show', function (Trail $trail, CollectedR
 
 #region ReportTreatments
 // ReportTreatmentResults
-Breadcrumbs::for('reporttreatments.index', function (Trail $trail) {
-    $trail->parent('home')->push('Traitements Rapports', route('reporttreatments.index'));
+Breadcrumbs::for('treatments.index', function (Trail $trail) {
+    $trail->parent('home')->push('Traitements Rapports', route('treatments.index'));
 });
 // ReportTreatments.show
-Breadcrumbs::for('reporttreatments.show', function (Trail $trail, ReportTreatment $reporttreatment) {
-    $trail->parent('reporttreatments.index')
-        ->push($reporttreatment->name, route('reporttreatments.show', $reporttreatment->uuid));
+Breadcrumbs::for('treatments.show', function (Trail $trail, Treatment $treatment) {
+    $trail->parent('treatments.index')
+        ->push($treatment->name, route('treatments.show', $treatment->uuid));
 });
 // ReportTreatmentSteps.show
 Breadcrumbs::for('reporttreatmentsteps.show', function (Trail $trail, ReportTreatmentStep $reporttreatmentstep) {
-    $trail->parent('reporttreatments.show', $reporttreatmentstep->reporttreatment)
+    $trail->parent('treatments.show', $reporttreatmentstep->reporttreatment)
         ->push($reporttreatmentstep->name, route('reporttreatmentsteps.show', $reporttreatmentstep->uuid));
 });
 // TreatmentOperations.show

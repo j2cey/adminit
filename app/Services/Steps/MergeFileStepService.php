@@ -36,8 +36,14 @@ class MergeFileStepService implements ITreatmentStepService
     }
 
     public function initStages() {
-        $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'], null);
+        /*$this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'], null);
         $this->stage->setFunction("launchMergeFileExec", CriticalityLevelEnum::HIGH, true, true, "Launch Merge File Execution");
+        */
+        $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'], null);
+        $this->stage->setFunction("tryMergeRows", CriticalityLevelEnum::HIGH, false, false, "Try merge file rows");
+
+        $this->stage
+            ->addNextStageOnSuccess("Try merge file", "tryMergeFile", CriticalityLevelEnum::HIGH, true, true,"Try merge file");
     }
 
     public static function getQueueCode(): QueueEnum
@@ -65,6 +71,7 @@ class MergeFileStepService implements ITreatmentStepService
             return $this->treatment;
         }
 
+        $this->treatment->starting();
         $this->stage->exec();
 
         return $this->treatment;
@@ -78,6 +85,35 @@ class MergeFileStepService implements ITreatmentStepService
         $import_operation->service->setCollectedReportFile($this->treatment->service->collectedreportfile);
 
         return 1;
+    }
+
+    public function tryMergeRows(CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment): int {
+        $dynamicrows = $this->treatment->service->collectedreportfile->dynamicrows;
+
+        foreach ($dynamicrows as $row_index => $dynamicrow) {
+            // get merged formatted values for each row
+            if ( $dynamicrow->isImported ) {
+                self::rowFormatAndMergeValues($this->treatment, CriticalityLevelEnum::HIGH, false, true, $dynamicrow, false);
+            }
+        }
+
+        return 1;
+    }
+
+    public function tryMergeFile(CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment): int {
+        if ( $this->treatment->service->collectedreportfile->isImported ) {
+            $import_treatment = self::getImportTreatment($this->treatment);
+
+            $format_and_merge_file = self::fileMergeRows( $this->treatment, CriticalityLevelEnum::HIGH, true, true, $this->treatment->service->collectedreportfile, false, false );
+            if ( $format_and_merge_file->isSuccess() ) {
+                $treatment_payloads = ['collectedReportFileId' => $this->treatment->service->collectedreportfile->id, 'mergeTreatmentId' => $import_treatment->id];
+                $this->treatment->launchUpperStep(TreatmentCodeEnum::NOTIFYFILE, $treatment_payloads, true, null);
+            }
+            return 1;
+        } else {
+            $this->treatment->endingWithFailure("Import NOT YET DONE");
+            return -1;
+        }
     }
     #endregion
 

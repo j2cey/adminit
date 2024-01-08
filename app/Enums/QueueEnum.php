@@ -24,23 +24,18 @@ enum QueueEnum: string
     #[Description('Traitement Principal')]
     case MAIN = 'main';
 
+
     #[Description('Telechargement Fichiers')]
     case DOWNLOADFILE = 'downloadfile';
 
     #[Description('Importation Lignes Fichier')]
     case IMPORTFILE = 'importfile';
 
-    #[Description('Importation Valeurs de Ligne de Fichier')]
-    case IMPORTDATA = 'importdata';
-
-    #[Description('Formattage des Valeurs de Ligne de Fichier')]
-    case FORMATDATA = 'formatdata';
+    #[Description('Formattage de Fichier')]
+    case FORMATFILE = 'formatfile';
 
     #[Description('Merge des Lignes formatees de Fichier')]
     case MERGEFILE = 'mergefile';
-
-    #[Description('Merge colonnes formatees')]
-    case MERGECOLUMNS = 'mergecolumns';
 
     #[Description('Notifie les Fichiers')]
     case NOTIFYFILE = 'notifyfile';

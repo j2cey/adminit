@@ -20,20 +20,22 @@ use App\Traits\ReportTreatment\HasDynamicValue;
 use App\Contracts\ReportTreatment\ITreatmentType;
 use App\Contracts\ReportTreatment\IHasReportFile;
 use App\Contracts\ReportTreatment\IHasDynamicRow;
-use App\Contracts\ReportTreatment\IHasDynamicValue;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Traits\ReportTreatment\HasCollectedReportFile;
 use App\Models\Treatments\Treatment\RawTreatment;
 use App\Models\Treatments\Treatment\MainTreatment;
+use App\Contracts\ReportTreatment\IHasDynamicValue;
 use App\Models\Treatments\Treatment\TreatmentEnding;
 use App\Models\Treatments\Treatment\StateManagement;
-use App\Contracts\ReportTreatment\IHasCollectedReportFile;
 use App\Models\Treatments\Treatment\ResultManagement;
 use App\Models\Treatments\Treatment\ServiceManagement;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\ReportTreatment\HasCollectedReportFile;
 use App\Models\Treatments\Treatment\TreatmentRawInfos;
 use App\Models\Treatments\Treatment\PayloadManagement;
 use App\Models\Treatments\Treatment\TreatmentStarting;
+use App\Traits\ReflexiveRelationship\HasReflexivePath;
 use App\Models\Treatments\Treatment\TreatmentAttempting;
+use App\Contracts\ReportTreatment\IHasCollectedReportFile;
+use App\Models\Treatments\Treatment\SubTreatmentsManagement;
 
 /**
  * Class Treatment
@@ -83,6 +85,7 @@ use App\Models\Treatments\Treatment\TreatmentAttempting;
  * @property int|null $stages_count
  *
  * @property int|null $uppertreatment_id
+ * @property string $full_path
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -90,13 +93,12 @@ use App\Models\Treatments\Treatment\TreatmentAttempting;
  * @property boolean $isHighCritical
  *
  * @method static Builder toProcessOrProcessing()
+ * @method static Builder isMain()
+ *
  * @method static Treatment create(array $array)
  *
  * @property ReportFile $reportfile
  * @property Treatment $uppertreatment
- * @property Treatment $lastestsubtreatment
- * @property Treatment[] $subtreatments
- * @property Treatment[] $subtreatmentswaiting
  * @property TreatmentService $service
  * @property TreatmentResult $treatmentresult
  */
@@ -107,6 +109,7 @@ class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCol
     use HasFactory, \OwenIt\Auditing\Auditable,
         TreatmentRawInfos,
         RawTreatment,
+        SubTreatmentsManagement,
         ServiceManagement,
         ResultManagement,
         StateManagement,
@@ -119,7 +122,7 @@ class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCol
         HasCollectedReportFile,
         HasDynamicRow,
         HasDynamicValue,
-        ModelPickable;
+        ModelPickable, HasReflexivePath;
 
     protected $guarded = [];
 
@@ -169,18 +172,12 @@ class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCol
     public function uppertreatment() {
         return $this->belongsTo(Treatment::class, 'uppertreatment_id');
     }
-    public function subtreatments() {
-        return $this->hasMany(Treatment::class, 'uppertreatment_id');
-    }
-    public function subtreatmentswaiting() {
-        return $this->hasMany(Treatment::class, 'uppertreatment_id')->waiting();
-    }
-    public function lastestsubtreatment()
-    {
-        return $this->hasOne(Treatment::class, 'uppertreatment_id')->latest('id');
-    }
 
     #endregion
+
+    public function scopeIsMain($query){
+        return $query->whereNull('uppertreatment_id');
+    }
 
     #region scopes
 
@@ -211,6 +208,7 @@ class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCol
      */
     public static function notStartedGetFirst(TreatmentCodeEnum $code, int|null $max_running) {
         if ( self::maxRunningReached($code, $max_running) ) {
+            \Log::error("maxRunningReached for ". $code->value);
             return null;
         }
         return Treatment::notstarted()->where('code', $code->value)->first();
@@ -261,4 +259,29 @@ class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCol
 
 
     #endregion
+
+    public static function getReflexiveParentIdField(): string
+    {
+        return "uppertreatment_id";
+    }
+
+    public static function getTitleField(): string
+    {
+        return "name";
+    }
+
+    public static function getReflexiveFullPathField(): string
+    {
+        return "full_path";
+    }
+
+    public function getReflexiveChildrenRelationName(): string
+    {
+        return "subtreatments";
+    }
+
+    public static function getReflexivePathSeparator(): string
+    {
+        return " / ";
+    }
 }

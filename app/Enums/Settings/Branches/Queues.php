@@ -23,12 +23,9 @@ class Queues extends SettingNode
         $workerbounds->addChild("listener", "1,4,4", "array", "workers bounds pour listeners.");
         $workerbounds->addChild("main", "1,4,4", "array", "workers bounds pour main.");
         $workerbounds->addChild("downloadfile", "1,4,4", "array", "workers bounds pour downloadfile.");
-        $workerbounds->addChild("importfile", "1,5,5", "array", "workers bounds pour importfile.");
-        //$workerbounds->addChild("formatdata", "1,5,5", "array", "workers bounds pour formatdata.");
+        $workerbounds->addChild("importfile", "1,4,4", "array", "workers bounds pour importfile.");
+        $workerbounds->addChild("formatfile", "1,5,5", "array", "workers bounds pour formatfile.");
         $workerbounds->addChild("mergefile", "1,4,4", "array", "workers bounds pour mergefile.");
         $workerbounds->addChild("notifyfile", "1,4,4", "array", "workers bounds pour notifyfile.");
-        //$workerbounds->addChild("importdata", "1,5,5", "array", "workers bounds pour importdata.");
-        //$workerbounds->addChild("mergecolumns", "1,5,5", "array", "workers bounds pour mergecolumns.");
-        //$workerbounds->addChild("mergerows", "1,5,5", "array", "workers bounds pour mergerows.");
     }
 }

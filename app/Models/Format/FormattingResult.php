@@ -47,6 +47,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $formattable_type
  * @property int|null $formattable_id
  * @property string|null $last_failed_message
+ * @property bool $merging_ready
  *
  * @property int|null $posi
  *
@@ -234,6 +235,11 @@ class FormattingResult extends BaseModel implements Auditable
                 $this->upperformattingresult?->itemFormattingFailed($this->posi, $this->last_failed_message);
             }
         }
+    }
+
+    public function setMergingReady() {
+        $this->merging_ready = true;
+        $this->save();
     }
 
     #endregion

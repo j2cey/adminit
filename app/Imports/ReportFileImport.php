@@ -39,6 +39,7 @@ class ReportFileImport implements WithChunkReading, WithEvents, WithValidation, 
     private int $end_import_launcher_id = 0;
     private int $import_queue_id = 0;
     public static QueueEnum $IMPORT_QUEUE = QueueEnum::IMPORTFILE;
+    private bool $_merge_launched = false;
 
     public function __construct(CollectedReportFile $collectedreportfile, Treatment $operation)
     {
@@ -79,16 +80,20 @@ class ReportFileImport implements WithChunkReading, WithEvents, WithValidation, 
 
         //\Log::info("ReportFileImport rowIndex: " . $rowIndex);
         $newrow = $collectedreportfile->addRow($treatment->service->getReportfile(), $row);
+        $hasdynamicattributes = $newrow->getHasdynamicattributes();
+        $newrow->addValues($hasdynamicattributes, json_decode($newrow->raw_value));
 
         if ( $rowIndex >= $this->_totalrows ) {
-            //$treatment_payloads = ['collectedReportFileId' => $collectedreportfile->id, 'importTreatmentId' => $this->_treatment_id];
+            $treatment_payloads = ['collectedReportFileId' => $collectedreportfile->id, 'importTreatmentId' => $this->_treatment_id];
             //$treatment->launchToGivenUpperStep(TreatmentCodeEnum::MERGEFILE, true, true, $treatment_payloads, false);
             //$treatment->launchUpperStep(TreatmentCodeEnum::MERGEFILE, $treatment_payloads, true, null);
 
-            $this->formatRowValuesLaunch($treatment, $collectedreportfile, $newrow, true);
-        } else {
+            //$this->formatRowValuesLaunch($treatment, $collectedreportfile, $newrow, true);
+            $treatment->launchUpperStep(TreatmentCodeEnum::FORMATFILE, $treatment_payloads, false, null);
+            $treatment->endingWithSuccess();
+        } /*else {
             $this->formatRowValuesLaunch($treatment, $collectedreportfile, $newrow, false);
-        }
+        }*/
 
         /*
         if ( $rowIndex >= $this->_totalrows ) {
@@ -216,10 +221,11 @@ class ReportFileImport implements WithChunkReading, WithEvents, WithValidation, 
         })->finally(function (Batch $batch) use ($treatment_id, $collectedreportfile_id) {
             // The batch has finished executing...
             //\Log::info("The batch " . substr($batch->id, -8) . " has finished executing. For file " . $collectedreportfile_id);
-            if (CollectedReportFile::getById($collectedreportfile_id)?->isImported) {
+            if (CollectedReportFile::getById($collectedreportfile_id)?->isImported && ( ! $this->_merge_launched ) ) {
                 //\Log::info("...And the file is imported...");
                 $treatment_payloads = ['collectedReportFileId' => $collectedreportfile_id, 'importTreatmentId' => $treatment_id];
-                \App\Models\Treatments\Treatment::getById($treatment_id)?->launchUpperStep(TreatmentCodeEnum::MERGEFILE, $treatment_payloads, true, null);
+                \App\Models\Treatments\Treatment::getById($treatment_id)?->launchUpperStep(TreatmentCodeEnum::MERGEFILE, $treatment_payloads, false, null);
+                $this->_merge_launched = true;
             }
         })->onQueue( $queue_name )->name("format row " . $dynamicrow->id . ", file " . $collectedreportfile->local_file_name . " (" . $collectedreportfile->id . " ) ")
             ->dispatch();

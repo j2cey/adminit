@@ -74,10 +74,10 @@ class ReportFileImportCmd extends Command
     private function treatmentToImportGet(): ?Treatment
     {
         //$max_running = config('Settings.treatment.max_running.importfile_doimport');
-        $treatment_code_value = TreatmentCodeEnum::IMPORTFILE_DOIMPORT->value;
+        $treatment_code_value = TreatmentCodeEnum::IMPORTFILE->value;
         $max_running = Settings::Treatment()->max_running()->$treatment_code_value()->get();
 
-        $notstarted_treatment = Treatment::notStartedGetFirst( TreatmentCodeEnum::IMPORTFILE_DOIMPORT, $max_running );
+        $notstarted_treatment = Treatment::notStartedGetFirst( TreatmentCodeEnum::IMPORTFILE, $max_running );
 
         if ( empty($notstarted_treatment) ) {
             $this->error("No Not started Treatments !");
@@ -101,6 +101,7 @@ class ReportFileImportCmd extends Command
             $treatment->setState(TreatmentStateEnum::PICKING);
             //\Log::info("doImportFile From CMD for treatment: " . $treatment->name . " ( " . $treatment->id . " )");
             if ($treatment->service && $treatment->service->collectedreportfile) {
+                $treatment->service->exec();
                 (new ReportFileImport($treatment->service->collectedreportfile, $treatment))->import($treatment->service->collectedreportfile->fileLocalAbsolutePath);
                 return 1;
             } else {
