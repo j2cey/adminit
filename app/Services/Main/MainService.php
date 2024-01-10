@@ -42,6 +42,8 @@ class MainService implements IMainService
     }
 
     public function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
-
+        /*if ( ! is_null($child_treatment) ) {
+            $treatment->progressionAddStepDone($child_treatment->name, ($treatmentresultenum->succeed()), "end from Main");
+        }*/
     }
 }

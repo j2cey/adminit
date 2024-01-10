@@ -76,7 +76,7 @@ class FormatFileStepService implements ITreatmentStepService
         foreach ($dynamicrows as $dynamicrow) {
             $this->formatRowValuesLaunch($treatment,$treatment->collectedreportfile,$dynamicrow);
         }
-        return -1;
+        return 1;
     }
     #endregion
 
@@ -97,6 +97,7 @@ class FormatFileStepService implements ITreatmentStepService
 
         $jobs = [];
         foreach ($dynamicvalues as $dynamicvalue) {
+            $treatment->progressionAddTodo(1, "format value " . $dynamicvalue->id . ", row " . $dynamicvalue->dynamicrow->line_num . "(" . $dynamicvalue->dynamicrow->id . ")" );
             $dynamicvalue->initInnerValue();
             $jobs[] = new DynamicValueFormatJob( $treatment, $dynamicvalue );
         }

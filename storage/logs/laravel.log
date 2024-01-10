@@ -1,13 +1,44 @@
-[2024-01-08 14:18:17] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:19:13] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:21:29] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:22:20] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:23:21] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:25:35] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:26:19] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:27:50] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:28:56] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:29:48] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:30:51] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:31:59] local.ERROR: maxRunningReached for importfile  
-[2024-01-08 14:32:59] local.ERROR: maxRunningReached for importfile  
+[2024-01-10 09:17:40] local.ERROR: Treatment Download file Step ( 4 ) cant be executed as it is Not Started yet or Not Waiting or Not Queued  
+[2024-01-10 09:17:41] local.ERROR: Treatment Download file Step ( 6 ) cant be executed as it is Not Started yet or Not Waiting or Not Queued  
+[2024-01-10 09:17:42] local.ERROR: Treatment Download file Step ( 2 ) cant be executed as it is Not Started yet or Not Waiting or Not Queued  
+[2024-01-10 09:28:33] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 2 )  
+[2024-01-10 09:28:33] local.ERROR: Treatment Download file Step ( 2 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:28:34] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 4 )  
+[2024-01-10 09:28:34] local.ERROR: Treatment Download file Step ( 4 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:28:34] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 6 )  
+[2024-01-10 09:28:35] local.ERROR: Treatment Download file Step ( 6 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:28:42] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 2 )  
+[2024-01-10 09:28:43] local.ERROR: Treatment Download file Step ( 2 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:28:43] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 4 )  
+[2024-01-10 09:28:43] local.ERROR: Treatment Download file Step ( 4 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:28:44] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 6 )  
+[2024-01-10 09:28:44] local.ERROR: Treatment Download file Step ( 6 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:29:39] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 2 )  
+[2024-01-10 09:29:39] local.ERROR: Treatment Download file Step ( 2 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:29:40] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 4 )  
+[2024-01-10 09:29:40] local.ERROR: Treatment Download file Step ( 4 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:29:40] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 6 )  
+[2024-01-10 09:29:40] local.ERROR: Treatment Download file Step ( 6 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:30:27] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 2 )  
+[2024-01-10 09:30:28] local.ERROR: Treatment Download file Step ( 2 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:30:28] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 4 )  
+[2024-01-10 09:30:28] local.ERROR: Treatment Download file Step ( 4 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:30:28] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 6 )  
+[2024-01-10 09:30:29] local.ERROR: Treatment Download file Step ( 6 ) cant be dispatched as it is Not Waiting  
+[2024-01-10 09:31:23] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 2 )  
+[2024-01-10 09:31:30] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 4 )  
+[2024-01-10 09:31:34] local.INFO: dispatchTreatment. Dispatching DONE for treatment: Download file Step ( 6 )  
+[2024-01-10 09:31:52] local.INFO: HasProgression, setUpperProgression for App\Models\Treatments\Treatment(9) - upperprogression: 3  
+[2024-01-10 09:31:53] local.INFO: Progression, setUpperProgression for (9) - upperprogression: 3  
+[2024-01-10 09:31:57] local.INFO: save as subtreatment  
+[2024-01-10 09:33:27] local.ERROR: maxRunningReached for importfile  
+[2024-01-10 09:34:19] local.ERROR: maxRunningReached for importfile  
+[2024-01-10 09:35:06] local.INFO: HasProgression, setUpperProgression for App\Models\Treatments\Treatment(10) - upperprogression: 3  
+[2024-01-10 09:35:08] local.INFO: Progression, setUpperProgression for (10) - upperprogression: 3  
+[2024-01-10 09:35:18] local.INFO: save as subtreatment  
+[2024-01-10 09:47:17] local.INFO: HasProgression, setUpperProgression for App\Models\Treatments\Treatment(11) - upperprogression: 3  
+[2024-01-10 09:47:18] local.INFO: Progression, setUpperProgression for (11) - upperprogression: 3  
+[2024-01-10 09:47:25] local.INFO: save as subtreatment  
+[2024-01-10 09:52:08] local.INFO: HasProgression, setUpperProgression for App\Models\Treatments\Treatment(12) - upperprogression: 3  
+[2024-01-10 09:52:09] local.INFO: Progression, setUpperProgression for (12) - upperprogression: 3  
+[2024-01-10 09:52:21] local.INFO: save as subtreatment  

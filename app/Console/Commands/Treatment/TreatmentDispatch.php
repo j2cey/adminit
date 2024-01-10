@@ -5,6 +5,7 @@ namespace App\Console\Commands\Treatment;
 use Illuminate\Console\Command;
 use App\Events\LaunchTreatmentEvent;
 use App\Models\Treatments\Treatment;
+use App\Enums\Treatments\TreatmentStateEnum;
 
 class TreatmentDispatch extends Command
 {
@@ -51,7 +52,7 @@ class TreatmentDispatch extends Command
                 $this->error("No Treatments to dispatch !");
             } else {
                 foreach ($waiting_treatments as $treatment) {
-
+                    $this->dispatchTreatment($treatment);
                     $launched_execs++;
                 }
             }
@@ -59,7 +60,8 @@ class TreatmentDispatch extends Command
             // Launch one
             $this->warn("Dispatch one, treatmentId: " . $treatmentId);
             $treatment = Treatment::getById($treatmentId);
-            $treatment->service?->dispatch($treatment->service->getReportfile());
+            //$treatment->service?->dispatch($treatment->service->getReportfile());
+            $this->dispatchTreatment($treatment);
             $launched_execs++;
         }
 
@@ -75,6 +77,7 @@ class TreatmentDispatch extends Command
             return;
         }
         \Log::info("dispatchTreatment. Dispatching DONE for treatment: " . $treatment->name . " ( " . $treatment->id . " )");
+        $treatment->setState(TreatmentStateEnum::WAITING);
         $treatment->service->dispatch($treatment->service->getReportfile());
     }
 }

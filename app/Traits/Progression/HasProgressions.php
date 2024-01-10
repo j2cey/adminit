@@ -2,7 +2,7 @@
 
 namespace App\Traits\Progression;
 
-use App\Models\Progression;
+use App\Models\Progression\Progression;
 
 trait HasProgressions
 {

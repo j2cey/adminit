@@ -26,6 +26,10 @@ class TreatmentStageFunction
         $this->setCanEndUppertreatment($can_end_uppertreatment);
 
         $this->setDescription($description);
+
+        if ( $stage->getTreatment()->attempts === 0 ) {
+            $this->getStage()->getTreatment()->progressionAddTodo(1, $this->getFunctionName());
+        }
     }
 
     #region Public Functions
@@ -36,7 +40,9 @@ class TreatmentStageFunction
                 'is_last_subtreatment' => $this->isLastSubtreatment(),
                 'can_end_uppertreatment' => $this->canEndUppertreatment(),
             ];
-            return call_user_func_array(array($this->getStage()->getServiceObject(), $this->getFunctionName()), $args);
+            $result = call_user_func_array(array($this->getStage()->getServiceObject(), $this->getFunctionName()), $args);
+            $this->getStage()->getTreatment()->progressionAddStepDone($this->getFunctionName(), ($result > 0), $this->getDescription());
+            return $result;
         } else {
             \Log::error($this->getStage()->getServiceObject(). ", " . $this->getFunctionName() . " is not callable !");
         }

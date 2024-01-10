@@ -15,6 +15,9 @@ enum QueueEnum: string
     #[Description('Execution Trace')]
     case EXECTRACE = 'exectrace';
 
+    #[Description('Update Progression')]
+    case PROGRESSION = 'progression';
+
     #[Description('Treatment Starting or Ending')]
     case TREATMENTSTARTEND = 'treatmentstartend';
 

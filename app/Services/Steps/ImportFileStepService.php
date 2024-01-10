@@ -39,9 +39,6 @@ class ImportFileStepService implements ITreatmentStepService
     public function initStages() {
         $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::IMPORTFILE->toArray()['name'], null);
         $this->stage->setFunction("prepareImport", CriticalityLevelEnum::HIGH, false, false, "Prepare File importation");
-
-        /*$this->stage
-            ->addNextStageOnSuccess("Launch Import Execution", "launchImportExec", CriticalityLevelEnum::HIGH, true, true,"Launch Import Execution");*/
     }
 
     public static function getQueueCode(): QueueEnum
@@ -80,13 +77,6 @@ class ImportFileStepService implements ITreatmentStepService
             return 1;
         }
         return -1;
-    }
-    public function launchImportExec(CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment): int {
-        $import_operation = $this->treatment->operationAddOrGet(TreatmentCodeEnum::IMPORTFILE_DOIMPORT, $criticality_level, ++$this->exec_id, $is_last_subtreatment, $can_end_uppertreatment, false, false, false, [], null);
-        $import_operation->service->setReportFile($this->treatment->service->reportfile);
-        $import_operation->service->setCollectedReportFile($this->treatment->service->collectedreportfile);
-
-        return 1;
     }
     #endregion
 

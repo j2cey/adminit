@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Progression;
 
+use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class Progression
- * @package App\Models
+ * @package App\Models\Progression
  *
  * @property integer $id
  *
@@ -16,20 +17,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property bool $is_default
  * @property string|null $tags
  *
- * @property integer $nb_todo
- * @property integer $nb_done
- * @property integer $rate
- * @property integer $curr_value
- * @property boolean $exec_done
- *
- * @property integer|null $execution_id
+ * @property string $name
+ * @property bool $passed
  *
  * @property string|null $description
+ * @property int|null $progression_id
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @method static ProgressionStep create(array $array)
  */
-class Progression extends BaseModel implements Auditable
+class ProgressionStep extends BaseModel implements Auditable
 {
     use HasFactory, \OwenIt\Auditing\Auditable;
 
@@ -62,14 +61,30 @@ class Progression extends BaseModel implements Auditable
     #endregion
 
     #region Eloquent Relationships
-
-    public function execution() {
-        return $this->belongsTo(Execution::class, 'execution_id');
+    public function progression() {
+        return $this->belongsTo(Progression::class,"progression_id");
     }
-
     #endregion
 
     #region Custom Functions
+    /**
+     * @param Progression $progression
+     * @param string $name
+     * @param bool $passed
+     * @param string|null $description
+     * @return ProgressionStep
+     */
+    public static function createNew(Progression $progression, string $name, bool $passed, string|null $description): ProgressionStep
+    {
+        $progressionstep = ProgressionStep::create([
+            'name' => $name,
+            'passed' => $passed,
+            'description' => $description,
+        ]);
 
+        $progressionstep->progression()->associate($progression)->save();
+
+        return $progressionstep;
+    }
     #endregion
 }

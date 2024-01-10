@@ -18,6 +18,7 @@ class Queues extends SettingNode
 
         $workerbounds = $this->addChild("workerbounds", null, null, "Min-utilisable, Max-utilisable et Max-disponible du nombre de workers par type de traitement.");
         $workerbounds->addChild("exectrace", "1,1,1", "array", "workers bounds pour exectrace.");
+        $workerbounds->addChild("progression", "1,1,1", "array", "workers bounds pour progression.");
         $workerbounds->addChild("systemlog", "1,3,3", "array", "workers bounds pour systemlog.");
         $workerbounds->addChild("treatmentstartend", "1,1,1", "array", "workers bounds pour treatmentstartend.");
         $workerbounds->addChild("listener", "1,4,4", "array", "workers bounds pour listeners.");

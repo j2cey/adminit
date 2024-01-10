@@ -10,12 +10,14 @@ use App\Models\ReportFile\ReportFile;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\Progression\HasProgression;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Enums\Treatments\TreatmentTypeEnum;
 use App\Enums\Treatments\TreatmentStateEnum;
 use Illuminate\Database\Eloquent\Collection;
 use App\Traits\ReportTreatment\HasReportFile;
 use App\Traits\ReportTreatment\HasDynamicRow;
+use App\Contracts\Progression\IHasProgression;
 use App\Traits\ReportTreatment\HasDynamicValue;
 use App\Contracts\ReportTreatment\ITreatmentType;
 use App\Contracts\ReportTreatment\IHasReportFile;
@@ -102,7 +104,7 @@ use App\Models\Treatments\Treatment\SubTreatmentsManagement;
  * @property TreatmentService $service
  * @property TreatmentResult $treatmentresult
  */
-class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCollectedReportFile, IHasDynamicRow, IHasDynamicValue
+class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCollectedReportFile, IHasDynamicRow, IHasDynamicValue, IHasProgression
 {
     // * @method static Treatment create(array|null $array)
     // * @method static Treatment|null find(int $id)
@@ -122,7 +124,9 @@ class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCol
         HasCollectedReportFile,
         HasDynamicRow,
         HasDynamicValue,
-        ModelPickable, HasReflexivePath;
+        ModelPickable,
+        HasReflexivePath,
+        HasProgression;
 
     protected $guarded = [];
 
@@ -283,5 +287,10 @@ class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCol
     public static function getReflexivePathSeparator(): string
     {
         return " / ";
+    }
+
+    public function getUpperHasProgression(): ?IHasProgression
+    {
+        return $this->uppertreatment;
     }
 }

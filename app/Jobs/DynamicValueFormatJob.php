@@ -71,5 +71,6 @@ class DynamicValueFormatJob implements ShouldQueue
                 $treatment->endingWithFailure($dynamicvalue->dynamicrow->hasdynamicrow->importresult->last_failed_message ?? "At least one import failed");
             }
         }
+        $treatment->progressionAddStepDone("format value " . $dynamicvalue->id . ", row " . $dynamicvalue->dynamicrow->line_num . "(" . $dynamicvalue->dynamicrow->id . ")",true, null);
     }
 }
