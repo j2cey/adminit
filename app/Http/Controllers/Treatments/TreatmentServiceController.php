@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Treatments;
 
 use App\Http\Controllers\Controller;
 use App\Models\Treatments\TreatmentService;
-use App\Http\Requests\StoreTreatmentServiceRequest;
-use App\Http\Requests\UpdateTreatmentServiceRequest;
+use App\Http\Requests\TreatmentService\StoreTreatmentServiceRequest;
+use App\Http\Requests\TreatmentService\UpdateTreatmentServiceRequest;
 
 class TreatmentServiceController extends Controller
 {
@@ -32,7 +32,7 @@ class TreatmentServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreTreatmentServiceRequest  $request
+     * @param  \App\Http\Requests\TreatmentService\StoreTreatmentServiceRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreTreatmentServiceRequest $request)
@@ -65,7 +65,7 @@ class TreatmentServiceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTreatmentServiceRequest  $request
+     * @param  \App\Http\Requests\TreatmentService\UpdateTreatmentServiceRequest  $request
      * @param  \App\Models\Treatments\TreatmentService  $treatmentService
      * @return \Illuminate\Http\Response
      */

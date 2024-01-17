@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreModelPickerRequest;
-use App\Http\Requests\UpdateModelPickerRequest;
 use App\Models\ModelPicker;
+use App\Http\Requests\ModelPicker\StoreModelPickerRequest;
+use App\Http\Requests\ModelPicker\UpdateModelPickerRequest;
 
 class ModelPickerController extends Controller
 {
@@ -31,7 +31,7 @@ class ModelPickerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreModelPickerRequest  $request
+     * @param  \App\Http\Requests\ModelPicker\StoreModelPickerRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreModelPickerRequest $request)
@@ -64,7 +64,7 @@ class ModelPickerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateModelPickerRequest  $request
+     * @param  \App\Http\Requests\ModelPicker\UpdateModelPickerRequest  $request
      * @param  \App\Models\ModelPicker  $modelPicker
      * @return \Illuminate\Http\Response
      */

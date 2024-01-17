@@ -34,7 +34,7 @@ class NotifyFileStepService implements ITreatmentStepService
     }
 
     public function initStages() {
-        $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'], null);
+        $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'], null, true);
         $this->stage->setFunction("sendNotifications", $this->treatment->criticality_level, $this->treatment->is_last_subtreatment, $this->treatment->can_end_uppertreatment, "Send Notifications");
     }
 
@@ -60,7 +60,7 @@ class NotifyFileStepService implements ITreatmentStepService
 
         $this->treatment->starting();
 
-        $this->stage->exec();
+        $this->stage->exec($this->treatment->break_point);
 
         return $this->treatment;
         /*if ( $treatment->subtreatments()->waiting()->count() > 0 ) {

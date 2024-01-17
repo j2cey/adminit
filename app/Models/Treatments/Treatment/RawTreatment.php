@@ -146,9 +146,9 @@ trait RawTreatment
         */
     }
 
-    public function launchUpperStep(TreatmentCodeEnum $uppertreatment_code, array $payloads, bool $dispatch_on_creation, string|null $description): ?Treatment
+    public function launchUpperStep(TreatmentCodeEnum $uppertreatment_code, bool $is_last_subtreatment, bool $can_end_uppertreatment, array $payloads, bool $dispatch_on_creation, string|null $description): ?Treatment
     {
-        return $this->getMainTreatment()->stepAddOrGet($uppertreatment_code, CriticalityLevelEnum::HIGH, 0, false, true, $dispatch_on_creation, false, false, $payloads, $description);
+        return $this->getMainTreatment()->stepAddOrGet($uppertreatment_code, CriticalityLevelEnum::HIGH, 0, $is_last_subtreatment, $can_end_uppertreatment, $dispatch_on_creation, false, false, $payloads, $description);
     }
 
     public static function getById(int|null $id): ?Treatment {

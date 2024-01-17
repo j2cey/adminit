@@ -27,7 +27,7 @@ class TreatmentObserver
 
         // save as subtreatment
         if ( ! is_null( $treatment->uppertreatment ) ) {
-            \Log::info("save as subtreatment");
+            //\Log::info("save as subtreatment");
             $treatment->uppertreatment->saveSubTreatment($treatment);
             //$treatment->setUpperProgression($treatment->uppertreatment?->progression);
         }

@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property string|null $description
  * @property int|null $progression_id
+ * @property int|null $sub_progression_id
  *
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -72,14 +73,16 @@ class ProgressionStep extends BaseModel implements Auditable
      * @param string $name
      * @param bool $passed
      * @param string|null $description
+     * @param Progression|null $sub_progression
      * @return ProgressionStep
      */
-    public static function createNew(Progression $progression, string $name, bool $passed, string|null $description): ProgressionStep
+    public static function createNew(Progression $progression, string $name, bool $passed, string|null $description, Progression|null $sub_progression): ProgressionStep
     {
         $progressionstep = ProgressionStep::create([
             'name' => $name,
             'passed' => $passed,
             'description' => $description,
+            'sub_progression_id' => is_null($sub_progression) ? null : $sub_progression->id,
         ]);
 
         $progressionstep->progression()->associate($progression)->save();

@@ -13,7 +13,9 @@ use App\Models\Treatments\Treatment;
 class TreatmentStage
 {
     private object $_service_object;
-    private int $_stageId;  // The ID/Number (in the execution order) of this stage
+    private int $_stageId = 1;  // The ID/Number (in the execution order) of this stage
+    private bool $_is_beark_point;
+
     private string $_name;
     private ?TreatmentStageFunction $_stage_function = null;
     private ?TreatmentStage $_next_stage_on_success = null;
@@ -23,31 +25,33 @@ class TreatmentStage
 
     private Treatment $_treatment;
 
-    public function __construct(Treatment $treatment, object $service_object, string $name, TreatmentStageFunction|null $stage_function)
+    public function __construct(Treatment $treatment, object $service_object, string $name, TreatmentStageFunction|null $stage_function, bool $is_beark_point)
     {
         $this->setTreatment($treatment);
         $this->setServiceClass($service_object);
         $this->setName($name);
         $this->setStageFunction($stage_function);
+        $this->setIsBearkPoint($is_beark_point);
     }
 
-    public function addNextStageOnSuccess(string $name, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, string|null $function_description): TreatmentStage
+    public function addNextStageOnSuccess(string $name, bool $is_beark_point, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, string|null $function_description): TreatmentStage
     {
-        $this->setNextStageOnSuccess($this->newSubStage($name, $function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $function_description));
+        $this->setNextStageOnSuccess($this->newSubStage($name, $is_beark_point, $function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $function_description));
 
         return $this->getNextStageOnSuccess();
     }
-    public function addNetStageOnFailure(string $name, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, string|null $function_description): TreatmentStage
+    public function addNetStageOnFailure(string $name, bool $is_beark_point, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, string|null $function_description): TreatmentStage
     {
-        $this->setNextStageOnFailure($this->newSubStage($name, $function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $function_description));
+        $this->setNextStageOnFailure($this->newSubStage($name, $is_beark_point, $function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $function_description));
 
         return $this->getNextStageOnFailure();
     }
 
-    private function newSubStage(string $name, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, string|null $function_description): TreatmentStage {
-        $sub_stage = new TreatmentStage($this->getTreatment(), $this->getServiceObject(), $name, null);
+    private function newSubStage(string $name, bool $is_beark_point, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, string|null $function_description): TreatmentStage {
+        $sub_stage = new TreatmentStage($this->getTreatment(), $this->getServiceObject(), $name, null, $is_beark_point);
         $sub_stage->setPreviousStage($this);
         $sub_stage->setFunction($function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $function_description);
+        $sub_stage->setStageId($this->getStageId() + 1);
 
         return $sub_stage;
     }
@@ -59,33 +63,42 @@ class TreatmentStage
     }
 
     #region Public Functions
-    public function exec(): ?int
+    public function exec(int $break_point): ?int
     {
+        $this->getTreatment()->progressionSetCurrentStep( $this->getStageFunction()->getFunctionName() ?? $this->getName() );
         //\Log::info("exec Stage: " . $this->getName() . ", Function: " . $this->getStageFunction()->getFunctionName());
         // exec this stage's function
-        $this->setStageResult( $this->getStageFunction()->exec() );
+        if ( $this->getStageId() > $break_point ) {
+            $this->setStageResult($this->getStageFunction()->exec());
+        }
         //\Log::info("func_result: " . $this->getStageResult());
 
         // get next stage if any
-        $next_stage = $this->getNextStage();
+        $next_stage = $this->getNextStage($break_point);
 
         if ( is_null( $next_stage ) ) {
             //\Log::info("END of STAGES func_result: " . $this->getStageResult());
             return $this->getStageResult();
+        } else {
+            $this->setStageResult(1);
         }
 
         // exec next stage
-        return $next_stage->exec();
+        return $next_stage->exec($break_point);
     }
     #endregion
 
     #region Private Functions
-    #[Pure] private function getNextStage(): ?TreatmentStage
+    #[Pure] private function getNextStage(int &$break_point): ?TreatmentStage
     {
         if ( is_null($this->getStageResult()) ) {
             return null;
         }
         if ( $this->getStageResult() > 0 ) {
+            if ( $this->isBearkPoint() ) {
+                $break_point = $this->getStageId();
+                $this->getTreatment()->setBreakPoint($break_point);
+            }
             return $this->getNextStageOnSuccess();
         }
         return $this->getNextStageOnFailure();
@@ -238,6 +251,22 @@ class TreatmentStage
     public function setTreatment(Treatment $treatment): void
     {
         $this->_treatment = $treatment;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBearkPoint(): bool
+    {
+        return $this->_is_beark_point;
+    }
+
+    /**
+     * @param bool $is_beark_point
+     */
+    public function setIsBearkPoint(bool $is_beark_point): void
+    {
+        $this->_is_beark_point = $is_beark_point;
     }
     #endregion
 }

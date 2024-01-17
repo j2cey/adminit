@@ -39,11 +39,11 @@ class MergeFileStepService implements ITreatmentStepService
         /*$this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'], null);
         $this->stage->setFunction("launchMergeFileExec", CriticalityLevelEnum::HIGH, true, true, "Launch Merge File Execution");
         */
-        $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'], null);
+        $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'], null, true);
         $this->stage->setFunction("tryMergeRows", CriticalityLevelEnum::HIGH, false, false, "Try merge file rows");
 
         $this->stage
-            ->addNextStageOnSuccess("Try merge file", "tryMergeFile", CriticalityLevelEnum::HIGH, true, true,"Try merge file");
+            ->addNextStageOnSuccess("Try merge file", true, "tryMergeFile", CriticalityLevelEnum::HIGH, true, true,"Try merge file");
     }
 
     public static function getQueueCode(): QueueEnum
@@ -72,7 +72,7 @@ class MergeFileStepService implements ITreatmentStepService
         }
 
         $this->treatment->starting();
-        $this->stage->exec();
+        $this->stage->exec($this->treatment->break_point);
 
         return $this->treatment;
     }
@@ -107,7 +107,7 @@ class MergeFileStepService implements ITreatmentStepService
             $format_and_merge_file = self::fileMergeRows( $this->treatment, CriticalityLevelEnum::HIGH, true, true, $this->treatment->service->collectedreportfile, false, false );
             if ( $format_and_merge_file->isSuccess() ) {
                 $treatment_payloads = ['collectedReportFileId' => $this->treatment->service->collectedreportfile->id, 'mergeTreatmentId' => $import_treatment->id];
-                $this->treatment->launchUpperStep(TreatmentCodeEnum::NOTIFYFILE, $treatment_payloads, true, null);
+                $this->treatment->launchUpperStep(TreatmentCodeEnum::NOTIFYFILE, true, true, $treatment_payloads, true, null);
             }
             return 1;
         } else {

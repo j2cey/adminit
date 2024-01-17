@@ -73,16 +73,16 @@ __webpack_require__.r(__webpack_exports__);
         sortable: true,
         date: false
       }, {
-        field: 'result',
-        key: 'result',
-        label: 'Result',
-        searchable: true,
-        sortable: true
-      }, {
         field: 'state',
         key: 'state',
-        label: 'State',
-        searchable: true,
+        label: 'State/Result',
+        searchable: false,
+        sortable: true
+      }, {
+        field: 'progression',
+        key: 'progression',
+        label: 'Progression',
+        searchable: false,
         sortable: true
       }, {
         field: 'actions',
@@ -167,6 +167,9 @@ __webpack_require__.r(__webpack_exports__);
           timer: 3000
         }).then(function () {});
       }
+    },
+    roundedNum: function roundedNum(numb) {
+      return Math.floor(numb);
     }
   },
   computed: {
@@ -330,24 +333,7 @@ var render = function render() {
             attrs: {
               type: "is-default is-light"
             }
-          }, [_vm._v(_vm._s(props.row[column.field].report.title) + " / " + _vm._s(props.row[column.field].name))])], 1) : _c("span")]) : column.field === "result" ? _c("span", {
-            staticClass: "has-text-info is-italic text-xs"
-          }, [props.row[column.field] ? _c("span", [props.row[column.field] === "success" ? _c("b-tag", {
-            attrs: {
-              rounded: "",
-              type: "is-success"
-            }
-          }, [_vm._v(_vm._s(props.row[column.field]))]) : props.row[column.field] === "failed" ? _c("b-tag", {
-            attrs: {
-              rounded: "",
-              type: "is-danger"
-            }
-          }, [_vm._v(_vm._s(props.row[column.field]))]) : _c("b-tag", {
-            attrs: {
-              rounded: "",
-              type: "is-default"
-            }
-          }, [_vm._v(_vm._s(props.row[column.field]))])], 1) : _c("span")]) : column.field === "state" ? _c("span", {
+          }, [_vm._v(_vm._s(props.row[column.field].report.title) + " / " + _vm._s(props.row[column.field].name))])], 1) : _c("span")]) : column.field === "state" ? _c("span", {
             staticClass: "has-text-info is-italic text-xs"
           }, [props.row[column.field] ? _c("span", [props.row[column.field] === "completed" ? _c("b-tag", {
             attrs: {
@@ -369,7 +355,41 @@ var render = function render() {
               rounded: "",
               type: "is-default"
             }
-          }, [_vm._v(_vm._s(props.row[column.field]))])], 1) : _c("span")]) : column.field === "start_at" ? _c("span", {
+          }, [_vm._v(_vm._s(props.row[column.field]))]), _vm._v("\n                             /\n                            "), props.row["result"] === "success" ? _c("b-tag", {
+            attrs: {
+              rounded: "",
+              type: "is-success"
+            }
+          }, [_vm._v(_vm._s(props.row["result"]))]) : props.row["result"] === "failed" ? _c("b-tag", {
+            attrs: {
+              rounded: "",
+              type: "is-danger"
+            }
+          }, [_vm._v(_vm._s(props.row["result"]))]) : _c("b-tag", {
+            attrs: {
+              rounded: "",
+              type: "is-default"
+            }
+          }, [_vm._v(_vm._s(props.row["result"]))])], 1) : _c("span")]) : column.field === "progression" ? _c("span", {
+            staticClass: "has-text-info is-italic text-xs"
+          }, [props.row[column.field] ? _c("span", [props.row[column.field].rate >= 100 ? _c("b-tag", {
+            attrs: {
+              type: "is-success",
+              size: "is-small"
+            }
+          }, [_vm._v(_vm._s(_vm.roundedNum(props.row[column.field].rate) + "%"))]) : props.row[column.field].rate <= 50 ? _c("b-tag", {
+            attrs: {
+              type: "is-danger",
+              size: "is-small"
+            }
+          }, [_vm._v(_vm._s(_vm.roundedNum(props.row[column.field].rate) + "%"))]) : _c("b-tag", {
+            attrs: {
+              type: "is-warning",
+              size: "is-small"
+            }
+          }, [_vm._v(_vm._s(_vm.roundedNum(props.row[column.field].rate) + "%"))]), _vm._v("\n                            /\n                            "), _c("span", {
+            staticClass: "tag is-info is-light"
+          }, [_vm._v("\n                                " + _vm._s(props.row[column.field].current_step) + "\n                            ")])], 1) : _c("span")]) : column.field === "start_at" ? _c("span", {
             staticClass: "tag is-info is-light"
           }, [_vm._v("\n                        " + _vm._s(_vm._f("formatDate")(props.row["start_at"])) + " / " + _vm._s(_vm._f("formatDate")(props.row["end_at"])) + "\n                    ")]) : column.date ? _c("span", {
             staticClass: "tag is-info is-light"

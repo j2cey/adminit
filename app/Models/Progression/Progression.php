@@ -24,9 +24,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $rate
  * @property integer $rate_passed
  * @property boolean $exec_done
+ * @property string $current_step
  *
  * @property string|null $description
  * @property integer|null $upper_progression_id
+ * @property integer|null $lastprogressionstep_id
  *
  * @property string|null $hasprogression_type
  * @property integer|null $hasprogression_id
@@ -38,6 +40,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Progression|null $upperprogression
  * @property ProgressionStep|null $lastprogressionstep
  * @property Progression[] $subprogressions
+ * @property ProgressionStep[] $progressionsteps
  * @method static Progression create(array $array)
  */
 class Progression extends BaseModel implements Auditable
@@ -106,36 +109,57 @@ class Progression extends BaseModel implements Auditable
     }
 
     public function setUpperProgression(Progression|null $upperprogression) {
-        $msg = "Progression, setUpperProgression for (" . $this->id . ") - upperprogression: " . (is_null($upperprogression) ? "NULL" : $upperprogression->id);
-        \Log::info($msg);
+        //$msg = "Progression, setUpperProgression for (" . $this->id . ") - upperprogression: " . (is_null($upperprogression) ? "NULL" : $upperprogression->id);
+        //\Log::info($msg);
         $this->upperprogression()->associate($upperprogression)->save();
+        $upperprogression->addNewSubprogressionAsToDo($this);
     }
     public function setLastProgressionStep(ProgressionStep $last_progressionstep) {
+        $this->setCurrentStep($last_progressionstep->name);
         $this->lastprogressionstep()->associate($last_progressionstep)->save();
+    }
+
+    public function addNewSubprogressionAsToDo(Progression $subprogression) {
+        $this->addTodo(1, "sub-progression: " . $subprogression->id);
     }
 
     public function addTodo(int $amount, string $name) {
         $this->update(['nb_todo' => $this->nb_todo+= $amount,]
         );
         $this->setProgressionUpToDate();
-        $this->addToDos($name);
+        $this->appendToDos($name);
 
         $this->upperprogression?->addTodo($amount, $name);
     }
 
-    public function addStepDone(string $name, bool $passed, string|null $description, Progression|null $child_progression) {
-        $this->addNbDone(1);
-        if ( $passed ) $this->addNbPassed(1);
+    public function setCurrentStep(string $name) {
+        $this->update(['current_step' => $name,]
+        );
+    }
 
-        if ( is_null($child_progression) ) {
-            $last_progressionstep = ProgressionStep::createNew($this, $name, $passed, $description);
+    public function addStepDone(string $name, bool $passed, string|null $description, Progression|null $sub_progression) {
+        $this->incrementDone($passed);
+
+        if ( is_null($sub_progression) ) {
+            $last_progressionstep = ProgressionStep::createNew($this, $name, $passed, $description, null);
         } else {
-            $last_progressionstep = $child_progression->lastprogressionstep;
+            $last_progressionstep = $sub_progression->lastprogressionstep;
+            if ($sub_progression->exec_done) {
+                if ( $this->progressionsteps()->where('sub_progression_id', $sub_progression->id)->count() === 0 ) {
+                    ProgressionStep::createNew($this, "sub-progression " . $sub_progression->id . " executed.", true, null, $sub_progression);
+                    $this->incrementDone($passed);
+                }
+            }
         }
 
         $this->setLastProgressionStep($last_progressionstep);
         $this->setProgressionUpToDate();
         $this->upperprogression?->addStepDone($name, $passed, $description, $this);
+    }
+
+    private function incrementDone(bool $passed) {
+        $this->addNbDone(1);
+        if ( $passed ) $this->addNbPassed(1);
     }
 
     public function setProgressionUpToDate() {
@@ -203,7 +227,7 @@ class Progression extends BaseModel implements Auditable
         );
     }
 
-    private function addToDos(string $name) {
+    private function appendToDos(string $name) {
         $todos_arr = is_null($this->todos) ? [] : json_decode($this->todos, true);
         $todos_arr[] = ['name' => $name];
 
@@ -217,4 +241,19 @@ class Progression extends BaseModel implements Auditable
         return Progression::find($id);
     }
     #endregion
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::deleting(function ($model) {
+            $model->progressionsteps()->each(function($progressionstep) {
+                $progressionstep->delete(); // <-- direct deletion
+            });
+
+            $model->subprogressions()->each(function($subprogression) {
+                $subprogression->delete(); // <-- direct deletion
+            });
+        });
+    }
 }

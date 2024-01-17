@@ -85,6 +85,7 @@ use App\Models\Treatments\Treatment\SubTreatmentsManagement;
  *
  * @property int|null $current_stage
  * @property int|null $stages_count
+ * @property int $break_point
  *
  * @property int|null $uppertreatment_id
  * @property string $full_path
@@ -254,6 +255,10 @@ class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCol
 
     public function subTreatmentsToProcessOrProcessingCount(): int {
         return $this->subtreatments() ? $this->subtreatments()->toProcessOrProcessing()->count() : 0;
+    }
+
+    public function setBreakPoint(int $break_point) {
+        $this->update(['break_point' => $break_point]);
     }
 
     #endregion

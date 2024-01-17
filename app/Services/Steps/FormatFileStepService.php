@@ -44,7 +44,7 @@ class FormatFileStepService implements ITreatmentStepService
     }
 
     public function initStages() {
-        $this->stage = new TreatmentStage(Treatment::getById($this->treatment_id), $this, TreatmentCodeEnum::IMPORTFILE->toArray()['name'], null);
+        $this->stage = new TreatmentStage(Treatment::getById($this->treatment_id), $this, TreatmentCodeEnum::IMPORTFILE->toArray()['name'], null, true);
         $this->stage->setFunction("launchFormatRows", CriticalityLevelEnum::HIGH, false, false, "Launch File formatting");
     }
 
@@ -64,7 +64,7 @@ class FormatFileStepService implements ITreatmentStepService
         }
 
         $treatment->starting();
-        $this->stage->exec();
+        $this->stage->exec($treatment->break_point);
 
         return $treatment;
     }
@@ -158,7 +158,7 @@ class FormatFileStepService implements ITreatmentStepService
             //\Log::info("...And the file is imported...");
             if ( ! $collectedreportfile->isMergingReady) {
                 $treatment_payloads = ['collectedReportFileId' => $collectedreportfile_id, 'importTreatmentId' => $treatment_id];
-                \App\Models\Treatments\Treatment::getById($treatment_id)?->launchUpperStep(TreatmentCodeEnum::MERGEFILE, $treatment_payloads, false, null);
+                \App\Models\Treatments\Treatment::getById($treatment_id)?->launchUpperStep(TreatmentCodeEnum::MERGEFILE, false, true, $treatment_payloads, false, null);
                 $collectedreportfile->setMergingReady();
             }
         }

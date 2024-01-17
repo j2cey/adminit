@@ -28,6 +28,7 @@ class CreateProgressionsTable extends Migration
             $table->decimal('rate')->nullable()->comment('execution rate');
             $table->decimal('rate_passed')->nullable()->comment('execution passed rate');
             $table->boolean('exec_done')->default(false)->comment('execution rate');
+            $table->string('current_step')->nullable()->comment('current progression step');
             $table->string('description')->nullable()->comment('description');
             $table->longText('todos')->nullable();
 

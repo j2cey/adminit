@@ -70,6 +70,7 @@ class CreateTreatmentsTable extends Migration
 
             $table->integer('current_stage')->nullable()->comment('current stage');
             $table->integer('stages_count')->nullable()->comment('number of stages to be executed by this treatment');
+            $table->integer('break_point')->default(0)->comment('last execution break point');
             $table->string('full_path')->nullable()->comment('treatment full path');
 
             /**

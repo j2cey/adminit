@@ -65,7 +65,7 @@ trait HasTreatmentWorkflow
             ->addStepAsNext(TreatmentCodeEnum::IMPORTFILE, CriticalityLevelEnum::HIGH)
             ->addStepAsNext(TreatmentCodeEnum::FORMATFILE, CriticalityLevelEnum::HIGH)
             ->addStepAsNext(TreatmentCodeEnum::MERGEFILE, CriticalityLevelEnum::HIGH)
-        //    ->addStepAsNext(TreatmentCodeEnum::NOTIFYFILE, CriticalityLevelEnum::HIGH)
+            ->addStepAsNext(TreatmentCodeEnum::NOTIFYFILE, CriticalityLevelEnum::HIGH)
         ;
 
         return $treatmentworkflow;

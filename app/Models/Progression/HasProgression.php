@@ -40,8 +40,8 @@ trait HasProgression
     }
 
     public function setUpperProgression(Progression|null $progression) {
-        $msg = "HasProgression, setUpperProgression for " . self::class . "(" . $this->id . ") - upperprogression: " . ( is_null($progression) ? "NULL" : $progression->id );
-        \Log::info($msg);
+        //$msg = "HasProgression, setUpperProgression for " . self::class . "(" . $this->id . ") - upperprogression: " . ( is_null($progression) ? "NULL" : $progression->id );
+        //\Log::info($msg);
         if ( is_null( $this->progression ) ) {
             $this->refresh();
         }
@@ -56,8 +56,12 @@ trait HasProgression
         dispatch(new ProgressionJob($this->progression, "addTodo", ['amount' => $amount, 'name' => $name,]));
         return $this->progression;
     }
+    public function progressionSetCurrentStep(string $name) {
+        dispatch(new ProgressionJob($this->progression, "setCurrentStep", ['name' => $name,]));
+        return $this->progression;
+    }
     public function progressionAddStepDone(string $name, bool $passed, string|null $description) {
-        dispatch(new ProgressionJob($this->progression, "addStepDone", ['name' => $name,'passed' => $passed,'description' => $description, 'child_progression' => null,]));
+        dispatch(new ProgressionJob($this->progression, "addStepDone", ['name' => $name,'passed' => $passed,'description' => $description, 'sub_progression' => null,]));
         return $this->progression;
     }
     #endregion

@@ -8,6 +8,7 @@ use App\Enums\CriticalityLevelEnum;
 use App\Models\Treatments\Treatment;
 use App\Models\ReportFile\ReportFile;
 use App\Http\Resources\StatusResource;
+use App\Models\Progression\Progression;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Treatments\TreatmentResult;
 use App\Enums\Treatments\TreatmentTypeEnum;
@@ -16,6 +17,7 @@ use App\Models\Treatments\TreatmentService;
 use App\Enums\Treatments\TreatmentStateEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Contracts\ReportTreatment\ITreatmentType;
+use App\Http\Resources\Progression\ProgressionResource;
 
 /**
  * Class TreatmentResource
@@ -82,6 +84,7 @@ use App\Contracts\ReportTreatment\ITreatmentType;
  * @property Treatment[] $subtreatmentswaiting
  * @property TreatmentService $service
  * @property TreatmentResult $treatmentresult
+ * @property Progression $progression
  * @property Status $status
  */
 class TreatmentResource extends JsonResource
@@ -143,6 +146,8 @@ class TreatmentResource extends JsonResource
             'treatmentresult' => TreatmentResultResource::make($this->treatmentresult),
             'full_path' => $this->full_path,
             //'subtreatments_count' => $this->subtreatments()->count(),// TreatmentResource::collection($this->subtreatments),
+
+            'progression' => ProgressionResource::make($this->progression),
 
             'show_url' => route('treatments.show', $this->uuid),
             'edit_url' => route('treatments.edit', $this->uuid),

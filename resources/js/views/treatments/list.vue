@@ -64,20 +64,28 @@
                             </span>
                             <span v-else></span>
                         </span>
-                        <span v-else-if="column.field === 'result'" class="has-text-info is-italic text-xs">
-                            <span v-if="props.row[column.field]">
-                                <b-tag rounded v-if="props.row[column.field] === 'success'" type="is-success">{{ props.row[column.field] }}</b-tag>
-                                <b-tag rounded v-else-if="props.row[column.field] === 'failed'" type="is-danger">{{ props.row[column.field] }}</b-tag>
-                                <b-tag rounded v-else type="is-default">{{ props.row[column.field] }}</b-tag>
-                            </span>
-                            <span v-else></span>
-                        </span>
                         <span v-else-if="column.field === 'state'" class="has-text-info is-italic text-xs">
                             <span v-if="props.row[column.field]">
                                 <b-tag rounded v-if="props.row[column.field] === 'completed'" type="is-success">{{ props.row[column.field] }}</b-tag>
                                 <b-tag rounded v-else-if="props.row[column.field] === 'running'" type="is-danger">{{ props.row[column.field] }}</b-tag>
                                 <b-tag rounded v-else-if="props.row[column.field] === 'queued'" type="is-warning">{{ props.row[column.field] }}</b-tag>
                                 <b-tag rounded v-else type="is-default">{{ props.row[column.field] }}</b-tag>
+                                 /
+                                <b-tag rounded v-if="props.row['result'] === 'success'" type="is-success">{{ props.row['result'] }}</b-tag>
+                                <b-tag rounded v-else-if="props.row['result'] === 'failed'" type="is-danger">{{ props.row['result'] }}</b-tag>
+                                <b-tag rounded v-else type="is-default">{{ props.row['result'] }}</b-tag>
+                            </span>
+                            <span v-else></span>
+                        </span>
+                        <span v-else-if="column.field === 'progression'" class="has-text-info is-italic text-xs">
+                            <span v-if="props.row[column.field]">
+                                <b-tag v-if="props.row[column.field].rate >= 100" type="is-success" size="is-small">{{ roundedNum(props.row[column.field].rate) + '%' }}</b-tag>
+                                <b-tag v-else-if="props.row[column.field].rate <= 50" type="is-danger" size="is-small">{{ roundedNum(props.row[column.field].rate) + '%' }}</b-tag>
+                                <b-tag v-else type="is-warning" size="is-small">{{ roundedNum(props.row[column.field].rate) + '%' }}</b-tag>
+                                /
+                                <span class="tag is-info is-light">
+                                    {{ props.row[column.field].current_step }}
+                                </span>
                             </span>
                             <span v-else></span>
                         </span>
@@ -198,17 +206,17 @@ export default {
                     date: false,
                 },
                 {
-                    field: 'result',
-                    key: 'result',
-                    label: 'Result',
-                    searchable: true,
+                    field: 'state',
+                    key: 'state',
+                    label: 'State/Result',
+                    searchable: false,
                     sortable: true,
                 },
                 {
-                    field: 'state',
-                    key: 'state',
-                    label: 'State',
-                    searchable: true,
+                    field: 'progression',
+                    key: 'progression',
+                    label: 'Progression',
+                    searchable: false,
                     sortable: true,
                 },
                 {
@@ -299,6 +307,9 @@ export default {
                 })
             }
         },
+        roundedNum(numb) {
+            return Math.floor(numb);
+        }
     },
     computed: {
         // eslint-disable-next-line vue/return-in-computed-property

@@ -37,7 +37,7 @@ class ImportFileStepService implements ITreatmentStepService
     }
 
     public function initStages() {
-        $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::IMPORTFILE->toArray()['name'], null);
+        $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::IMPORTFILE->toArray()['name'], null, true);
         $this->stage->setFunction("prepareImport", CriticalityLevelEnum::HIGH, false, false, "Prepare File importation");
     }
 
@@ -65,7 +65,7 @@ class ImportFileStepService implements ITreatmentStepService
             return $this->treatment;
         }
 
-        $this->stage->exec();
+        $this->stage->exec($this->treatment->break_point);
 
         return $this->treatment;
     }

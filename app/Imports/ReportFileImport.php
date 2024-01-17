@@ -9,6 +9,7 @@ use Illuminate\Bus\Batch;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Facades\Bus;
 use App\Jobs\DynamicValueFormatJob;
+use App\Models\Treatments\Treatment;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\DynamicValue\DynamicRow;
 use Maatwebsite\Excel\Validators\Failure;
@@ -16,7 +17,6 @@ use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Events\BeforeImport;
-use App\Models\Treatments\Treatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
@@ -40,12 +40,15 @@ class ReportFileImport implements WithChunkReading, WithEvents, WithValidation, 
     private int $import_queue_id = 0;
     public static QueueEnum $IMPORT_QUEUE = QueueEnum::IMPORTFILE;
     private bool $_merge_launched = false;
+    private string $_import_name;
 
     public function __construct(CollectedReportFile $collectedreportfile, Treatment $operation)
     {
         $this->_collectedreportfile_id   = $collectedreportfile->id;
         //$this->_step = $step;//->startTreatmentStep();
         $this->_treatment_id = $operation->starting()->id;
+        $this->_import_name = "Import file: " . substr($collectedreportfile->local_file_name, -11);
+        $operation->progressionAddTodo(1,$this->_import_name);
     }
 
     public function onRow(Row $row)
@@ -89,8 +92,9 @@ class ReportFileImport implements WithChunkReading, WithEvents, WithValidation, 
             //$treatment->launchUpperStep(TreatmentCodeEnum::MERGEFILE, $treatment_payloads, true, null);
 
             //$this->formatRowValuesLaunch($treatment, $collectedreportfile, $newrow, true);
-            $treatment->launchUpperStep(TreatmentCodeEnum::FORMATFILE, $treatment_payloads, false, null);
+            $treatment->launchUpperStep(TreatmentCodeEnum::FORMATFILE, false, true, $treatment_payloads, false, null);
             $treatment->endingWithSuccess();
+            $treatment->progressionAddStepDone($this->_import_name, 1, null);
         } /*else {
             $this->formatRowValuesLaunch($treatment, $collectedreportfile, $newrow, false);
         }*/
@@ -224,7 +228,7 @@ class ReportFileImport implements WithChunkReading, WithEvents, WithValidation, 
             if (CollectedReportFile::getById($collectedreportfile_id)?->isImported && ( ! $this->_merge_launched ) ) {
                 //\Log::info("...And the file is imported...");
                 $treatment_payloads = ['collectedReportFileId' => $collectedreportfile_id, 'importTreatmentId' => $treatment_id];
-                \App\Models\Treatments\Treatment::getById($treatment_id)?->launchUpperStep(TreatmentCodeEnum::MERGEFILE, $treatment_payloads, false, null);
+                \App\Models\Treatments\Treatment::getById($treatment_id)?->launchUpperStep(TreatmentCodeEnum::MERGEFILE, false, true, $treatment_payloads, false, null);
                 $this->_merge_launched = true;
             }
         })->onQueue( $queue_name )->name("format row " . $dynamicrow->id . ", file " . $collectedreportfile->local_file_name . " (" . $collectedreportfile->id . " ) ")

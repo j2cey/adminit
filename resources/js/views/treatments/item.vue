@@ -114,7 +114,7 @@
                                 <span v-else class="badge badge-pill badge-default">{{ treatment.treatmentresult.result }}</span>
 
                                 <a type="button" class="btn btn-tool" @click="collapseClicked('collapse_treatmentresult_icon', collapse_treatmentresult_icon)" data-toggle="collapse" :data-parent="'#treatmentresult_' + treatment.uuid" :href="'#collapse-treatmentresult-access-'+index">
-                                    <i :class="currentTreatmentInfosCollapseIcon"></i>
+                                    <i :class="currentTreatmentResultCollapseIcon"></i>
                                 </a>
                             </span>
                         </div>
@@ -142,6 +142,61 @@
                                 <dd class="text text-xs">{{ treatment.retry_end_at | formatDate}}</dd>
                                 <dt class="text text-xs">Message</dt>
                                 <dd class="col-sm-8 offset-sm-4 text-xs">{{ treatment.treatmentresult.message ?? '' }}</dd>
+                            </dl>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+
+        <div :id="'treatmentprogression_' + treatment.uuid">
+            <div class="card">
+                <header>
+                    <div class="card-header-title row">
+                        <div class="col-md-6 col-sm-8 col-12">
+                            <span class="text-purple text-xs" @click="collapseClicked('collapse_treatmentprogression_icon', collapse_treatmentprogression_icon)" data-toggle="collapse" :data-parent="'#treatmentprogression_' + treatment.uuid" :href="'#collapse-treatmentprogression-'+index">
+                                Progression
+                            </span>
+                        </div>
+                        <div class="col-md-6 col-sm-4 col-12 text-right">
+                            <span class="text text-sm">
+
+                                <span v-if="treatment.progression.rate >= 100" class="badge badge-pill badge-success">{{ roundedNum(treatment.progression.rate) + '%' }}</span>
+                                <span v-else-if="treatment.progression.rate <= 50" class="badge badge-pill badge-danger">{{ roundedNum(treatment.progression.rate) + '%' }}</span>
+                                <span v-else class="badge badge-pill badge-warning">{{ roundedNum(treatment.progression.rate) + '%' }}</span>
+
+                                <a type="button" class="btn btn-tool" @click="collapseClicked('collapse_treatmentprogression_icon', collapse_treatmentprogression_icon)" data-toggle="collapse" :data-parent="'#treatmentprogression_' + treatment.uuid" :href="'#collapse-treatmentprogression-'+index">
+                                    <i :class="currentTreatmentProgressionCollapseIcon"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- /.user-block -->
+                </header>
+                <!-- /.card-header -->
+                <div :id="'collapse-treatmentprogression-'+index" class="card-content panel-collapse collapse in">
+
+                    <div class="row">
+
+                        <div class="col-md-6 col-sm-6 col-6">
+                            <dl>
+                                <dt class="text text-xs">NB TODO</dt>
+                                <dd class="text text-xs">{{ treatment.progression.nb_todo }}</dd>
+                                <dt class="text text-xs">NB DONE</dt>
+                                <dd class="text text-xs">{{ treatment.progression.nb_todo }}</dd>
+                                <dt class="text text-xs">NB PASSED</dt>
+                                <dd class="text text-xs">{{ treatment.progression.nb_passed }}</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-6">
+                            <dl>
+                                <dt class="text text-xs">Current Step</dt>
+                                <dd class="text text-xs">{{ treatment.progression.current_step }}</dd>
+                                <dt class="text text-xs">Last Step</dt>
+                                <dd class="col-sm-8 offset-sm-4 text-xs">{{ treatment.progression.lastprogressionstep ? treatment.progression.lastprogressionstep.name : '' }}</dd>
                             </dl>
                         </div>
                         <!-- /.col -->
@@ -182,11 +237,11 @@
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-sm-2 col-6">
-                                    <span class="text text-xs">State</span>
+                                    <span class="text text-xs">State/Result</span>
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-sm-2 col-6">
-                                    <span class="text text-xs">Result</span>
+                                    <span class="text text-xs">Progression</span>
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-sm-2 col-6">
@@ -217,12 +272,18 @@
                                     <span class="text text-xs text-danger" v-else-if="treatmentcurr && (treatmentcurr.state === 'running' || treatmentcurr.state === 'retrying')">{{ treatmentcurr ? treatmentcurr.state : '' }}</span>
                                     <span class="text text-xs text-warning" v-else-if="treatmentcurr && (treatmentcurr.state === 'queued')">{{ treatmentcurr ? treatmentcurr.state : '' }}</span>
                                     <span class="text text-xs text-info" v-else>{{ treatmentcurr ? treatmentcurr.state : '' }}</span>
-                                </div>
-                                <!-- /.col -->
-                                <div class="col-sm-2 col-6 border-right">
+                                    /
                                     <span class="text text-xs text-green" v-if="treatmentcurr.treatmentresult && treatmentcurr.treatmentresult.result === 'success'">{{ treatmentcurr.treatmentresult ? treatmentcurr.treatmentresult.result : '' }}</span>
                                     <span class="text text-xs text-warning" v-else-if="treatmentcurr && treatmentcurr.treatmentresult.result === 'failed'">{{ treatmentcurr.treatmentresult ? treatmentcurr.treatmentresult.result : '' }}</span>
                                     <span class="text text-xs text-info" v-else>{{ treatmentcurr.treatmentresult ? treatmentcurr.treatmentresult.result : '' }}</span>
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-2 col-6 border-right">
+                                    <span class="text text-xs text-green" v-if="treatmentcurr.progression && treatmentcurr.progression.rate >= 100">{{ roundedNum(treatmentcurr.progression.rate) + '%' }}</span>
+                                    <span class="text text-xs text-danger" v-else-if="treatmentcurr && treatmentcurr.progression.rate <= 50">{{ roundedNum(treatmentcurr.progression.rate) + '%' }}</span>
+                                    <span class="text text-xs text-warning" v-else>{{ roundedNum(treatmentcurr.progression.rate) + '%' }}</span>
+                                    /
+                                    <span class="text text-xs text-info" v-if="treatmentcurr.progression">{{ treatmentcurr.progression ? treatmentcurr.progression.current_step : '' }}</span>
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-sm-2 col-6 border-right">
@@ -302,6 +363,7 @@ export default {
             collapse_treatmentinfos_icon: 'fas fa-chevron-down',
             collapse_treatmentresult_icon: 'fas fa-chevron-down',
             collapse_treatmentcurrlast_icon: 'fas fa-chevron-down',
+            collapse_treatmentprogression_icon: 'fas fa-chevron-down',
         };
     },
     methods: {
@@ -311,6 +373,9 @@ export default {
             } else {
                 this[collapsevar] = 'fas fa-chevron-down';
             }
+        },
+        roundedNum(numb) {
+            return Math.floor(numb);
         }
     },
     computed: {
@@ -361,6 +426,15 @@ export default {
 
         currentTreatmentInfosCollapseIcon() {
             return this.collapse_treatmentinfos_icon;
+        },
+        currentTreatmentResultCollapseIcon() {
+            return this.collapse_treatmentresult_icon;
+        },
+        currentTreatmentCurrLastCollapseIcon() {
+            return this.collapse_treatmentcurrlast_icon;
+        },
+        currentTreatmentProgressionCollapseIcon() {
+            return this.collapse_treatmentprogression_icon;
         }
     }
 }

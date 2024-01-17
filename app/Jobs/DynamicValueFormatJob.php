@@ -4,10 +4,10 @@ namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Bus\Batchable;
+use App\Models\Treatments\Treatment;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\DynamicValue\DynamicValue;
-use App\Models\Treatments\Treatment;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -46,7 +46,12 @@ class DynamicValueFormatJob implements ShouldQueue
             return;
         }
         $treatment = Treatment::getById($this->_treatment_id);
+
         $dynamicvalue = DynamicValue::getById($this->_dynamicvalue_id);
+        $progression_step_name = "format value " . $dynamicvalue->id . ", row " . $dynamicvalue->dynamicrow->line_num . "(" . $dynamicvalue->dynamicrow->id . ")";
+
+        $treatment?->progressionSetCurrentStep( $progression_step_name );
+
         $dynamicvalue->startingImport(1, $dynamicvalue->dynamicrow);
         $dynamicvalue->itemImportSucceed(1);
 
@@ -71,6 +76,6 @@ class DynamicValueFormatJob implements ShouldQueue
                 $treatment->endingWithFailure($dynamicvalue->dynamicrow->hasdynamicrow->importresult->last_failed_message ?? "At least one import failed");
             }
         }
-        $treatment->progressionAddStepDone("format value " . $dynamicvalue->id . ", row " . $dynamicvalue->dynamicrow->line_num . "(" . $dynamicvalue->dynamicrow->id . ")",true, null);
+        $treatment->progressionAddStepDone($progression_step_name,true, null);
     }
 }
