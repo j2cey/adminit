@@ -4,8 +4,8 @@ namespace App\Models\DynamicValue;
 
 use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
-use App\Traits\Import\IsImportable;
-use App\Traits\Format\IsFormattable;
+use App\Models\Import\IsImportable;
+use App\Models\Format\IsFormattable;
 use Illuminate\Database\Eloquent\Model;
 use App\Contracts\Import\IIsImportable;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -47,9 +47,9 @@ use App\Contracts\AnalysisRules\IHasMatchedAnalysisRules;
  * @property DynamicAttribute $dynamicattribute
  * @method static DynamicValue create(array $array)
  */
-class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasFormatRules, IIsImportable, IIsFormattable
+class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasFormatRules
 {
-    use HasFactory, HasFormattedValue, HasFormatRules, IsImportable, IsFormattable, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasFormattedValue, HasFormatRules, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     protected $with = ['innerdynamicvalue'];
@@ -192,9 +192,17 @@ class DynamicValue extends Model implements Auditable, IHasFormattedValue, IHasF
     {
         return 100;
     }
+    public function getUpperIsImportable(): ?IIsImportable
+    {
+        return $this->dynamicrow;
+    }
 
     public function getFormattedSuccessRate(): float
     {
         return 100;
+    }
+    public function getUpperIsFormattable(): ?IIsFormattable
+    {
+        return $this->dynamicrow;
     }
 }

@@ -43,23 +43,19 @@ class DownloadFileStepService implements ITreatmentStepService
 
     public function initStages() {
         $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'], null, false);
-        $this->stage->setFunction("getRemoteDisk", $this->treatment->criticality_level, $this->treatment->is_last_subtreatment, $this->treatment->can_end_uppertreatment, "Get Access Disk");
+        $this->stage->setFunction("getRemoteDisk", $this->treatment->criticality_level, $this->treatment->is_last_subtreatment, $this->treatment->can_end_uppertreatment, null, "Get Access Disk");
 
         $this->stage
-            ->addNextStageOnSuccess("Get Retrieve Mode", false, "getRetrieveMode", CriticalityLevelEnum::HIGH, false, false,"Get the relevant s retrieve (download) mode")
-            ->addNextStageOnSuccess("Download file and save new CollectedFile", true, "downloadFile", CriticalityLevelEnum::HIGH, false,  false, "Download file")
-            ->addNextStageOnSuccess("Launch Import File Step", true, "launchImportFileStep", CriticalityLevelEnum::HIGH, false,  false, "launch Import File Step")
-            ->addNextStageOnSuccess("Get After Download Action Mode", false, "getAfterDownloadActionMode", CriticalityLevelEnum::HIGH, false, false, "Get After Download ation Mode")
-            ->addNextStageOnSuccess("Perform action after download", true, "performActionAfterDownloadFile", CriticalityLevelEnum::LOW, true, true, "Perform Action after Download file");
+            ->addNextStageOnSuccess("Get Retrieve Mode", false, "getRetrieveMode", CriticalityLevelEnum::HIGH, false, false, null,"Get the relevant s retrieve (download) mode")
+            ->addNextStageOnSuccess("Download file and save new CollectedFile", true, "downloadFile", CriticalityLevelEnum::HIGH, false,  false, null, "Download file")
+            ->addNextStageOnSuccess("Launch Import File Step", true, "launchImportFileStep", CriticalityLevelEnum::HIGH, false,  false, null, "launch Import File Step")
+            ->addNextStageOnSuccess("Get After Download Action Mode", false, "getAfterDownloadActionMode", CriticalityLevelEnum::HIGH, false, false, null, "Get After Download ation Mode")
+            ->addNextStageOnSuccess("Perform action after download", true, "performActionAfterDownloadFile", CriticalityLevelEnum::LOW, true, true, null, "Perform Action after Download file");
     }
 
     public static function getQueueCode(): QueueEnum
     {
         return QueueEnum::DOWNLOADFILE;
-    }
-
-    public function launchExecOpertion_old(Treatment $treatment, int|null $exec_id, bool $is_last_subtreatment, bool $can_end_uppertreatment, array $nexttreatment_payloads, bool $dispatch_on_creation): ?Treatment {
-        return $treatment->launchNewSubOperation(TreatmentCodeEnum::DOWNLOADFILE_EXEC, CriticalityLevelEnum::HIGH, $exec_id ?? 1, $is_last_subtreatment, $can_end_uppertreatment, $nexttreatment_payloads, $dispatch_on_creation,false, false, null);
     }
 
     public function launch(Treatment $treatment): ?Treatment {
@@ -77,6 +73,7 @@ class DownloadFileStepService implements ITreatmentStepService
             return $this->treatment;
         }
 
+        $this->treatment->starting();
         $this->stage->exec($this->treatment->break_point);
 
         /*if ( $treatment->subtreatments()->waiting()->count() > 0 ) {
@@ -95,6 +92,28 @@ class DownloadFileStepService implements ITreatmentStepService
 
     public function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
 
+    }
+
+    public function getNextOnSuccess(): ?TreatmentCodeEnum
+    {
+        return TreatmentCodeEnum::IMPORTFILE;
+    }
+
+    public function launchNextOnSuccess(array $payloads)
+    {
+        $this->treatment->reloadCollectedreportfile();
+        $payloads = self::addCollectedReportFileToPayload($payloads, $this->treatment->collectedreportfile);
+        $this->treatment->launchUpperStep($this->getNextOnSuccess(), false, true, $payloads, false, null);
+    }
+
+    public function getNextOnFailure(): ?TreatmentCodeEnum
+    {
+        return null;
+    }
+
+    public function launchNextOnFailure(array $payloads)
+    {
+        // TODO: Implement launchNextOnFailure() method.
     }
 
     #region Stage Functions
@@ -126,6 +145,7 @@ class DownloadFileStepService implements ITreatmentStepService
         //\Log::info("downloadFile - criticality_level: $criticality_level->value, is_last_subtreatment: " . ($is_last_subtreatment ? "true" : "false") . ", can_end_uppertreatment: " . $can_end_uppertreatment ? "true" : "false");
         $execute_retrievemode = $this->retrieve_mode_action::execAction($this->disk, $this->treatment->service->getReportfile(), $this->treatment, $criticality_level, ++$this->exec_id, $is_last_subtreatment,  $can_end_uppertreatment);
         if ( $execute_retrievemode->isSuccess() ) {
+            $this->launchNextOnSuccess([]);
             return 1;
         }
         return -1;

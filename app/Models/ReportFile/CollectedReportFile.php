@@ -6,12 +6,14 @@ use App\Models\Status;
 use App\Models\BaseModel;
 use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
-use App\Traits\Import\IsImportable;
+use App\Models\Import\IsImportable;
 use App\Traits\Notify\IsNotifiable;
-use App\Traits\Format\IsFormattable;
+use App\Models\Format\IsFormattable;
 use Illuminate\Support\Facades\Storage;
 use App\Contracts\Notify\IIsNotifiable;
+use App\Contracts\Import\IIsImportable;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Contracts\Format\IIsFormattable;
 use App\Traits\FormatRule\HasFormatRules;
 use Illuminate\Database\Eloquent\Builder;
 use App\Contracts\FormatRule\IHasFormatRules;
@@ -287,10 +289,18 @@ class CollectedReportFile extends BaseModel implements Auditable, IHasDynamicRow
     {
         return 100;
     }
+    public function getUpperIsImportable(): ?IIsImportable
+    {
+        return null;
+    }
 
     public function getFormattedSuccessRate(): float
     {
         return 100;
+    }
+    public function getUpperIsFormattable(): ?IIsFormattable
+    {
+        return null;
     }
 
     public function getNotifiedSuccessRate(): float

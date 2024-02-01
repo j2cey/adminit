@@ -123,38 +123,46 @@ class NotificationResult extends BaseModel implements Auditable
         return NotificationResult::create($data);
     }
 
-    private function addSubNotificationResult(NotificationResult $notificationresult) {
+    public function setUpperNotificationResult(NotificationResult|null $uppernotificationresult) {
+        if ( ! is_null( $uppernotificationresult ) ) {
+            $uppernotificationresult->addSubNotificationResult($this);
+        }
+    }
+
+    public function addSubNotificationResult(NotificationResult $notificationresult) {
         $notificationresult->posi = $this->subnotificationresults()->count() + 1;
         $notificationresult->uppernotificationresult()->associate($this)->save();
     }
 
-    public function setStarting(int $nb_to_notify, float $min_notified_success_rate, NotificationResult|null $upper_notificationresult) {
+    public function addToNotify(int $amount) {
+        $this->update(['nb_to_notify' => $this->nb_to_notify += $amount,]
+        );
+        $this->setNotificationUpToDate(true);
 
-        $this->posi = 1;
-        $upper_notificationresult?->addSubNotificationResult($this);
-
-        $this->start_at = Carbon::now();
-        $this->setNewAttempt();
-
-        $this->nb_to_notify = $nb_to_notify;
-        $this->min_notified_success_rate = $min_notified_success_rate;
-        $this->incrementNotification(false);
-
-        $this->save();
-
-        return $this;
+        $this->uppernotificationresult?->addToNotify($amount);
     }
 
-    public function startingSubNotification(NotificationTypeEnum $notification_type, int $nb_to_notify, bool $increment_upper_nb_to_notify): NotificationResult {
-        $sub_notification = NotificationResult::createNew([
-            'notification_type' => $notification_type->value,
-        ]);
-        if ($increment_upper_nb_to_notify) {
-            $this->nb_to_notify += 1;
-        }
-        $sub_notification->setStarting($nb_to_notify, $this->min_notified_success_rate, $this);
+    public function setStarting(int|null $nb_to_notify, bool $force = false) {
 
-        return $sub_notification;
+        //$this->posi = 1;
+        //$upper_notificationresult?->addSubNotificationResult($this);
+
+        if ( ! is_null($nb_to_notify) ) {
+            $this->addToNotify($nb_to_notify);
+        }
+
+        if ( is_null($this->start_at) || $force ) {
+            $this->start_at = Carbon::now();
+            $this->setNewAttempt();
+
+            $this->incrementNotification(false);
+
+            $this->save();
+        }
+
+        $this->uppernotificationresult?->setStarting(null, $force);
+
+        //return $this;
     }
 
 
@@ -192,12 +200,16 @@ class NotificationResult extends BaseModel implements Auditable
     public function itemNotificationSucceed(int $item) {
         $this->last_notification_success = $item;
         $this->setNotificationDone("nb_notification_success",1, 1);
+
+        $this->uppernotificationresult?->itemNotificationSucceed($item);
     }
 
     public function itemNotificationFailed(int $item, string $message) {
         $this->last_notification_failed = $item;
         $this->last_failed_message = $message;
         $this->setNotificationDone("nb_notification_failed",1, 1);
+
+        $this->uppernotificationresult?->itemNotificationFailed($item, $message);
     }
 
 
@@ -216,20 +228,29 @@ class NotificationResult extends BaseModel implements Auditable
     }
 
     private function setNotificationDone(string $notification_attribute, int $amount, int $last_item) {
+        if ( is_null( $this->start_at ) ) {
+            $this->setStarting($amount);
+        }
         $this->last_notified = $last_item;
         $this->decrementNotification($notification_attribute, $amount, false);
-        $this->setNotified(false);
+
+        // adjust nb to notify if any
+        if ( $this->{$notification_attribute} > $this->nb_to_notify ) {
+            $this->nb_to_notify = $last_item;
+        }
+
+        $this->setNotificationUpToDate(false);
 
         $this->save();
     }
 
-    private function setNotified(bool $save) {
+    private function setNotificationUpToDate(bool $save) {
         $this->notification_success_rate = ($this->nb_notification_success / $this->nb_to_notify) * 100;
         $this->notification_failed_rate = ($this->nb_notification_failed / $this->nb_to_notify) * 100;
 
-        $this->notified = ( $this->notification_success_rate >= $this->min_notified_success_rate );
         $this->saveObject($save);
 
+        $this->notified = ( $this->notification_success_rate >= $this->min_notified_success_rate );
         $this->notification_done = ($this->nb_notification_success + $this->nb_notification_failed) >= $this->nb_to_notify;
 
         $this->endNotification();
@@ -242,13 +263,15 @@ class NotificationResult extends BaseModel implements Auditable
             $this->end_at = $duration->getEndAt();
             $this->duration = $duration->getDuration();
             $this->duration_hhmmss = $duration->getDurationHhmmss();
-
-            if ($this->notified) {
-                $this->uppernotificationresult?->itemNotificationSucceed($this->posi);
-            } else {
-                $this->uppernotificationresult?->itemNotificationFailed($this->posi, $this->last_failed_message);
-            }
         }
+    }
+
+    /**
+     * @param int $id
+     * @return NotificationResult|null
+     */
+    public static function getById(int $id) {
+        return NotificationResult::find($id);
     }
 
     #endregion

@@ -41,7 +41,7 @@ class InnerTreatment
             $this->setKey(null);
             $this->setStartAt(null);
 
-            if ($this->canStartUppertreatment() && (!$treatment->isStarting) || (!$treatment->isRunning)) {
+            if ($this->canStartUppertreatment() && (!$treatment->isStarting) && (!$treatment->isRunning)) {
                 $treatment->starting();
             }
             $this->registerInnerTreatment();

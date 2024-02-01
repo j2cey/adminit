@@ -298,4 +298,9 @@ class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCol
     {
         return $this->uppertreatment;
     }
+
+    public function getProcessName(): string
+    {
+        return $this->name;
+    }
 }

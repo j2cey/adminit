@@ -17,6 +17,10 @@ trait HasCollectedReportFile
         return $this->belongsTo(CollectedReportFile::class, 'collected_report_file_id');
     }
 
+    public function reloadCollectedreportfile() {
+        $this->load('collectedreportfile');
+    }
+
     public function setCollectedReportFile(CollectedReportFile|null $collectedreportfile): static
     {
         if ( ! is_null($collectedreportfile) ) {

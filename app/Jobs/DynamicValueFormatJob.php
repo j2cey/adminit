@@ -26,9 +26,6 @@ class DynamicValueFormatJob implements ShouldQueue
      */
     public function __construct(Treatment $treatment, DynamicValue $dynamicvalue)
     {
-        //$this->_launcher_id = $launcher->id;
-        //$this->onQueue($launcher->getQueueName());
-
         $this->_dynamicvalue_id = $dynamicvalue->id;
         $this->_treatment_id = $treatment->id;
     }
@@ -42,40 +39,16 @@ class DynamicValueFormatJob implements ShouldQueue
     {
         if ($this->batch()->cancelled()) {
             // Determine if the batch has been cancelled...
-
             return;
         }
-        $treatment = Treatment::getById($this->_treatment_id);
-
         $dynamicvalue = DynamicValue::getById($this->_dynamicvalue_id);
-        $progression_step_name = "format value " . $dynamicvalue->id . ", row " . $dynamicvalue->dynamicrow->line_num . "(" . $dynamicvalue->dynamicrow->id . ")";
 
-        $treatment?->progressionSetCurrentStep( $progression_step_name );
-
-        $dynamicvalue->startingImport(1, $dynamicvalue->dynamicrow);
-        $dynamicvalue->itemImportSucceed(1);
-
-        $dynamicvalue->startingFormatting(1, $dynamicvalue->dynamicrow);
         $dynamicvalue->initFormattedValue();
         $dynamicvalue->load(['htmlformattedvalue','smsformattedvalue']);
 
         if ( $dynamicvalue->htmlformattedvalue && $dynamicvalue->smsformattedvalue ) {
             //\Log::info("DynamicValueFormatJob - FormattedValue INIT done for DynamicValue " . $dynamicvalue->id);
             $dynamicvalue->applyValueFormat();
-
-            $dynamicvalue->itemFormattingSucceed(1);
         }
-
-        if ($dynamicvalue->dynamicrow->hasdynamicrow->isImportDone) {
-            if ($dynamicvalue->dynamicrow->hasdynamicrow->isImported) {
-                //\Log::info("importation done for " . get_class($dynamicvalue->dynamicrow->hasdynamicrow) . " (" . $dynamicvalue->dynamicrow->hasdynamicrow->id . ")");
-                $treatment->endingWithSuccess();
-                //$treatment_payloads = ['collectedReportFileId' => $treatment->service->collectedreportfile->id, 'importTreatmentId' => $treatment->id];
-                //$treatment->launchUpperStep(TreatmentCodeEnum::MERGEFILE, $treatment_payloads, true, null);
-            } else {
-                $treatment->endingWithFailure($dynamicvalue->dynamicrow->hasdynamicrow->importresult->last_failed_message ?? "At least one import failed");
-            }
-        }
-        $treatment->progressionAddStepDone($progression_step_name,true, null);
     }
 }

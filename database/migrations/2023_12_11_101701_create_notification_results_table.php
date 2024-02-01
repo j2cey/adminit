@@ -26,7 +26,7 @@ class CreateNotificationResultsTable extends Migration
 
             $table->string('notification_type')->nullable()->comment("notification type");
             $table->integer('posi')->nullable()->comment("notification item position");
-            $table->integer('nb_to_notify')->nullable()->comment("number of items to be notified");
+            $table->integer('nb_to_notify')->default(0)->comment("number of items to be notified");
             $table->integer('nb_notification_success')->default(0)->comment("number of items successfully notified");
             $table->decimal('notification_success_rate')->default(0)->comment("rate of items successfully notified");
             $table->integer('last_notification_success')->nullable()->comment("last item successfully notified");

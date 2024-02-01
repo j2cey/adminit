@@ -30,6 +30,12 @@ class FormatFileStepService implements ITreatmentStepService
 
     public int $import_queue_id = 0;
 
+    public int $nb_rows_to_process = 0;
+    public int $nb_rows_processed = 0;
+
+    public int $nb_values_to_process = 0;
+    public int $nb_values_processed = 0;
+
     public function __construct(Treatment $treatment)
     {
         $this->treatment_id = $treatment->id;
@@ -45,7 +51,7 @@ class FormatFileStepService implements ITreatmentStepService
 
     public function initStages() {
         $this->stage = new TreatmentStage(Treatment::getById($this->treatment_id), $this, TreatmentCodeEnum::IMPORTFILE->toArray()['name'], null, true);
-        $this->stage->setFunction("launchFormatRows", CriticalityLevelEnum::HIGH, false, false, "Launch File formatting");
+        $this->stage->setFunction("launchFormatRows", CriticalityLevelEnum::HIGH, false, false, null, "Launch File formatting");
     }
 
     public static function getQueueCode(): QueueEnum
@@ -69,6 +75,34 @@ class FormatFileStepService implements ITreatmentStepService
         return $treatment;
     }
 
+    public function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
+
+    }
+
+    public function getNextOnSuccess(): ?TreatmentCodeEnum
+    {
+        return TreatmentCodeEnum::MERGEFILE;
+    }
+
+    public function launchNextOnSuccess(array $payloads)
+    {
+        $treatment = Treatment::getById($this->treatment_id);
+
+        $treatment->reloadCollectedreportfile();
+        $payloads = self::addCollectedReportFileToPayload($payloads, $treatment->collectedreportfile);
+        $treatment->launchUpperStep($this->getNextOnSuccess(), false, true, $payloads, false, null);
+    }
+
+    public function getNextOnFailure(): ?TreatmentCodeEnum
+    {
+        return null;
+    }
+
+    public function launchNextOnFailure(array $payloads)
+    {
+        // TODO: Implement launchNextOnFailure() method.
+    }
+
     #region Stage Functions
     public function launchFormatRows(CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment): int {
         $treatment = Treatment::getById($this->treatment_id);
@@ -80,38 +114,36 @@ class FormatFileStepService implements ITreatmentStepService
     }
     #endregion
 
-    public function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
-
-    }
-
     #region Custom local functions
     private function formatRowValuesLaunch(Treatment $treatment, CollectedReportFile $collectedreportfile, DynamicRow $dynamicrow) {
-        $dynamicrow->hasdynamicrow->mergeRawValueFromRow( json_decode($dynamicrow->raw_value) );
-        //$hasdynamicattributes = $dynamicrow->getHasdynamicattributes();
-        $dynamicrow->startingImport( count( json_decode($dynamicrow->raw_value) ), $dynamicrow->hasdynamicrow );
-        $dynamicrow->startingFormatting( count( json_decode($dynamicrow->raw_value) ), $dynamicrow->hasdynamicrow );
-        //$dynamicrow->addValues($hasdynamicattributes, json_decode($dynamicrow->raw_value));
-        //$dynamicrow->allImportSucceed($collectedreportfile);
 
-        $dynamicvalues = $dynamicrow->dynamicvalues;;
+        $progression_step_name = "format row " . $dynamicrow->line_num . "(" . $dynamicrow->id . ")";
+        $treatment->progressionAddTodo(1, $progression_step_name);
+        $treatment?->progressionSetCurrentStep( $progression_step_name );
+
+        $dynamicrow->startingFormatting(1);
+
+        $dynamicrow->hasdynamicrow->mergeRawValueFromRow( json_decode($dynamicrow->raw_value) );
+
+        $dynamicvalues = $dynamicrow->dynamicvalues;
 
         $jobs = [];
         foreach ($dynamicvalues as $dynamicvalue) {
-            $treatment->progressionAddTodo(1, "format value " . $dynamicvalue->id . ", row " . $dynamicvalue->dynamicrow->line_num . "(" . $dynamicvalue->dynamicrow->id . ")" );
+            //$treatment->progressionAddTodo(1, "format value " . $dynamicvalue->id . ", row " . $dynamicvalue->dynamicrow->line_num . "(" . $dynamicvalue->dynamicrow->id . ")" );
             $dynamicvalue->initInnerValue();
             $jobs[] = new DynamicValueFormatJob( $treatment, $dynamicvalue );
         }
 
-        $this->createBatch($treatment, $collectedreportfile, $dynamicrow, $jobs);
+        $this->createBatch($treatment, $collectedreportfile, $dynamicrow, $jobs, $progression_step_name);
     }
 
-    private function createBatch(Treatment $treatment, CollectedReportFile $collectedreportfile, DynamicRow $dynamicrow, array $jobs): Batch
+    private function createBatch(Treatment $treatment, CollectedReportFile $collectedreportfile, DynamicRow $dynamicrow, array $jobs, string $progression_step_name): Batch
     {
         $dynamicrow_id = $dynamicrow->id;
         $collectedreportfile_id = $collectedreportfile->id;
         $treatment_id = $treatment->id;
 
-        $queue_name = self::getQueueCode()->value . "_" . $this->getNextQueueId();
+        $queue_name = self::getQueueCode()->value; //self::getQueueCode()->value . "_" . $this->getNextQueueId();
 
         $batch = Bus::batch(
             $jobs
@@ -122,11 +154,13 @@ class FormatFileStepService implements ITreatmentStepService
         })->catch(function (Batch $batch, Throwable $e) {
             // First batch job failure detected...
             \Log::error("First batch job failure detected...");
-        })->finally(function (Batch $batch) use ($treatment_id, $collectedreportfile_id) {
+        })->finally(function (Batch $batch) use ($treatment_id, $dynamicrow_id, $collectedreportfile_id, $progression_step_name) {
             // The batch has finished executing...
-            \App\Services\Steps\FormatFileStepService::formatRowFinished($treatment_id, $collectedreportfile_id);
+            //\Log::info("The batch has finished executing...");
+            \App\Services\Steps\FormatFileStepService::formatRowFinished($treatment_id, $dynamicrow_id, $collectedreportfile_id, $progression_step_name);
         })->onQueue( $queue_name )->name("format row " . $dynamicrow->id . ", file " . $collectedreportfile->local_file_name . " (" . $collectedreportfile->id . ") ")
             ->dispatch();
+        //})->onQueue( $queue_name )->name("format row " . $dynamicrow->id . ", file " . $collectedreportfile->local_file_name . " (" . $collectedreportfile->id . ") ")
 
         //$this->_batch_id = $batch->id;
 
@@ -151,15 +185,28 @@ class FormatFileStepService implements ITreatmentStepService
     }
     #endregion
 
-    public static function formatRowFinished($treatment_id, $collectedreportfile_id) {
+    public static function formatRowFinished($treatment_id, $dynamicrow_id, $collectedreportfile_id, $progression_step_name) {
+        $dynamicrow = DynamicRow::getById($dynamicrow_id);
+        $treatment = \App\Models\Treatments\Treatment::getById($treatment_id)::getById($treatment_id);
+
+        $dynamicrow?->itemFormattingSucceed(1);
+
+        $treatment->progressionAddStepDone($progression_step_name,true, null);
+
         $collectedreportfile = CollectedReportFile::getById($collectedreportfile_id);
-        if ($collectedreportfile?->isImported) {
+
+        if ($collectedreportfile?->isFormatted) {
             //$mergefile_count = Treatment::
             //\Log::info("...And the file is imported...");
             if ( ! $collectedreportfile->isMergingReady) {
-                $treatment_payloads = ['collectedReportFileId' => $collectedreportfile_id, 'importTreatmentId' => $treatment_id];
-                \App\Models\Treatments\Treatment::getById($treatment_id)?->launchUpperStep(TreatmentCodeEnum::MERGEFILE, false, true, $treatment_payloads, false, null);
+
+                $treatment_payloads = ['importTreatmentId' => $treatment_id];
+                $treatment?->service->launchNextOnSuccess($treatment_payloads);
+                $treatment?->endingWithSuccess();
+
                 $collectedreportfile->setMergingReady();
+
+                //\Log::info("Import finished for collecteddFile " . $collectedreportfile_id . ", Treatment " . $treatment_id . " ended");
             }
         }
     }

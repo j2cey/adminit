@@ -5,8 +5,8 @@ namespace App\Models\DynamicValue;
 use App\Models\BaseModel;
 use App\Enums\HtmlTagKey;
 use Illuminate\Support\Carbon;
-use App\Traits\Import\IsImportable;
-use App\Traits\Format\IsFormattable;
+use App\Models\Import\IsImportable;
+use App\Models\Format\IsFormattable;
 use Illuminate\Database\Eloquent\Model;
 use App\Contracts\Import\IIsImportable;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -235,9 +235,17 @@ class DynamicRow extends BaseModel implements Auditable, IHasFormattedValue, IHa
     {
         return 100;
     }
+    public function getUpperIsImportable(): ?IIsImportable
+    {
+        return $this->hasdynamicrow;
+    }
 
     public function getFormattedSuccessRate(): float
     {
         return 100;
+    }
+    public function getUpperIsFormattable(): ?IIsFormattable
+    {
+        return $this->hasdynamicrow;
     }
 }

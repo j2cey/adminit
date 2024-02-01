@@ -24,6 +24,7 @@ class CreateTreatmentWorkflowStepsTable extends Migration
 
             $table->string('code')->comment('workflow step code');
             //$table->string('treatmentservice_class')->comment('chemin complet de la classe service de traitement du step (qui va implémenter l interface ITreatmentStepService)');
+            $table->integer('exec_posi')->nullable()->comment('workflow step position');
             $table->string('name')->nullable()->comment('workflow step name');
             $table->string('criticality_level')->nullable()->index()->comment('treatment step criticality level: [High, Medium, Low]');
             $table->string('description', 500)->nullable()->comment('workflow step description');

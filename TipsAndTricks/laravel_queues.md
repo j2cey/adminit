@@ -13,7 +13,7 @@ When you have tasks that need to run forever, like Laravel queues, it’s good t
    You have many emails to send. Without a queue, the user has to wait. With a queue, the task goes in the background.
 
 Your Laravel command:
-````linux
+````sh
 php artisan queue:work
 ````
 Use Supervisord to keep it running.
@@ -23,7 +23,7 @@ Use Supervisord to keep it running.
 
 Your command might be:
 
-````linux
+````sh
 php artisan websockets:serve
 ````
 
@@ -33,24 +33,24 @@ Supervisord can handle this too.
    You made a script to clean the database every hour. Instead of a cron job, you can use Supervisord.
 
 Your custom script:
-````linux
+````sh
 php artisan clean:database
 ````
 
 ## Let’s Install Supervisord
 First, you need to install it:
-````linux
+````sh
 sudo apt-get update
 sudo apt-get install supervisor
 ````
 
 ## Configuring Supervisor for Laravel
 Create a new config file:
-````linux
+````sh
 sudo nano /etc/supervisor/conf.d/laravel-worker.conf
 ````
 Put this code inside:
-````linux
+````sh
 [program:laravel-worker]
 process_name=%(program_name)s_%(process_num)02d
 command=php /path-to-your-laravel-app/artisan queue:work
@@ -65,7 +65,7 @@ Update the /path-to-your-laravel-app/ and your-user with your own info.
 
 ## Load and Start
 Run these commands:
-````linux
+````sh
 sudo supervisorctl reread
 sudo supervisorctl update
 sudo supervisorctl start laravel-worker:*
@@ -83,7 +83,7 @@ This method is good because:
 Now, let’s see the actual steps.
 
 Create an example file at .docker/web/my-supervisor.conf and map in your docker-compose file:
-````linux
+````sh
 version: '3'
 services:
     web:

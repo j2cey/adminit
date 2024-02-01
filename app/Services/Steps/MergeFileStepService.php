@@ -23,27 +23,22 @@ class MergeFileStepService implements ITreatmentStepService
     public Treatment $treatment;
     public int $exec_id;
     public Treatment $importTreatment;
-    //public ?CollectedReportFile $collected_report_file;
 
     public function __construct(Treatment $treatment)
     {
         $this->treatment = $treatment;
         $this->exec_id = 0;
         self::setCollectedReportFileFromPayload($treatment);
-        //$this->collected_report_file = $treatment->service->collectedreportfile;
 
         $this->initStages();
     }
 
     public function initStages() {
-        /*$this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'], null);
-        $this->stage->setFunction("launchMergeFileExec", CriticalityLevelEnum::HIGH, true, true, "Launch Merge File Execution");
-        */
         $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::DOWNLOADFILE->toArray()['name'], null, true);
-        $this->stage->setFunction("tryMergeRows", CriticalityLevelEnum::HIGH, false, false, "Try merge file rows");
+        $this->stage->setFunction("tryMergeRows", CriticalityLevelEnum::HIGH, false, false, null, "Try merge file rows");
 
         $this->stage
-            ->addNextStageOnSuccess("Try merge file", true, "tryMergeFile", CriticalityLevelEnum::HIGH, true, true,"Try merge file");
+            ->addNextStageOnSuccess("Try merge file", true, "tryMergeFile", CriticalityLevelEnum::HIGH, true, true, null,"Try merge file");
     }
 
     public static function getQueueCode(): QueueEnum
@@ -60,13 +55,6 @@ class MergeFileStepService implements ITreatmentStepService
     }
 
     public function exec(): ?Treatment {
-        //$treatment_payloads = ['collectedReportFileId' => $collectedreportfile->id, 'importTreatmentId' => $this->_treatment_id];
-        /*if ( $treatment->subtreatments()->waiting()->count() > 0 ) {
-            $treatment->firstWaitingSubTreatment()->service->dispatch($treatment->reportfile);
-
-            return $treatment;
-        }*/
-
         if (!$this->treatment->canBeExecuted) {
             return $this->treatment;
         }
@@ -75,6 +63,28 @@ class MergeFileStepService implements ITreatmentStepService
         $this->stage->exec($this->treatment->break_point);
 
         return $this->treatment;
+    }
+
+    public function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
+
+    }
+
+    public function getNextOnSuccess(): ?TreatmentCodeEnum {
+        return TreatmentCodeEnum::NOTIFYFILE;
+    }
+
+    public function launchNextOnSuccess(array $payloads) {
+        $this->treatment->reloadCollectedreportfile();
+        $payloads = self::addCollectedReportFileToPayload($payloads, $this->treatment->collectedreportfile);
+        $this->treatment->launchUpperStep($this->getNextOnSuccess() , true, true, $payloads, true, null);
+    }
+
+    public function getNextOnFailure(): ?TreatmentCodeEnum {
+        return null;
+    }
+
+    public function launchNextOnFailure(array $payloads) {
+
     }
 
     #region Stage Functions
@@ -101,13 +111,13 @@ class MergeFileStepService implements ITreatmentStepService
     }
 
     public function tryMergeFile(CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment): int {
-        if ( $this->treatment->service->collectedreportfile->isImported ) {
-            $import_treatment = self::getImportTreatment($this->treatment);
+        $this->treatment->service->collectedreportfile->reloadFormattingResult();
+        if ( $this->treatment->service->collectedreportfile->isFormatted ) {
+            //$import_treatment = self::getImportTreatment($this->treatment);
 
             $format_and_merge_file = self::fileMergeRows( $this->treatment, CriticalityLevelEnum::HIGH, true, true, $this->treatment->service->collectedreportfile, false, false );
             if ( $format_and_merge_file->isSuccess() ) {
-                $treatment_payloads = ['collectedReportFileId' => $this->treatment->service->collectedreportfile->id, 'mergeTreatmentId' => $import_treatment->id];
-                $this->treatment->launchUpperStep(TreatmentCodeEnum::NOTIFYFILE, true, true, $treatment_payloads, true, null);
+                $this->launchNextOnSuccess(['mergeTreatmentId' => $this->treatment->id]);
             }
             return 1;
         } else {
@@ -117,17 +127,13 @@ class MergeFileStepService implements ITreatmentStepService
     }
     #endregion
 
-    public function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
-
-    }
-
     public static function getImportTreatment(Treatment $treatment): ?Treatment
     {
         return Treatment::getById( (int) $treatment->getPayloadEntry("importTreatmentId") );
     }
 
     public static function fileMergeRows(Treatment $treatment, CriticalityLevelEnum $criticalitylevel, bool $is_last_subtreatment, bool $can_end_uppertreatment, CollectedReportFile $collectedreportfile, bool $format_and_merge_rows, bool $format_values): InnerTreatment {
-        $innertreatment = new InnerTreatment($treatment, TreatmentCodeEnum::MERGEFORMATTEDFILE, $criticalitylevel, $is_last_subtreatment, $can_end_uppertreatment, true, "File: " . $collectedreportfile->id);
+        $innertreatment = new InnerTreatment($treatment, TreatmentCodeEnum::MERGEFORMATTEDFILE, $criticalitylevel, $is_last_subtreatment, $can_end_uppertreatment, false, "File: " . $collectedreportfile->id);
 
         try {
             // reset rawvalues from formatted values
@@ -164,8 +170,6 @@ class MergeFileStepService implements ITreatmentStepService
                     // merge object (this) formatted values with all rows formatted values
                     $collectedreportfile->mergeRawValueFromFormatted($dynamicrow);
                 }
-
-                //$collectedreportfile->setRowFormatSuccess($row_index);
             }
             if ( ! is_null($last_row) ) {
                 $collectedreportfile->mergeRawValueFromFormatted($last_row);
@@ -204,7 +208,7 @@ class MergeFileStepService implements ITreatmentStepService
      */
     public static function rowFormatAndMergeValues(Treatment $treatment, CriticalityLevelEnum $criticalitylevel, bool $is_last_subtreatment, bool $can_end_uppertreatment, DynamicRow $dynamicrow, bool $format_values): InnerTreatment
     {
-        $innertreatment = new InnerTreatment($treatment, TreatmentCodeEnum::MERGEFORMATTEDROW, $criticalitylevel, $is_last_subtreatment, $can_end_uppertreatment, true, "Row: " . $dynamicrow->id,);
+        $innertreatment = new InnerTreatment($treatment, TreatmentCodeEnum::MERGEFORMATTEDROW, $criticalitylevel, $is_last_subtreatment, $can_end_uppertreatment, false, "Row: " . $dynamicrow->id,);
 
         try {
             // reset rawvalue from formatted values
@@ -218,12 +222,10 @@ class MergeFileStepService implements ITreatmentStepService
                 if ( $format_values ) {
                     $dynamicvalue->resetRawValues();
                     $dynamicvalue->applyFormatFromRaw($dynamicvalue->getValue(), $dynamicvalue->getFormatRulesForNotification($dynamicrow->hasdynamicrow), true);
-                    //$dynamicvalue->itemFormattingSucceed(1);
                 }
                 if ($dynamicvalue->dynamicattribute->can_be_notified) {
                     // merge each row (this one) formatted value with all dynamic values formatted values
                     $dynamicrow->mergeRawValueFromFormatted($dynamicvalue);
-                    //$dynamicrow->itemFormattingSucceed($dynamicvalue->dynamicattribute->num_ord);
                 }
             }
             $dynamicrow->applyFormatFromRaw(null, $dynamicrow->formatrules, true);

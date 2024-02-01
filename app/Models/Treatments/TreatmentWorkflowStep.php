@@ -24,6 +24,7 @@ use App\Contracts\ReportTreatment\Step\ITreatmentStepService;
  *
  * @property string|TreatmentCodeEnum $code
  * @property string $name
+ * @property integer $exec_posi workflow step position
  * @property string|CriticalityLevelEnum $criticality_level
  * @property string $description
  *

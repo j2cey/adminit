@@ -95,12 +95,20 @@ class ReportFileMergeCmd extends Command
         if ( $treatment->canBeExecuted ) {
             $treatment->setState(TreatmentStateEnum::PICKING);
             //\Log::info("Merge File From CMD for treatment: " . $treatment->name . " ( " . $treatment->id . " )");
-            if ( is_null($treatment->service) ) {
-                $delay = rand(100000,300000);
-                usleep($delay);
-                $treatment->rewindToPreviousState();
+
+            $treatment->service->collectedreportfile->reloadImportResult();
+            $treatment->service->collectedreportfile->reloadFormattingResult();
+
+            if ( $treatment->service->collectedreportfile->isImported && $treatment->service->collectedreportfile->isFormatted ) {
+                if (is_null($treatment->service)) {
+                    $delay = rand(100000, 300000);
+                    usleep($delay);
+                    $treatment->rewindToPreviousState();
+                } else {
+                    $treatment->service->exec();
+                }
             } else {
-                $treatment->service->exec();
+                $treatment->rewindToPreviousState();
             }
             return 1;
         }

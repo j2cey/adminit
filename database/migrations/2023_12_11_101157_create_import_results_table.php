@@ -25,7 +25,7 @@ class CreateImportResultsTable extends Migration
             $table->timestamp('start_at')->nullable()->comment('import start date');
 
             $table->integer('posi')->nullable()->comment("import item position");
-            $table->integer('nb_to_import')->nullable()->comment("number of items to be imported");
+            $table->integer('nb_to_import')->default(0)->comment("number of items to be imported");
             $table->integer('nb_import_success')->default(0)->comment("number of items successfully imported");
             $table->decimal('import_success_rate')->default(0)->comment("rate of items successfully imported");
             $table->integer('last_import_success')->nullable()->comment("last item successfully imported");

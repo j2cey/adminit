@@ -20,7 +20,7 @@ class ProgressionJob implements ShouldQueue
     public string $_method_name;
     public array $_args;
 
-    public int $_launcher_id;
+    //public int $_launcher_id;
 
     /**
      * Create a new job instance.
@@ -29,10 +29,11 @@ class ProgressionJob implements ShouldQueue
      */
     public function __construct(Progression $progression, string $method_name, array $args)
     {
-        $launcher = JobLauncher::getLauncher(QueueEnum::PROGRESSION);
-        $this->_launcher_id = $launcher->id;
-        $this->onQueue($launcher->queue_name);
+        //$launcher = JobLauncher::getLauncher(QueueEnum::PROGRESSION);
+        //$this->_launcher_id = $launcher->id;
+        //$this->onQueue($launcher->queue_name);
 
+        $this->onQueue(QueueEnum::PROGRESSION->value);
         $this->_progression_id = $progression->id;
         $this->_method_name = $method_name;
         $this->_args = $args;
@@ -56,6 +57,6 @@ class ProgressionJob implements ShouldQueue
             \Log::error("ProgressionJob - " . $progression. ", " . $this->_method_name . " is not callable !");
         }
 
-        JobLauncher::getById($this->_launcher_id)?->delete();
+        //JobLauncher::getById($this->_launcher_id)?->delete();
     }
 }

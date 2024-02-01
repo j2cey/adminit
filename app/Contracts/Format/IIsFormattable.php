@@ -11,7 +11,12 @@ use App\Models\Format\FormattingResult;
  */
 interface IIsFormattable
 {
-    public function startingFormatting(int $nb_to_format, IIsFormattable|null $upper_formattable): FormattingResult;
+    public function formattingresult();
+    public function setFormattingResult();
+
+    public function addToFormat(int $amount);
+    public function startingFormatting(int|null $nb_to_format): FormattingResult;
+
     public function itemFormattingSucceed(int $item);
     public function itemFormattingFailed(int $item, string $message);
     public function allFormattingSucceed();

@@ -4,6 +4,7 @@ namespace App\Services\Main;
 
 use App\Enums\QueueEnum;
 use App\Models\Treatments\Treatment;
+use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Enums\Treatments\TreatmentResultEnum;
 use App\Contracts\ReportTreatment\Main\IMainService;
 
@@ -45,5 +46,21 @@ class MainService implements IMainService
         /*if ( ! is_null($child_treatment) ) {
             $treatment->progressionAddStepDone($child_treatment->name, ($treatmentresultenum->succeed()), "end from Main");
         }*/
+    }
+
+    public function getNextOnSuccess(): ?TreatmentCodeEnum {
+        return null;
+    }
+
+    public function launchNextOnSuccess(array $payloads) {
+
+    }
+
+    public function getNextOnFailure(): ?TreatmentCodeEnum {
+        return null;
+    }
+
+    public function launchNextOnFailure(array $payloads) {
+
     }
 }

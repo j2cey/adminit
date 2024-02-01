@@ -25,7 +25,7 @@ class CreateFormattingResultsTable extends Migration
             $table->timestamp('start_at')->nullable()->comment('formatting start date');
 
             $table->integer('posi')->nullable()->comment("formatting item position");
-            $table->integer('nb_to_format')->nullable()->comment("number of items to be formatted");
+            $table->integer('nb_to_format')->default(0)->comment("number of items to be formatted");
             $table->integer('nb_formatting_success')->default(0)->comment("number of items successfully formatted");
             $table->decimal('formatting_success_rate')->default(0)->comment("rate of items successfully formatted");
             $table->integer('last_formatting_success')->nullable()->comment("last item successfully formatted");

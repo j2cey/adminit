@@ -13,31 +13,34 @@ class MainTreatmentType implements ITreatmentType
     public static string $MAIN_TREATMENT_LOG_INFO_PART = "maintype";
 
 
-    public static function preEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null): bool
+    public static function preEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, bool $child_completed = false): bool
     {
         if ( is_null( $child_treatment ) ) {
             \Log::error("Ending Main. NO Child");
             return false;
         }
 
-        $can_switch_to_next = ($child_treatment->isCompleted && $child_treatment->isSuccess);
+        //$can_switch_to_next = ($child_treatment->isCompleted && $child_treatment->isSuccess);
+
+        /*$can_switch_to_next = ($child_completed && $child_treatment->isSuccess);
         $next_workflowstep = $treatment->getNextWorkflowStepFromTreatment($child_treatment);
         $next_treatmentstep = null;
 
-        SystemLog::infoTreatments("Ending Main Treatment; - Child, state: " . $child_treatment?->state?->value . ", isCompleted: " . ( $child_treatment->isCompleted ? "yes" : "no" ) . ", result: " . $child_treatment?->treatmentresult?->result?->value . "; isSuccess: " . ( $child_treatment?->isSuccess ? "yes" : "no" ), self::$MAIN_TREATMENT_LOG_INFO_PART);
+        SystemLog::infoTreatments("Ending Main Treatment: " . $treatment->name . "(" . $treatment->id . ") ; - Child name: " . $child_treatment?->name . "(" . $child_treatment?->id . "), state: " . $child_treatment?->state?->value . ", isCompleted: " . ( $child_completed ? "yes" : "no" ) . ", result: " . $child_treatment?->treatmentresult?->result?->value . "; isSuccess: " . ( $child_treatment?->isSuccess ? "yes" : "no" ), self::$MAIN_TREATMENT_LOG_INFO_PART);
 
         if ( $can_switch_to_next ) {
             $next_treatmentstep = $treatment->switchToNextStep($next_workflowstep);
         }
 
         SystemLog::infoTreatments("Ending Main Treatment; " . ( is_null($next_treatmentstep) ? "NO Switch" : "Switching to Next Step: " . $next_treatmentstep->name ), self::$MAIN_TREATMENT_LOG_INFO_PART);
-
+        */
         /**  condition de Fin de Traitement:
          *      - tous les traitements enfants sont completes (celui-ci est le dernier)
          *      - on peut aller a l'etape suivante
          *      - et il n'y a pas d'etape a la suite
          */
-        $complete_treatment = $child_treatment->isLastTreatmentToProcess() && $can_switch_to_next && is_null($next_workflowstep);
+        $complete_treatment =  is_null( $child_treatment->service->getNextOnSuccess() );
+        //$complete_treatment = $child_treatment->isLastTreatmentToProcess() && $can_switch_to_next && is_null($next_workflowstep);
 
         //$next_workflowstep_from = $treatment->reportfile->report->getNextWorkflowStepFrom($next_treatmentstep->code);
         /*if ( is_null($next_treatmentstep) ) {

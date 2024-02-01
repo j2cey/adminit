@@ -55,10 +55,4 @@ trait TreatmentStepService
             $treatment->service->setDynamicRow( DynamicRow::getById( (int) $treatment->getPayloadEntry("rowId") ) );
         }
     }
-
-    public static function setCollectedReportFileFromPayload(Treatment $treatment) {
-        if ( is_null($treatment->service->dynamicrow) ) {
-            $treatment->service->setCollectedReportFile( CollectedReportFile::getById( (int) $treatment->getPayloadEntry("collectedReportFileId") ) );
-        }
-    }
 }

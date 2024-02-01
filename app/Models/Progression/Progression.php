@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property bool $is_default
  * @property string|null $tags
  *
+ * @property string $process_name
  * @property integer $nb_todo
  * @property integer $nb_done
  * @property integer $nb_passed

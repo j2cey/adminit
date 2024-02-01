@@ -34,31 +34,31 @@ class TreatmentStage
         $this->setIsBearkPoint($is_beark_point);
     }
 
-    public function addNextStageOnSuccess(string $name, bool $is_beark_point, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, string|null $function_description): TreatmentStage
+    public function addNextStageOnSuccess(string $name, bool $is_beark_point, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, array|null $append_args, string|null $function_description): TreatmentStage
     {
-        $this->setNextStageOnSuccess($this->newSubStage($name, $is_beark_point, $function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $function_description));
+        $this->setNextStageOnSuccess($this->newSubStage($name, $is_beark_point, $function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $append_args, $function_description));
 
         return $this->getNextStageOnSuccess();
     }
-    public function addNetStageOnFailure(string $name, bool $is_beark_point, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, string|null $function_description): TreatmentStage
+    public function addNetStageOnFailure(string $name, bool $is_beark_point, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, array|null $append_args, string|null $function_description): TreatmentStage
     {
-        $this->setNextStageOnFailure($this->newSubStage($name, $is_beark_point, $function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $function_description));
+        $this->setNextStageOnFailure($this->newSubStage($name, $is_beark_point, $function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $append_args, $function_description));
 
         return $this->getNextStageOnFailure();
     }
 
-    private function newSubStage(string $name, bool $is_beark_point, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, string|null $function_description): TreatmentStage {
+    private function newSubStage(string $name, bool $is_beark_point, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, array|null $append_args, string|null $function_description): TreatmentStage {
         $sub_stage = new TreatmentStage($this->getTreatment(), $this->getServiceObject(), $name, null, $is_beark_point);
         $sub_stage->setPreviousStage($this);
-        $sub_stage->setFunction($function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $function_description);
+        $sub_stage->setFunction($function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $append_args, $function_description);
         $sub_stage->setStageId($this->getStageId() + 1);
 
         return $sub_stage;
     }
 
-    public function setFunction(string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, string|null $description): TreatmentStageFunction
+    public function setFunction(string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, array|null $append_args, string|null $description): TreatmentStageFunction
     {
-        $this->setStageFunction(new TreatmentStageFunction($this, $function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $description));
+        $this->setStageFunction(new TreatmentStageFunction($this, $function_name, $criticality_level, $is_last_subtreatment, $can_end_uppertreatment, $append_args, $description));
         return $this->getStageFunction();
     }
 
@@ -89,6 +89,7 @@ class TreatmentStage
     #endregion
 
     #region Private Functions
+
     #[Pure] private function getNextStage(int &$break_point): ?TreatmentStage
     {
         if ( is_null($this->getStageResult()) ) {
@@ -103,6 +104,7 @@ class TreatmentStage
         }
         return $this->getNextStageOnFailure();
     }
+
     #endregion
 
     #region Getters & Setters

@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Enums\CriticalityLevelEnum;
-use App\Models\Treatments\Treatment;
+use function PHPUnit\Framework\isNull;
 
 class TreatmentStageFunction
 {
@@ -15,8 +15,9 @@ class TreatmentStageFunction
     private CriticalityLevelEnum $_criticality_level;
     private bool $_is_last_subtreatment;
     private bool $_can_end_uppertreatment;
+    private ?array $append_args;
 
-    public function __construct(TreatmentStage $stage, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, string|null $description)
+    public function __construct(TreatmentStage $stage, string $function_name, CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment, array|null $append_args, string|null $description)
     {
         $this->setStage($stage);
         $this->setFunctionName($function_name);
@@ -24,6 +25,7 @@ class TreatmentStageFunction
         $this->setCriticalityLevel($criticality_level);
         $this->setIsLastSubtreatment($is_last_subtreatment);
         $this->setCanEndUppertreatment($can_end_uppertreatment);
+        $this->setAppendArgs($append_args);
 
         $this->setDescription($description);
 
@@ -40,6 +42,11 @@ class TreatmentStageFunction
                 'is_last_subtreatment' => $this->isLastSubtreatment(),
                 'can_end_uppertreatment' => $this->canEndUppertreatment(),
             ];
+
+            if ( ! is_null( $this->getAppendArgs() ) ) {
+                $args = array_merge($args, $this->getAppendArgs());
+            }
+
             $result = call_user_func_array(array($this->getStage()->getServiceObject(), $this->getFunctionName()), $args);
             $this->getStage()->getTreatment()->progressionAddStepDone($this->getFunctionName(), ($result > 0), $this->getDescription());
             return $result;
@@ -110,9 +117,7 @@ class TreatmentStageFunction
     {
         $this->_description = $description;
     }
-    #endregion
 
-    #region Getters & Setters
     /**
      * @return bool
      */
@@ -159,6 +164,22 @@ class TreatmentStageFunction
     public function setCriticalityLevel(CriticalityLevelEnum $criticality_level): void
     {
         $this->_criticality_level = $criticality_level;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getAppendArgs(): ?array
+    {
+        return $this->append_args;
+    }
+
+    /**
+     * @param array|null $append_args
+     */
+    public function setAppendArgs(?array $append_args): void
+    {
+        $this->append_args = $append_args;
     }
     #endregion
 }

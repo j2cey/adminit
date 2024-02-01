@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  */
 trait HasProgression
 {
+    abstract public function getProcessName(): string;
     abstract public function getUpperHasProgression(): ?IHasProgression;
 
     /**
@@ -27,6 +28,7 @@ trait HasProgression
         $data['nb_todo'] = $nb_todo ?? 0;
         if ( ! is_null($description) ) $data['description'] = $description;
         if ( is_null( $this->progression ) ) {
+            $data['process_name'] = $this->getProcessName();
             $progression = Progression::createNew($data);
 
             $this->progression()->save($progression);

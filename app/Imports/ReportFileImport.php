@@ -48,7 +48,6 @@ class ReportFileImport implements WithChunkReading, WithEvents, WithValidation, 
         //$this->_step = $step;//->startTreatmentStep();
         $this->_treatment_id = $operation->starting()->id;
         $this->_import_name = "Import file: " . substr($collectedreportfile->local_file_name, -11);
-        $operation->progressionAddTodo(1,$this->_import_name);
     }
 
     public function onRow(Row $row)
@@ -63,8 +62,9 @@ class ReportFileImport implements WithChunkReading, WithEvents, WithValidation, 
             $this->nextRow();
             $this->registerEvents();
             //$collectedreportfile->update(['nb_rows' => $this->_totalrows]);
-            $collectedreportfile->startingImport($this->_totalrows - 1, null);
-            $collectedreportfile->startingFormatting($this->_totalrows - 1, null);
+            //$collectedreportfile->startingImport($this->_totalrows - 1);
+            //$collectedreportfile->startingFormatting($this->_totalrows - 1);
+            $collectedreportfile->startingImport($this->_totalrows - 1);
 
             if ($collectedreportfile->reportfile->has_headers) {
                 return null;
@@ -81,33 +81,23 @@ class ReportFileImport implements WithChunkReading, WithEvents, WithValidation, 
             return null;
         }
 
+        $progression_name = $this->_import_name . ", rowIndex: " . $rowIndex;
+        $treatment->progressionAddTodo(1, $progression_name);
+
         //\Log::info("ReportFileImport rowIndex: " . $rowIndex);
         $newrow = $collectedreportfile->addRow($treatment->service->getReportfile(), $row);
         $hasdynamicattributes = $newrow->getHasdynamicattributes();
         $newrow->addValues($hasdynamicattributes, json_decode($newrow->raw_value));
 
-        if ( $rowIndex >= $this->_totalrows ) {
-            $treatment_payloads = ['collectedReportFileId' => $collectedreportfile->id, 'importTreatmentId' => $this->_treatment_id];
-            //$treatment->launchToGivenUpperStep(TreatmentCodeEnum::MERGEFILE, true, true, $treatment_payloads, false);
-            //$treatment->launchUpperStep(TreatmentCodeEnum::MERGEFILE, $treatment_payloads, true, null);
+        $newrow->itemImportSucceed(1);
 
-            //$this->formatRowValuesLaunch($treatment, $collectedreportfile, $newrow, true);
-            $treatment->launchUpperStep(TreatmentCodeEnum::FORMATFILE, false, true, $treatment_payloads, false, null);
-            $treatment->endingWithSuccess();
-            $treatment->progressionAddStepDone($this->_import_name, 1, null);
-        } /*else {
-            $this->formatRowValuesLaunch($treatment, $collectedreportfile, $newrow, false);
-        }*/
-
-        /*
         if ( $rowIndex >= $this->_totalrows ) {
-            $treatment->launchToGivenUpperStep(TreatmentCodeEnum::IMPORTDATA, true, true, $treatment_payloads, true);
+            $treatment_payloads = ['importTreatmentId' => $this->_treatment_id];
+
+            $treatment->service->launchNextOnSuccess($treatment_payloads);
             $treatment->endingWithSuccess();
-        }*/
-        /*else {
-            $treatment->launchToGivenUpperStep(TreatmentCodeEnum::IMPORTDATA, false, false, $treatment_payloads, false);
-        }*/
-        //event( new AddDynamicRowEvent($this->_operation, $this->_collectedreportfile, $row, ['rowNumber' => $rowIndex]) );
+        }
+        $treatment->progressionAddStepDone($progression_name, 1, null);
     }
 
 
@@ -152,8 +142,8 @@ class ReportFileImport implements WithChunkReading, WithEvents, WithValidation, 
     private function formatRowValuesLaunch(Treatment $treatment, CollectedReportFile $collectedreportfile, DynamicRow $dynamicrow, bool $is_last_row) {
         $dynamicrow->hasdynamicrow->mergeRawValueFromRow( json_decode($dynamicrow->raw_value) );
         $hasdynamicattributes = $dynamicrow->getHasdynamicattributes();
-        $dynamicrow->startingImport( count( json_decode($dynamicrow->raw_value) ), $dynamicrow->hasdynamicrow );
-        $dynamicrow->startingFormatting( count( json_decode($dynamicrow->raw_value) ), $dynamicrow->hasdynamicrow );
+        $dynamicrow->startingImport( count( json_decode($dynamicrow->raw_value) ));
+        $dynamicrow->startingFormatting( count( json_decode($dynamicrow->raw_value) ) );
         $dynamicrow->addValues($hasdynamicattributes, json_decode($dynamicrow->raw_value));
         //$dynamicrow->allImportSucceed($collectedreportfile);
 

@@ -2,6 +2,7 @@
 
 namespace App\Contracts\Notify;
 
+use App\Enums\NotificationTypeEnum;
 use App\Models\Notify\NotificationResult;
 
 /**
@@ -11,7 +12,8 @@ use App\Models\Notify\NotificationResult;
  */
 interface IIsNotifiable
 {
-    public function startingNotification(int $nb_to_notify, IIsNotifiable|null $upper_notifiable): NotificationResult;
+    public function startingNotification(int|null $nb_to_notify): NotificationResult;
+    public function startingSubNotification(NotificationTypeEnum $notification_type, int|null $nb_to_notify): NotificationResult;
     public function itemNotificationSucceed(int $item);
     public function itemNotificationFailed(int $item, string $message);
     public function allNotificationSucceed();

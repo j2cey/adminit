@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Carbon $updated_at
  * @property int|null $created_by user creator reference
  * @property int|null $updated_by user updator reference
+ *
+ * @property string $fullName
  */
 class Person extends BaseModel implements Auditable
 {
@@ -64,6 +66,14 @@ class Person extends BaseModel implements Auditable
     }
 
     #region Scopes
+
+    #region Accessors & Mutators
+
+    public function getFullNameAttribute() {
+        return  $this->first_name . " " . $this->last_name;
+    }
+
+    #endregion
 
     #endregion
 

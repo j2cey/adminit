@@ -11,7 +11,12 @@ use App\Models\Import\ImportResult;
  */
 interface IIsImportable
 {
-    public function startingImport(int $nb_to_import, IIsImportable|null $upper_importable): ImportResult;
+    public function importresult();
+    public function setImportResult();
+
+    public function addToImport(int $amount);
+    public function startingImport(int|null $nb_to_import): ImportResult;
+
     public function itemImportSucceed(int $item);
     public function itemImportFailed(int $item, string $message);
     public function allImportSucceed();

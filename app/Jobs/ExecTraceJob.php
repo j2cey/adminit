@@ -18,7 +18,7 @@ class ExecTraceJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $_launcher_id;
+    //public int $_launcher_id;
 
     public int $_treatment_id;
     public ?string $_treatmentcode;
@@ -32,10 +32,11 @@ class ExecTraceJob implements ShouldQueue
      */
     public function __construct(Treatment $treatment, TreatmentCodeEnum|null $treatmentcode, string $message, string|null $description)
     {
-        $launcher = JobLauncher::getLauncher(QueueEnum::EXECTRACE);
-        $this->_launcher_id = $launcher->id;
-        $this->onQueue($launcher->queue_name);
+        //$launcher = JobLauncher::getLauncher(QueueEnum::EXECTRACE);
+        //$this->_launcher_id = $launcher->id;
+        //$this->onQueue($launcher->queue_name);
 
+        $this->onQueue(QueueEnum::EXECTRACE->value);
         $this->_treatment_id = $treatment->id;
         $this->_treatmentcode = $treatmentcode?->value;
         $this->_message = $message;
@@ -50,6 +51,6 @@ class ExecTraceJob implements ShouldQueue
     public function handle()
     {
         ExecTrace::register( Treatment::getById($this->_treatment_id), ( is_null($this->_treatmentcode) ? null : TreatmentCodeEnum::from($this->_treatmentcode) ), $this->_message, $this->_description );
-        JobLauncher::getById($this->_launcher_id)?->delete();
+        //JobLauncher::getById($this->_launcher_id)?->delete();
     }
 }

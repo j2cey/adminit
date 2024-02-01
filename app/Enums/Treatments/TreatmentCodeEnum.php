@@ -11,6 +11,7 @@ use App\Services\Steps\ImportFileStepService;
 use App\Services\Steps\NotifyFileStepService;
 use App\Services\Steps\FormatFileStepService;
 use App\Services\Steps\DownloadFileStepService;
+use App\Services\Operations\NotifyExecOperationService;
 
 enum TreatmentCodeEnum: string
 {
@@ -122,6 +123,10 @@ enum TreatmentCodeEnum: string
     #endregion
 
     #region
+
+    #[Description('Exec Notification')]
+    #[ServiceClass(NotifyExecOperationService::class)]
+    case NOTIFYEXEC = 'notifyexec';
 
     #[Description('File Notifiation Start')]
     case NOTIFYFILE_START = 'notifyfile_start';

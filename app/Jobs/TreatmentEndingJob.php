@@ -20,7 +20,7 @@ class TreatmentEndingJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $_launcher_id;
+    //public int $_launcher_id;
 
     public int $_treatment_id;
     public string $_treatmentresult;
@@ -40,9 +40,9 @@ class TreatmentEndingJob implements ShouldQueue
      */
     public function __construct(Treatment $treatment, TreatmentResultEnum $treatmentresult, string|null $message, Treatment $childtreatment = null)
     {
-        $launcher = JobLauncher::getLauncher(QueueEnum::TREATMENTSTARTEND);
-        $this->_launcher_id = $launcher->id;
-        $this->onQueue($launcher->queue_name);
+        //$launcher = JobLauncher::getLauncher(QueueEnum::TREATMENTSTARTEND);
+        //$this->_launcher_id = $launcher->id;
+        //$this->onQueue($launcher->queue_name);
 
         $this->_treatment_id = $treatment->id;
         $this->_treatmentresult = $treatmentresult->value;
@@ -66,7 +66,7 @@ class TreatmentEndingJob implements ShouldQueue
 
         $treatment->doEnding($treatmentresult, $this->_message, Treatment::getById($this->_childtreatment_id));
 
-        JobLauncher::getById($this->_launcher_id)?->delete();
+        //JobLauncher::getById($this->_launcher_id)?->delete();
         /*
         $inner_treatment = $this->inner_treatment;
         $inner_treatment->setTreatment($treatment);

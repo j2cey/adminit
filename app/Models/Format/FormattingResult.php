@@ -122,26 +122,43 @@ class FormattingResult extends BaseModel implements Auditable
         return FormattingResult::create($data);
     }
 
+    public function setUpperFormattingResult(FormattingResult|null $upperformattingresult) {
+        if ( ! is_null( $upperformattingresult ) ) {
+            $upperformattingresult->addSubFormattingResult($this);
+        }
+    }
+
     private function addSubFormattingResult(FormattingResult $formattingresult) {
         $formattingresult->posi = $this->subformattingresults()->count() + 1;
         $formattingresult->upperformattingresult()->associate($this)->save();
     }
 
-    public function setStarting(int $nb_to_format, float $min_formatted_success_rate, FormattingResult|null $upper_formattingresult) {
+    public function addToFormat(int $amount) {
+        $this->update(['nb_to_format' => $this->nb_to_format+= $amount,]
+        );
+        $this->setFormattingUpToDate(true);
 
-        $this->posi = 1;
-        $upper_formattingresult?->addSubFormattingResult($this);
+        $this->upperformattingresult?->addToFormat($amount);
+    }
 
-        $this->start_at = Carbon::now();
-        $this->setNewAttempt();
+    public function setStarting(bool $force = false) {
 
-        $this->nb_to_format = $nb_to_format;
-        $this->min_formatted_success_rate = $min_formatted_success_rate;
-        $this->incrementFormatting(false);
+        //$this->posi = 1;
+        //$upper_formattingresult?->addSubFormattingResult($this);
 
-        $this->save();
+        if ( is_null($this->start_at) || $force ) {
+            $this->start_at = Carbon::now();
+            $this->setNewAttempt();
 
-        return $this;
+            //$this->nb_to_format = $nb_to_format;
+            $this->incrementFormatting(false);
+
+            $this->save();
+        }
+
+        $this->upperformattingresult?->setStarting();
+
+        //return $this;
     }
 
     private function setNewAttempt() {
@@ -178,12 +195,16 @@ class FormattingResult extends BaseModel implements Auditable
     public function itemFormattingSucceed(int $item) {
         $this->last_formatting_success = $item;
         $this->setFormattingDone("nb_formatting_success",1, 1);
+
+        $this->upperformattingresult?->itemFormattingSucceed($item);
     }
 
     public function itemFormattingFailed(int $item, string $message) {
         $this->last_formatting_failed = $item;
         $this->last_failed_message = $message;
         $this->setFormattingDone("nb_formatting_failed",1, 1);
+
+        $this->upperformattingresult?->itemFormattingFailed($item, $message);
     }
 
 
@@ -202,14 +223,18 @@ class FormattingResult extends BaseModel implements Auditable
     }
 
     private function setFormattingDone(string $formatting_attribute, int $amount, int $last_item) {
+        //\Log::info("setFormattingDone (" . $this->id . "), amount: " . $amount . ", formatting_attribute: " . $formatting_attribute . ", formattable: " . $this->formattable_type . "(" . $this->formattable_id . ")");
+        if ( is_null( $this->start_at ) ) {
+            $this->setStarting();
+        }
         $this->last_formatted = $last_item;
         $this->decrementFormatting($formatting_attribute, $amount, false);
-        $this->setFormatted(false);
+        $this->setFormattingUpToDate(false);
 
         $this->save();
     }
 
-    private function setFormatted(bool $save) {
+    private function setFormattingUpToDate(bool $save) {
         $this->formatting_success_rate = ($this->nb_formatting_success / $this->nb_to_format) * 100;
         $this->formatting_failed_rate = ($this->nb_formatting_failed / $this->nb_to_format) * 100;
 
@@ -229,11 +254,11 @@ class FormattingResult extends BaseModel implements Auditable
             $this->duration = $duration->getDuration();
             $this->duration_hhmmss = $duration->getDurationHhmmss();
 
-            if ($this->formatted) {
+            /*if ($this->formatted) {
                 $this->upperformattingresult?->itemFormattingSucceed($this->posi);
             } else {
                 $this->upperformattingresult?->itemFormattingFailed($this->posi, $this->last_failed_message);
-            }
+            }*/
         }
     }
 

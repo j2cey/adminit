@@ -21,7 +21,8 @@ trait TreatmentStarting
         if ( ! $this->isStarting ) {
             $this->setStarting(true);
             //event(new TreatmentStartingEvent($this, $child));
-            dispatch(new TreatmentStartingJob($this, $child));
+            //dispatch(new TreatmentStartingJob($this, $child));
+            $this->doStarting($child);
         }
         return $this;
     }

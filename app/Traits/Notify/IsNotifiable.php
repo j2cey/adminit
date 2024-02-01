@@ -2,6 +2,7 @@
 
 namespace App\Traits\Notify;
 
+use App\Enums\NotificationTypeEnum;
 use App\Contracts\Notify\IIsNotifiable;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Notify\NotificationResult;
@@ -47,17 +48,38 @@ trait IsNotifiable
 
     #endregion
 
+    public function reloadNotificationResult() {
+        $this->load('notificationresult');
+    }
+
     public function setNotificationResult() {
         if ( is_null($this->notificationresult) ) {
-            $this->notificationresult()->save( NotificationResult::createNew([]) );
-            $this->load('notificationresult');
+            $this->notificationresult()->save( NotificationResult::createNew([
+                'posi' => 1,
+                'min_notified_success_rate' => $this->getNotifiedSuccessRate(),
+            ]) );
+            //$this->load('notificationresult');
         }
     }
 
-    public function startingNotification(int $nb_to_notify, IIsNotifiable|null $upper_notifiable): NotificationResult {
-        $upper_notifiable?->setNotificationResult();
-        $this->setNotificationResult();
-        return $this->notificationresult->setStarting($nb_to_notify, $this->getNotifiedSuccessRate(), $upper_notifiable?->notificationresult);
+    public function startingSubNotification(NotificationTypeEnum $notification_type, int|null $nb_to_notify): NotificationResult {
+        $sub_notification = NotificationResult::createNew([
+            'notification_type' => $notification_type->value,
+        ]);
+        $this->notificationresult->addSubNotificationResult($sub_notification);
+        /*if ($increment_upper_nb_to_notify) {
+            $this->nb_to_notify += 1;
+        }*/
+        $sub_notification->setStarting($nb_to_notify);
+
+        return $sub_notification;
+    }
+
+    public function startingNotification(int|null $nb_to_notify): NotificationResult {
+
+        $this->notificationresult->setStarting($nb_to_notify);
+
+        return $this->notificationresult;
     }
 
     public function itemNotificationFailed(int $item, string $message) {
@@ -91,6 +113,12 @@ trait IsNotifiable
 
     public static function bootIsNotifiable()
     {
+        // after the model has been created
+        static::created(function ($model) {
+            // We set a notifictaion result for the model
+            $model->setNotificationResult();
+        });
+
         static::deleting(function ($model) {
             $model->notificationresult?->delete();
         });

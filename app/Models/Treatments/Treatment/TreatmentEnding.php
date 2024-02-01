@@ -29,11 +29,11 @@ trait TreatmentEnding
         $this->treatmentresult->setEnded($child_treatment, $prev_treatmentresult, $treatmentresultenum, $message, $complete_treatment);
     }
 
-    public function preEnding(TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null): bool {
-        return $this->treatmenttype_class::preEnding($this, $treatmentresultenum, $child_treatment);
+    public function preEnding(TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, bool $child_completed = false): bool {
+        return $this->treatmenttype_class::preEnding($this, $treatmentresultenum, $child_treatment, $child_completed);
     }
 
-    public function defaultPreEnding(TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null): bool {
+    public function defaultPreEnding(TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, bool $child_completed = false): bool {
         if ( is_null($child_treatment) ) {
             // Direct Ending
             return $this->isReadyToBeCompleted($treatmentresultenum);
@@ -50,7 +50,8 @@ trait TreatmentEnding
         if ( ! $this->isEnding ) {
             $this->setEnding($child_treatment);
             //event(new TreatmentEndingEvent($this, $treatmentresultenum, $message, $child_treatment));
-            dispatch(new TreatmentEndingJob($this, $treatmentresultenum, $message, $child_treatment));
+            //dispatch(new TreatmentEndingJob($this, $treatmentresultenum, $message, $child_treatment));
+            $this->doEnding($treatmentresultenum, $message, $child_treatment);
         }
 
         return $treatmentresultenum;
@@ -94,13 +95,13 @@ trait TreatmentEnding
      * Exec all ending instructions
      * @return void
      */
-    public function doEnding(TreatmentResultEnum $treatmentresult, string|null $message, Treatment|null $child_treatment) {
+    public function doEnding(TreatmentResultEnum $treatmentresult, string|null $message, Treatment|null $child_treatment, bool $child_completed = false) {
         SystemLog::infoTreatments("Ending, " . $this->type->value . " treatment: " . $this->name . "(" . $this->id . ")", self::$TREATMENT_ENDING_LOG_INFO_PART);
 
         $prev_treatmentresult = $this->treatmentresult;
         //$child_treatment = is_null($event->childtreatmentId) ? null : Treatment::getById($event->childtreatmentId);
         // 1. Perform PRE-Ending if any
-        $complete_treatment = $this->preEnding($treatmentresult, $child_treatment);
+        $complete_treatment = $this->preEnding($treatmentresult, $child_treatment, $child_completed);
 
         // 2. set ending this treatment
         $this->setEnded($child_treatment, $prev_treatmentresult, $treatmentresult, $message, $complete_treatment);

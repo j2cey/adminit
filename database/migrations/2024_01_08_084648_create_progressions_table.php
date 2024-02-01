@@ -22,6 +22,7 @@ class CreateProgressionsTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
+            $table->string('process_name')->nullable()->comment('progression s process name');
             $table->integer('nb_todo')->default(0)->comment('number of steps to be executed');
             $table->integer('nb_done')->default(0)->comment('number of steps executed');
             $table->integer('nb_passed')->default(0)->comment('number of steps passed');

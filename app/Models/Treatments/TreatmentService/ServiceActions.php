@@ -4,10 +4,11 @@ namespace App\Models\Treatments\TreatmentService;
 
 use App\Models\SystemLog;
 use App\Jobs\TreatmentJob;
+use App\Models\Treatments\Treatment;
 use App\Models\ReportFile\ReportFile;
 use App\Models\DynamicValue\DynamicRow;
 use App\Models\DynamicValue\DynamicValue;
-use App\Models\Treatments\Treatment;
+use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Enums\Treatments\TreatmentResultEnum;
 use App\Models\ReportFile\CollectedReportFile;
 use function dispatch;
@@ -53,6 +54,14 @@ trait ServiceActions
             return $this->serviceactions_class::exec($this->treatment);
         }*/
         return $this->getServiceObject()->exec();
+    }
+
+    public function getNextOnSuccess(): ?TreatmentCodeEnum {
+        return $this->getServiceObject()->getNextOnSuccess();
+    }
+
+    public function launchNextOnSuccess(array $payloads) {
+        $this->getServiceObject()->launchNextOnSuccess($payloads);
     }
 
     public function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {

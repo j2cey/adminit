@@ -95,4 +95,12 @@ class ReportFileReceiver extends BaseModel implements Auditable
 
         return $reportfilereceiver;
     }
+
+    /**
+     * @param int $id
+     * @return ReportFileReceiver|null
+     */
+    public static function getById(int $id) {
+        return ReportFileReceiver::find($id);
+    }
 }

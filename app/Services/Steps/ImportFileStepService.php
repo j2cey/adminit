@@ -38,7 +38,7 @@ class ImportFileStepService implements ITreatmentStepService
 
     public function initStages() {
         $this->stage = new TreatmentStage($this->treatment, $this, TreatmentCodeEnum::IMPORTFILE->toArray()['name'], null, true);
-        $this->stage->setFunction("prepareImport", CriticalityLevelEnum::HIGH, false, false, "Prepare File importation");
+        $this->stage->setFunction("prepareImport", CriticalityLevelEnum::HIGH, false, false, null, "Prepare File importation");
     }
 
     public static function getQueueCode(): QueueEnum
@@ -70,6 +70,34 @@ class ImportFileStepService implements ITreatmentStepService
         return $this->treatment;
     }
 
+    public function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false)
+    {
+    }
+
+    public function getNextOnSuccess(): ?TreatmentCodeEnum
+    {
+        return TreatmentCodeEnum::FORMATFILE;
+    }
+
+    public function launchNextOnSuccess(array $payloads)
+    {
+        $this->treatment->reloadCollectedreportfile();
+        $payloads = self::addCollectedReportFileToPayload($payloads, $this->treatment->collectedreportfile);
+        $this->treatment->launchUpperStep($this->getNextOnSuccess(), false, true, $payloads, false, null);
+        //$treatment->launchUpperStep(TreatmentCodeEnum::FORMATFILE, false, true, $treatment_payloads, false, null);
+    }
+
+    public function getNextOnFailure(): ?TreatmentCodeEnum
+    {
+        return null;
+    }
+
+    public function launchNextOnFailure(array $payloads)
+    {
+        // TODO: Implement launchNextOnFailure() method.
+    }
+
+
     #region Stage Functions
     public function prepareImport(CriticalityLevelEnum $criticality_level, bool $is_last_subtreatment, bool $can_end_uppertreatment): int {
         $delete_imported_data = self::deleteImportedData($this->treatment->service->collectedreportfile, $this->treatment, $criticality_level, ++$this->exec_id, true, $is_last_subtreatment, $can_end_uppertreatment);
@@ -79,10 +107,6 @@ class ImportFileStepService implements ITreatmentStepService
         return -1;
     }
     #endregion
-
-    public function postEnding(Treatment $treatment, TreatmentResultEnum $treatmentresultenum, Treatment $child_treatment = null, string $message = null, bool $complete_treatment = false) {
-
-    }
 
     #region Private Functions
 

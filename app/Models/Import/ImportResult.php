@@ -121,26 +121,43 @@ class ImportResult extends BaseModel implements Auditable
         return ImportResult::create($data);
     }
 
+    public function setUpperImportResult(ImportResult|null $upperimportresult) {
+        if ( ! is_null( $upperimportresult ) ) {
+            $upperimportresult->addSubImportResult($this);
+        }
+    }
+
     private function addSubImportResult(ImportResult $importresult) {
         $importresult->posi = $this->subimportresults()->count() + 1;
         $importresult->upperimportresult()->associate($this)->save();
     }
 
-    public function setStarting(int $nb_to_import, float $min_imported_success_rate, ImportResult|null $upper_importresult): ImportResult {
+    public function addToImport(int $amount) {
+        $this->update(['nb_to_import' => $this->nb_to_import+= $amount,]
+        );
+        $this->setImportUpToDate(true);
 
-        $this->posi = 1;
-        $upper_importresult?->addSubImportResult($this);
+        $this->upperimportresult?->addToImport($amount);
+    }
 
-        $this->start_at = Carbon::now();
-        $this->setNewAttempt();
+    public function setStarting(bool $force = false) {
 
-        $this->nb_to_import = $nb_to_import;
-        $this->min_imported_success_rate = $min_imported_success_rate;
-        $this->incrementImporting(false);
+        //$this->posi = 1;
+        //$upper_importresult?->addSubImportResult($this);
 
-        $this->save();
+        if ( is_null($this->start_at) || $force ) {
+            $this->start_at = Carbon::now();
+            $this->setNewAttempt();
 
-        return $this;
+            //$this->nb_to_import = $nb_to_import;
+            $this->incrementImporting(false);
+
+            $this->save();
+        }
+
+        $this->upperimportresult?->setStarting();
+
+        //return $this;
     }
 
     private function setNewAttempt() {
@@ -177,12 +194,16 @@ class ImportResult extends BaseModel implements Auditable
     public function itemImportSucceed(int $item) {
         $this->last_import_success = $item;
         $this->setImportDone("nb_import_success",1, 1);
+
+        $this->upperimportresult?->itemImportSucceed($item);
     }
 
     public function itemImportFailed(int $item, string $message) {
         $this->last_import_failed = $item;
         $this->last_failed_message = $message;
         $this->setImportDone("nb_import_failed",1, 1);
+
+        $this->upperimportresult?->itemImportFailed($item, $message);
     }
 
     /**
@@ -200,14 +221,24 @@ class ImportResult extends BaseModel implements Auditable
     }
 
     private function setImportDone(string $import_attribute, int $amount, int $last_item) {
+        //\Log::info("setImportDone (" . $this->id . "), amount: " . $amount . ", import_attribute: " . $import_attribute . ", importable: " . $this->importable_type . "(" . $this->importable_id . ")");
+        if ( is_null( $this->start_at ) ) {
+            $this->setStarting();
+        }
         $this->last_import = $last_item;
         $this->decrementImporting($import_attribute, $amount, false);
-        $this->setImported(false);
+
+        // adjust nb to import
+        if ( $this->{$import_attribute} > $this->nb_to_import ) {
+            $this->nb_to_import = $amount;
+        }
+
+        $this->setImportUpToDate(false);
 
         $this->save();
     }
 
-    private function setImported(bool $save) {
+    private function setImportUpToDate(bool $save) {
         $this->import_success_rate = ($this->nb_import_success / $this->nb_to_import) * 100;
         $this->import_failed_rate = ($this->nb_import_failed / $this->nb_to_import) * 100;
 
@@ -226,12 +257,6 @@ class ImportResult extends BaseModel implements Auditable
             $this->end_at = $duration->getEndAt();
             $this->duration = $duration->getDuration();
             $this->duration_hhmmss = $duration->getDurationHhmmss();
-
-            if ($this->imported) {
-                $this->upperimportresult?->itemImportSucceed($this->posi);
-            } else {
-                $this->upperimportresult?->itemImportFailed($this->posi, $this->last_failed_message);
-            }
         }
     }
 
