@@ -22,8 +22,6 @@ class CreateImportResultsTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
-            $table->timestamp('start_at')->nullable()->comment('import start date');
-
             $table->integer('posi')->nullable()->comment("import item position");
             $table->integer('nb_to_import')->default(0)->comment("number of items to be imported");
             $table->integer('nb_import_success')->default(0)->comment("number of items successfully imported");
@@ -42,6 +40,7 @@ class CreateImportResultsTable extends Migration
             $table->decimal('min_imported_success_rate')->default(false)->comment("(min) success rate to determine if whole import is success");
             $table->boolean('imported')->default(false)->comment("determine if whole import have been done with success");
             $table->boolean('import_done')->default(false)->comment("determine if whole import have already been done");
+            $table->timestamp('start_at')->nullable()->comment('import start date');
             $table->timestamp('end_at')->nullable()->comment('import end date');
             $table->integer('duration')->nullable()->comment('import duration');
             $table->string('duration_hhmmss')->nullable()->comment('import duration in hh:mm:ss format');

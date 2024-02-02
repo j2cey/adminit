@@ -73,8 +73,8 @@ use App\Models\Treatments\Treatment\SubTreatmentsManagement;
  * @property string $innertreatments
  * @property string $description
  *
- * @property Carbon $start_at
- * @property Carbon $end_at
+ * @property Carbon|null $start_at
+ * @property Carbon|null $end_at
  * @property int|null $duration
  * @property string|null $duration_hhmmss
  *
@@ -136,8 +136,8 @@ class Treatment extends  BaseModel implements Auditable, IHasReportFile, IHasCol
         'code' => TreatmentCodeEnum::class,
         'criticality_level' => CriticalityLevelEnum::class,
         'state' => TreatmentStateEnum::class,
-        'start_at' => 'date',
-        'end_at' => 'date',
+        'start_at' => 'datetime:Y-m-d',
+        'end_at' => 'datetime:Y-m-d',
     ];
 
     #region Validation Rules

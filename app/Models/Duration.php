@@ -7,7 +7,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * Class Duration
+ * Class Period
  * @package App\Models
  *
  * @property integer $id

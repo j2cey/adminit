@@ -3,10 +3,9 @@
 namespace App\Models\Treatments\Treatment;
 
 use App\Models\SystemLog;
-use App\Services\ExecTrace;
-use App\Jobs\TreatmentEndingJob;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\Treatments\Treatment;
+use App\Services\Treatments\ExecTrace;
 use App\Models\Treatments\TreatmentResult;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use App\Enums\Treatments\TreatmentStateEnum;
@@ -95,7 +94,7 @@ trait TreatmentEnding
      * Exec all ending instructions
      * @return void
      */
-    public function doEnding(TreatmentResultEnum $treatmentresult, string|null $message, Treatment|null $child_treatment, bool $child_completed = false) {
+    public function  doEnding(TreatmentResultEnum $treatmentresult, string|null $message, Treatment|null $child_treatment, bool $child_completed = false) {
         SystemLog::infoTreatments("Ending, " . $this->type->value . " treatment: " . $this->name . "(" . $this->id . ")", self::$TREATMENT_ENDING_LOG_INFO_PART);
 
         $prev_treatmentresult = $this->treatmentresult;

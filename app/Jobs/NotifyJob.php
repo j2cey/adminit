@@ -35,7 +35,7 @@ class NotifyJob implements ShouldQueue
      */
     public function __construct(Treatment $treatment, NotificationTypeEnum $notificationtype, CollectedReportFile $collectedreportfile, ReportFileReceiver $receiver)
     {
-        \Log::info("NotifyJob __construct - treatment: " . $treatment->id . ", collectedreportfile: " . $collectedreportfile->id . ", receiver : " . $receiver->id);
+        //\Log::info("NotifyJob __construct - treatment: " . $treatment->id . ", collectedreportfile: " . $collectedreportfile->id . ", receiver : " . $receiver->id);
         $this->onQueue(QueueEnum::NOTIFYFILE->value);
 
         $this->_sub_notification_id = $treatment->service->collectedreportfile->startingSubNotification($notificationtype, 1)->id;
@@ -58,7 +58,7 @@ class NotifyJob implements ShouldQueue
         $sub_notification = NotificationResult::getById($this->_sub_notification_id);
         $collectedreportfile = CollectedReportFile::getById($this->_collectedreportfile_id);
 
-        \Log::info("NotifyJob handle - treatment: " . $treatment->id . ", collectedreportfile: " . $collectedreportfile->id . ", receiver : " . $receiver->id);
+        //\Log::info("NotifyJob handle - treatment: " . $treatment->id . ", collectedreportfile: " . $collectedreportfile->id . ", receiver : " . $receiver->id);
 
         Mail::to($receiver->emailaddress->email)
             ->send(new NotifyReport($collectedreportfile));
@@ -66,7 +66,7 @@ class NotifyJob implements ShouldQueue
         $sub_notification->itemNotificationSucceed(1);
         $collectedreportfile->reloadNotificationResult();
 
-        \Log::info("NotifyJob handle - collectedreportfile->isNotified: " . ($collectedreportfile->isNotified ? "YES" : "NO") . ", nb_notification_success: " . $collectedreportfile->notificationresult->nb_notification_success);
+        //\Log::info("NotifyJob handle - collectedreportfile->isNotified: " . ($collectedreportfile->isNotified ? "YES" : "NO") . ", nb_notification_success: " . $collectedreportfile->notificationresult->nb_notification_success);
 
         if ($collectedreportfile->isNotified) {
             $treatment->endingWithSuccess("All Notifications Done !");

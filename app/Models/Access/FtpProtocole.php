@@ -2,10 +2,10 @@
 
 namespace App\Models\Access;
 
-use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
-use App\Models\OsAndServer\ReportServer;
 use App\Models\Treatments\Treatment;
+use App\Models\OsAndServer\ReportServer;
+use App\Services\Treatments\InnerTreatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use Illuminate\Filesystem\FilesystemManager;
 use App\Contracts\AccessProtocole\IProtocole;

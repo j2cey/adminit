@@ -3,15 +3,15 @@
 namespace App\Enums\Treatments;
 
 use App\Traits\Enum\EnumTrait;
-use App\Services\Main\MainService;
 use App\Enums\Attributes\Description;
 use App\Enums\Attributes\ServiceClass;
-use App\Services\Steps\MergeFileStepService;
-use App\Services\Steps\ImportFileStepService;
-use App\Services\Steps\NotifyFileStepService;
-use App\Services\Steps\FormatFileStepService;
-use App\Services\Steps\DownloadFileStepService;
-use App\Services\Operations\NotifyExecOperationService;
+use App\Services\Treatments\Main\MainService;
+use App\Services\Treatments\Steps\MergeFileStepService;
+use App\Services\Treatments\Steps\ImportFileStepService;
+use App\Services\Treatments\Steps\NotifyFileStepService;
+use App\Services\Treatments\Steps\FormatFileStepService;
+use App\Services\Treatments\Steps\DownloadFileStepService;
+use App\Services\Treatments\Operations\NotifyExecOperationService;
 
 enum TreatmentCodeEnum: string
 {

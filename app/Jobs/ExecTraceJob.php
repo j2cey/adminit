@@ -3,16 +3,14 @@
 namespace App\Jobs;
 
 use App\Enums\QueueEnum;
-use App\Services\ExecTrace;
 use Illuminate\Bus\Queueable;
-use App\Models\Jobs\JobLauncher;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use App\Models\Treatments\Treatment;
+use Illuminate\Queue\SerializesModels;
+use App\Services\Treatments\ExecTrace;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Enums\Treatments\TreatmentCodeEnum;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class ExecTraceJob implements ShouldQueue
 {

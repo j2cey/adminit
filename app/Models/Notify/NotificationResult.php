@@ -3,11 +3,10 @@
 namespace App\Models\Notify;
 
 use App\Models\BaseModel;
+use App\Services\Time\Period;
 use Illuminate\Support\Carbon;
-use App\Traits\Time\HasDuration;
-use App\Enums\NotificationTypeEnum;
-use OwenIt\Auditing\Contracts\Auditable;
 use App\Contracts\Notify\IIsNotifiable;
+use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -61,14 +60,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class NotificationResult extends BaseModel implements Auditable
 {
-    use HasFactory, HasDuration, \OwenIt\Auditing\Auditable;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
     protected $casts = [
         'notified' => 'boolean',
-        'start_at' => 'date',
-        'end_at' => 'date',
+        'start_at' => 'datetime:Y-m-d H:i:s',
+        'end_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     #region Validation Rules
@@ -258,11 +257,11 @@ class NotificationResult extends BaseModel implements Auditable
 
     private function endNotification() {
         if ($this->notification_done) {
-            $duration = $this->getNewDuration($this->start_at, null);
+            $period = Period::start($this->start_at)->end();
 
-            $this->end_at = $duration->getEndAt();
-            $this->duration = $duration->getDuration();
-            $this->duration_hhmmss = $duration->getDurationHhmmss();
+            $this->end_at = $period->getEndAt();
+            $this->duration = $period->getDurationMilliseconds();
+            $this->duration_hhmmss = $period->getDurationHhmmss();
         }
     }
 

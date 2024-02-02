@@ -2,10 +2,10 @@
 
 namespace App\Contracts\RetrieveAction;
 
-use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
-use App\Models\ReportFile\ReportFile;
 use App\Models\Treatments\Treatment;
+use App\Models\ReportFile\ReportFile;
+use App\Services\Treatments\InnerTreatment;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
 interface IRetrieveAction

@@ -2,11 +2,11 @@
 
 namespace App\Contracts\AccessProtocole;
 
-use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
 use App\Models\Access\AccessAccount;
-use App\Models\OsAndServer\ReportServer;
 use App\Models\Treatments\Treatment;
+use App\Models\OsAndServer\ReportServer;
+use App\Services\Treatments\InnerTreatment;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
 interface IProtocole

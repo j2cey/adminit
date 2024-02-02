@@ -2,19 +2,13 @@
 
 namespace App\Jobs;
 
-use App\Enums\QueueEnum;
 use Illuminate\Bus\Queueable;
-use App\Models\Jobs\JobLauncher;
-use App\Services\InnerTreatment;
-use App\Enums\CriticalityLevelEnum;
+use App\Models\Treatments\Treatment;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Models\Treatments\Treatment;
+use App\Services\Treatments\InnerTreatment;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Enums\Treatments\TreatmentCodeEnum;
-use App\Enums\Treatments\TreatmentResultEnum;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class TreatmentStartingJob implements ShouldQueue
 {

@@ -57,8 +57,8 @@ class TreatmentResult extends BaseModel implements Auditable
 
     protected $casts = [
         'result' => TreatmentResultEnum::class,
-        'start_at' => 'date',
-        'end_at' => 'date',
+        'start_at' => 'datetime:Y-m-d H:i:s',
+        'end_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     #region Validation Rules

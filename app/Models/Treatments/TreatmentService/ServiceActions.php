@@ -28,10 +28,10 @@ trait ServiceActions
         return $this->serviceactions_class::launchExecOpertion($this->treatment, $exec_id, $is_last_subtreatment, $can_end_uppertreatment, $nexttreatment_payloads, $dispatch_on_creation);
     }*/
 
-    public function launch() {
+    /*public function launch() {
         SystemLog::infoTreatments("launch service " . $this->serviceactions_class . ", " . $this->treatment->type->value . " treatment: " . $this->treatment->name . "( " . $this->treatment->id . " )" . is_null($this->reportfile) ? "" : " - file: " . $this->reportfile->name . "(" . $this->reportfile->id . ")", self::$TREATMENTSERVICE_LOG_INFO_PART);
         $this->serviceactions_class::launch($this->treatment);
-    }
+    }*/
 
     public function exec(string $description = null, ReportFile $reportFile = null, CollectedReportFile $collectedreportfile = null, DynamicRow $dynamicrow = null, DynamicValue $dynamicvalue = null): Treatment|static|null
     {

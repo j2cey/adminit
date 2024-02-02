@@ -2,8 +2,8 @@
 
 namespace App\Models\Treatments\Treatment;
 
+use App\Services\Time\Period;
 use Illuminate\Support\Carbon;
-use App\Traits\Time\HasDuration;
 use Illuminate\Database\Eloquent\Builder;
 use App\Enums\Treatments\TreatmentStateEnum;
 
@@ -39,8 +39,6 @@ use App\Enums\Treatments\TreatmentStateEnum;
  */
 trait StateManagement
 {
-    use HasDuration;
-
     #region Scopes
 
     public function scopeNotStarted($query) {
@@ -197,22 +195,14 @@ trait StateManagement
 
     public function setCompleted() {
         // set Treatment Ended
-        //if ( is_null($this->end_at) ) {
+        $period = Period::start($this->start_at)->end();
+        $this->setState(TreatmentStateEnum::COMPLETED);
 
-            $this->setState(TreatmentStateEnum::COMPLETED);
+        $this->end_at = $period->getEndAt();
+        $this->duration = $period->getDurationMilliseconds();
+        $this->duration_hhmmss = $period->getDurationHhmmss();
 
-            $end_at = Carbon::now();
-            //$this->duration = $this->end_at->diffInSeconds($this->start_at);
-            //$this->duration_hhmmss = gmdate('H:i:s', $this->duration);
-
-            $duration = $this->getNewDuration($this->start_at, $end_at);
-
-            $this->end_at = $end_at;
-            $this->duration = $duration->getDuration();
-            $this->duration_hhmmss = $duration->getDurationHhmmss();
-
-            $this->save();
-        //}
+        $this->save();
     }
 
     public function setRunning(bool $save = true) {

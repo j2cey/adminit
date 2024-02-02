@@ -3,9 +3,8 @@
 namespace App\Models\Treatments\Treatment;
 
 use App\Models\SystemLog;
-use App\Services\ExecTrace;
-use App\Jobs\TreatmentStartingJob;
 use App\Models\Treatments\Treatment;
+use App\Services\Treatments\ExecTrace;
 use App\Enums\Treatments\TreatmentCodeEnum;
 
 trait TreatmentStarting

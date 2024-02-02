@@ -2,14 +2,12 @@
 
 namespace App\Models\RetrieveAction;
 
-use App\Enums\QueueDispatchMode;
-use App\Services\InnerTreatment;
 use App\Enums\CriticalityLevelEnum;
+use App\Models\Treatments\Treatment;
 use App\Models\ReportFile\ReportFile;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Treatments\Treatment;
+use App\Services\Treatments\InnerTreatment;
 use App\Enums\Treatments\TreatmentCodeEnum;
-use App\Enums\Treatments\TreatmentResultEnum;
 use App\Models\ReportFile\CollectedReportFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\Contracts\RetrieveAction\IRetrieveAction;

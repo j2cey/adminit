@@ -1,36 +1,41 @@
-[2024-01-31 14:50:12] local.ERROR: maxRunningReached for importfile  
-[2024-01-31 14:52:26] local.ERROR: maxRunningReached for importfile  
-[2024-01-31 14:53:18] local.ERROR: maxRunningReached for importfile  
-[2024-01-31 14:55:19] local.ERROR: maxRunningReached for importfile  
-[2024-01-31 14:56:15] local.ERROR: maxRunningReached for importfile  
-[2024-01-31 14:57:11] local.ERROR: maxRunningReached for importfile  
-[2024-01-31 15:02:02] local.INFO: launchNotifications, matchedanalysisrules_count: 1  
-[2024-01-31 15:02:02] local.INFO: launchNotifications receivers length: 2  
-[2024-01-31 15:02:02] local.INFO: launchNotifications receiver : 1  
-[2024-01-31 15:02:02] local.INFO: NotifyJob __construct - treatment: 14, collectedreportfile: 1, receiver : 1  
-[2024-01-31 15:02:03] local.INFO: launchNotifications receiver : 2  
-[2024-01-31 15:02:03] local.INFO: NotifyJob __construct - treatment: 14, collectedreportfile: 1, receiver : 2  
-[2024-01-31 15:02:06] local.INFO: NotifyJob handle - treatment: 14, collectedreportfile: 1, receiver : 1  
-[2024-01-31 15:02:14] local.INFO: NotifyJob handle - collectedreportfile->isNotified: NO, nb_notification_success: 1  
-[2024-01-31 15:02:15] local.INFO: NotifyJob handle - treatment: 14, collectedreportfile: 1, receiver : 2  
-[2024-01-31 15:02:18] local.INFO: NotifyJob handle - collectedreportfile->isNotified: YES, nb_notification_success: 2  
-[2024-01-31 15:07:19] local.INFO: launchNotifications, matchedanalysisrules_count: 1  
-[2024-01-31 15:07:19] local.INFO: launchNotifications receivers length: 2  
-[2024-01-31 15:07:19] local.INFO: launchNotifications receiver : 3  
-[2024-01-31 15:07:19] local.INFO: NotifyJob __construct - treatment: 16, collectedreportfile: 2, receiver : 3  
-[2024-01-31 15:07:20] local.INFO: launchNotifications receiver : 4  
-[2024-01-31 15:07:20] local.INFO: NotifyJob __construct - treatment: 16, collectedreportfile: 2, receiver : 4  
-[2024-01-31 15:07:26] local.INFO: NotifyJob handle - treatment: 16, collectedreportfile: 2, receiver : 3  
-[2024-01-31 15:07:30] local.INFO: NotifyJob handle - collectedreportfile->isNotified: NO, nb_notification_success: 1  
-[2024-01-31 15:07:32] local.INFO: NotifyJob handle - treatment: 16, collectedreportfile: 2, receiver : 4  
-[2024-01-31 15:07:34] local.INFO: NotifyJob handle - collectedreportfile->isNotified: YES, nb_notification_success: 2  
-[2024-01-31 15:10:09] local.INFO: launchNotifications, matchedanalysisrules_count: 1  
-[2024-01-31 15:10:09] local.INFO: launchNotifications receivers length: 2  
-[2024-01-31 15:10:09] local.INFO: launchNotifications receiver : 5  
-[2024-01-31 15:10:09] local.INFO: NotifyJob __construct - treatment: 18, collectedreportfile: 3, receiver : 5  
-[2024-01-31 15:10:09] local.INFO: launchNotifications receiver : 6  
-[2024-01-31 15:10:09] local.INFO: NotifyJob __construct - treatment: 18, collectedreportfile: 3, receiver : 6  
-[2024-01-31 15:10:11] local.INFO: NotifyJob handle - treatment: 18, collectedreportfile: 3, receiver : 5  
-[2024-01-31 15:10:14] local.INFO: NotifyJob handle - collectedreportfile->isNotified: NO, nb_notification_success: 1  
-[2024-01-31 15:10:15] local.INFO: NotifyJob handle - treatment: 18, collectedreportfile: 3, receiver : 6  
-[2024-01-31 15:10:17] local.INFO: NotifyJob handle - collectedreportfile->isNotified: YES, nb_notification_success: 2  
+[2024-02-02 08:18:17] local.ERROR: maxRunningReached for importfile  
+[2024-02-02 08:19:12] local.ERROR: maxRunningReached for importfile  
+[2024-02-02 08:21:47] local.ERROR: maxRunningReached for importfile  
+[2024-02-02 08:22:44] local.ERROR: maxRunningReached for importfile  
+[2024-02-02 08:23:27] local.ERROR: maxRunningReached for importfile  
+[2024-02-02 08:24:25] local.ERROR: maxRunningReached for importfile  
+[2024-02-02 08:25:43] local.ERROR: maxRunningReached for importfile  
+[2024-02-02 08:35:38] local.ERROR: maxRunningReached for importfile  
+[2024-02-02 08:36:33] local.ERROR: maxRunningReached for importfile  
+[2024-02-02 08:37:23] local.ERROR: maxRunningReached for importfile  
+[2024-02-02 08:38:06] local.INFO: launchNotifications, matchedanalysisrules_count: 1  
+[2024-02-02 08:38:06] local.INFO: launchNotifications receivers length: 2  
+[2024-02-02 08:38:06] local.INFO: launchNotifications receiver : 3  
+[2024-02-02 08:38:06] local.INFO: NotifyJob __construct - treatment: 13, collectedreportfile: 2, receiver : 3  
+[2024-02-02 08:38:07] local.INFO: launchNotifications receiver : 4  
+[2024-02-02 08:38:07] local.INFO: NotifyJob __construct - treatment: 13, collectedreportfile: 2, receiver : 4  
+[2024-02-02 08:38:10] local.INFO: NotifyJob handle - treatment: 13, collectedreportfile: 2, receiver : 3  
+[2024-02-02 08:38:18] local.ERROR: maxRunningReached for importfile  
+[2024-02-02 08:38:21] local.INFO: NotifyJob handle - collectedreportfile->isNotified: NO, nb_notification_success: 1  
+[2024-02-02 08:38:23] local.INFO: NotifyJob handle - treatment: 13, collectedreportfile: 2, receiver : 4  
+[2024-02-02 08:38:29] local.INFO: NotifyJob handle - collectedreportfile->isNotified: YES, nb_notification_success: 2  
+[2024-02-02 08:42:56] local.INFO: launchNotifications, matchedanalysisrules_count: 1  
+[2024-02-02 08:42:56] local.INFO: launchNotifications receivers length: 2  
+[2024-02-02 08:42:56] local.INFO: launchNotifications receiver : 5  
+[2024-02-02 08:42:56] local.INFO: NotifyJob __construct - treatment: 16, collectedreportfile: 3, receiver : 5  
+[2024-02-02 08:42:57] local.INFO: launchNotifications receiver : 6  
+[2024-02-02 08:42:57] local.INFO: NotifyJob __construct - treatment: 16, collectedreportfile: 3, receiver : 6  
+[2024-02-02 08:43:00] local.INFO: NotifyJob handle - treatment: 16, collectedreportfile: 3, receiver : 5  
+[2024-02-02 08:43:10] local.INFO: NotifyJob handle - collectedreportfile->isNotified: NO, nb_notification_success: 1  
+[2024-02-02 08:43:12] local.INFO: NotifyJob handle - treatment: 16, collectedreportfile: 3, receiver : 6  
+[2024-02-02 08:43:18] local.INFO: NotifyJob handle - collectedreportfile->isNotified: YES, nb_notification_success: 2  
+[2024-02-02 08:47:40] local.INFO: launchNotifications, matchedanalysisrules_count: 1  
+[2024-02-02 08:47:40] local.INFO: launchNotifications receivers length: 2  
+[2024-02-02 08:47:40] local.INFO: launchNotifications receiver : 1  
+[2024-02-02 08:47:40] local.INFO: NotifyJob __construct - treatment: 18, collectedreportfile: 4, receiver : 1  
+[2024-02-02 08:47:40] local.INFO: launchNotifications receiver : 2  
+[2024-02-02 08:47:40] local.INFO: NotifyJob __construct - treatment: 18, collectedreportfile: 4, receiver : 2  
+[2024-02-02 08:47:43] local.INFO: NotifyJob handle - treatment: 18, collectedreportfile: 4, receiver : 1  
+[2024-02-02 08:47:46] local.INFO: NotifyJob handle - collectedreportfile->isNotified: NO, nb_notification_success: 1  
+[2024-02-02 08:47:49] local.INFO: NotifyJob handle - treatment: 18, collectedreportfile: 4, receiver : 2  
+[2024-02-02 08:47:53] local.INFO: NotifyJob handle - collectedreportfile->isNotified: YES, nb_notification_success: 2  

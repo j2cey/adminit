@@ -22,8 +22,6 @@ class CreateNotificationResultsTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
-            $table->timestamp('start_at')->nullable()->comment('notification start date');
-
             $table->string('notification_type')->nullable()->comment("notification type");
             $table->integer('posi')->nullable()->comment("notification item position");
             $table->integer('nb_to_notify')->default(0)->comment("number of items to be notified");
@@ -43,6 +41,7 @@ class CreateNotificationResultsTable extends Migration
             $table->decimal('min_notified_success_rate')->default(false)->comment("(min) success rate to determine if whole notification is success");
             $table->boolean('notified')->default(false)->comment("determine if notification have been done with success");
             $table->boolean('notification_done')->default(false)->comment("determine if whole notification have already been done");
+            $table->timestamp('start_at')->nullable()->comment('notification start date');
             $table->timestamp('end_at')->nullable()->comment('notification end date');
             $table->integer('duration')->nullable()->comment('notification duration');
             $table->string('duration_hhmmss')->nullable()->comment('notification duration in hh:mm:ss format');

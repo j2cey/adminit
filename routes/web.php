@@ -50,8 +50,13 @@ Route::get('/dashboard', function () {
 require __DIR__.'/auth.php';
 
 Route::get('test', function () {
-    $reporttreatment = \App\Models\Treatments\ReportTreatment::getById(1);
-    dd($reporttreatment);
+    $treatment = \App\Models\Treatments\Treatment::getById(1);
+    $period = \App\Services\Time\Period::start();
+    sleep(63);
+    $period->end();
+    dd($period);
+    //$reporttreatment = \App\Models\Treatments\ReportTreatment::getById(1);
+    //dd($reporttreatment);
     //$queuecode_value = "listeners";
     //dd( ( \App\Enums\Settings::Queues()->workerbounds()->$queuecode_value()->get() ));
     /*$class_methods = get_class_methods(\App\Enums\Settings::class);

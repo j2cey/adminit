@@ -22,8 +22,6 @@ class CreateFormattingResultsTable extends Migration
         Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 
-            $table->timestamp('start_at')->nullable()->comment('formatting start date');
-
             $table->integer('posi')->nullable()->comment("formatting item position");
             $table->integer('nb_to_format')->default(0)->comment("number of items to be formatted");
             $table->integer('nb_formatting_success')->default(0)->comment("number of items successfully formatted");
@@ -42,6 +40,7 @@ class CreateFormattingResultsTable extends Migration
             $table->decimal('min_formatted_success_rate')->default(false)->comment("(min) success rate to determine if whole formatting is success");
             $table->boolean('formatted')->default(false)->comment("determine if formatting have been done with success");
             $table->boolean('formatting_done')->default(false)->comment("determine if whole formatting have already been done");
+            $table->timestamp('start_at')->nullable()->comment('formatting start date');
             $table->timestamp('end_at')->nullable()->comment('formatting end date');
             $table->integer('duration')->nullable()->comment('formatting duration');
             $table->string('duration_hhmmss')->nullable()->comment('formatting duration in hh:mm:ss format');

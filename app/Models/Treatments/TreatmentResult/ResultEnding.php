@@ -2,17 +2,15 @@
 
 namespace App\Models\Treatments\TreatmentResult;
 
+use App\Services\Time\Period;
 use Illuminate\Support\Carbon;
-use App\Traits\Time\HasDuration;
 use App\Models\Treatments\Treatment;
+use App\Models\Treatments\TreatmentResult;
 use App\Enums\Treatments\TreatmentStateEnum;
 use App\Enums\Treatments\TreatmentResultEnum;
-use App\Models\Treatments\TreatmentResult;
 
 trait ResultEnding
 {
-    use HasDuration;
-
     public function setEnding(Treatment|null $child_treatment, $save = true) {
         if ( is_null($child_treatment) ) {
             $this->treatment->setState(TreatmentStateEnum::FIRSTENDING);
@@ -24,7 +22,7 @@ trait ResultEnding
 
     public function setEnded(Treatment|null $child_treatment, TreatmentResult|null $prev_treatmentresult, TreatmentResultEnum $treatmentresultenum, string $message = null, bool $complete_treatment = false) {
 
-        $end_at = Carbon::now();
+        $period = Period::start($this->start_at)->end();
 
         $this->last_exec_end_at = Carbon::now();
         $this->setResult($treatmentresultenum, $message);
@@ -32,12 +30,11 @@ trait ResultEnding
         if ($complete_treatment) {
             $this->treatment->setCompleted();
 
-            $this->end_at = $end_at;
 
-            $duration = $this->getNewDuration($this->start_at, $end_at);
+            $this->end_at = $period->getEndAt();
 
-            $this->duration = $duration->getDuration();
-            $this->duration_hhmmss = $duration->getDurationHhmmss();
+            $this->duration = $period->getDurationMilliseconds();
+            $this->duration_hhmmss = $period->getDurationHhmmss();
         } else {
             $this->treatment->setWaiting(true);
         }
